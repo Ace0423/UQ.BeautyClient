@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="29.357" height="29.257" viewBox="0 0 29.357 29.257">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #84715c;
+      }
+    </style>
+  </defs>
+  <path id="Icon_simple-addthis" data-name="Icon simple-addthis" class="cls-1" d="M22.018,16.52H16.512V22h-3.67V16.52h-5.5V12.863h5.5V7.376h3.671v5.486h5.5ZM25.688.061H3.67A3.675,3.675,0,0,0,0,3.719V25.664a3.674,3.674,0,0,0,3.67,3.655H25.688a3.676,3.676,0,0,0,3.67-3.655V3.719A3.676,3.676,0,0,0,25.688.062Z" transform="translate(0 -0.062)"/>
+</svg>

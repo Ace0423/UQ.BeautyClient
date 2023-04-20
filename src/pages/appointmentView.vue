@@ -813,10 +813,9 @@ $borderCoder: #EAEDF2;
         position: relative;
         top: 0px;
         margin: 0 auto;
-        // width: 100%;
         height: 85%;
         margin: 2px 40px;
-        // border: 1px solid #707070;
+        // min-width: 1000px;
 
         >.item-tab {
             display: flex;
@@ -853,6 +852,7 @@ $borderCoder: #EAEDF2;
             width: 100%;
             height: 94.5%;
             border: 1px solid #ddd;
+            min-width: 900px;
 
             // background: #e6e2de;
             .appointment_schedule {
@@ -873,6 +873,7 @@ $borderCoder: #EAEDF2;
 
                 .appointment_week {
                     width: 100%;
+                    min-width: 600px;
                     height: 100%;
                     padding: 1%;
                     box-sizing: border-box;
@@ -977,7 +978,7 @@ $borderCoder: #EAEDF2;
                     }
 
                     .week_table {
-                        height: 100px;
+                        height: 95%;
                         display: flex;
                         flex-direction: column;
 
@@ -1035,7 +1036,7 @@ $borderCoder: #EAEDF2;
                         .timePeriodList {
                             width: 100%;
                             overflow: auto;
-                            padding-bottom: 80%;
+                            padding-bottom: 0%;
 
                             .timePeriod_row {
                                 width: 100%;
@@ -1122,12 +1123,16 @@ $borderCoder: #EAEDF2;
                     right: 2px;
                     border-radius: 15px;
                     background: #ffffff;
-                    height: 528px;
+                    // height: 528px;
+                    height: 86%;
+                    width: 28%;
                     border: 1px solid #707070;
 
                     .dateBox {
-                        width: 300px;
-                        height: 300px;
+                        // width: 300px;
+                        // height: 300px;
+                        width: 100%;
+                        height: 55%;
                         // margin: 10 auto;
                         // border: solid 1px #707070;
 

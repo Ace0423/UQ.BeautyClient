@@ -312,7 +312,7 @@ let confirmAddCourseDataForm = () => {
 .course_div {
   width: 100%;
   height: 100%;
-
+min-width: 500px;
   >.customer-tab {
     margin: 2px 40px;
 

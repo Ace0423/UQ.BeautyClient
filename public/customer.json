@@ -1,0 +1,118 @@
+{
+    "items_title": [
+        {
+        "id": 1,
+        "title": "所有客戶"
+        },
+        {
+        "id": 2,
+        "title": "標籤設定"
+        }
+    ],
+    "customer_list": [
+        {
+        "userId": 1,
+        "userName": "謝金",
+        "phone": "0978978978",
+        "img": "src/assets/Icon zocial-guest.svg",
+        "tag": [
+            "95折",
+            "85折"
+            ]
+        },
+        {
+        "userId": 2,
+        "userName": "青青",
+        "phone": "0978978978",
+        "img": "src/assets/Icon zocial-guest.svg",
+        "tag": [
+            "95折",
+            "85折"
+            ]
+        },
+        {
+        "userId": 3,
+        "userName": "青青",
+        "phone": "0978978978",
+        "img": "src/assets/Icon zocial-guest.svg",
+        "tag": [
+            "95折",
+            "85折"
+            ]
+        },
+        {
+        "userId": 4,
+        "userName": "青青",
+        "phone": "0978978978",
+        "img": "src/assets/Icon zocial-guest.svg",
+        "tag": [
+            "95折",
+            "85折"
+            ]
+        },
+        {
+        "userId": 5,
+        "userName": "青青",
+        "phone": "0978978978",
+        "img": "src/assets/Icon zocial-guest.svg",
+        "tag": [
+            "95折",
+            "85折"
+            ]
+        },
+        {
+        "userId": 6,
+        "userName": "青青",
+        "phone": "0978978978",
+        "img": "src/assets/Icon zocial-guest.svg",
+        "tag": [
+            "95折",
+            "85折"
+            ]
+        },
+        {
+        "userId": 6,
+        "userName": "青青",
+        "phone": "0978978978",
+        "img": "src/assets/Icon zocial-guest.svg",
+        "tag": [
+            "95折",
+            "85折"
+            ]
+        },
+        {
+        "userId": 6,
+        "userName": "青青",
+        "phone": "0978978978",
+        "img": "src/assets/Icon zocial-guest.svg",
+        "tag": [
+            "95折",
+            "85折"
+            ]
+        },
+        {
+        "userId": 6,
+        "userName": "青青",
+        "phone": "0978978978",
+        "img": "src/assets/Icon zocial-guest.svg",
+        "tag": [
+            "95折",
+            "85折"
+            ]
+        },
+        {
+        "userId": 6,
+        "userName": "青青",
+        "phone": "0978978978",
+        "img": "src/assets/Icon zocial-guest.svg",
+        "tag": [
+            "95折",
+            "85折"
+            ]
+        }
+    ],
+    "customer_tag": [
+    "95折",
+    "85折"
+    ]
+}

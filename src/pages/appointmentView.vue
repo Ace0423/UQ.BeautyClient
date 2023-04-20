@@ -308,6 +308,15 @@ let timePeriodList = reactive([
                 course: '鬆背收胛芳香調理',
                 status: 1,
             },
+            // {
+            //     id: 4,
+            //     timePeriod: '11:00',
+            //     date: '2023-04-19',
+            //     name: '顧客D',
+            //     phone: '0000000000',
+            //     course: '鬆背收胛芳香調理',
+            //     status: 1,
+            // },
             {
                 id: 5,
                 date: '2022-01-18',
@@ -1048,7 +1057,8 @@ $borderCoder: #EAEDF2;
 
                                 .timePeriod_col {
                                     width: 100%;
-                                    min-height: 60px;
+                                    // min-height: 60px;
+                                    min-height: 10%;
                                     display: flex;
 
                                     .timePeriod {
@@ -1164,6 +1174,7 @@ $borderCoder: #EAEDF2;
                             .data {
                                 justify-content: center;
                                 font-size: 20px;
+                                width: 100%;
                                 color: #b89087;
                                 cursor: default;
                             }

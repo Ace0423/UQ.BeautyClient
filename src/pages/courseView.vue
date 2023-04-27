@@ -1,10 +1,12 @@
 <template>
   <div class="course_div">
     <Header :moduleType="'課程管理'" :Icon="Icon"></Header>
-    <div class="customer-tab">
-      <div class="item-tab">
-        <button :class='courseTypesTabsValue == index ? "active" : ""' v-for="(item, index) in courseTypesTabs"
-          :key="item.lessonTypeId" v-on:click="changeTab(index, item)">{{ item.nameTw }} </button>
+    <div class="customer-top">
+      <div class="customer-tab">
+        <div class="item-tab">
+          <button :class='courseTypesTabsValue == index ? "active" : ""' v-for="(item, index) in courseTypesTabs"
+            :key="item.lessonTypeId" v-on:click="changeTab(index, item)">{{ item.nameTw }} </button>
+        </div>
         <div class="addcoursetype-btn" @click="showAddForm(true)"><img :src="addcoursetype" /></div>
       </div>
       <div class="course_table">
@@ -37,7 +39,8 @@
                   v-on:click="changeStutusFn(index, item)">
               </td>
               <td>
-                <button v-on:click="handleDelete(index, item.lessonId)"><img :src="DeleteIcon" /></button>
+                <button v-on:click="showEditFormBtn(index, item)"><img class="edit_img" :src="Icon_edit" /></button>
+                <button v-on:click="deleteHdr(index, item.lessonId)"><img class="edit_img" :src="DeleteIcon" /></button>
               </td>
             </tr>
           </tbody>
@@ -100,6 +103,21 @@
       </div>
     </div>
 
+    <div id="ck1" class="form_bg" v-show="showEditCourse" @click.self="showEditForm(false)">
+      <div class="add-coursetype-form">
+        <div class="add-coursetype-bg">
+          <p>修改課程</p>
+          <input v-model="editCourseInfo.nameTw" />
+          <input v-model="editCourseInfo.servicesTime" />
+          <input v-model="editCourseInfo.price" />
+          <div>
+            <button class="confirm-coursetype-btn" @click="EditConfirmHdr()">確認</button>
+            <button class="confirm-coursetype-btn" @click="showEditForm(false)">取消</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
     
@@ -111,6 +129,7 @@ import formDeleteIcon from '@/assets/Icon course-delete.svg';
 import addcoursetype from '@/assets/Icon course-addcoursetype.svg';
 import DeleteIcon from '@/assets/Icon material-delete.svg';
 import Icon from '@/assets/Icon zocial-guest.svg';
+import Icon_edit from '@/assets/Ico_edit.svg';
 
 let search = ref('')
 
@@ -124,65 +143,14 @@ let addCourseDataNameRef = ref('');
 let addCourseDataTimeRef = ref('');
 let addCourseDataPriceRef = ref('');
 let addCourseDataStausRef = ref(false);
-// let courseData = reactive([
-//   {
-//     lessonId: 1,
-//     lessonTypeId: 1,
-//     nameTw: 'MOI 抗菌香氛護手霜',
-//     nameEn: '',
-//     servicesTime: '60Min',
-//     price: '1999',
-//     state: true,
-//     display: true,
-//     discount: 0,
-
-//   },
-//   {
-//     lessonId: 2,
-//     lessonTypeId: 1,
-//     nameTw: 'VIELÖ 探索有機雙發',
-//     nameEn: '',
-//     price: '2999',
-
-//     servicesTime: '60Min',
-//     state: true,
-//     display: true,
-//     discount: 0,
-//   },
-// ])
 
 
 let store = useCounterStore();
-let { courseTypesTabs, courseData, courseTypesTabsValue } = storeToRefs(store);
+let { courseTypesTabs, courseDataList, courseTypesTabsValue } = storeToRefs(store);
 let { getCourseTypeApi, delCourseTypeApi, getCourseDetailApi, addCourseTypeApi, addCourseDetailApi, delCourseDetailApi, updateCourseDetailApi } = store;
-
-
-// let courseTypesTabsValue = ref(1);
 let addCourseTypesName = ref('')
-
-// let courseTypesTabs =
-// ref([
-//   {
-//     lessonTypeId: 1,
-//     nameEn: '客製美臀順腿主課程',
-//     nameTw: '客製美臀順腿主課程',
-//     display: true
-//   },
-//   {
-//     lessonTypeId: 2,
-//     nameEn: '客製美臀順腿主課程',
-//     nameTw: '客製美臀順腿主課程',
-//     display: true
-//   },
-//   {
-//     lessonTypeId: 3,
-//     nameEn: '客製美臀順腿主課程',
-//     nameTw: '客製美臀順腿主課程',
-//     display: true
-//   },
-// ])
 let filterCourseData = computed(() =>
-  courseData.value.filter(getCourseFn)
+  courseDataList.value.filter(getCourseFn)
 )
 function getCourseFn(data: any) {
   return (
@@ -192,67 +160,80 @@ function getCourseFn(data: any) {
 
 
 getCourseTypeApi(0);
-// addCourseTypeHr('add');
 onMounted(() => {
-  // console.log(courseTypesTabsValue.value);
-  // console.log(courseTypesTabs.value);
-
-  // getCourseDetailApi((courseTypesTabs.value[courseTypesTabsValue.value]), 0)
 });
 
 watchEffect(() => {
-  courseTypesTabs.value;// =[];
+  courseTypesTabs.value;
 })
 
-// let getCourseTypeFn = () => {
-//   getCourseTypeHandler(0);
 // }
 
 let changeTab = (index: number, item: any) => {
   courseTypesTabsValue.value = index;
-  // console.log(item.lessonTypeId);
-
   getCourseDetailApi(item.lessonTypeId, 0)
 }
 //刪除類型
 let handleDelCourseType = (index: number, itemId: number) => {
-  // console.log("000");
   delCourseTypeApi(itemId);
 }
 
 //改變課程狀態
 let changeStutusFn = (index: number, item: any) => {
-  for (let i = 0; i < courseData.value.length; i++) {
-    let element = courseData.value[i];
-    if (item.lessonId === element.lessonId) {
-      if (element.display == true)
-        courseData.value[i].display = false;
-      else
-        courseData.value[i].display = true;
-    }
-  }
-  console.log(item, 'item');
+  // for (let i = 0; i < courseDataList.value.length; i++) {
+  //   let element = courseDataList.value[i];
+  //   if (item.lessonId === element.lessonId) {
+  //     if (element.display == true)
+  //       courseDataList.value[i].display = false;
+  //     else
+  //       courseDataList.value[i].display = true;
+  //   }
+  // }
+
   let curdata: any = {
     lessonId: item.lessonId,
     lessonTypeId: item.lessonTypeId,
-    display: item.display,
+    display: !item.display,
     nameEn: item.nameEn,
     nameTw: item.nameTw,
     servicesTime: item.servicesTime,
     price: item.price,
     discount: item.discount,
   }
-
   updateCourseDetailApi(curdata)
+  getCourseDetailApi(item.lessonTypeId, 0)
 }
 //刪除課程
-let handleDelete = (index: number, itemId: number) => {
-  // for (let i = 0; i < courseData.value.length; i++) {
-  //   let element = courseData.value[i];
-  //   if (itemId === courseData.value[i].lessonId)
-  //     courseData.value.splice(i, 1);
-  // }
+let deleteHdr = (index: number, itemId: number) => {
   delCourseDetailApi(itemId);
+}
+
+let showEditCourse: any = ref(false)
+let editCourseInfo: any = ref([])
+function showEditFormBtn(index: number, item: any) {
+  editCourseInfo.value = item;
+  showEditForm(true);
+}
+
+function showEditForm(state: boolean) {
+  showEditCourse.value = state;
+}
+//編輯課程
+let EditConfirmHdr = () => {
+  editCourseInfo
+  let apiEditCourseData = {
+    lessonId: editCourseInfo.value.lessonId,
+    lessonTypeId: editCourseInfo.value.lessonTypeId,
+    display: true,
+    nameEn: "",
+    nameTw: editCourseInfo.value.nameTw,
+    servicesTime: editCourseInfo.value.servicesTime,
+    price: editCourseInfo.value.price,
+    discount: 0
+  }
+  updateCourseDetailApi(apiEditCourseData)
+  getCourseDetailApi(editCourseInfo.value.lessonTypeId, 0)
+  showEditForm(false)
 }
 //新增分類-顯示
 let showAddForm = (state: boolean) => {
@@ -262,12 +243,6 @@ let showAddForm = (state: boolean) => {
 //新增分類--確認
 let confirmShowAddForm = () => {
   if (addCourseTypesName.value != '') {
-    // courseTypesTabs.value.push({
-    //   courseTypeId: courseTypesTabs.value.length + 1,
-    //   title: addCourseTypesName.value,
-    //   name: (courseTypesTabs.value.length + 1).toString(),
-    //   content: addCourseTypesName.value,
-    // })
   }
 
   let curdata: any = {
@@ -312,40 +287,46 @@ let confirmAddCourseDataForm = () => {
 .course_div {
   width: 100%;
   height: 100%;
-min-width: 500px;
-  >.customer-tab {
+  min-width: 500px;
+
+  >.customer-top {
     margin: 2px 40px;
 
-    >.item-tab {
+    >.customer-tab {
       display: flex;
+      justify-content: space-between;
 
-      >button {
+      // display: flex;
+      >.item-tab {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        border: none;
-        // width: 120px;
-        height: 45px;
-        border-radius: 10px;
-        background-color: #faf9f8;
-        font-size: 20px;
-        font-weight: bold;
-        font-family: HeitiTC;
-        color: #717171;
-      }
 
-      >button.active {
-        background-color: #e6e2de;
-      }
+        >button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border: none;
+          // width: 120px;
+          height: 45px;
+          border-radius: 10px;
+          background-color: #faf9f8;
+          font-size: 20px;
+          font-weight: bold;
+          font-family: HeitiTC;
+          color: #717171;
+        }
 
-      .addcoursetype-btn {
-        // display: flex;
-        justify-content: center;
-        flex: 1;
-        text-align: right;
+        >button.active {
+          background-color: #e6e2de;
+        }
+
+        .addcoursetype-btn {
+          // display: flex;
+          justify-content: center;
+          flex: 1;
+          text-align: right;
+        }
       }
     }
-
 
 
 
@@ -416,6 +397,11 @@ min-width: 500px;
               height: 47px;
               padding: 2px;
 
+              .edit_img {
+                width: 30px;
+                height: 30px;
+              }
+
               >img {
                 width: 40px;
                 height: 40px;
@@ -429,7 +415,7 @@ min-width: 500px;
 
               >button {
                 background-color: transparent;
-                border: none
+                border: none;
               }
 
               >input {}
@@ -548,6 +534,9 @@ min-width: 500px;
       height: 43px;
       border: solid 1px #707070;
       background-color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+      color: #717171;
     }
 
     .add-coursetype-btn {
@@ -562,7 +551,7 @@ min-width: 500px;
       font-weight: bold;
       background-color: #fff;
       color: #717171;
-        padding: 4px 3px 0px 10px;
+      padding: 4px 3px 0px 10px;
 
       .add-coursetype-ico {
         // margin: -2px;
@@ -580,7 +569,6 @@ min-width: 500px;
         width: 72px;
         height: 38px;
         margin: 5px;
-        // padding: 9px 16px;
         border-radius: 10px;
         font-size: 20px;
         font-weight: bold;

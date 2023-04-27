@@ -28,6 +28,7 @@ header {
 
     >h1 {
         padding: 1%;
+        min-width: 150px;
         font-family: STXihei;
         font-size: 25px;
         color: #707070;

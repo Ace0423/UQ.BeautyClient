@@ -6,22 +6,27 @@ import courseImg from "@/assets/Icon awesome-spa.svg";
 import settingImg from "@/assets/Icon material-settings.svg";
 import orderImg from "@/assets/Icon metro-shop.svg";
 import customerImg from "@/assets/Icon zocial-guest.svg";
-
-
+onMounted(() => {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+})
 
 </script>
 
 <template>
     <div class="sideBar">
         <img :src="logoImg" />
-        <ul class="nav">
-            <li><img :src="customerImg" /><router-link to="/memberView">顧客管理</router-link></li>
-            <li><img :src="courseImg" /><router-link to="/courseView">課程管理</router-link></li>
-            <li><img :src="appointmentImg" /><router-link to="/appointmentView">預約紀錄</router-link></li>
-            <!-- <li><img :src="orderImg" /><router-link to="/orderView">訂單紀錄</router-link></li>
-                <li><img :src="commodityImg" /><router-link to="/commodityView">商品管理</router-link></li>
-                <li><img :src="settingImg" /><router-link to="/settingView">設定</router-link></li> -->
-        </ul>
+        <diV class="nav">
+            <ul>
+                <li><img :src="customerImg" /><router-link to="/memberView">顧客管理</router-link></li>
+                <li><img :src="courseImg" /><router-link to="/courseView">課程管理</router-link></li>
+                <li><img :src="appointmentImg" /><router-link to="/">預約紀錄</router-link></li>
+                <!-- <li><img :src="orderImg" /><router-link to="/orderView">訂單紀錄</router-link></li>
+                    <li><img :src="commodityImg" /><router-link to="/commodityView">商品管理</router-link></li>
+                    <li><img :src="settingImg" /><router-link to="/settingView">設定</router-link></li> -->
+            </ul>
+        </diV>
+
     </div>
 </template>
 
@@ -29,7 +34,9 @@ import customerImg from "@/assets/Icon zocial-guest.svg";
 .sideBar {
     top: 0;
     width: 259px;
+    min-width: 180px;
     height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     background-color: #fff;
     border: solid 1px #707070;
     box-sizing: border-box;
@@ -39,35 +46,40 @@ import customerImg from "@/assets/Icon zocial-guest.svg";
     }
 
     >.nav {
-        padding-left: 15px;
+        // padding-left: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
-        >li {
-            font-family: STXihei;
-            font-size: 20px;
-            color: #707070;
+        >ul {
+            padding: 0 0;
             display: flex;
-            align-items: center;
-            // padding-left: 10;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
 
-            >img {
-                padding: 20px;
-                width: 25px;
-                height: 25px;
-            }
-
-            >a {
-                text-decoration: none;
+            >li {
+                font-family: STXihei;
+                font-size: 20px;
                 color: #707070;
-            }
+                display: flex;
+                align-items: center;
+                padding-left: 15px;
 
-            >a:visited {
-                text-decoration: none;
-                color: #707070;
-            }
+                >img {
+                    padding: 15px;
+                    width: 30px;
+                    height: 30px;
+                }
 
-            >.router-link-active {
-                text-decoration: none;
-                color: #707070;
+                >a {
+                    text-decoration: none;
+                    color: #707070;
+                }
+
+                >.router-link-active {
+                    font-weight: bold;
+                }
             }
         }
     }

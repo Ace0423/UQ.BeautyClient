@@ -4,20 +4,17 @@ import { useCounterStore } from "@/stores/counter";
 import { storeToRefs } from 'pinia';
 import uictrl from '@/router/uictrl';
 import { RouterView, useRouter } from "vue-router";
-
 const store = useCounterStore();
 const { isLogin } = storeToRefs(store);
 const { setIsLogin } = store;
+const router = useRouter();
 onMounted(() => {
-
   setIsLogin(false);
-
-
-  // uictrl.setRouter(useRouter());
 
   if (getToken('token')) {
     setIsLogin(true);
   }
+
 })
 
 </script>

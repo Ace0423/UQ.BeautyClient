@@ -13,7 +13,7 @@ export const getUserNameRequest = () => authRequest.get("/username");
 //-----------------------------------------
 
 export const getCourseDetailReq = (Group: any, id: any) =>
-  authRequest.get("Lesson/Detail?id=" + Group + "&lid=" + id);
+  authRequest.get("Lesson/Detail?id=" + Group + "&id=" + id);
 export const getCourseTypeReq = (data: any) =>
   authRequest.get("/Lesson/Group?id=" + data);
 export const delCourseTypeReq = (data: any) =>

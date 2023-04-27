@@ -3,31 +3,50 @@ import Icon from '@/assets/Icon zocial-guest.svg';
 import AddIcon from '@/assets/Icon simple-addthis.svg';
 import DeleteIcon from '@/assets/Icon material-delete.svg';
 
-import { useCounterStore } from "@/stores/counter";
+import { useCounterStore } from "@/stores/member";
 import { storeToRefs } from 'pinia';
 
 const store = useCounterStore();
-const { memberList } = storeToRefs(store);
-const { getMemberData, } = store;
+const { memberList, groupData } = storeToRefs(store);
+const { getMemberList, getGroupData } = store;
 
 const currentIndex = ref(0);
 const memberInfoView = ref(false);
-const AddMemberView = ref(false);
-const selectItem = ref();
+const addMemberView = ref(false);
+const addGroupView = ref(false);
+const groupInfoView = ref(false);
+const selectMemberItem = ref();
+const selectGroupItem = ref();
+const groupInfoItem = ref();
+const i = ref(0)
 const changeTab = (index: number) => {
     currentIndex.value = index;
 }
 const handMemberInfoView = (item: any) => {
-    console.log(item);
-    selectItem.value = item;
+    selectMemberItem.value = item;
     memberInfoView.value = !memberInfoView.value;
 }
 const handAddMemberView = () => {
-    AddMemberView.value = !AddMemberView.value;
-}
+    addMemberView.value = !addMemberView.value;
 
+}
+const handAddGroupView = (item: any) => {
+    selectGroupItem.value = item;
+    addGroupView.value = !addGroupView.value;
+
+}
+const handGroupInfoView = (item: any) => {
+    groupInfoItem.value = item;
+    groupInfoView.value = !groupInfoView.value;
+
+}
+const add = () => {
+    i.value = i.value * 10;
+    console.log(i);
+}
 onMounted(() => {
-    getMemberData();
+    getMemberList();
+    getGroupData();
 })
 
 </script>
@@ -37,8 +56,6 @@ onMounted(() => {
         <Header :Icon="Icon" :moduleType="'顧客管理'"></Header>
         <div class="customer-tab">
             <div class="item-tab">
-                <!-- <button :class='currentIndex == index ? "active" : ""' v-for="(item, index) in customer_data.items_title"
-                                                                                        :key="index" v-on:click="changeTab(index)">{{ item.title }} </button> -->
                 <button :class='currentIndex == 0 ? "active" : ""' v-on:click="changeTab(0)">所有客戶</button>
                 <button :class='currentIndex == 1 ? "active" : ""' v-on:click="changeTab(1)">標籤設定</button>
             </div>
@@ -47,37 +64,46 @@ onMounted(() => {
                     <p>客戶(全部{{ memberList.data.length }}個)</p>
                     <div>
                         <input />
-                        <button class="header-btn" @click="handAddMemberView()"><img :src="AddIcon" /></button>
+                        <button class="header-btn" v-on:click="handAddMemberView()"><img :src="AddIcon" /></button>
                     </div>
                 </div>
                 <table>
-                    <tr v-for="(item) in memberList.data" :key="item.userId" @click="handMemberInfoView(item)">
+                    <tr v-for="(item, index) in memberList.data" :key="item.userId" v-on:click="handMemberInfoView(item)">
                         <td class="img-td"><img :src="Icon" /></td>
                         <td class="p-td">
                             <p>{{ item.nameView }}</p>
                             <p>{{ item.phone }}</p>
                         </td>
-                        <!-- <td class="btn-td">
-                                                                                    <button><img :src="DeleteIcon" /></button>
-                                                                                </td> -->
                     </tr>
                 </table>
             </div>
 
             <div :class='currentIndex != 1 ? "current" : ""'>
                 <div class="header-tab">
-                    <p>客戶標籤(全部0個)</p>
+                    <p>客戶標籤(全部{{ groupData.data.length }}個)</p>
                     <div>
                         <input />
+                        <button class="header-btn" v-on:click="handAddGroupView('')"><img :src="AddIcon" /></button>
                     </div>
                 </div>
                 <table>
+                    <tr v-for="(item, index) in groupData.data.slice(i, 10)" :key="item.groupId"
+                        v-on:click="handGroupInfoView(item)">
+                        <td>
+                            <p>{{ item.label }}</p>
+                        </td>
+                    </tr>
+                    <!-- <Pagination></Pagination> -->
                 </table>
+
             </div>
         </div>
     </div>
-    <AddMember v-if="AddMemberView" :hand-add-member-view="handAddMemberView" />
-    <MemberInfo v-if="memberInfoView" :hand-member-info-view="handMemberInfoView" :select-item="selectItem" />
+    <AddMember v-if="addMemberView" :hand-add-member-view="handAddMemberView" :select-member-item="selectMemberItem" />
+    <MemberInfo v-if="memberInfoView" :hand-member-info-view="handMemberInfoView" :select-member-item="selectMemberItem"
+        :hand-add-member-view="handAddMemberView" />
+    <AddGroup v-if="addGroupView" :hand-add-group-view="handAddGroupView" :select-group-item="selectGroupItem"/>
+    <GroupInfo v-if="groupInfoView" :group-info-item="groupInfoItem" :hand-group-info-view="handGroupInfoView"/>
 </template>
 
 <style scoped lang="scss">
@@ -87,9 +113,19 @@ onMounted(() => {
     position: relative;
 
     >.customer-tab {
+        position: absolute;
+        top: 80px;
+        bottom: 0px;
+        left: 0px;
+        right: 0PX;
         margin: 2px 40px;
 
         >.item-tab {
+            position: absolute;
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            right: 0PX;
             display: flex;
 
             >button {
@@ -113,6 +149,12 @@ onMounted(() => {
         }
 
         >div {
+            position: absolute;
+            top: 45px;
+            bottom: 0px;
+            left: 0px;
+            right: 0PX;
+
             >.header-tab {
                 justify-content: space-between;
                 height: 47px;
@@ -151,6 +193,11 @@ onMounted(() => {
             }
 
             >table {
+                position: absolute;
+                top: 49px;
+                bottom: 10px;
+                left: 0px;
+                right: 0PX;
                 display: inline-block;
                 padding: 10px 25px;
                 width: 100%;
@@ -161,7 +208,7 @@ onMounted(() => {
                 // font-size: 20px;
                 color: #717171;
                 table-layout: fixed;
-                min-height: 520px;
+                // min-height: 520px;
 
                 >tr {
                     display: flex;
@@ -185,6 +232,10 @@ onMounted(() => {
                             height: 100%;
                             background-color: transparent;
                             border: none
+                        }
+
+                        >p {
+                            padding: 0 10px;
                         }
 
                         &.p-td {

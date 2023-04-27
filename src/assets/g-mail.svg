@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24.389" height="20.252" viewBox="0 0 24.389 20.252">
+    <g data-name="Group 3599">
+        <text transform="translate(9 15.5)" style="fill:#707070;font-size:8px;font-family:Futura-Medium,Futura;font-weight:500"><tspan x="0" y="0">G</tspan></text>
+        <g data-name="Icon feather-mail">
+            <path data-name="Path 11499" d="M5.133 6H22.2a2.151 2.151 0 0 1 2.133 2.156V21.1a2.151 2.151 0 0 1-2.133 2.152H5.133A2.151 2.151 0 0 1 3 21.1V8.156A2.151 2.151 0 0 1 5.133 6z" transform="translate(-1.5 -4.5)" style="fill:none;stroke:#717171;stroke-linecap:round;stroke-linejoin:round;stroke-width:3px"/>
+            <path data-name="Path 11500" d="m22.918 9-9.959 4.284L3 9" transform="translate(-.5 -6.258)" style="fill:none;stroke:#717171;stroke-linecap:round;stroke-linejoin:round;stroke-width:3px"/>
+        </g>
+    </g>
+</svg>

@@ -54,9 +54,9 @@
           <p>新增分類</p>
           <input v-model="addCourseTypesName" />
           <tr v-for="(item, index) in courseTypesTabs" :key="item.lessonTypeId">
-            <button class="add-coursetype-btn" v-on:click="handleDelCourseType(index, item.lessonTypeId)">{{ item.nameTw
-            }}
-              <img :src="formDeleteIcon" /></button>
+            <button class="add-coursetype-btn" v-on:click="handleDelCourseType(index, item.lessonTypeId)">
+              <span>{{ item.nameTw }}</span>
+              <img class="add-coursetype-ico " :src="formDeleteIcon" /></button>
           </tr>
           <div>
             <button class="confirm-coursetype-btn" @click="confirmShowAddForm()">確認</button>
@@ -92,7 +92,8 @@
             </div>
           </div>
           <tr v-for="(item, index) in filterCourseData" :key="item.lessonId">
-            <button class="add-coursedetail-btn" v-on:click="handleDelCourseType(index, item.lessonId)">{{ item.nameTw }}
+            <button class="add-coursedetail-btn" v-on:click="handleDelCourseType(index, item.lessonId)">
+              <span>{{ item.nameTw }}</span>
               <img class='add-coursedetail-ico' :src="formDeleteIcon" /></button>
           </tr>
           <div>
@@ -524,40 +525,48 @@ let confirmAddCourseDataForm = () => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 352px;
 
   .add-coursetype-bg {
     padding: 15px 15px 15px 15px;
     background-color: #e6e2de;
 
     >input {
-      width: 98%;
+      width: 100%;
       height: 43px;
       border: solid 1px #707070;
       background-color: #fff;
       font-size: 20px;
       font-weight: bold;
       color: #717171;
+      margin-top: 5px;
     }
 
     .add-coursetype-btn {
-      width: 262px;
+      width: 250px;
       height: 45px;
-      margin: 10px 0 10px;
-      // padding: 5px 17.9px 12px 20px;
-      // text-align: left;
+      margin: 5px;
       border-radius: 10px;
 
       font-size: 20px;
       font-weight: bold;
       background-color: #fff;
       color: #717171;
-      padding: 4px 3px 0px 10px;
+      display: flex;
+
+      >span {
+        margin-top: 5px;
+        width: 85%;
+        justify-content: center;
+      }
 
       .add-coursetype-ico {
-        // margin: -2px;
+        margin-top: 10px;
+        width: 20px;
+        height: 20px;
+        display: flex;
         justify-content: center;
         flex: 1;
-        // text-align: right;
       }
     }
 
@@ -691,14 +700,21 @@ let confirmAddCourseDataForm = () => {
       font-weight: bold;
       background-color: #fff;
       color: #717171;
+      display: flex;
+
+      >span {
+        margin-top: 5px;
+        width: 75%;
+        justify-content: center;
+      }
 
       .add-coursedetail-ico {
-        // margin: -2px;
+        margin-top: 10px;
+        width: 20px;
+        height: 20px;
+        display: flex;
         justify-content: center;
-        // margin: 0px 1px 0px 19px;
         flex: 1;
-        // text-align: right;
-        padding: 4px 3px 0px 10px;
       }
 
     }

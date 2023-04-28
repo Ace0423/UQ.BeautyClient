@@ -33,7 +33,7 @@
                                         </div>
                                     </div>
                                     <div class="week_table">
-                                        <div class="table_header">
+                                        <!-- <div class="table_header">
                                             <div class="table_date">
                                                 <template v-for="(item, index) of months" :key="index">
                                                     <span class="first" v-if="index === 0">
@@ -52,27 +52,49 @@
                                                     </span>
                                                 </template>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="weekTable_main">
                                             <table class="Listinfotbody" style="">
+                                                <thead>
+                                                    <template v-for="(item, index) of months" :key="index">
+                                                        <tr>
+                                                            <th>
+                                                                <span class="first" v-if="index === 0">
+                                                                    {{ }}
+                                                                </span>
+                                                                <span v-else :key="index + 0">
+                                                                    <span class="day_item"
+                                                                        :class="{ 'isCurDate': item && item.isCurDate }">
+                                                                        {{ `${item && item.isCurDate ? item && item.showDate
+                                                                            ||
+                                                                            '' :
+                                                                            item
+                                                                            &&
+                                                                            item.showDate
+                                                                            || ''}` }}
+                                                                    </span>
+                                                                    <span> {{ item.weekTitle }} </span>
+                                                                </span>
+                                                            </th>
+                                                        </tr>
+                                                    </template>
+                                                </thead>
                                                 <tbody>
                                                     <tr class="timePeriod_col2" v-for="(period, p_index) in monthsThingsRef"
                                                         align="center" valign="center" :key="`period${p_index}`">
                                                         <td class="timeGroup">{{ period.time }}</td>
                                                         <template v-for="(thingGroup, t_index) of period.newThings"
                                                             :key="`thing${t_index}`">
-                                                            <td :class='thingGroup.things.length > 1 ? "more_things" : "one_things"'
+                                                            <td :class="{ 'one_things': thingGroup.things.length == 1, 'more_things': thingGroup.things.length > 1, 'zero_things': thingGroup.things.length == 0 }"
                                                                 class="thing_group" :rowspan=thingGroup.range>
                                                                 <template v-for="(thing, t_index) of thingGroup.things "
                                                                     :key="`thing${t_index}`">
                                                                     <div class="thing_item" @click="handleDetail(thing)"
                                                                         :class="{ 'finish': thing.state == 1, 'waiting': thing.state == 0, 'seldated': thing.state == 99 }">
-                                                                        <span>{{
-                                                                            thing.timePeriod.split(':')[0] + ':' +
-                                                                            thing.timePeriod.split(':')[1]
+                                                                        <span>{{ thing.timePeriod }}</span>
+                                                                        <span>{{ thing.customer }}</span>
+                                                                        <span class="thing_coursename">{{ thing.lesson
                                                                         }}</span>
-                                                                        <span>{{ thing.name }}</span>
-                                                                        <span>{{ thing.course }}</span>
                                                                     </div>
                                                                 </template>
                                                             </td>
@@ -117,12 +139,9 @@
                                                                         'finish': thing.state === 3, 'waiting': thing.state === 1, 'seldated': thing.state === 2,
                                                                         'oneitem_size': thingGroup.things.length == 1
                                                                     }">
-                                                                    <span>{{
-                                                                        thing.timePeriod.split(':')[0] + ':' +
-                                                                        thing.timePeriod.split(':')[1]
-                                                                    }}</span>
-                                                                    <span>{{ thing.name }}</span>
-                                                                    <span>{{ thing.course }}</span>
+                                                                    <span>{{ thing.timePeriod }}</span>
+                                                                    <span>{{ thing.customer }}</span>
+                                                                    <span>{{ thing.lesson }}</span>
                                                                 </div>
                                                             </template>
                                                         </td>
@@ -187,11 +206,11 @@
                                             <p>{{ 'PM' + item.timePeriod }}</p>
                                         </td>
                                         <td>
-                                            <p v-for="(courseitem) in item.course.split(',')" :key="courseitem">{{
+                                            <p v-for="(courseitem) in item.lesson" :key="courseitem">{{
                                                 courseitem }}</p>
                                         </td>
                                         <td>
-                                            <p>{{ item.name }}</p>
+                                            <p>{{ item.customer }}</p>
                                         </td>
                                         <td>
                                             <input class="checked_state" type="checkbox" name="sub" value="item"
@@ -210,7 +229,7 @@
             </div>
         </div>
     </div>
-    <div id="add_form" class="form_bg" v-show="showAddReserveFormRef">
+    <div id="add_form" class="form_bg" v-show="showAddReserveFormRef" @click.self="showAddReserveForm(false)">
         <div class="add-reserve-form">
             <div class="basic_info_main">
                 <div class="basic_info_item">
@@ -226,6 +245,16 @@
                     <div class="news-filter">
                         <select name="name" v-model="selTimePeriodRef">
                             <option v-for="(item) in timeGroup" :key="item" :value="item">{{ item }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="basic_info_item">
+                    <p>美容師</p>
+                    <div class="news-filter">
+                        <select v-model="selBeauticianRef">
+                            <option v-for="(item, index) in beauticianList" :key="item" :value="index">
+                                <span class="form_name"> {{ item.nameView }}</span>
                             </option>
                         </select>
                     </div>
@@ -272,8 +301,8 @@ let date = datetime.getDate() < 10 ? "0" + datetime.getDate() : datetime.getDate
 let nowdatetime = `${year}-${month}-${date}`
 
 let store = useCounterStore();
-let { timePeriodList, memberList, courseDataList } = storeToRefs(store);
-let { getApptDataApi, postAddApptDataApi, getMemberData, getCourseDetailApi, postEditApptDataApi } = store;
+let { timePeriodList, memberList, courseDataList, beauticianList } = storeToRefs(store);
+let { getApptDataApi, postAddApptDataApi, getMemberData, getCourseDetailApi, postEditApptDataApi, getBeauticianApi } = store;
 
 
 
@@ -292,6 +321,8 @@ function getApptInfpApi() {
     });
 }
 getApptInfpApi();
+// 獲取美容師
+getBeauticianApi(0);
 
 
 let filterAptData: any = computed(() => {
@@ -300,7 +331,7 @@ let filterAptData: any = computed(() => {
         let element = timePeriodList.value[i];
         for (let j = 0; j < element.things.length; j++) {
             let element2 = element.things[j];
-            if (!searchList.value || element2.course.toLowerCase().includes(searchList.value.toLowerCase())) {
+            if (!searchList.value || element2.lesson.toLowerCase().includes(searchList.value.toLowerCase())) {
                 curAptData.push(element2);
             }
         }
@@ -484,8 +515,6 @@ function getWeek(time: any) {
             }
         }
     }
-
-
     delete months.value[0];
     var selWeek = months.value[1].date
     var selWeekYear = selWeek.split('-')[0]
@@ -684,6 +713,7 @@ function resetAddReserveForm() {
     selApptCourseIdRef.value = null;
     selAddMember.value = null;
     selTimePeriodRef.value = null;
+    selBeauticianRef.value = 0;
 }
 
 function addAddReserveBtn() {
@@ -699,6 +729,8 @@ function changeWeekToday(state: boolean) {
 let selApptCourseIdRef: any = ref(null)
 let selAddMember: any = ref(null);
 let selTimePeriodRef: any = ref(null)
+let selBeauticianRef: any = ref(0);
+
 function editAddReserveBtn() {
     if (oldSelList) {
         for (let i = 0; i < memberList.value.data.length; i++) {
@@ -786,7 +818,7 @@ let confirmReserveForm = (btn: string) => {
             bookingNo: "",
             userId: selAddMember.value.userId,
             lessonId: selApptCourseIdRef.value.lessonId,
-            serverId: 0,
+            serverId: beauticianList.value[selBeauticianRef.value].userId,
             dateBooking: selLittleYMDateRef.value + '  ' + selTimePeriodRef.value, //"2023-04-20T07:25:10.372Z",
             timer: 60,
             tradeDone: true,
@@ -873,7 +905,7 @@ $borderCoder: #EAEDF2;
         position: absolute;
         top: 83px;
         bottom: 0px;
-        left: 208px;
+        left: 215px;
         right: 0px;
 
         .appointment_box {
@@ -1126,95 +1158,92 @@ $borderCoder: #EAEDF2;
                                     display: flex;
                                     flex-direction: column;
 
-                                    .table_header {
-                                        width: 100%;
-                                        height: 10%;
-                                        background: #e6e2de;
-                                        display: flex;
-                                        flex-direction: column;
-                                        align-items: center;
-                                        border-bottom: 1px solid $borderCoder;
-                                        box-sizing: border-box;
-
-                                        .table_date,
-                                        .table_week {
-                                            width: 100%;
-                                            height: 90%;
-                                            text-align: left;
-                                            display: flex;
-                                            justify-content: center;
-                                            align-items: center;
-
-                                            >span {
-                                                flex: 1;
-                                                // color: #000;
-                                                height: 100%;
-                                                // font-size: 14px;
-                                                display: flex;
-                                                justify-content: center;
-                                                align-items: center;
-                                                // font-weight: bold;
-                                                display: flex;
-                                                flex-direction: column;
-                                                color: #b89087;
-
-                                                .day_item {
-                                                    // color: #db1f1f;
-                                                    font-size: 22px;
-                                                    justify-content: center;
-                                                    align-items: center;
-                                                    color: #b89087;
-                                                    padding: 5px;
-                                                }
-
-                                                >span {
-                                                    // color: #000;
-                                                    font-size: 5px;
-                                                }
-                                            }
-
-                                            .first {
-
-                                                // cursor: pointer;
-                                                i {
-                                                    margin-left: 1%;
-                                                    font-size: 16px;
-                                                    font-weight: bold;
-
-                                                }
-                                            }
-                                        }
-                                    }
-
                                     .weekTable_main {
                                         width: 100%;
-                                        overflow: auto;
                                         padding-bottom: 0%;
                                         position: relative;
                                         display: flex;
                                         height: 100%;
+                                        overflow: auto;
+                                        overflow-y: scroll;
 
                                         .Listinfotbody {
-                                            display: flex;
+                                            // display: flex;
                                             width: 100%;
                                             height: 100%;
-                                            // height: 540px;
-                                            // display: flex;
+                                            word-break: break-all;
+
+                                            >thead {
+                                                display: flex;
+                                                width: 100%;
+
+                                                >tr {
+                                                    display: flex;
+                                                    width: 100%;
+
+                                                    >th {
+                                                        display: flex;
+                                                        width: 100%;
+                                                        text-align: left;
+                                                        justify-content: center;
+                                                        align-items: center;
+                                                        // border: 1px solid #ffffff;
+
+                                                        >span {
+                                                            flex: 1;
+                                                            height: 100%;
+                                                            display: flex;
+                                                            justify-content: center;
+                                                            align-items: center;
+                                                            display: flex;
+                                                            flex-direction: column;
+                                                            color: #b89087;
+
+                                                            .day_item {
+                                                                font-size: 22px;
+                                                                justify-content: center;
+                                                                align-items: center;
+                                                                color: #b89087;
+                                                                padding: 5px;
+                                                            }
+
+                                                            >span {
+                                                                // color: #000;
+                                                                font-size: 5px;
+                                                            }
+                                                        }
+
+                                                        .first {
+
+                                                            // cursor: pointer;
+                                                            i {
+                                                                margin-left: 1%;
+                                                                font-size: 16px;
+                                                                font-weight: bold;
+
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+
 
                                             // border: 1px solid #000000;
                                             >tbody {
                                                 width: 100%;
                                                 border: 3px gary solid;
                                                 height: 100%;
-                                                overflow-y: scroll;
-                                                display: grid;
+                                                display: block;
                                                 table-layout: fixed;
 
                                                 .timePeriod_col2 {
                                                     border-bottom: 1px solid #906e6c;
 
                                                     >td {
-                                                        width: 10%;
+                                                        height: 70px;
+                                                        // border: 1px solid #ffffff;
+                                                        width: 8%;
                                                         color: #906e6c;
                                                         table-layout: fixed;
 
@@ -1240,6 +1269,12 @@ $borderCoder: #EAEDF2;
                                                         width: 100%;
                                                     }
 
+                                                    .s {
+                                                        display: flex;
+                                                        width: 100%;
+                                                        height: 100%;
+                                                    }
+
                                                     .one_things {
                                                         // display: contents;
                                                     }
@@ -1248,7 +1283,8 @@ $borderCoder: #EAEDF2;
                                                         height: 100%;
 
                                                         .thing_item {
-                                                            height: 100%;
+                                                            // height: 100%;
+                                                            height: 70px;
                                                             flex: 1;
                                                             display: flex;
                                                             font-size: 14px;
@@ -1262,8 +1298,12 @@ $borderCoder: #EAEDF2;
                                                             >span {
                                                                 overflow: hidden;
                                                             }
-                                                        }
 
+                                                            // .thing_coursename {
+                                                            //     font-size: 15px;
+                                                            // }
+
+                                                        }
 
                                                         .waiting {
                                                             background: #ffffff;
@@ -1277,11 +1317,16 @@ $borderCoder: #EAEDF2;
                                                         .seldated {
                                                             // color: #fbff00;
                                                             background: #79baff;
+
+                                                            >span {
+                                                                width: 120px;
+                                                            }
                                                         }
 
                                                     }
                                                 }
                                             }
+
                                         }
 
                                         .timePeriod_row {
@@ -1369,7 +1414,7 @@ $borderCoder: #EAEDF2;
 
                     .weekEdit_btn {
                         position: relative;
-                        width: 15%;
+                        width: 10%;
                         left: 3px;
                         border-radius: 15px;
                         background: #ffffff;
@@ -1996,7 +2041,18 @@ $borderCoder: #EAEDF2;
                 border-radius: 5px;
             }
 
+            .news-filter {
+                >select {
+                    >option {
+                        .form_name {
+                            color: #ff0000;
+                        }
+                    }
+                }
+            }
+
         }
+
 
 
         .news-filter select {
@@ -2128,7 +2184,7 @@ $borderCoder: #EAEDF2;
 .isCurDate {
     color: #d7cac9 !important;
     background-color: #8b6f6d !important;
-    border-radius: 99em;
+    border-radius: 50%; // 99em;
 
 }
 

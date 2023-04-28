@@ -13,7 +13,7 @@ export const getUserNameRequest = () => authRequest.get("/username");
 //-----------------------------------------
 
 export const getCourseDetailReq = (Group: any, id: any) =>
-  authRequest.get("Lesson/Detail?id=" + Group + "&id=" + id);
+  authRequest.get("Lesson/Detail?id=" + Group + "&lid=" + id);
 export const getCourseTypeReq = (data: any) =>
   authRequest.get("/Lesson/Group?id=" + data);
 export const delCourseTypeReq = (data: any) =>
@@ -24,5 +24,9 @@ export const postAddUQLessonTypeReq = (data: any) =>
   authRequest.post("/Lesson/Group", data);
 export const postAddUQLessonDetailReq = (data: any) =>
   authRequest.post("/Lesson/Detail", data);
+
 export const updateCourseDetailReq = (data: any) =>
-  authRequest.put("/Lesson/Detail/" + data.lessonId, data);
+  authRequest.post("/Lesson/DetailUpdate", data);
+
+export const getBeauticianReq = (id: any) =>
+  authRequest.get("member/Beautician?id=" + id);

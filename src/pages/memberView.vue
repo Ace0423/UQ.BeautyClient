@@ -2,12 +2,13 @@
 import Icon from '@/assets/Icon zocial-guest.svg';
 import AddIcon from '@/assets/Icon simple-addthis.svg';
 import DeleteIcon from '@/assets/Icon material-delete.svg';
-
+import InfoIcon from '@/assets/Icon ionic-ios-list-box.svg';
+import editIcon from '@/assets/Icon awesome-edit.svg';
 import { useCounterStore } from "@/stores/member";
 import { storeToRefs } from 'pinia';
 
 const store = useCounterStore();
-const { memberList, groupData } = storeToRefs(store);
+const { memberList, groupListData } = storeToRefs(store);
 const { getMemberList, getGroupData } = store;
 
 const currentIndex = ref(0);
@@ -18,7 +19,7 @@ const groupInfoView = ref(false);
 const selectMemberItem = ref();
 const selectGroupItem = ref();
 const groupInfoItem = ref();
-const i = ref(0)
+const keyWord = ref('');
 const changeTab = (index: number) => {
     currentIndex.value = index;
 }
@@ -28,23 +29,42 @@ const handMemberInfoView = (item: any) => {
 }
 const handAddMemberView = () => {
     addMemberView.value = !addMemberView.value;
-
 }
 const handAddGroupView = (item: any) => {
     selectGroupItem.value = item;
     addGroupView.value = !addGroupView.value;
-
 }
 const handGroupInfoView = (item: any) => {
     groupInfoItem.value = item;
     groupInfoView.value = !groupInfoView.value;
-
 }
-const add = () => {
-    i.value = i.value * 10;
-    console.log(i);
+const filterMemberListData = computed(() => {
+    const filter = memberList.value.data.filter(getMemberListFn);
+    return filter;
+})
+const getMemberListFn = (data: any) => {
+    if (keyWord.value.substring(0, 1) == '0' || keyWord.value.substring(0, 2) == '09') {
+        return (
+            (!keyWord.value || data.phone.toLowerCase().includes(keyWord.value.toLowerCase()))
+        )
+    } else {
+        return (
+            (!keyWord.value || data.nameView.toLowerCase().includes(keyWord.value.toLowerCase()))
+        )
+    }
+}
+const filterGroupListData = computed(() => {
+    const filter = groupListData.value.data.filter(getGroupListFn);
+    return filter;
+})
+const getGroupListFn = (data: any) => {
+    return (
+        (!keyWord.value || data.label.toLowerCase().includes(keyWord.value.toLowerCase()))
+    )
 }
 onMounted(() => {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
     getMemberList();
     getGroupData();
 })
@@ -56,23 +76,24 @@ onMounted(() => {
         <Header :Icon="Icon" :moduleType="'顧客管理'"></Header>
         <div class="customer-tab">
             <div class="item-tab">
-                <button :class='currentIndex == 0 ? "active" : ""' v-on:click="changeTab(0)">所有客戶</button>
+                <button :class='currentIndex == 0 ? "active" : ""' v-on:click="changeTab(0)">所有顧客</button>
                 <button :class='currentIndex == 1 ? "active" : ""' v-on:click="changeTab(1)">標籤設定</button>
             </div>
             <div :class='currentIndex != 0 ? "current" : ""'>
                 <div class="header-tab">
-                    <p>客戶(全部{{ memberList.data.length }}個)</p>
+                    <p>顧客(全部{{ filterMemberListData.length }}個)</p>
                     <div>
-                        <input />
-                        <button class="header-btn" v-on:click="handAddMemberView()"><img :src="AddIcon" /></button>
+                        <input v-model="keyWord" />
+                        <button class="header-btn" v-on:click="handAddMemberView()">新增顧客</button>
                     </div>
                 </div>
                 <table>
-                    <tr v-for="(item, index) in memberList.data" :key="item.userId" v-on:click="handMemberInfoView(item)">
-                        <td class="img-td"><img :src="Icon" /></td>
-                        <td class="p-td">
-                            <p>{{ item.nameView }}</p>
-                            <p>{{ item.phone }}</p>
+                    <tr v-for="(item) in filterMemberListData" :key="item.userId">
+                        <td class="flex-td"><img :src="Icon" />
+                            <div v-on:click="handMemberInfoView(item)">
+                                <p>{{ item.nameView }}</p>
+                                <p>{{ item.phone }}</p>
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -80,36 +101,39 @@ onMounted(() => {
 
             <div :class='currentIndex != 1 ? "current" : ""'>
                 <div class="header-tab">
-                    <p>客戶標籤(全部{{ groupData.data.length }}個)</p>
+                    <p>顧客標籤(全部{{ filterGroupListData.length }}個)</p>
                     <div>
-                        <input />
-                        <button class="header-btn" v-on:click="handAddGroupView('')"><img :src="AddIcon" /></button>
+                        <input v-model="keyWord" />
+                        <button class="header-btn" v-on:click="handAddGroupView('')">新增標籤</button>
                     </div>
                 </div>
                 <table>
-                    <tr v-for="(item, index) in groupData.data.slice(i, 10)" :key="item.groupId"
-                        v-on:click="handGroupInfoView(item)">
+                    <tr v-for="(item) in filterGroupListData" :key="item.groupId">
                         <td>
                             <p>{{ item.label }}</p>
+                            <div>
+                                <button class="header-btn" v-on:click="handGroupInfoView(item)"><img
+                                        :src="InfoIcon" /></button>
+                                <button class="header-btn" v-on:click="handAddGroupView(item)"><img
+                                        :src="editIcon" /></button>
+                            </div>
                         </td>
                     </tr>
-                    <!-- <Pagination></Pagination> -->
                 </table>
-
             </div>
         </div>
     </div>
     <AddMember v-if="addMemberView" :hand-add-member-view="handAddMemberView" :select-member-item="selectMemberItem" />
     <MemberInfo v-if="memberInfoView" :hand-member-info-view="handMemberInfoView" :select-member-item="selectMemberItem"
         :hand-add-member-view="handAddMemberView" />
-    <AddGroup v-if="addGroupView" :hand-add-group-view="handAddGroupView" :select-group-item="selectGroupItem"/>
-    <GroupInfo v-if="groupInfoView" :group-info-item="groupInfoItem" :hand-group-info-view="handGroupInfoView"/>
+    <AddGroup v-if="addGroupView" :hand-add-group-view="handAddGroupView" :select-group-item="selectGroupItem" />
+    <GroupInfo v-if="groupInfoView" :group-info-item="groupInfoItem" :hand-group-info-view="handGroupInfoView" />
 </template>
 
 <style scoped lang="scss">
 .container {
-    width: 100%;
-    height: 100%;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
     position: relative;
 
     >.customer-tab {
@@ -175,9 +199,18 @@ onMounted(() => {
                     margin: 0 30px;
 
                     >button {
-                        display: contents;
-                        // background-color: transparent;
-                        // border: none
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        border: none;
+                        min-width: 92px;
+                        padding: 2px 10px;
+                        border-radius: 10px 10px 10px 10px;
+                        background-color: #84715c;
+                        font-size: 18px;
+                        font-weight: bold;
+                        font-family: HeitiTC;
+                        color: #ffffff
                     }
 
                     >input {
@@ -201,7 +234,7 @@ onMounted(() => {
                 display: inline-block;
                 padding: 10px 25px;
                 width: 100%;
-
+                overflow: auto;
                 background-color: #faf9f8;
                 border: solid 0.5px #ddd;
                 font-family: STXihei;
@@ -218,36 +251,54 @@ onMounted(() => {
 
 
                     >td {
+                        display: flex;
+                        width: 100%;
                         height: 47px;
+                        justify-content: space-between;
 
-                        >img {
-                            cursor: pointer;
-                            width: 40px;
-                            height: 40px;
-                            padding: 5px 10px;
-                            border-radius: 45px;
-                        }
 
-                        >button {
-                            height: 100%;
-                            background-color: transparent;
-                            border: none
-                        }
+
 
                         >p {
+                            cursor: pointer;
                             padding: 0 10px;
                         }
 
-                        &.p-td {
-                            flex: 1;
+                        >div {
+                            display: flex;
+
+                            >button {
+                                // width: 45px;
+                                // height: 45px;
+                                background-color: transparent;
+                                border: none;
+                                padding: 0 0 0 0;
+                                margin: 0 2px 0 2px;
+
+                                >img {
+                                    cursor: pointer;
+                                    width: 100%;
+                                    height: 100%;
+                                    // padding: 5px 10px;
+                                }
+                            }
+                        }
+
+                    }
+
+                    >.flex-td {
+                        display: flex;
+                        justify-content: flex-start;
+
+                        >div {
+                            cursor: pointer;
 
                             >p {
-                                cursor: pointer;
-                                display: table;
-                                margin: 3px;
+                                margin: 0 0;
                                 padding: 0 0;
                             }
                         }
+
                     }
                 }
             }

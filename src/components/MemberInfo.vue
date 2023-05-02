@@ -7,8 +7,13 @@ import addressIcon from '@/assets/Icon awesome-address-book.svg';
 import lineIcon from '@/assets/Icon awesome-line.svg';
 import mailIcon from '@/assets/Icon feather-mail.svg';
 import gMailIcon from '@/assets/g-mail.svg'
+import { useCounterStore } from "@/stores/memberBank";
+
+const store = useCounterStore();
+const { getMemberBankDetail } = store;
 const simpleView = ref(true);
-const currentIndex = ref(0);
+const currentIndex = ref(2);
+const memberDetailData: any = reactive({ accountBalance: 0, recentConsumption: { amount: '-', date: '-' }, recentDeposit: { amount: '-', date: '-' } })
 const props = defineProps<{
     selectMemberItem: any,
     handMemberInfoView: Function,
@@ -20,15 +25,41 @@ const handsimpleViewBtn = () => {
 }
 const changeTab = (index: number) => {
     currentIndex.value = index;
+    getmemberInfoApi();
 }
+const getmemberInfoApi = () => {
+    switch (currentIndex.value) {
+        case 2:
+            getMemberBankDetail(props.selectMemberItem.userId).then((res) => {
+                memberDetailData.accountBalance = res.accountBalance;
+                if (res.recentConsumption != null) {
+                    memberDetailData.recentConsumption.amount = res.recentConsumption.amount;
+                    memberDetailData.recentConsumption.date = res.recentConsumption.date;
+                }
+                if (res.recentDeposit != null) {
+                    memberDetailData.recentDeposit.amount = res.recentDeposit.amount;
+                    memberDetailData.recentDeposit.date = res.recentDeposit.date;
+                };
+            });
+            break;
 
+        default:
+            break;
+    }
+}
+onMounted(() => {
+    getmemberInfoApi();
+})
 </script>
 
 <template>
     <div class="popup-mask" v-on:click.self="handMemberInfoView()">
         <div>
-            <img :src="closeIcon" v-on:click="handMemberInfoView()">
-            <img :src="bitmapIcon" class="bitmap-img" v-on:click="handsimpleViewBtn()">
+            <div class="info-head">
+                <img :src="closeIcon" v-on:click="handMemberInfoView()">
+                <img :src="bitmapIcon" class="bitmap-img" v-on:click="handsimpleViewBtn()">
+                <img v-if="simpleView"/>
+            </div>
             <div>
                 <div class="info-content">
                     <img class="head-shot" :src="Icon" />
@@ -37,7 +68,7 @@ const changeTab = (index: number) => {
                     <div class="link-bottom"></div>
                     <div>
                         <button>訂單確認</button>
-                        <button v-on:click="handAddMemberView()">修改會員</button>
+                        <button v-on:click="handAddMemberView()">修改顧客</button>
                     </div>
                     <div class="link-bottom"></div>
                     <div class="content-box">
@@ -69,13 +100,14 @@ const changeTab = (index: number) => {
                     <div class="link-bottom"></div>
                     <div class="memo-box">
                         <p>備註</p>
-                        <textarea disabled >{{ props.selectMemberItem.memo }}</textarea>
+                        <textarea disabled>{{ props.selectMemberItem.memo }}</textarea>
                     </div>
                 </div>
                 <div class="onsumption-content" v-if="simpleView" v-on:click="">
                     <div class="item-tab">
-                        <button :class='currentIndex == 0 ? "active" : ""' v-on:click="changeTab(0)">消費表現</button>
-                        <button :class='currentIndex == 1 ? "active" : ""' v-on:click="changeTab(1)">消費紀錄</button>
+                        <!-- <button :class='currentIndex == 0 ? "active" : ""' v-on:click="changeTab(0)">消費表現</button>
+                        <button :class='currentIndex == 1 ? "active" : ""' v-on:click="changeTab(1)">消費紀錄</button> -->
+                        <button :class='currentIndex == 2 ? "active" : ""' v-on:click="changeTab(2)">儲值紀錄</button>
                     </div>
                     <div class="link-bottom"></div>
                     <div class="consumption-performance" :class='currentIndex != 0 ? "current" : ""'>
@@ -102,6 +134,29 @@ const changeTab = (index: number) => {
                     </div>
                     <div class="consumption-performance" :class='currentIndex != 1 ? "current" : ""'>
 
+                    </div>
+                    <div class="consumption-performance" :class='currentIndex != 2 ? "current" : ""'>
+
+                        <div>
+                            <h1>{{ memberDetailData.accountBalance }}</h1>
+                            <p>儲值金餘額</p>
+                        </div>
+                        <div>
+                            <h1>{{ memberDetailData.recentConsumption.amount }}</h1>
+                            <p>最後消費金額</p>
+                        </div>
+                        <div>
+                            <h1>{{ memberDetailData.recentConsumption.date }}</h1>
+                            <p>最後消費日期</p>
+                        </div>
+                        <div>
+                            <h1>{{ memberDetailData.recentDeposit.amount }}</h1>
+                            <p>最後儲值金額</p>
+                        </div>
+                        <div>
+                            <h1>{{ memberDetailData.recentDeposit.date }}</h1>
+                            <p>最後儲值日期</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -131,6 +186,17 @@ const changeTab = (index: number) => {
         border: solid 1px #707070;
         background-color: #faf9f8;
         box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+
+        >.info-head {
+            justify-content: space-between;
+            >img{
+                display: flex;
+                justify-content: center;
+                margin: 10px 10px 10px 10px;
+            }
+        }
 
         >.bitmap-img {
             position: relative;
@@ -170,7 +236,7 @@ const changeTab = (index: number) => {
 
                 >h1 {
                     font-family: STXihei;
-                    font-size: 20px;
+                    font-size: 25px;
                     color: #717171;
                 }
 

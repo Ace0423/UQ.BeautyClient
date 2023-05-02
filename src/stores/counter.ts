@@ -87,7 +87,6 @@ export const useCounterStore = defineStore("counter", () => {
         const element = res.data.data[i];
         beauticianList.value.push(element);
       }
-      console.log(beauticianList.value);
     } catch (error) {
       console.log(error);
     }
@@ -120,6 +119,11 @@ export const useCounterStore = defineStore("counter", () => {
     try {
       let curData: any = await getCourseDetailReq(g, id);
       courseDataList.value = curData.data.data;
+      courseDataList.value = [];
+      for (let i = 0; i < curData.data.data.length; i++) {
+        const element = curData.data.data[i];
+        if (element.display) courseDataList.value.push(element);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -175,110 +179,86 @@ export const useCounterStore = defineStore("counter", () => {
   };
   //------------------apptt
 
-  let timeList: any = [
+  let timeGroup: any = ref([
     "10:00",
+    "10:30",
     "11:00",
+    "11:30",
     "12:00",
+    "12:30",
     "13:00",
+    "13:30",
     "14:00",
+    "14:30",
     "15:00",
+    "15:30",
     "16:00",
+    "16:30",
     "17:00",
+    "17:30",
     "18:00",
-  ];
-  let timePeriodList: any = ref([
-    {
-      timePeriod_tw: "上午10點",
-      timePeriod: "10:00",
-      things: [],
-    },
-    {
-      timePeriod_tw: "上午11點",
-      timePeriod: "11:00",
-      things: [],
-    },
-    {
-      timePeriod_tw: "下午12點",
-      timePeriod: "12:00",
-      things: [],
-    },
-    {
-      timePeriod_tw: "下午13點",
-      timePeriod: "13:00",
-      things: [],
-    },
-    {
-      timePeriod_tw: "上午14點",
-      timePeriod: "14:00",
-      things: [],
-    },
-    {
-      timePeriod_tw: "下午15點",
-      timePeriod: "15:00:00",
-      things: [],
-    },
-    {
-      timePeriod_tw: "下午16點",
-      timePeriod: "16:00",
-      things: [],
-    },
-    {
-      timePeriod_tw: "下午17點",
-      timePeriod: "17:00",
-      things: [],
-    },
-    {
-      timePeriod_tw: "下午18點",
-      timePeriod: "18:00",
-      things: [],
-    },
+    "18:30",
   ]);
+  let bookingList: any = ref([]);
   const getApptDataApi = async (year: any, month: any) => {
     try {
       let data = "?year=" + year + "&month=" + month;
       let res = await getApptDataRequest(data);
+      bookingList.value = [];
+
       //重製預約
-      for (let i = 0; i < timePeriodList.value.length; i++) {
-        const element = timePeriodList.value[i];
-        element.things = [];
+      for (let i = 0; i < timeGroup.value.length; i++) {
+        const element = timeGroup.value[i];
+        bookingList.value.push({
+          timeView: timeGroup.value[i],
+          timePeriod_tw: timeGroup.value[i],
+          timePeriod: timeGroup.value[i],
+          things: [],
+        });
       }
       //插入預約
       for (let i = 0; i < res.data.data.length; i++) {
-        const element = res.data.data[i];
-        for (let j = 0; j < timePeriodList.value.length; j++) {
-          const element2 = timePeriodList.value[j];
-          let curDateTime = element.dateBooking.split("T");
+        const bookingListEmt = res.data.data[i];
+        if (bookingListEmt.state == 3) {
+          continue;
+        }
+        for (let j = 0; j < bookingList.value.length; j++) {
+          // const timeEmt = timeList[j];
+          const timeEmt = bookingList.value[j];
+          let curDateTime = bookingListEmt.dateBooking.split("T");
           let curTime =
             curDateTime[1].split(":")[0] + ":" + curDateTime[1].split(":")[1];
+          let things = [];
           for (let k = 0; k < memberList.data.length; k++) {
             const memberData = memberList.data[k];
-            if (memberData.userId == element.userId) {
-              if (curTime == element2.timePeriod && element.lesson) {
+            if (memberData.userId == bookingListEmt.userId) {
+              if (curTime == timeEmt.timePeriod && bookingListEmt.lesson) {
                 let bookingData: any = {
-                  id: element.bookingNo,
-                  timePeriod: curTime,//hh:mm
-                  date: curDateTime[0],//yyyy-mm-dd
+                  id: bookingListEmt.bookingNo,
+                  timePeriod: curTime, //hh:mm
+                  date: curDateTime[0], //yyyy-mm-dd
                   phone: memberData.phone,
-                  range: element.timer / 60,
+                  range: bookingListEmt.timer / 30,
 
-                  userId: element.userId,
-                  bookingNo: element.bookingNo,
-                  beautyTherapist: element.beautyTherapist,
-                  bookingMemo: element.bookingMemo,
-                  customer: element.customer,
-                  dateBooking: element.dateBooking,
-                  dateCreate: element.dateCreate,
-                  discount: element.discount,
-                  lesson: element.lesson,
-                  lessonId: element.lessonId,
-                  price: element.price,
-                  serverId: element.serverId,
-                  state: element.state,
-                  timer: element.timer,
-                  tradeDone: element.tradeDone,
+                  userId: bookingListEmt.userId,
+                  bookingNo: bookingListEmt.bookingNo,
+                  beautyTherapist: bookingListEmt.beautyTherapist,
+                  bookingMemo: bookingListEmt.bookingMemo,
+                  customer: bookingListEmt.customer,
+                  dateBooking: bookingListEmt.dateBooking,
+                  dateCreate: bookingListEmt.dateCreate,
+                  discount: bookingListEmt.discount,
+                  lesson: bookingListEmt.lesson,
+                  lessonId: bookingListEmt.lessonId,
+                  price: bookingListEmt.price,
+                  serverId: bookingListEmt.serverId,
+                  state: bookingListEmt.state,
+                  timer: bookingListEmt.timer,
+                  tradeDone: bookingListEmt.tradeDone,
                 };
 
-                timePeriodList.value[j].things.push(bookingData);
+                bookingList.value[j].things.push(bookingData);
+                // things.push(bookingData);
               }
             }
           }
@@ -286,7 +266,7 @@ export const useCounterStore = defineStore("counter", () => {
       }
       //   getCurWeek();
 
-      return timePeriodList;
+      return bookingList;
     } catch (error) {
       console.log(error);
     }
@@ -349,10 +329,11 @@ export const useCounterStore = defineStore("counter", () => {
     updateCourseDetailApi,
     //--------------------appt
     getApptDataApi,
-    timePeriodList,
+    bookingList,
     postAddApptDataApi,
     postEditApptDataApi,
     getBeauticianApi,
     beauticianList,
+    timeGroup,
   };
 });

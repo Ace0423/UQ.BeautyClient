@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import { useCounterStore } from "@/stores/member";
-// import "vue3-multiselect-checkboxed/style.css"
+import Multiselect from 'vue-multiselect'
+import 'vue-multiselect/dist/vue-multiselect.css'
 const store = useCounterStore();
-const { createMemberData, editMemberData, groupData } = store;
-const title = ref('新增客戶');
-const props = defineProps<{
-    selectMemberItem: any
-    handAddMemberView: Function,
-}>()
-const newMember = reactive({
+const { createMemberData, editMemberData, groupListData } = store;
+const alertState = ref(false);
+const alertInformation = reactive({
+    messageText: '', // 提示內容
+    buttonState: 0,  //按鈕顯示狀態 0:全部 1:只顯示確定按鈕 2:不顯示按鈕 
+    timerVal: 0      //時間計時器
+})
+const title = ref('新增顧客');
+
+const newMember: any = reactive({
     userId: 0,
     email: "",
     phone: "",
@@ -19,22 +23,44 @@ const newMember = reactive({
     sex: 1,
     poto: "",
     memo: "",
+    groupList: [],
 });
-const value = null
-const options = ['list', 'of', 'options']
+
+const props = defineProps<{
+    selectMemberItem: any
+    handAddMemberView: Function,
+}>()
+
+const handAlertView = (msg: string, btnState: number, timer: number) => {
+    alertInformation.messageText = msg;
+    alertInformation.buttonState = btnState;
+    alertInformation.timerVal = timer;
+    alertState.value = !alertState.value;
+}
+
 const handSubmit = () => {
     if (props.selectMemberItem) {
         newMember.nameView = newMember.nameFirst + "," + newMember.nameLast;
         editMemberData(newMember).then((res) => {
-            if (res == 1) {
-                props.handAddMemberView()
+             if (res == 1) {
+                handAlertView("修改成功", 2, 1);
+                setTimeout(() => {
+                    props.handAddMemberView()
+                }, 1000)
+            } else {
+                handAlertView("修改失敗", 2, 1);
             }
         })
     } else {
         newMember.nameView = newMember.nameFirst + "," + newMember.nameLast;
         createMemberData(newMember).then((res) => {
-            if (res == 1) {
-                props.handAddMemberView()
+             if (res == 1) {
+                handAlertView("新增成功", 2, 1);
+                setTimeout(() => {
+                    props.handAddMemberView();
+                }, 1000)
+            }else{
+                handAlertView("新增失敗", 2, 1);
             }
         })
     }
@@ -42,7 +68,6 @@ const handSubmit = () => {
 
 onMounted(() => {
     if (props.selectMemberItem) {
-        console.log(props.selectMemberItem);
         newMember.userId = props.selectMemberItem.userId;
         newMember.email = props.selectMemberItem.email;
         newMember.phone = props.selectMemberItem.phone;
@@ -53,7 +78,8 @@ onMounted(() => {
         newMember.sex = props.selectMemberItem.sex;
         newMember.poto = props.selectMemberItem.poto;
         newMember.memo = props.selectMemberItem.memo;
-        title.value = '修改客戶';
+        newMember.groupList = props.selectMemberItem.groupList;
+        title.value = '修改顧客';
     }
 })
 </script>
@@ -74,6 +100,15 @@ onMounted(() => {
                 <label><input type="radio" name="gender" value=0 v-model="newMember.sex">女</label>
             </div>
             <div>
+                <span>標籤</span>
+                <multiselect v-model="newMember.groupList" :options="groupListData.data" :multiple="true"
+                    :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="" label="label"
+                    track-by="groupId" :preselect-first="false">
+                    <!-- <template #default="{ values, search, isOpen }"><span class="multiselect__single" -->
+                    <!-- v-if="values.length" v-show="!isOpen">{{ values.length }} options selected</span></template> -->
+                </multiselect>
+            </div>
+            <div>
                 <span>電話</span>
                 <input v-model="newMember.phone" />
             </div>
@@ -85,11 +120,6 @@ onMounted(() => {
                 <span>信箱</span>
                 <input type="email" v-model="newMember.email" />
             </div>
-            <!-- <div>
-                <span>標籤</span>
-                <Multiselect v-model="value" :options="options" :multiple="true" :close-on-select="true"
-                    placeholder="Pick some" label="name" track-by="name"></Multiselect>
-            </div> -->
             <div>
                 <span>備註</span>
                 <textarea v-model="newMember.memo"></textarea>
@@ -100,6 +130,7 @@ onMounted(() => {
             </div>
         </div>
     </div>
+    <Alert v-if="alertState" :alert-information="alertInformation" :hand-alert-view="handAlertView"></Alert>
 </template>
 
 <style scoped lang="scss">
@@ -137,6 +168,7 @@ onMounted(() => {
             // justify-content: end;
 
             >span {
+                min-width: 40px;
                 margin: 3px 10px;
             }
 
@@ -175,6 +207,12 @@ onMounted(() => {
             >.input-name-last {
                 margin: 0 5px;
                 // width: 40px;
+            }
+
+            >.multiselectcheckbox {
+                max-width: 320px;
+                border-radius: 6px;
+                border: solid 1px #707070;
             }
         }
 

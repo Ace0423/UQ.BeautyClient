@@ -11,6 +11,8 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AddGroup: typeof import('./components/AddGroup.vue')['default']
     AddMember: typeof import('./components/AddMember.vue')['default']
+    AddMemberBank: typeof import('./components/AddMemberBank.vue')['default']
+    Alert: typeof import('./components/Alert.vue')['default']
     GroupInfo: typeof import('./components/GroupInfo.vue')['default']
     Header: typeof import('./components/Header.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
@@ -20,8 +22,8 @@ declare module '@vue/runtime-core' {
     IconSupport: typeof import('./components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./components/icons/IconTooling.vue')['default']
     Login: typeof import('./components/Login.vue')['default']
+    MemberBankInfo: typeof import('./components/MemberBankInfo.vue')['default']
     MemberInfo: typeof import('./components/MemberInfo.vue')['default']
-    Pagination: typeof import('./components/Pagination.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SideBar: typeof import('./components/SideBar.vue')['default']

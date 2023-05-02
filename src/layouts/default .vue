@@ -10,13 +10,31 @@ const { setIsLogin } = store;
 const router = useRouter();
 onMounted(() => {
   setIsLogin(false);
-
   if (getToken('token')) {
     setIsLogin(true);
   }
 
+  scrollListenerHandler()
+  window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", onResize, false);
 })
 
+function onResize() {
+  setTimeout(() => {
+    scrollListenerHandler();//此处为要执行方法
+  }, 10)
+}
+
+const scrollListenerHandler = () => {
+  const clientHeight = document.documentElement.clientHeight;
+  const clientWidth = document.documentElement.clientWidth;
+  // 滚动到了底部
+  if (clientWidth >= clientHeight) {
+    document.getElementById("MoblileR")!.style.display = "none";
+  } else {
+    document.getElementById("effect")!.classList.add("pad");
+    document.getElementById("MoblileR")!.style.display = "block";
+  }
+}
 </script>
 
 <template>

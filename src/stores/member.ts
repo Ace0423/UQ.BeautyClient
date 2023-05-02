@@ -1,10 +1,10 @@
 import { defineStore } from "pinia";
-import { apiGetMemberListRequest, apiPostMemberDataRequest, apiPutMemberDataRequest, apiGetGroupDataRequest, apiPostGroupDataRequest, apiPutGroupDataRequest, apiGetGroupInfoRequest } from "@/api/index";
+import { apiGetMemberListRequest, apiPostMemberDataRequest, apiPostUpdateMemberDataRequest, apiGetGroupDataRequest, apiPostGroupDataRequest, apiPutGroupDataRequest, apiGetGroupInfoRequest, apiPostGroupInfoRequest, apiDeleteGroupInfoRequest } from "@/api/index";
 export const useCounterStore = defineStore("member", () => {
     const memberList: any = reactive({ data: [] });
-    const groupData: any = reactive({ data: [] });
-    // const groupListData: any = reactive({ notselected: [], selected: [] });
     const groupListData: any = reactive({ data: [] });
+    // const groupListData: any = reactive({ notselected: [], selected: [] });
+    const groupInfoData: any = reactive({ data: [] });
     const getMemberList = async () => {
         try {
             const dataRequest = reactive({
@@ -22,29 +22,72 @@ export const useCounterStore = defineStore("member", () => {
 
     };
     const createMemberData = async (data: any) => {
+        let memberVal: any = {
+            userId: data.userId,
+            email: data.email,
+            phone: data.phone,
+            nameFirst: data.nameFirst,
+            nameLast: data.nameLast,
+            nameView: data.nameView,
+            birthday: data.birthday,
+            sex: data.sex,
+            poto: data.poto,
+            memo: data.memo,
+            groupList: []
+        }
+        for (let index = 0; index < data.groupList.length; index++) {
+            let val = {
+                groupId: data.groupList[index].groupId
+            }
+            memberVal.groupList.push(data.groupList[index].groupId);
+        }
         try {
-            const res = await apiPostMemberDataRequest(data);
+            const res = await apiPostMemberDataRequest(memberVal);
             if (res.data.state == 1) {
                 updataMemberList(res.data.data);
-                return res.data.state
             }
+            return res.data.state
         } catch (error) {
             console.log(error);
         }
     };
+
     const editMemberData = async (data: any) => {
+        let memberVal: any = {
+            userId: data.userId,
+            email: data.email,
+            phone: data.phone,
+            nameFirst: data.nameFirst,
+            nameLast: data.nameLast,
+            nameView: data.nameView,
+            birthday: data.birthday,
+            sex: data.sex,
+            poto: data.poto,
+            memo: data.memo,
+            groupList: []
+        }
+
+        for (let index = 0; index < data.groupList.length; index++) {
+            let val = {
+                userId: data.userId,
+                groupId: data.groupList[index].groupId
+            }
+            memberVal.groupList.push(val);
+        }
+
         try {
-            const res = await apiPutMemberDataRequest(data);
+            const res = await apiPostUpdateMemberDataRequest(memberVal);
             if (res.data.state == 1) {
                 updataMemberList(res.data.data);
-                return res.data.state
             }
+            return res.data.state
         } catch (error) {
             console.log(error);
         }
     };
 
     const updataMemberList = (data: any) => {
+
         if (memberList.data.filter((item: any) => item.userId == data.userId).length > 0) {
             memberList.data.findIndex((item: any) => {
                 if (item.userId == data.userId) {
@@ -58,6 +101,8 @@ export const useCounterStore = defineStore("member", () => {
                     item.sex = data.sex;
                     item.poto = data.poto;
                     item.memo = data.memo;
+                    item.groupList = data.groupList;
+                    console.log(item);
                 }
             })
         } else {
@@ -74,7 +119,7 @@ export const useCounterStore = defineStore("member", () => {
                 memo: 0,
             });
             const res = await apiGetGroupDataRequest(dataRequest);
-            groupData.data = res.data.data;
+            groupListData.data = res.data.data;
         } catch (error) {
             console.log(error);
         }
@@ -82,12 +127,11 @@ export const useCounterStore = defineStore("member", () => {
     const createGroupData = async (data: any) => {
         try {
             const res = await apiPostGroupDataRequest(data);
-            console.log(res.data);
             if (res.data.state == 1) {
                 console.log(res.data.data);
                 updataGroupList(res.data.data);
-                return res.data.state
             }
+            return res.data.state
         } catch (error) {
             console.log(error);
         }
@@ -97,15 +141,15 @@ export const useCounterStore = defineStore("member", () => {
             const res = await apiPutGroupDataRequest(data);
             if (res.data.state == 1) {
                 updataGroupList(res.data.data);
-                return res.data.state
             }
+            return res.data.state
         } catch (error) {
             console.log(error);
         }
     };
     const updataGroupList = (data: any) => {
-        if (groupData.data.filter((item: any) => item.groupId == data.groupId).length > 0) {
-            groupData.data.findIndex((item: any) => {
+        if (groupListData.data.filter((item: any) => item.groupId == data.groupId).length > 0) {
+            groupListData.data.findIndex((item: any) => {
                 if (item.groupId == data.groupId) {
                     item.groupId = data.groupId;
                     item.label = data.label;
@@ -113,13 +157,13 @@ export const useCounterStore = defineStore("member", () => {
                 }
             })
         } else {
-            groupData.data.push(data);
+            groupListData.data.push(data);
         }
 
     };
     const getGroupInfoData = async (data: any) => {
         try {
-            groupListData.data = [];
+            groupInfoData.data = [];
             const dataRequest = reactive({
                 id: data.groupId,
                 pageindex: 0,
@@ -128,26 +172,53 @@ export const useCounterStore = defineStore("member", () => {
             const res = await apiGetGroupInfoRequest(dataRequest);
 
             if (res.data.state == 1) {
-                groupListData.data = res.data.data;
-                console.log(groupListData.data);
-                // groupListData.selected = res.data.data;
-                // groupListData.notselected = [];
-                // for (let i: number = 0; i < memberList.data.length; i++) {
-                //     if (groupListData.selected.filter((item: any) => item.userId == memberList.data[i].userId).length == 0) {
-                //         let val = {
-                //             groupId: res.data.data.groupId,
-                //             label: res.data.data.label,
-                //             nameView: memberList.data[i].nameView,
-                //             userId: memberList.data[i].userId,
-                //         }
-                //         groupListData.notselected.push(val);
-                //     }
-                // }
-                return res.data.state
+                groupInfoData.data = res.data.data;
+
             }
+            return res.data.state
         } catch (error) {
             console.log(error);
         }
+    };
+    const addGroupInfoData = async (data: any) => {
+        try {
+            let val = [{
+                groupId: data.groupId,
+                userId: data.userId
+            }]
+            const res = await apiPostGroupInfoRequest(val);
+            if (res.data.state == 1) {
+                console.log('add');
+                updataGroupInfoData(data, res.data.data[0]);
+
+            }
+            return res.data.state;
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const deleteGroupInfoData = async (data: any) => {
+        try {
+            let val: string = '/' + data.groupId + '/' + data.userId;
+            const res = await apiDeleteGroupInfoRequest(val);
+            if (res.data.state == 1) {
+                groupInfoData.data = groupInfoData.data.filter((item: any) => {
+                    return item.userId !== res.data.data.userId;
+                })
+            }
+            return res.data.state
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const updataGroupInfoData = (data: any, res: any) => {
+        let val = {
+            groupId: res.groupId,
+            label: data.label,
+            nameView: data.nameView,
+            userId: res.userId
+        }
+        groupInfoData.data.push(val);
     };
     return {
         memberList,
@@ -155,11 +226,13 @@ export const useCounterStore = defineStore("member", () => {
         getMemberData,
         createMemberData,
         editMemberData,
-        groupData,
+        groupListData,
         getGroupData,
         createGroupData,
         editGroupData,
         getGroupInfoData,
-        groupListData
+        addGroupInfoData,
+        deleteGroupInfoData,
+        groupInfoData
     }
 })

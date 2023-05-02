@@ -9,15 +9,23 @@ export const getMemberListRequest = (data: any) =>
   memberRequest.get("/member/user", { params: data });
 export const postMemberDataRequest = (data: any) =>
   memberRequest.post("/member/user", data);
-export const putMemberDataRequest = (data: any) =>
-  memberRequest.put("/member/user/" + data.userId, data);
+// export const putMemberDataRequest = (data: any) =>
+//   memberRequest.put("/member/user/" + data.userId, data);
+export const postUpdateMemberDataRequest = (data: any) =>
+  memberRequest.post("/member/update", data);
 
 export const getGroupDataRequest = (data: any) =>
   memberRequest.get("/member/group", { params: data });
 export const postGroupDataRequest = (data: any) =>
   memberRequest.post("/member/group", data);
 export const putGroupDataRequest = (data: any) =>
-  memberRequest.put("/member/group/" + data.groupId, data);
+  memberRequest.put("/member/group?id=" + data.groupId, data );
 
-  export const getGroupInfoRequest = (data: any) =>
+export const getGroupInfoRequest = (data: any) =>
   memberRequest.get("/member/grouplist", { params: data });
+export const postGroupInfoRequest = (data: any) =>
+  memberRequest.post("/member/grouplist", data);
+export const putGroupInfoRequest = (data: any) =>
+  memberRequest.put("/member/grouplist", data.groupId, data);
+export const deleteGroupInfoRequest = (data: any) =>
+  memberRequest.delete("/member/grouplist" + data);

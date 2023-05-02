@@ -1,9 +1,10 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"," ./auto-imports.d.ts"],
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"," ./auto-imports.d.ts","types"],
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
     "baseUrl": ".",
+    "allowJs": true,
     "paths": {
       "@/*": ["./src/*"]
     }

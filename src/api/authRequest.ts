@@ -6,7 +6,7 @@ const authRequest = axios.create({
 });
 
 export const postLoginRequest = (data: any) =>
-  authRequest.post("/signin", data);
+  authRequest.post("/Auth/signin", data);
 
 export const getUserNameRequest = () => authRequest.get("/username");
 

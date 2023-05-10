@@ -9,6 +9,7 @@ const alertInformation = reactive({
     buttonState: 0,  //按鈕顯示狀態 0:全部 1:只顯示確定按鈕 2:不顯示按鈕 
     timerVal: 0      //時間計時器
 })
+const addGroupMemberView = ref(false);
 const selectMember = ref();
 const groupInfo = reactive({
     groupId: 0,
@@ -25,8 +26,6 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
     alertInformation.timerVal = timer;
     alertState.value = !alertState.value;
 }
-const addGroupMemberView = ref(false);
-
 
 const handAddGroupMenberView = () => {
     selectMember.value = '';
@@ -105,7 +104,7 @@ onMounted(() => {
                         </tr>
                     </thead>
                     <tbody class="content-tab">
-                        <tr v-for="(item, index) in groupInfoData.data" :key="item">
+                        <tr v-for="(item) in groupInfoData.data" :key="item">
                             <td>
                                 <p>{{ item.nameView }}</p>
                             </td>
@@ -145,7 +144,7 @@ onMounted(() => {
     left: 0;
     bottom: 0;
     right: 0;
-    z-index: 50002;
+    z-index: 2;
     background: rgba(255, 255, 255, 0.5);
 
 
@@ -179,6 +178,10 @@ onMounted(() => {
 
             >p {
                 margin: 0px 0px;
+            }
+            >button{
+                height: 100%;
+                padding: 2px 2px 2px 2px;
             }
         }
 

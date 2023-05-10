@@ -2,6 +2,8 @@
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue"," ./auto-imports.d.ts","types"],
   "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom","es5","ES2015.Promise","ES2015","es2017"], 
     "ignoreDeprecations": "5.0",
     "baseUrl": ".",
     "allowJs": true,

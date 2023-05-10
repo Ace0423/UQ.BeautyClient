@@ -13,7 +13,9 @@ export const useCounterStore = defineStore("member", () => {
                 count: 0,
             });
             const res = await apiGetMemberListRequest(dataRequest);
-            memberList.data = res.data.data;
+            if (res.data.data.table) {
+                memberList.data = res.data.data.table;
+            }
         } catch (error) {
             console.log(error);
         }
@@ -36,15 +38,13 @@ export const useCounterStore = defineStore("member", () => {
             groupList: []
         }
         for (let index = 0; index < data.groupList.length; index++) {
-            let val = {
-                groupId: data.groupList[index].groupId
-            }
             memberVal.groupList.push(data.groupList[index].groupId);
         }
         try {
             const res = await apiPostMemberDataRequest(memberVal);
+            console.log(res)
             if (res.data.state == 1) {
-                updataMemberList(res.data.data);
+                updataMemberList(res.data.data.table[0]);
             }
             return res.data.state
         } catch (error) {
@@ -77,8 +77,9 @@ export const useCounterStore = defineStore("member", () => {
 
         try {
             const res = await apiPostUpdateMemberDataRequest(memberVal);
+            console.log(res.data);
             if (res.data.state == 1) {
-                updataMemberList(res.data.data);
+                updataMemberList(res.data.data.table[0]);
             }
             return res.data.state
         } catch (error) {
@@ -87,7 +88,6 @@ export const useCounterStore = defineStore("member", () => {
     };
 
     const updataMemberList = (data: any) => {
-
         if (memberList.data.filter((item: any) => item.userId == data.userId).length > 0) {
             memberList.data.findIndex((item: any) => {
                 if (item.userId == data.userId) {
@@ -108,7 +108,6 @@ export const useCounterStore = defineStore("member", () => {
         } else {
             memberList.data.push(data);
         }
-
     };
 
     const getGroupData = async () => {
@@ -119,7 +118,10 @@ export const useCounterStore = defineStore("member", () => {
                 memo: 0,
             });
             const res = await apiGetGroupDataRequest(dataRequest);
-            groupListData.data = res.data.data;
+            if (res.data.data) {
+                groupListData.data = res.data.data.table;
+            }
+
         } catch (error) {
             console.log(error);
         }
@@ -172,7 +174,8 @@ export const useCounterStore = defineStore("member", () => {
             const res = await apiGetGroupInfoRequest(dataRequest);
 
             if (res.data.state == 1) {
-                groupInfoData.data = res.data.data;
+                console.log(res.data.data);
+                groupInfoData.data = res.data.data.table;
 
             }
             return res.data.state

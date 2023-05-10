@@ -9,10 +9,16 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AddAdminManager: typeof import('./components/AddAdminManager.vue')['default']
+    AddApptUI: typeof import('./components/apptCmpt/AddApptUI.vue')['default']
+    AddCourseDetailUI: typeof import('./components/courseCmpt/AddCourseDetailUI.vue')['default']
+    AddCourseTypeUI: typeof import('./components/courseCmpt/AddCourseTypeUI.vue')['default']
     AddGroup: typeof import('./components/AddGroup.vue')['default']
     AddMember: typeof import('./components/AddMember.vue')['default']
     AddMemberBank: typeof import('./components/AddMemberBank.vue')['default']
+    AddRoleManager: typeof import('./components/AddRoleManager.vue')['default']
     Alert: typeof import('./components/Alert.vue')['default']
+    EditCourseDetailUI: typeof import('./components/courseCmpt/EditCourseDetailUI.vue')['default']
     GroupInfo: typeof import('./components/GroupInfo.vue')['default']
     Header: typeof import('./components/Header.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
@@ -24,6 +30,7 @@ declare module '@vue/runtime-core' {
     Login: typeof import('./components/Login.vue')['default']
     MemberBankInfo: typeof import('./components/MemberBankInfo.vue')['default']
     MemberInfo: typeof import('./components/MemberInfo.vue')['default']
+    RoleInfo: typeof import('./components/RoleInfo.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SideBar: typeof import('./components/SideBar.vue')['default']

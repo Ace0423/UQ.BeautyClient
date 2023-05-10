@@ -2,7 +2,7 @@ import Cookies from "js-cookie";
 
 export const TOKEN_KEY = 'NOW_TOKEN';
 
-export const setToken = (name: string, value:any, cookieExpires: number = 1) => {
+export const setToken = (name: string, value: any, cookieExpires: number = 1) => {
     Cookies.set(name, JSON.stringify(value), { expires: cookieExpires || 1 });
 }
 

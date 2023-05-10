@@ -427,9 +427,9 @@ let mainTypeDataRef = ref([
 ]);
 
 let newApptDataRef: any = ref({
-  memberInfo: null,
+  memberId: null,
   timer: null,
-  beautician: 0,
+  beauticianId: 0,
   courses: null,
   selDate: selThisDate(),
 });
@@ -969,9 +969,9 @@ let showAddReserveForm = (state: boolean) => {
 
 function resetAddReserveForm() {
   newApptDataRef.value.courses = null;
-  newApptDataRef.value.memberInfo = null;
+  newApptDataRef.value.memberId = null;
   newApptDataRef.value.timer = null;
-  newApptDataRef.value.beautician = 0;
+  newApptDataRef.value.beauticianId = 0;
   newApptDataRef.value.selDate = selThisDate();
 }
 
@@ -986,12 +986,13 @@ function changeWeekToday(state: boolean) {
 }
 function editAddReserveBtn() {
   if (oldSelList) {
-    for (let i = 0; i < memberList.value.data.length; i++) {
-      let element = memberList.value.data[i];
-      if (element.userId == oldSelList.userId) {
-        newApptDataRef.value.memberInfo = element;
-      }
-    }
+    // for (let i = 0; i < memberList.value.data.length; i++) {
+    //   let element = memberList.value.data[i];
+    //   if (element.userId == oldSelList.userId) {
+    //     newApptDataRef.value.memberId = element.userId;
+    //   }
+    // }
+    newApptDataRef.value.memberId = oldSelList.userId;
 
     for (let i = 0; i < courseDataList.value.length; i++) {
       let element = courseDataList.value[i];
@@ -1007,12 +1008,13 @@ function editAddReserveBtn() {
       }
     }
 
-    for (let i = 0; i < beauticianList.value.length; i++) {
-      let element = beauticianList.value[i];
-      if (element.userId == oldSelList.serverId) {
-        newApptDataRef.value.beautician = i;
-      }
-    }
+    // for (let i = 0; i < beauticianList.value.length; i++) {
+    //   let element = beauticianList.value[i];
+    //   if (element.userId == oldSelList.serverId) {
+    //     newApptDataRef.value.beauticianId = i;
+    //   }
+    // }
+    newApptDataRef.value.beauticianId = oldSelList.serverId;
     newApptDataRef.value.selDate = oldSelList.date;
 
     showOkBtnRef.value = true;

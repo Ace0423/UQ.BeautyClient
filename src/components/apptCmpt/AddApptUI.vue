@@ -5,24 +5,24 @@
       <div class="basic_info_main">
         <div class="basic_info_item name">
           <p>姓名(電話)</p>
-          <!-- <select v-model="newApptDataRef.memberInfo">
+          <!-- <select v-model="newApptDataRef.memberId">
             <option v-for="item in memberList.data" :key="item" :value="item">
               {{ item.nameView + "(" + item.phone + ")" }}
             </option>
           </select> -->
           <el-select
-            v-model="newApptDataRef.memberInfo"
-            multiple
+            v-model="newApptDataRef.memberId"
             filterable
             allow-create
             default-first-option
             :reserve-keyword="false"
-            placeholder=""
+            placeholder=" "
           >
             <el-option
               v-for="item in memberList.data"
-              :key="item"
-              :label="item"
+              :key="item.nameView"
+              :value="item.userId"
+              :label="item.nameView"
             >
               {{ item.nameView + "(" + item.phone + ")" }}
             </el-option>
@@ -45,11 +45,11 @@
               allow-create
               default-first-option
               :reserve-keyword="false"
-              placeholder=""
+              placeholder=" "
             >
               <el-option
-                v-for="item in timeGroup"
-                :key="item"
+                v-for="(item, index) in timeGroup"
+                :key="index"
                 :label="item"
                 :value="item"
               />
@@ -59,10 +59,10 @@
             </span>
           </div>
         </div>
-        <div class="basic_info_item">
+        <div class="basic_info_item beautician">
           <p>美容師</p>
           <div class="news-filter">
-            <select v-model="newApptDataRef.beautician">
+            <!-- <select v-model="newApptDataRef.beautician">
               <option
                 v-for="(item, index) in beauticianList"
                 :key="item"
@@ -70,7 +70,23 @@
               >
                 <span class="form_name"> {{ item.nameView }}</span>
               </option>
-            </select>
+            </select> -->
+            <el-select
+              v-model="newApptDataRef.beauticianId"
+              allow-create
+              default-first-option
+              :reserve-keyword="false"
+              placeholder=" "
+            >
+              <el-option
+                v-for="item in beauticianList"
+                :key="item.userId"
+                :label="item.nameView"
+                :value="item.userId"
+              >
+                <span class="form_name"> {{ item.nameView }}</span>
+              </el-option>
+            </el-select>
           </div>
         </div>
       </div>
@@ -161,13 +177,12 @@ const props = defineProps<{
   oldSelList: any;
 }>();
 let newApptDataRef: any = ref({
-  memberInfo: null,
+  memberId: null,
   timer: null,
-  beautician: 0,
+  beauticianId: 0,
   courses: null,
   selDate: "",
 });
-newApptDataRef.value = props.curApptDataRef;
 
 let newCourseDetailRef: any = ref({
   name: "",
@@ -252,6 +267,9 @@ onMounted(() => {
   newCourseDetailRef.value.timer = "";
   newCourseDetailRef.value.price = "";
   newCourseDetailRef.value.state = false;
+
+  newApptDataRef.value = props.curApptDataRef;
+  console.log(newApptDataRef.value);
 });
 
 function getNowDay() {
@@ -263,10 +281,8 @@ function getNowDay() {
 }
 //預約--確認
 let confirmReserveForm = (btn: string) => {
-  ruleLists.ruleItem.name.value = newApptDataRef.value.memberInfo;
+  ruleLists.ruleItem.name.value = newApptDataRef.value.memberId;
   ruleLists.ruleItem.timeClock.value = newApptDataRef.value.timer;
-  console.log(newApptDataRef.value.timer);
-  console.log(newApptDataRef.value.courses);
 
   ruleLists.ruleItem.lessonItem.value = newApptDataRef.value.courses
     ? newApptDataRef.value.courses.nameTw
@@ -286,9 +302,9 @@ let confirmReserveForm = (btn: string) => {
 
     let addApptData = {
       bookingNo: "",
-      userId: newApptDataRef.value.memberInfo.userId,
+      userId: newApptDataRef.value.memberId,
       lessonId: newApptDataRef.value.courses.lessonId,
-      serverId: beauticianList.value[newApptDataRef.value.beautician].userId,
+      serverId: newApptDataRef.value.beauticianId,
       dateBooking:
         newApptDataRef.value.selDate + "  " + newApptDataRef.value.timer, //"2023-04-20T07:25:10.372Z",
       timer: newApptDataRef.value.courses.servicesTime,
@@ -327,17 +343,12 @@ let confirmReserveForm = (btn: string) => {
             newApptDataRef.value.selDate.split("-")[0],
             newApptDataRef.value.selDate.split("-")[1]
           );
-          // props.showAddReserveForm(false);
           setTimeout(() => {
             props.showAddReserveForm(false);
           }, 1000);
         } else {
           console.log(res, "錯誤");
-          // alertInformation.buttonState = 2;
-          // alertInformation.timerVal = 2;
-          // alertInformation.messageText = resData.msg;
           handAlertView("新增失敗", 2, 1);
-          // alertInformation.showAlert = true;
         }
       })
       .catch((error) => {
@@ -346,7 +357,7 @@ let confirmReserveForm = (btn: string) => {
   } else if ((btn = "edit" && props.oldSelList)) {
     let editApptDate = {
       bookingNo: props.oldSelList.id,
-      userId: newApptDataRef.value.memberInfo.userId,
+      userId: newApptDataRef.value.memberId,
       lessonId: newApptDataRef.value.courses.lessonId,
       serverId: props.oldSelList.serverId,
       dateBooking:
@@ -362,7 +373,15 @@ let confirmReserveForm = (btn: string) => {
     //修改預約
     postEditApptDataApi(editApptDate)
       .then((res: any) => {
-        console.log();
+        let resData = res.data;
+        if (resData.state == 1) {
+          handAlertView("修改成功", 2, 1);
+          setTimeout(() => {
+            props.showAddReserveForm(false);
+          }, 1000);
+        } else {
+          handAlertView("修改失敗", 2, 1);
+        }
       })
       .catch((error) => {
         console.log(error, "error");
@@ -371,9 +390,9 @@ let confirmReserveForm = (btn: string) => {
 };
 function resetAddReserveForm() {
   newApptDataRef.value.courses = null;
-  newApptDataRef.value.memberInfo = null;
+  newApptDataRef.value.memberId = null;
   newApptDataRef.value.timer = null;
-  newApptDataRef.value.beautician = 0;
+  newApptDataRef.value.beauticianId = 0;
   newApptDataRef.value.selDate = newApptDataRef.value.selDate;
 }
 </script>
@@ -484,6 +503,20 @@ function resetAddReserveForm() {
           color: #fc0505;
           width: 100%;
         }
+        .el-select {
+          border: solid 1px #707070;
+          background-color: #fff;
+          border-radius: 5px;
+        }
+      }
+      .name {
+        width: 60%;
+      }
+      .time {
+        width: 20%;
+      }
+      .beautician {
+        width: 20%;
       }
 
       .news-filter select {
@@ -508,7 +541,7 @@ function resetAddReserveForm() {
 
     .add_seldate {
       display: flex;
-      width: 90%;
+      width: 99%;
       justify-content: right;
       font-size: 20px;
       font-family: HeitiTC;

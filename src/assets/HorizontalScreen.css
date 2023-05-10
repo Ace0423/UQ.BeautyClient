@@ -1,0 +1,113 @@
+.mob-con {
+	width: 100%;
+	height: 100%;
+	display: none;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background: #32373b;
+	z-index: 9990;
+}
+
+.mob-cen {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 9999;
+}
+
+.mob-cen i {
+	margin: auto;
+	display: block;
+	width: 128px;
+	height: 194px;
+	/*background: url(../images/hengping.png 0 0 no-repeat);*/
+	background: url(hengping.png);
+	background-size: 128px 194px;
+	animation: mobileR 1.5s ease infinite alternate;
+	-webkit-animation: mobileR 1.5s ease infinite alternate;
+}
+
+.mob-cen i.pad {
+	animation: mobilePadR 1.5s ease infinite alternate;
+	-webkit-animation: mobilePadR 1.5s ease infinite alternate;
+}
+
+.mob-cen div {
+	font-size: 22px;
+	margin-top: 20px;
+	color: #ffd40a;
+}
+
+@keyframes mobileR {
+	0% {
+		-webkit-transform: rotate(0deg);
+	}
+
+	30% {
+		-webkit-transform: rotate(0deg);
+	}
+
+	70% {
+		-webkit-transform: rotate(90deg);
+	}
+
+	100% {
+		-webkit-transform: rotate(90deg);
+	}
+}
+
+@-webkit-keyframes mobileR {
+	0% {
+		-webkit-transform: rotate(0deg);
+	}
+
+	30% {
+		-webkit-transform: rotate(0deg);
+	}
+
+	70% {
+		-webkit-transform: rotate(90deg);
+	}
+
+	100% {
+		-webkit-transform: rotate(90deg);
+	}
+}
+
+@keyframes mobilePadR {
+	0% {
+		-webkit-transform: rotate(0deg);
+	}
+
+	30% {
+		-webkit-transform: rotate(0deg);
+	}
+
+	70% {
+		-webkit-transform: rotate(90deg);
+	}
+
+	100% {
+		-webkit-transform: rotate(90deg);
+	}
+}
+
+@-webkit-keyframes mobilePadR {
+	0% {
+		-webkit-transform: rotate(0deg);
+	}
+
+	30% {
+		-webkit-transform: rotate(0deg);
+	}
+
+	70% {
+		-webkit-transform: rotate(90deg);
+	}
+
+	100% {
+		-webkit-transform: rotate(90deg);
+	}
+}

@@ -62,14 +62,13 @@ export const useApptStore = defineStore("apptStore", () => {
         for (let i = 0; i < res.data.data.table.length; i++) {
           let element = res.data.data.table[i];
           // element.orderCheck = element.order;
-          courseTypesTabs.value.push(element);
+          element.editState = false;
+          (element.editNameTw = element.nameTw),
+            courseTypesTabs.value.push(element);
         }
         courseTypesTabs.value.sort(function (a: any, b: any) {
           return a.order > b.order ? 1 : -1;
         });
-
-        console.log(courseTypesTabs.value);
-
         getCourseDetailApi(
           courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
           "0"
@@ -121,8 +120,6 @@ export const useApptStore = defineStore("apptStore", () => {
   const addCourseTypeApi = async (data: any) => {
     try {
       let res = await postAddUQLessonTypeReq(data);
-
-      if (res) getCourseTypeApi(0);
       return res;
     } catch (error) {
       console.log(error);
@@ -132,8 +129,6 @@ export const useApptStore = defineStore("apptStore", () => {
   const editCourseTypeApi = async (data: any) => {
     try {
       let res = await updateLessonTypeReq(data);
-
-      if (res) getCourseTypeApi(0);
       return res;
     } catch (error) {
       console.log(error);
@@ -143,8 +138,6 @@ export const useApptStore = defineStore("apptStore", () => {
   const editCourseTypeOrderApi = async (data: any) => {
     try {
       let res = await updateLessonTypeOrderReq(data);
-
-      if (res) getCourseTypeApi(0);
       return res;
     } catch (error) {
       console.log(error);

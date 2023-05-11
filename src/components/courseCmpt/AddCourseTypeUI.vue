@@ -11,7 +11,7 @@
         </div>
         <div class="add-coursedetail-btndiv">
           <draggable
-            v-model="courseTypesTabsUI"
+            v-model="courseTypesTabs"
             group="people"
             @start="drag = true"
             @end="drag = false"
@@ -23,7 +23,9 @@
                   v-if="element.lessonTypeId != 0"
                   class="add-coursedetail-btn"
                 >
-                  <span v-show="!element.editState">{{ element.nameTw }}</span>
+                  <span v-show="!element.editState">{{
+                    element.editNameTw
+                  }}</span>
                   <input
                     v-show="element.editState"
                     :id="element.nameTw"
@@ -69,6 +71,7 @@ import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import type { IBackStatus } from "@/types/IData";
 import { verify_methods } from "@/types/utils";
 import Icon_edit from "@/assets/Ico_edit.svg";
+import { storeToRefs } from "pinia";
 
 import draggable from "vuedraggable";
 let addCourseTypesName = ref("");
@@ -89,7 +92,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
 };
 const props = defineProps<{
   showAddForm: Function;
-  courseTypesTabs: any;
+  // courseTypesTabs: any;
 }>();
 
 //-------------------------------------form驗證
@@ -102,28 +105,9 @@ const ruleLists: any = reactive({
       is_readonly: false,
       value: "",
       rules: {
-        // required: {
-        //   warn: "此項為必填",
-        // },
-        length: {
-          max: 9,
-          warn: "不高於9字",
+        required: {
+          warn: "此項為必填",
         },
-      },
-      is_error: false,
-      warn: "",
-      is_show: true,
-    },
-    oldName: {
-      label: "舊名稱",
-      component: "input",
-      type: "number",
-      is_readonly: false,
-      value: "",
-      rules: {
-        // required: {
-        //   warn: "此項為必填",
-        // },
         length: {
           max: 9,
           warn: "不高於9字",
@@ -157,14 +141,21 @@ const {
   delCourseTypeApi,
   editCourseTypeApi,
   editCourseTypeOrderApi,
+  getCourseTypeApi,
 } = store;
-let courseTypesTabsUI: any = ref([]);
+let { courseTypesTabs, courseTypesTabsValue } = storeToRefs(store);
+// let courseTypesTabs: any = ref([]);
 onMounted(() => {
   addCourseTypesName.value = "";
-  courseTypesTabsUI.value = [];
-  for (let i = 0; i < props.courseTypesTabs.length; i++) {
-    const element = props.courseTypesTabs[i];
-    courseTypesTabsUI.value.push({
+  setTypeData();
+});
+
+function setTypeData() {
+  let data = courseTypesTabs.value;
+  courseTypesTabs.value = [];
+  for (let i = 0; i < data.length; i++) {
+    const element = data[i];
+    courseTypesTabs.value.push({
       lessonTypeId: element.lessonTypeId,
       nameTw: element.nameTw,
       display: element.display,
@@ -172,32 +163,29 @@ onMounted(() => {
       editState: false,
     });
   }
-});
+}
 
 //新增分類--確認
 let confirmShowAddForm = () => {
-  console.log(courseTypesTabsUI.value);
-  /**存放改過分類名稱 */
   let changeNameList = [];
-  for (let i = 0; i < courseTypesTabsUI.value.length; i++) {
-    const element = courseTypesTabsUI.value[i];
-    if (element.nameTw != element.editNameTw) {
-      ruleLists.ruleItem.name.value = element.editNameTw;
-      if (!verify_all()) return;
-      element.nameTw = element.editNameTw;
-      changeNameList.push(element);
-      editCourseTypeApi(element).then((res: any) => {
-        let resData = res.data;
-        if (resData.state == 1) console.log("更新成功");
-        else console.log(resData.msg, "更新失敗");
-      });
-    }
-  }
-  /**存放改過分類排序 */
-  let changeOrderList = [];
-  for (let i = 0; i < courseTypesTabsUI.value.length; i++) {
-    const element = courseTypesTabsUI.value[i];
-    if (element.lessonTypeId != 0)
+  let changeOrderList: any = [];
+  for (let i = 0; i < courseTypesTabs.value.length; i++) {
+    const element = courseTypesTabs.value[i];
+    if (element.lessonTypeId != 0) {
+      /**判斷改名 */
+      if (element.nameTw != element.editNameTw) {
+        ruleLists.ruleItem.name.value = element.editNameTw;
+        if (!verify_all()) return;
+        element.nameTw = element.editNameTw;
+        changeNameList.push(element);
+        editCourseTypeApi(element).then((res: any) => {
+          let resData = res.data;
+          if (resData.state == 1) {
+            handAlertView("成功", 2, 2);
+          } else console.log(resData.msg, "失敗");
+        });
+      }
+      /**判斷改排序 */
       if (element.order != i + 1) {
         element.order = i + 1;
         changeOrderList.push({
@@ -205,18 +193,28 @@ let confirmShowAddForm = () => {
           order: element.order,
         });
       }
+    }
   }
-  editCourseTypeOrderApi(changeOrderList).then((res: any) => {
-    let resData = res.data;
-    if (resData.state == 1) console.log("修改排序成功");
-    else console.log(resData.msg, "修改排序失敗");
-  });
 
-  ruleLists.ruleItem.name.value = addCourseTypesName.value;
-  if (!verify_all()) return;
+  if (changeOrderList.length > 0) {
+    editCourseTypeOrderApi(changeOrderList).then((res: any) => {
+      let resData = res.data;
+      if (resData.state == 1) {
+        handAlertView("成功", 2, 2);
+        console.log("修改排序成功");
+      } else console.log(resData.msg, "修改排序失敗");
+    });
+  }
+
+  if (changeOrderList.length == 0 && changeNameList.length == 0) {
+    ruleLists.ruleItem.name.value = addCourseTypesName.value;
+    if (!verify_all()) return;
+  }
+
   if (addCourseTypesName.value) {
     let curdata: any = {
       lessonTypeId: 0,
+      order: 1,
       display: true,
       nameEn: addCourseTypesName.value + "_en",
       nameTw: addCourseTypesName.value,
@@ -225,19 +223,18 @@ let confirmShowAddForm = () => {
       .then((res: any) => {
         let resData = res.data;
         if (resData.state == 1) {
-          handAlertView("新增成功", 2, 2);
+          handAlertView("成功", 2, 2);
           setTimeout(() => {
             props.showAddForm(false);
           }, 1000);
         } else {
-          handAlertView("新增失敗", 2, 2);
+          handAlertView("失敗", 2, 2);
         }
       })
-      .catch((error) => {
-        console.log(error, "error");
-      });
   } else {
-    props.showAddForm(false);
+    setTimeout(() => {
+      props.showAddForm(false);
+    }, 1000);
   }
 };
 //刪除課程
@@ -270,14 +267,13 @@ const btnSumitHdr = (val: IBackStatus) => {
             let resData = res.data;
             if (resData.state == 1) {
               handAlertView("刪除成功", 2, 2);
+              getCourseTypeApi(0);
+              // setTypeData();
               setTimeout(() => {}, 1000);
             } else {
               handAlertView("刪除失敗(" + resData.msg + ")", 2, 2);
             }
           })
-          .catch((error) => {
-            console.log(error, "error");
-          });
       } else {
         console.log(val.btnStatus, "取消");
       }

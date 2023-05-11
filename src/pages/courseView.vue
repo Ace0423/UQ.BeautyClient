@@ -82,7 +82,6 @@
     <AddCourseTypeUI
       v-if="showAddType"
       :show-add-form="showAddForm"
-      :courseTypesTabs="courseTypesTabs"
     />
     <AddCourseDetailUI
       v-if="showCourseFormRef"
@@ -158,9 +157,6 @@ const btnSumitHdr = (val: IBackStatus) => {
               handAlertView("刪除失敗", 2, 1);
             }
           })
-          .catch((error) => {
-            console.log(error, "error");
-          });
       } else {
         console.log(val.btnStatus, "取消");
       }
@@ -198,7 +194,6 @@ let addDetailTypeID = computed(() =>
 );
 
 courseDataList.value = [];
-
 getCourseTypeApi(0);
 onMounted(() => {});
 

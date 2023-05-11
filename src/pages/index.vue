@@ -504,9 +504,6 @@ const btnSumitHdr = (val: IBackStatus) => {
               // alertInformation.messageText = resData.msg;
             }
           })
-          .catch((error) => {
-            console.log(error, "error");
-          });
         getApptInfpApi(currentYear.value, currentMonth.value + 1);
       } else {
         console.log(val.btnStatus, "取消");
@@ -532,13 +529,7 @@ function getApptInfpApi(
         .then((res: any) => {
           resetApptTable(year, month, date);
         })
-        .catch((error) => {
-          console.log(error, "error");
-        });
     })
-    .catch((error) => {
-      console.log(error, "error");
-    });
 }
 getApptInfpApi(new Date().getFullYear(), new Date().getMonth() + 1);
 // 獲取美容師
@@ -615,9 +606,6 @@ let changeStutusFn = (index: number, item: any) => {
     .then((res: any) => {
       console.log();
     })
-    .catch((error) => {
-      console.log(error, "error");
-    });
 
   getApptInfpApi(currentYear.value, currentMonth.value + 1);
 };
@@ -1392,7 +1380,7 @@ $borderCoder: #eaedf2;
                         border: 3px gary solid;
                         height: 100%;
                         display: inherit;
-                        table-layout: fixed;
+                        // table-layout: fixed;
 
                         .timePeriod_col2 {
                           border-top: 1px solid #906e6c;

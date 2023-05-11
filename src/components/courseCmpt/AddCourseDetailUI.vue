@@ -249,9 +249,6 @@ let confirmAddCourseDataForm = () => {
         handAlertView("新增失敗", 2, 1);
       }
     })
-    .catch((error) => {
-      console.log(error, "error");
-    });
 };
 </script>
 

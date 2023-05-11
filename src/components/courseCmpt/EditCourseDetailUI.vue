@@ -203,9 +203,6 @@ const editConfirmHdr = () => {
         handAlertView("修改失敗", 2, 2);
       }
     })
-    .catch((error) => {
-      console.log(error, "error");
-    });
 };
 </script>
 

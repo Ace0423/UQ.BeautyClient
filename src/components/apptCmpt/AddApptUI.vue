@@ -354,17 +354,13 @@ let confirmReserveForm = (btn: string) => {
           getApptDataApi(
             newApptDataRef.value.selDate.split("-")[0],
             newApptDataRef.value.selDate.split("-")[1]
-          )
-            .then((res: any) => {
-              props.resetApptTable(
-                newApptDataRef.value.selDate.split("-")[0],
-                newApptDataRef.value.selDate.split("-")[1],
-                newApptDataRef.value.selDate.split("-")[2]
-              );
-            })
-            .catch((error) => {
-              console.log(error, "error");
-            });
+          ).then((res: any) => {
+            props.resetApptTable(
+              newApptDataRef.value.selDate.split("-")[0],
+              newApptDataRef.value.selDate.split("-")[1],
+              newApptDataRef.value.selDate.split("-")[2]
+            );
+          });
           //新增成功查詢資料
           props.getApptInfpApi(
             newApptDataRef.value.selDate.split("-")[0],
@@ -377,9 +373,6 @@ let confirmReserveForm = (btn: string) => {
           handAlertView("新增失敗", 2, 1);
         }
       })
-      .catch((error) => {
-        console.log(error, "error");
-      });
   } else if ((btn = "edit" && props.oldSelList)) {
     let editApptDate = {
       bookingNo: props.oldSelList.id,
@@ -397,21 +390,22 @@ let confirmReserveForm = (btn: string) => {
       bookingMemo: props.oldSelList.bookingMemo,
     };
     //修改預約
-    postEditApptDataApi(editApptDate)
-      .then((res: any) => {
-        let resData = res.data;
-        if (resData.state == 1) {
-          handAlertView("修改成功", 2, 1);
-          setTimeout(() => {
-            props.showAddReserveForm(false);
-          }, 1000);
-        } else {
-          handAlertView("修改失敗", 2, 1);
-        }
-      })
-      .catch((error) => {
-        console.log(error, "error");
-      });
+    postEditApptDataApi(editApptDate).then((res: any) => {
+      let resData = res.data;
+      if (resData.state == 1) {
+        handAlertView("修改成功", 2, 1);
+        //新增成功查詢資料
+        props.getApptInfpApi(
+          newApptDataRef.value.selDate.split("-")[0],
+          newApptDataRef.value.selDate.split("-")[1]
+        );
+        setTimeout(() => {
+          props.showAddReserveForm(false);
+        }, 1000);
+      } else {
+        handAlertView("修改失敗", 2, 1);
+      }
+    });
   }
 };
 function resetAddReserveForm() {

@@ -95,22 +95,7 @@
       </div>
       <p>選擇課程</p>
       <div>
-        <div v-if="showAddForm" class="add-reserve-div">
-          <template v-for="item in courseDataList" :key="item">
-            <label v-if="item.display" :value="item">
-              <input
-                class="add-reserve-btn2"
-                type="checkbox"
-                :value="item"
-                v-model="newApptDataRef.courses"
-              />
-              <span value="{{item}}" name="{{item.nameTw}}">{{
-                item.nameTw + "(" + item.servicesTime + ")"
-              }}</span>
-            </label>
-          </template>
-        </div>
-        <div v-else class="edit-reserve-div">
+        <div class="add-reserve-div">
           <template v-for="(item, index) in courseDataList" :key="item">
             <label v-if="item.display" :value="item">
               <input
@@ -195,7 +180,7 @@ let newApptDataRef: any = ref({
   memberId: null,
   timer: null,
   beauticianId: 0,
-  courses: [],
+  courses: null,
   selDate: "",
 });
 
@@ -276,15 +261,15 @@ let store = useApptStore();
 const { postAddApptDataApi, postEditApptDataApi, getApptDataApi } = store;
 let { memberList, timeGroup, beauticianList, courseDataList } =
   storeToRefs(store);
-/**true:新增 false:修改 */
-let showAddForm: any = ref(true);
+
 onMounted(() => {
   newCourseDetailRef.value.name = "";
   newCourseDetailRef.value.timer = "";
   newCourseDetailRef.value.price = "";
   newCourseDetailRef.value.state = false;
+
   newApptDataRef.value = props.curApptDataRef;
-  showAddForm.value = props.curApptDataRef.memberId ? false : true;
+  console.log(newApptDataRef.value);
 });
 
 function getNowDay() {
@@ -296,17 +281,13 @@ function getNowDay() {
 }
 //預約--確認
 let confirmReserveForm = (btn: string) => {
+  console.log(newApptDataRef.value.courses);
+
   ruleLists.ruleItem.name.value = newApptDataRef.value.memberId;
   ruleLists.ruleItem.timeClock.value = newApptDataRef.value.timer;
-  if (showAddForm)
-    ruleLists.ruleItem.lessonItem.value = newApptDataRef.value.courses
-      ? newApptDataRef.value.courses.nameTw
-      : newApptDataRef.value.courses;
-  else
-    ruleLists.ruleItem.lessonItem.value =
-      newApptDataRef.value.courses.length > 0
-        ? newApptDataRef.value.courses[0].nameTw
-        : null;
+  ruleLists.ruleItem.lessonItem.value = newApptDataRef.value.courses
+    ? newApptDataRef.value.courses.nameTw
+    : newApptDataRef.value.courses;
 
   if (!verify_all()) return;
 
@@ -321,28 +302,53 @@ let confirmReserveForm = (btn: string) => {
       new Date().getSeconds();
 
     let courseListData = [];
+    console.log(newApptDataRef.value);
 
-    for (let i = 0; i < newApptDataRef.value.courses.length; i++) {
-      const element = newApptDataRef.value.courses[i];
-      courseListData.push({
-        listNo: i + 1,
-        lid: element.lessonId,
-        time: element.servicesTime,
-        bookingNo: "",
-        price: element.price,
-        discount: element.discount,
-      });
-    }
+    // for (let i = 0; i < newApptDataRef.value.courses.length; i++) {
+    //   const element = newApptDataRef.value.courses[i];
+    //   courseListData.push({
+    //     no: i + 1,
+    //     lid: element.lessonId,
+    //     min: element.servicesTime,
+    //   });
+    // }
+
+    courseListData.push({
+      listNo: 1,
+      lid: newApptDataRef.value.courses.lessonId,
+      time: newApptDataRef.value.courses.servicesTime,
+      bookingNo: "",
+      price: newApptDataRef.value.courses.price,
+      discount: newApptDataRef.value.courses.discount,
+    });
+
+    // courseListData.push({
+    //   listNo: 2,
+    //   lid: newApptDataRef.value.courses.lessonId,
+    //   time: 60,
+    //   bookingNo: "",
+    //   price: newApptDataRef.value.courses.price,
+    //   discount: newApptDataRef.value.courses.discount,
+    // });
+    // console.log(courseListData);
+
     let addApptData = {
       userId: newApptDataRef.value.memberId,
       lessonlist: courseListData,
+      // lessonId: newApptDataRef.value.courses.lessonId,
       serverId: newApptDataRef.value.beauticianId,
       dateBooking:
         newApptDataRef.value.selDate + "  " + newApptDataRef.value.timer, //"2023-04-20T07:25:10.372Z",
       tradeDone: true,
       state: 0,
       bookingMemo: "string",
+
+      // timer: newApptDataRef.value.courses.servicesTime,
+      // price: newApptDataRef.value.courses.price,
+      // discount: 0,
+      // dateCreate: nowTime,
     };
+    // console.log(addApptData, "新增預約");
     //新增預約
     postAddApptDataApi(addApptData)
       .then((res: any) => {
@@ -374,6 +380,7 @@ let confirmReserveForm = (btn: string) => {
             props.showAddReserveForm(false);
           }, 1000);
         } else {
+          console.log(res, "錯誤");
           handAlertView("新增失敗", 2, 1);
         }
       })
@@ -415,7 +422,7 @@ let confirmReserveForm = (btn: string) => {
   }
 };
 function resetAddReserveForm() {
-  newApptDataRef.value.courses = [];
+  newApptDataRef.value.courses = null;
   newApptDataRef.value.memberId = null;
   newApptDataRef.value.timer = null;
   newApptDataRef.value.beauticianId = 0;
@@ -583,10 +590,6 @@ function resetAddReserveForm() {
     }
 
     .add-reserve-div {
-      max-height: 200px;
-      overflow-y: scroll;
-    }
-    .edit-reserve-div {
       max-height: 200px;
       overflow-y: scroll;
     }

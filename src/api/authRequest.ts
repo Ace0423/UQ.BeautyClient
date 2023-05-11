@@ -22,6 +22,8 @@ export const delCourseDetailReq = (data: any) =>
   authRequest.delete("/Lesson/Detail/" + data);
 export const postAddUQLessonTypeReq = (data: any) =>
   authRequest.post("/Lesson/Group", data);
+export const updateLessonTypeReq = (data: any) =>
+  authRequest.post("/Lesson/GroupUpdate", data);
 export const postAddUQLessonDetailReq = (data: any) =>
   authRequest.post("/Lesson/Detail", data);
 

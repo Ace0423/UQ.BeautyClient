@@ -173,13 +173,11 @@ const editConfirmHdr = () => {
       let resData = res.data;
       if (resData.state == 1) {
         handAlertView("修改成功", 2, 2);
-        // console.log('成功');
         getCourseDetailApi(props.editCourseInfo.lessonTypeId, 0);
         setTimeout(() => {
           props.showEditForm(false);
         }, 1000);
       } else {
-        console.log(res, "api失敗");
         handAlertView("修改失敗", 2, 2);
       }
     })

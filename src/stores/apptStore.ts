@@ -14,6 +14,7 @@ import {
   postAddUQLessonDetailReq,
   postAddUQLessonTypeReq,
   updateCourseDetailReq,
+  updateLessonTypeReq,
 } from "@/api/authRequest";
 import { defineStore } from "pinia";
 
@@ -117,6 +118,17 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+  //更新分類
+  const editCourseTypeApi = async (data: any) => {
+    try {
+      let res = await updateLessonTypeReq(data);
+
+      if (res) getCourseTypeApi(0);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //新增資料
   const addCourseDetailApi = async (data: any) => {
     try {
@@ -208,41 +220,39 @@ export const useApptStore = defineStore("apptStore", () => {
             let curTime =
               curDateTime[1].split(":")[0] + ":" + curDateTime[1].split(":")[1];
             let things = [];
-            for (let k = 0; k < memberList.data.length; k++) {
-              const memberData = memberList.data[k];
-              if (memberData.userId == bookingListEmt.userId) {
-                if (curTime == timeEmt.timePeriod && bookingListEmt.lesson) {
-                  let bookingData: any = {
-                    id: bookingListEmt.bookingNo,
-                    timePeriod: curTime, //hh:mm
-                    date: curDateTime[0], //yyyy-mm-dd
-                    phone: memberData.phone,
-                    range:
-                      bookingListEmt.timer > 30 ? bookingListEmt.timer / 30 : 1,
+            // for (let k = 0; k < memberList.data.length; k++) {
+            //   const memberData = memberList.data[k];
+            //   if (memberData.userId == bookingListEmt.userId) {
+            if (curTime == timeEmt.timePeriod && bookingListEmt.lesson) {
+              let bookingData: any = {
+                id: bookingListEmt.bookingNo,
+                timePeriod: curTime, //hh:mm
+                date: curDateTime[0], //yyyy-mm-dd
+                range:
+                  bookingListEmt.timer > 30 ? bookingListEmt.timer / 30 : 1,
 
-                    userId: bookingListEmt.userId,
-                    bookingNo: bookingListEmt.bookingNo,
-                    beautyTherapist: bookingListEmt.beautyTherapist,
-                    bookingMemo: bookingListEmt.bookingMemo,
-                    customer: bookingListEmt.customer,
-                    dateBooking: bookingListEmt.dateBooking,
-                    dateCreate: bookingListEmt.dateCreate,
-                    discount: bookingListEmt.discount,
-                    lesson: bookingListEmt.lesson,
-                    lessonId: bookingListEmt.lessonId,
-                    price: bookingListEmt.price,
-                    serverId: bookingListEmt.serverId,
-                    state: bookingListEmt.state,
-                    timer: bookingListEmt.timer,
-                    tradeDone: bookingListEmt.tradeDone,
-                  };
+                userId: bookingListEmt.userId,
+                bookingNo: bookingListEmt.bookingNo,
+                beautyTherapist: bookingListEmt.beautyTherapist,
+                bookingMemo: bookingListEmt.bookingMemo,
+                customer: bookingListEmt.customer,
+                dateBooking: bookingListEmt.dateBooking,
+                dateCreate: bookingListEmt.dateCreate,
+                discount: bookingListEmt.discount,
+                lesson: bookingListEmt.lesson,
+                lessonId: bookingListEmt.lessonId,
+                price: bookingListEmt.price,
+                serverId: bookingListEmt.serverId,
+                state: bookingListEmt.state,
+                timer: bookingListEmt.timer,
+                tradeDone: bookingListEmt.tradeDone,
+              };
 
-                  bookingList.value[j].things.push(bookingData);
-                  // things.push(bookingData);
-                }
-              }
+              bookingList.value[j].things.push(bookingData);
             }
           }
+          //   }
+          // }
         }
       return res;
     } catch (error) {
@@ -299,6 +309,7 @@ export const useApptStore = defineStore("apptStore", () => {
     courseTypesTabsValue,
     delCourseDetailApi,
     updateCourseDetailApi,
+    editCourseTypeApi,
     //--------------------appt
     getMemberData,
     getApptDataApi,

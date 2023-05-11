@@ -209,7 +209,6 @@ const btnSumitHdr = (val: IBackStatus) => {
   switch (alertInformation.selfType) {
     case "delCourseDetail":
       if (val.btnStatus) {
-        console.log(val.btnStatus, "確定");
         delCourseDetailApi(alertInformation.selfData);
       } else {
         console.log(val.btnStatus, "取消");
@@ -242,13 +241,11 @@ let confirmAddCourseDataForm = () => {
     .then((res: any) => {
       let resData = res.data;
       if (resData.state == 1) {
-        // console.log('成功');
         handAlertView("新增成功", 2, 1);
         setTimeout(() => {
           props.showAddDetailForm(false);
         }, 1000);
       } else {
-        console.log(res, "api失敗");
         handAlertView("新增失敗", 2, 1);
       }
     })

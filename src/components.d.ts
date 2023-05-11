@@ -18,6 +18,7 @@ declare module '@vue/runtime-core' {
     AddMemberBank: typeof import('./components/AddMemberBank.vue')['default']
     AddRoleManager: typeof import('./components/AddRoleManager.vue')['default']
     Alert: typeof import('./components/Alert.vue')['default']
+    EditApptUI: typeof import('./components/apptCmpt/EditApptUI.vue')['default']
     EditCourseDetailUI: typeof import('./components/courseCmpt/EditCourseDetailUI.vue')['default']
     GroupInfo: typeof import('./components/GroupInfo.vue')['default']
     Header: typeof import('./components/Header.vue')['default']

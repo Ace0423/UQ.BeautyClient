@@ -430,7 +430,7 @@ let newApptDataRef: any = ref({
   memberId: null,
   timer: null,
   beauticianId: 0,
-  courses: null,
+  courses: [],
   selDate: selThisDate(),
 });
 
@@ -477,7 +477,6 @@ const btnSumitHdr = (val: IBackStatus) => {
   switch (alertInformation.selfType) {
     case "delReserveData":
       if (val.btnStatus) {
-        console.log(val.btnStatus, "確定");
         oldSelList.state = 3;
         let editApptDate = {
           bookingNo: oldSelList.id,
@@ -497,12 +496,10 @@ const btnSumitHdr = (val: IBackStatus) => {
         //修改預約
         postEditApptDataApi(editApptDate)
           .then((res: any) => {
-            console.log();
             let resData = res.data;
             if (resData.state == 1) {
               handAlertView("刪除成功", 2, 1);
             } else {
-              console.log(res, "api失敗");
               handAlertView("刪除失敗", 2, 1);
               // alertInformation.messageText = resData.msg;
             }
@@ -583,7 +580,6 @@ let delCourseListHdr = (index: number, itemId: string) => {
       for (let j = 0; j < element.things.length; j++) {
         let element2 = element.things[j];
         if (itemId.toString() === element2.id.toString()) {
-          console.log(element2.state == 0);
           if (element2.state == 0) {
             oldSelList = element2;
             alertInformation.selfType = "delReserveData";
@@ -968,7 +964,7 @@ let showAddReserveForm = (state: boolean) => {
 };
 
 function resetAddReserveForm() {
-  newApptDataRef.value.courses = null;
+  newApptDataRef.value.courses = [];
   newApptDataRef.value.memberId = null;
   newApptDataRef.value.timer = null;
   newApptDataRef.value.beauticianId = 0;
@@ -1000,7 +996,7 @@ function editAddReserveBtn() {
         newApptDataRef.value.courses = element;
       }
     }
-
+    
     for (let i = 0; i < timeGroup.value.length; i++) {
       let element = timeGroup.value[i];
       if (element == oldSelList.timePeriod) {

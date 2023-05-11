@@ -12,16 +12,30 @@
         <div class="add-coursedetail-btndiv">
           <div>
             <div
-              v-for="(item, index) in courseTypesTabs"
+              v-for="(item, index) in courseTypesTabsUI"
               :key="item.lessonTypeId"
             >
               <button
                 v-if="item.lessonTypeId != 0"
                 class="add-coursedetail-btn"
-                v-on:click="delCourseTypeHdr(index, item.lessonTypeId)"
               >
-                <span>{{ item.nameTw }}</span>
-                <img class="add-coursedetail-ico" :src="formDeleteIcon" />
+                <span v-show="!item.editState">{{ item.nameTw }}</span>
+                <input
+                  v-show="item.editState"
+                  id="lessonInput"
+                  type="text"
+                  v-model="item.editNameTw"
+                />
+                <img
+                  class="edit_img"
+                  :src="Icon_edit"
+                  v-on:click="editCourseTypeHdr(index, item)"
+                />
+                <img
+                  class="add-coursedetail-ico"
+                  :src="formDeleteIcon"
+                  v-on:click="delCourseTypeHdr(index, item.lessonTypeId)"
+                />
               </button>
             </div>
           </div>
@@ -49,6 +63,7 @@ import { useApptStore } from "@/stores/apptStore";
 import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import type { IBackStatus } from "@/types/IData";
 import { verify_methods } from "@/types/utils";
+import Icon_edit from "@/assets/Ico_edit.svg";
 let addCourseTypesName = ref("");
 //alertUI
 const alertInformation = reactive({
@@ -64,7 +79,6 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
   alertInformation.buttonState = btnState;
   alertInformation.timerVal = timer;
   alertInformation.showAlert = !alertInformation.showAlert;
-  console.log("handAlertView");
 };
 const props = defineProps<{
   showAddForm: Function;
@@ -81,9 +95,9 @@ const ruleLists: any = reactive({
       is_readonly: false,
       value: "",
       rules: {
-        required: {
-          warn: "此項為必填",
-        },
+        // required: {
+        //   warn: "此項為必填",
+        // },
         length: {
           max: 9,
           warn: "不高於9字",
@@ -112,69 +126,107 @@ const verify_all = () => {
 //-------------------------------------------------------------------
 
 const store = useApptStore();
-const { addCourseTypeApi, delCourseTypeApi } = store;
+const { addCourseTypeApi, delCourseTypeApi, editCourseTypeApi } = store;
+let courseTypesTabsUI: any = ref([]);
 onMounted(() => {
   addCourseTypesName.value = "";
+  courseTypesTabsUI.value = [];
+  for (let i = 0; i < props.courseTypesTabs.length; i++) {
+    const element = props.courseTypesTabs[i];
+    courseTypesTabsUI.value.push({
+      lessonTypeId: element.lessonTypeId,
+      nameTw: element.nameTw,
+      display: element.display,
+      editNameTw: element.nameTw,
+      editState: false,
+    });
+  }
 });
 
 //新增分類--確認
 let confirmShowAddForm = () => {
+  console.log(courseTypesTabsUI.value);
+
+  let editCourseTypeName = [];
+  for (let i = 0; i < courseTypesTabsUI.value.length; i++) {
+    const element = courseTypesTabsUI.value[i];
+    if (element.nameTw != element.editNameTw) {
+      ruleLists.ruleItem.name.value = element.editNameTw;
+      if (!verify_all()) return;
+      element.nameTw = element.editNameTw;
+      editCourseTypeName.push(element);
+      editCourseTypeApi(element)
+        .then((res: any) => {})
+        .catch((error) => {
+          console.log(error, "error");
+        });
+    }
+  }
+
   ruleLists.ruleItem.name.value = addCourseTypesName.value;
   if (!verify_all()) return;
-
-  let curdata: any = {
-    lessonTypeId: 0,
-    display: true,
-    nameEn: addCourseTypesName.value + "_en",
-    nameTw: addCourseTypesName.value,
-  };
-  addCourseTypeApi(curdata)
-    .then((res: any) => {
-      let resData = res.data;
-      if (resData.state == 1) {
-        console.log("成功");
-        handAlertView("新增成功", 2, 2);
-        setTimeout(() => {
-          props.showAddForm(false);
-        }, 1000);
-      } else {
-        console.log(res, "api失敗");
-        handAlertView("新增失敗", 2, 2);
-      }
-    })
-    .catch((error) => {
-      console.log(error, "error");
-    });
+  if (addCourseTypesName.value) {
+    let curdata: any = {
+      lessonTypeId: 0,
+      display: true,
+      nameEn: addCourseTypesName.value + "_en",
+      nameTw: addCourseTypesName.value,
+    };
+    addCourseTypeApi(curdata)
+      .then((res: any) => {
+        let resData = res.data;
+        if (resData.state == 1) {
+          handAlertView("新增成功", 2, 2);
+          setTimeout(() => {
+            props.showAddForm(false);
+          }, 1000);
+        } else {
+          handAlertView("新增失敗", 2, 2);
+        }
+      })
+      .catch((error) => {
+        console.log(error, "error");
+      });
+  } else {
+    props.showAddForm(false);
+  }
 };
-//刪除課程2
+//刪除課程
 let delCourseTypeHdr = (index: number, itemId: number) => {
   // delCourseTypeApi(itemId);
   alertInformation.selfType = "delCourseDetail";
   alertInformation.selfData = itemId;
   handAlertView("是否刪除", 0, 0);
 };
+//編輯課程
+
+let editCourseTypeHdr = (index: number, item: any) => {
+  item.editState = !item.editState;
+  const input = document.getElementById(
+    "lessonInput"
+  ) as HTMLInputElement | null;
+  setTimeout(() => {
+    input?.focus();
+  }, 10);
+};
 
 const btnSumitHdr = (val: IBackStatus) => {
   switch (alertInformation.selfType) {
     case "delCourseDetail":
       if (val.btnStatus) {
-        console.log(val.btnStatus, "確定");
-        delCourseTypeApi(alertInformation.selfData).then((res: any) => {
-      let resData = res.data;
-      if (resData.state == 1) {
-        handAlertView("刪除成功", 2, 2);
-        setTimeout(() => {
-          
-        }, 1000);
-      } else {
-        console.log(res, "api失敗");
-        handAlertView("刪除失敗", 2, 2);
-      }
-    })
-    .catch((error) => {
-      console.log(error, "error");
-    });
-        
+        delCourseTypeApi(alertInformation.selfData)
+          .then((res: any) => {
+            let resData = res.data;
+            if (resData.state == 1) {
+              handAlertView("刪除成功", 2, 2);
+              setTimeout(() => {}, 1000);
+            } else {
+              handAlertView("刪除失敗", 2, 2);
+            }
+          })
+          .catch((error) => {
+            console.log(error, "error");
+          });
       } else {
         console.log(val.btnStatus, "取消");
       }
@@ -324,7 +376,20 @@ const btnSumitHdr = (val: IBackStatus) => {
                 width: 88%;
                 justify-content: center;
               }
-
+              > input {
+                margin-top: 5px;
+                width: 88%;
+                justify-content: center;
+                border-style: none;
+              }
+              .edit_img {
+                margin-top: 10px;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                justify-content: center;
+                flex: 1;
+              }
               .add-coursedetail-ico {
                 margin-top: 10px;
                 width: 20px;

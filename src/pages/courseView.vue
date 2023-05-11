@@ -134,7 +134,6 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
   alertInformation.buttonState = btnState;
   alertInformation.timerVal = timer;
   alertInformation.showAlert=!alertInformation.showAlert
-  console.log("alert");
 };
 
 const alertInformation = reactive({
@@ -150,14 +149,12 @@ const btnSumitHdr = (val: IBackStatus) => {
   switch (alertInformation.selfType) {
     case "delCourseDetail":
       if (val.btnStatus) {
-        console.log(val.btnStatus, "確定");
         delCourseDetailApi(alertInformation.selfData)
           .then((res: any) => {
             let resData = res.data;
             if (resData.state == 1) {
               handAlertView("刪除成功", 2, 1);
             } else {
-              console.log(res, "api失敗");
               handAlertView("刪除失敗", 2, 1);
             }
           })

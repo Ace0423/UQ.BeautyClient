@@ -33,12 +33,12 @@
                   <img
                     class="edit_img"
                     :src="Icon_edit"
-                    v-on:click="editCourseTypeHdr(index, element)"
+                    v-on:click="editCourseTypeHdr(element, element)"
                   />
                   <img
                     class="add-coursedetail-ico"
                     :src="formDeleteIcon"
-                    v-on:click="delCourseTypeHdr(index, element.lessonTypeId)"
+                    v-on:click="delCourseTypeHdr(element, element.lessonTypeId)"
                   />
                 </button>
               </div>
@@ -272,7 +272,7 @@ const btnSumitHdr = (val: IBackStatus) => {
               handAlertView("刪除成功", 2, 2);
               setTimeout(() => {}, 1000);
             } else {
-              handAlertView("刪除失敗", 2, 2);
+              handAlertView("刪除失敗(" + resData.msg + ")", 2, 2);
             }
           })
           .catch((error) => {
@@ -298,17 +298,21 @@ const btnSumitHdr = (val: IBackStatus) => {
   right: 0;
   background: rgba(255, 255, 255, 0.5);
   z-index: 3;
+
   .add-coursetype-form {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 520px;
+    width: 650px;
+    background-color: #e6e2de;
 
     .add-coursetype-bg {
-      padding: 15px 15px 15px 15px;
+      // padding: 15px 15px 15px 15px;
       background-color: #e6e2de;
-      width: 100%;
+      width: 92%;
+      display: grid;
+      margin-left: 4%;
 
       > div {
         padding: 10px 0;
@@ -407,11 +411,12 @@ const btnSumitHdr = (val: IBackStatus) => {
         div {
           flex-wrap: wrap;
           display: flex;
+          justify-content: center;
 
           // padding: 10px;
           div {
             .add-coursedetail-btn {
-              width: 250px;
+              width: 275px;
               height: 45px;
               margin: 5px;
               border-radius: 10px;
@@ -424,12 +429,12 @@ const btnSumitHdr = (val: IBackStatus) => {
 
               > span {
                 margin-top: 5px;
-                width: 77%;
+                width: 85%;
                 justify-content: center;
               }
               > input {
                 margin-top: 5px;
-                width: 77%;
+                width: 85%;
                 justify-content: center;
                 border-style: none;
                 text-align: center;

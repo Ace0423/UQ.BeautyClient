@@ -258,6 +258,7 @@ function showEditForm(state: boolean) {
 //新增分類-顯示
 let showAddForm = (state: boolean) => {
   showAddType.value = state;
+  getCourseTypeApi(0);
 };
 
 //新增課程-顯示

@@ -54,6 +54,7 @@ export const useApptStore = defineStore("apptStore", () => {
           lessonTypeId: 0,
           display: true,
           nameTw: "全部",
+          order: 0,
         },
       ];
       courseDataList.value = [];
@@ -66,6 +67,9 @@ export const useApptStore = defineStore("apptStore", () => {
         courseTypesTabs.value.sort(function (a: any, b: any) {
           return a.order > b.order ? 1 : -1;
         });
+
+        console.log(courseTypesTabs.value);
+
         getCourseDetailApi(
           courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
           "0"

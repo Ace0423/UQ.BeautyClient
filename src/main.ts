@@ -8,7 +8,6 @@ import generatedRoutes from "virtual:generated-pages";
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 
-
 const routes = setupLayouts(generatedRoutes);
 const router = createRouter({
     history: createWebHistory(),

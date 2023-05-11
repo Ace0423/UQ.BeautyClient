@@ -133,7 +133,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
   alertInformation.messageText = msg;
   alertInformation.buttonState = btnState;
   alertInformation.timerVal = timer;
-  alertInformation.showAlert=!alertInformation.showAlert
+  alertInformation.showAlert = !alertInformation.showAlert;
 };
 
 const alertInformation = reactive({
@@ -250,6 +250,10 @@ function showEditFormBtn(index: number, item: any) {
 
 function showEditForm(state: boolean) {
   showEditCourse.value = state;
+  getCourseDetailApi(
+    courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
+    0
+  );
 }
 //新增分類-顯示
 let showAddForm = (state: boolean) => {

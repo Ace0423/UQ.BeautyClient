@@ -9,6 +9,19 @@
           <span class="p_error" v-if="ruleItem.name.is_error">
             {{ ruleItem.name.warn }}
           </span>
+          <!-- <el-form
+            ref="ruleFormRef"
+            :model="ruleForm"
+            :rules="rules"
+            label-width="120px"
+            class="demo-ruleForm"
+            :size="formSize"
+            status-icon
+          >
+            <el-form-item label="" prop="name">
+              <el-input v-model="editCourseInfo.nameTw" />
+            </el-form-item>
+          </el-form> -->
           <input
             v-model="editCourseInfo.servicesTime"
             onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
@@ -47,6 +60,7 @@
 <script setup lang="ts">
 import { useApptStore } from "@/stores/apptStore";
 import { verify_methods } from "@/types/utils";
+import type { FormRules } from "element-plus";
 //alertUI
 const alertInformation = reactive({
   selfData: {},
@@ -131,6 +145,14 @@ const ruleLists: any = reactive({
     },
   },
 });
+
+const rules = reactive<FormRules>({
+  name: [
+    { required: true, message: "此項為必填2", trigger: "blur" },
+    { min: 1, max: 9, message: "不高於9字2", trigger: "blur" },
+  ],
+});
+
 let { ruleItem } = toRefs(ruleLists);
 const verify_all = () => {
   let is_valid = true;

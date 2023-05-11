@@ -10,35 +10,40 @@
           </span>
         </div>
         <div class="add-coursedetail-btndiv">
-          <div>
-            <div
-              v-for="(item, index) in courseTypesTabsUI"
-              :key="item.lessonTypeId"
-            >
-              <button
-                v-if="item.lessonTypeId != 0"
-                class="add-coursedetail-btn"
-              >
-                <span v-show="!item.editState">{{ item.nameTw }}</span>
-                <input
-                  v-show="item.editState"
-                  id="lessonInput"
-                  type="text"
-                  v-model="item.editNameTw"
-                />
-                <img
-                  class="edit_img"
-                  :src="Icon_edit"
-                  v-on:click="editCourseTypeHdr(index, item)"
-                />
-                <img
-                  class="add-coursedetail-ico"
-                  :src="formDeleteIcon"
-                  v-on:click="delCourseTypeHdr(index, item.lessonTypeId)"
-                />
-              </button>
-            </div>
-          </div>
+          <draggable
+            v-model="courseTypesTabsUI"
+            group="people"
+            @start="drag = true"
+            @end="drag = false"
+            item-key="id"
+          >
+            <template #item="{ element }">
+              <div style="">
+                <button
+                  v-if="element.lessonTypeId != 0"
+                  class="add-coursedetail-btn"
+                >
+                  <span v-show="!element.editState">{{ element.nameTw }}</span>
+                  <input
+                    v-show="element.editState"
+                    :id="element.nameTw"
+                    type="text"
+                    v-model="element.editNameTw"
+                  />
+                  <img
+                    class="edit_img"
+                    :src="Icon_edit"
+                    v-on:click="editCourseTypeHdr(index, element)"
+                  />
+                  <img
+                    class="add-coursedetail-ico"
+                    :src="formDeleteIcon"
+                    v-on:click="delCourseTypeHdr(index, element.lessonTypeId)"
+                  />
+                </button>
+              </div>
+            </template>
+          </draggable>
         </div>
         <div>
           <button class="confirm-coursetype-btn" @click="confirmShowAddForm()">
@@ -64,6 +69,8 @@ import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import type { IBackStatus } from "@/types/IData";
 import { verify_methods } from "@/types/utils";
 import Icon_edit from "@/assets/Ico_edit.svg";
+
+import draggable from "vuedraggable";
 let addCourseTypesName = ref("");
 //alertUI
 const alertInformation = reactive({
@@ -107,6 +114,25 @@ const ruleLists: any = reactive({
       warn: "",
       is_show: true,
     },
+    oldName: {
+      label: "舊名稱",
+      component: "input",
+      type: "number",
+      is_readonly: false,
+      value: "",
+      rules: {
+        // required: {
+        //   warn: "此項為必填",
+        // },
+        length: {
+          max: 9,
+          warn: "不高於9字",
+        },
+      },
+      is_error: false,
+      warn: "",
+      is_show: true,
+    },
   },
 });
 let { ruleItem } = toRefs(ruleLists);
@@ -126,7 +152,12 @@ const verify_all = () => {
 //-------------------------------------------------------------------
 
 const store = useApptStore();
-const { addCourseTypeApi, delCourseTypeApi, editCourseTypeApi } = store;
+const {
+  addCourseTypeApi,
+  delCourseTypeApi,
+  editCourseTypeApi,
+  editCourseTypeOrderApi,
+} = store;
 let courseTypesTabsUI: any = ref([]);
 onMounted(() => {
   addCourseTypesName.value = "";
@@ -146,22 +177,40 @@ onMounted(() => {
 //新增分類--確認
 let confirmShowAddForm = () => {
   console.log(courseTypesTabsUI.value);
-
-  let editCourseTypeName = [];
+  /**存放改過分類名稱 */
+  let changeNameList = [];
   for (let i = 0; i < courseTypesTabsUI.value.length; i++) {
     const element = courseTypesTabsUI.value[i];
     if (element.nameTw != element.editNameTw) {
       ruleLists.ruleItem.name.value = element.editNameTw;
       if (!verify_all()) return;
       element.nameTw = element.editNameTw;
-      editCourseTypeName.push(element);
-      editCourseTypeApi(element)
-        .then((res: any) => {})
-        .catch((error) => {
-          console.log(error, "error");
-        });
+      changeNameList.push(element);
+      editCourseTypeApi(element).then((res: any) => {
+        let resData = res.data;
+        if (resData.state == 1) console.log("更新成功");
+        else console.log(resData.msg, "更新失敗");
+      });
     }
   }
+  /**存放改過分類排序 */
+  let changeOrderList = [];
+  for (let i = 0; i < courseTypesTabsUI.value.length; i++) {
+    const element = courseTypesTabsUI.value[i];
+    if (element.lessonTypeId != 0)
+      if (element.order != i + 1) {
+        element.order = i + 1;
+        changeOrderList.push({
+          lid: element.lessonTypeId,
+          order: element.order,
+        });
+      }
+  }
+  editCourseTypeOrderApi(changeOrderList).then((res: any) => {
+    let resData = res.data;
+    if (resData.state == 1) console.log("修改排序成功");
+    else console.log(resData.msg, "修改排序失敗");
+  });
 
   ruleLists.ruleItem.name.value = addCourseTypesName.value;
   if (!verify_all()) return;
@@ -199,12 +248,14 @@ let delCourseTypeHdr = (index: number, itemId: number) => {
   handAlertView("是否刪除", 0, 0);
 };
 //編輯課程
-
+let oldInput: any = "";
 let editCourseTypeHdr = (index: number, item: any) => {
   item.editState = !item.editState;
-  const input = document.getElementById(
-    "lessonInput"
-  ) as HTMLInputElement | null;
+  const input = document.getElementById(item.nameTw) as HTMLInputElement | null;
+  if (oldInput) {
+    input?.blur();
+    oldInput = input;
+  }
   setTimeout(() => {
     input?.focus();
   }, 10);
@@ -262,7 +313,7 @@ const btnSumitHdr = (val: IBackStatus) => {
       > div {
         padding: 10px 0;
         > input {
-          width: 96%;
+          width: 99%;
           height: 43px;
           border: solid 1px #707070;
           background-color: #fff;
@@ -373,14 +424,15 @@ const btnSumitHdr = (val: IBackStatus) => {
 
               > span {
                 margin-top: 5px;
-                width: 88%;
+                width: 77%;
                 justify-content: center;
               }
               > input {
                 margin-top: 5px;
-                width: 88%;
+                width: 77%;
                 justify-content: center;
                 border-style: none;
+                text-align: center;
               }
               .edit_img {
                 margin-top: 10px;

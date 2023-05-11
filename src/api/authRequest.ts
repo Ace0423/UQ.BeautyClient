@@ -24,6 +24,8 @@ export const postAddUQLessonTypeReq = (data: any) =>
   authRequest.post("/Lesson/Group", data);
 export const updateLessonTypeReq = (data: any) =>
   authRequest.post("/Lesson/GroupUpdate", data);
+  export const updateLessonTypeOrderReq = (data: any) =>
+    authRequest.post("/Lesson/GroupUpdateOrder", data);
 export const postAddUQLessonDetailReq = (data: any) =>
   authRequest.post("/Lesson/Detail", data);
 

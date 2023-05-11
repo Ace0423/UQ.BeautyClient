@@ -14,6 +14,7 @@ import {
   postAddUQLessonDetailReq,
   postAddUQLessonTypeReq,
   updateCourseDetailReq,
+  updateLessonTypeOrderReq,
   updateLessonTypeReq,
 } from "@/api/authRequest";
 import { defineStore } from "pinia";
@@ -39,6 +40,7 @@ export const useApptStore = defineStore("apptStore", () => {
   let courseTypesTabs: any = ref([
     {
       lessonTypeId: 0,
+      order: 0,
       display: true,
       nameTw: "全部",
     },
@@ -58,8 +60,12 @@ export const useApptStore = defineStore("apptStore", () => {
       if (res.data.data.table) {
         for (let i = 0; i < res.data.data.table.length; i++) {
           let element = res.data.data.table[i];
+          // element.orderCheck = element.order;
           courseTypesTabs.value.push(element);
         }
+        courseTypesTabs.value.sort(function (a: any, b: any) {
+          return a.order > b.order ? 1 : -1;
+        });
         getCourseDetailApi(
           courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
           "0"
@@ -122,6 +128,17 @@ export const useApptStore = defineStore("apptStore", () => {
   const editCourseTypeApi = async (data: any) => {
     try {
       let res = await updateLessonTypeReq(data);
+
+      if (res) getCourseTypeApi(0);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //更新分類排序
+  const editCourseTypeOrderApi = async (data: any) => {
+    try {
+      let res = await updateLessonTypeOrderReq(data);
 
       if (res) getCourseTypeApi(0);
       return res;
@@ -310,6 +327,7 @@ export const useApptStore = defineStore("apptStore", () => {
     delCourseDetailApi,
     updateCourseDetailApi,
     editCourseTypeApi,
+    editCourseTypeOrderApi,
     //--------------------appt
     getMemberData,
     getApptDataApi,

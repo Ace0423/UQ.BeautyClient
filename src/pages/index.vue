@@ -617,10 +617,9 @@ function goTodayHdr() {
     "-" +
     addZeroDateFn(currentDay.value);
 
-    
   selDate.value =
     currentYear.value + "-" + addZeroDateFn(currentMonth.value, 1);
-  getSelectWeek('value');
+  getSelectWeek("value");
   weekSelDay.value =
     currentYear.value +
     "-" +
@@ -733,12 +732,27 @@ function getWeek(time: any) {
       }
       if (element2.range > 1) {
         for (let l = 1; l < element2.range; l++) {
-          if (monthsThingsRef.value[i + l])
+          if (monthsThingsRef.value[i + l]) {
+            //同事見衝突
+            if (monthsThingsRef.value[i + l].newThings[j].id == 1) {
+              console.log(monthsThingsRef.value[i].newThings[j]);
+              console.log(monthsThingsRef.value[i + l].newThings[j]);
+              let readyDelData =
+                monthsThingsRef.value[i + l].newThings[j].things;
+              for (let k = 0; k < readyDelData.length; k++) {
+                const element = readyDelData[k];
+                monthsThingsRef.value[i].newThings[j].things.push(element);
+              }
+            }
+
             monthsThingsRef.value[i + l].newThings.splice(j, 1);
+          }
         }
       }
     }
   }
+  console.log(monthsThingsRef.value);
+
   delete months.value[0];
   let selWeek = months.value[7].date;
   let selWeekYear = selWeek.split("-")[0];

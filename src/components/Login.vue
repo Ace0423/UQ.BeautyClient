@@ -124,12 +124,10 @@ const verify_methods: any = {
       "[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]"
     );
     if (rep.test(component.value)) {
-      console.log(11);
       component.is_error = false;
       component.warn = "";
       return true;
     } else {
-      console.log(22);
       component.is_error = true;
       component.warn = component.rules.special?.warn || "";
       return false;
@@ -182,6 +180,7 @@ const loginFn = () => {
     user.username = state.form_items.email.value;
     user.password = state.form_items.password.value;
     authHandler(user).then((res) => {
+      console.log(res);
       if (res.state == 2) {
         error_message.request = "帳號或密碼錯誤";
       }

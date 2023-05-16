@@ -28,7 +28,7 @@ export const useCounterStore = defineStore("memberBank", () => {
         try {
             const res = await apiGetMemberBankInfoListRequest(data);
             memberBankInfoList.data = [];
-            if (res.data.state = 1) {
+            if (res.data.state == 1) {
                 memberBankInfoList.data = res.data.data.table;
             }
         } catch (error) {
@@ -38,13 +38,13 @@ export const useCounterStore = defineStore("memberBank", () => {
     const creatMemberBankData = async (data: any) => {
         try {
             const res = await apiPostMemberBankRequest(data);
-            console.log(res);
-            if (res.status = 201) {
-                updateMemberBankList(res.data.table[0])
-                return res.status;
+            if (res.data.state == 1) {
+                updateMemberBankList(res.data.data.table[0])
             }
+            return res.data;
         } catch (error) {
             console.log(error);
+            return Promise.reject(error);
         }
     };
 
@@ -65,13 +65,13 @@ export const useCounterStore = defineStore("memberBank", () => {
     const editMemberBankInfoData = async (data: any) => {
         try {
             const res = await apiPutMemberBankInfoRequest(data);
-            console.log(res.data.data);
-            if (res.status = 201) {
+            if (res.data.state == 1) {
                 updateMemberBankInfoList(res.data.data)
-                return res.status;
             }
+            return res.data;
         } catch (error) {
             console.log(error);
+            return Promise.reject(error);
         }
     };
     const updateMemberBankInfoList = (data: any) => {

@@ -19,7 +19,7 @@ onMounted(() => {
 <template>
   <header>
     <div class="head-title">
-      <button class="memu-btn"  v-if="!memuState" v-on:click="handmemuStateBtn">
+      <button class="memu-btn"  v-if="!memuState" v-on:click="handmemuStateBtn()">
         <img :src="memuIcon" />
       </button>
       <img :src="Icon" />

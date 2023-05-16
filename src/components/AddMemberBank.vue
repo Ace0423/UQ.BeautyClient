@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useCounterStore } from "@/stores/memberBank";
+import { showErrorMsg, showApiStatus } from "@/types/IMessage";
 const store = useCounterStore();
 const { creatMemberBankData, editMemberBankInfoData } = store;
 const title = ref("儲值");
@@ -35,31 +36,40 @@ const handSubmit = () => {
       return;
     }
     newAddMemberBank.income = Number(newAddMemberBank.income);
-    creatMemberBankData(newAddMemberBank).then((res) => {
-      if (res == 201) {
-        handAlertView("成功", 2, 1);
-        setTimeout(() => {
-          props.handAddMemberBankView();
-        }, 1000);
-      } else {
-        handAlertView("失敗", 2, 1);
-      }
-    });
+    creatMemberBankData(newAddMemberBank)
+      .then((res) => {
+        if (res.state == 1) {
+          handAlertView("成功", 2, 1);
+          setTimeout(() => {
+            props.handAddMemberBankView();
+          }, 1000);
+        } else {
+          handAlertView(showErrorMsg(res.msg), 2, 1);
+        }
+      })
+      .catch((e: any) => {
+        handAlertView(showApiStatus(e.response.status), 2, 1);
+      });
   } else {
     let editMemberBankInfo = {
       ubid: newAddMemberBank.ubid,
       memo: newAddMemberBank.memo,
     };
-    editMemberBankInfoData(editMemberBankInfo).then((res) => {
-      if (res == 201) {
-        handAlertView("成功", 2, 1);
-        setTimeout(() => {
-          props.handAddMemberBankView();
-        }, 1000);
-      } else {
-        handAlertView("失敗", 2, 1);
-      }
-    });
+    editMemberBankInfoData(editMemberBankInfo)
+      .then((res) => {
+        console.log(res.state);
+        if (res.state == 1) {
+          handAlertView("成功", 2, 1);
+          setTimeout(() => {
+            props.handAddMemberBankView();
+          }, 1000);
+        } else {
+          handAlertView(showErrorMsg(res.msg), 2, 1);
+        }
+      })
+      .catch((e: any) => {
+        handAlertView(showApiStatus(e.response.status), 2, 1);
+      });
   }
 };
 

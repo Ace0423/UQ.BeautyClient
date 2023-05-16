@@ -79,7 +79,7 @@ onMounted(() => {
           <p>{{ props.selectMemberItem.phone }}</p>
           <div class="link-bottom"></div>
           <div>
-            <button>訂單確認</button>
+            <!-- <button>訂單確認</button> -->
             <button v-on:click="handAddMemberView()">修改顧客</button>
           </div>
           <div class="link-bottom"></div>

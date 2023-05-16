@@ -2,6 +2,8 @@
 import { useCounterStore } from "@/stores/member";
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.css";
+import { showErrorMsg, showApiStatus } from "@/types/IMessage";
+
 const store = useCounterStore();
 const { createMemberData, editMemberData, groupListData } = store;
 const alertState = ref(false);
@@ -37,7 +39,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
   alertInformation.timerVal = timer;
   alertState.value = !alertState.value;
 };
-const state :any= reactive({
+const state: any = reactive({
   form_items: {
     name: {
       label: "姓名",
@@ -205,28 +207,36 @@ const handSubmit = () => {
 
   if (props.selectMemberItem) {
     newMember.nameView = newMember.nameFirst;
-    editMemberData(newMember).then((res) => {
-      if (res == 1) {
-        handAlertView("修改成功", 2, 1);
-        setTimeout(() => {
-          props.handAddMemberView();
-        }, 1000);
-      } else {
-        handAlertView("修改失敗", 2, 1);
-      }
-    });
+    editMemberData(newMember)
+      .then((res) => {
+        if (res.state == 1) {
+          handAlertView("修改成功", 2, 1);
+          setTimeout(() => {
+            props.handAddMemberView();
+          }, 1000);
+        } else {
+          handAlertView(showErrorMsg(res.msg), 2, 1);
+        }
+      })
+      .catch((e: any) => {
+        handAlertView(showApiStatus(e.response.status), 2, 1);
+      });
   } else {
     newMember.nameView = newMember.nameFirst;
-    createMemberData(newMember).then((res) => {
-      if (res == 1) {
-        handAlertView("新增成功", 2, 1);
-        setTimeout(() => {
-          props.handAddMemberView();
-        }, 1000);
-      } else {
-        handAlertView("新增失敗", 2, 1);
-      }
-    });
+    createMemberData(newMember)
+      .then((res) => {
+        if (res.state == 1) {
+          handAlertView("新增成功", 2, 1);
+          setTimeout(() => {
+            props.handAddMemberView();
+          }, 1000);
+        } else {
+          handAlertView(showErrorMsg(res.msg), 2, 1);
+        }
+      })
+      .catch((e: any) => {
+        handAlertView(showApiStatus(e.response.status), 2, 1);
+      });
   }
 };
 

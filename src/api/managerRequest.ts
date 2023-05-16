@@ -52,7 +52,6 @@ export const postRoleManagerDataRequest = (data: any) => {
     return managerRequest.post("/manager/RoleMapping", data);
 }
 export const deleteRoleManagerRequest = (data: any) =>{
-    console.log(data);
     let token: any = getToken('token');
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return  managerRequest.delete("/manager/RoleMapping/" + data.roleId +'/' +data.mgrId);

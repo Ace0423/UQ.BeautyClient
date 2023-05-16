@@ -494,16 +494,15 @@ const btnSumitHdr = (val: IBackStatus) => {
         };
 
         //修改預約
-        postEditApptDataApi(editApptDate)
-          .then((res: any) => {
-            let resData = res.data;
-            if (resData.state == 1) {
-              handAlertView("刪除成功", 2, 1);
-            } else {
-              handAlertView("刪除失敗", 2, 1);
-              // alertInformation.messageText = resData.msg;
-            }
-          })
+        postEditApptDataApi(editApptDate).then((res: any) => {
+          let resData = res.data;
+          if (resData.state == 1) {
+            handAlertView("刪除成功", 2, 1);
+          } else {
+            handAlertView("刪除失敗", 2, 1);
+            // alertInformation.messageText = resData.msg;
+          }
+        });
         getApptInfpApi(currentYear.value, currentMonth.value + 1);
       } else {
         console.log(val.btnStatus, "取消");
@@ -522,14 +521,12 @@ function getApptInfpApi(
 ) {
   getCourseDetailApi(0, 0);
   //先取得會員清單
-  getMemberData()
-    .then((res: any) => {
-      //預先呼叫api獲取數據
-      getApptDataApi(year, month)
-        .then((res: any) => {
-          resetApptTable(year, month, date);
-        })
-    })
+  getMemberData().then((res: any) => {
+    //預先呼叫api獲取數據
+    getApptDataApi(year, month).then((res: any) => {
+      resetApptTable(year, month, date);
+    });
+  });
 }
 getApptInfpApi(new Date().getFullYear(), new Date().getMonth() + 1);
 // 獲取美容師
@@ -602,10 +599,9 @@ let changeStutusFn = (index: number, item: any) => {
     bookingMemo: item.bookingMemo,
   };
   //修改預約
-  postEditApptDataApi(editApptDate)
-    .then((res: any) => {
-      console.log();
-    })
+  postEditApptDataApi(editApptDate).then((res: any) => {
+    console.log();
+  });
 
   getApptInfpApi(currentYear.value, currentMonth.value + 1);
 };
@@ -620,6 +616,19 @@ function goTodayHdr() {
     addZeroDateFn(currentMonth.value, 1) +
     "-" +
     addZeroDateFn(currentDay.value);
+
+    
+  selDate.value =
+    currentYear.value + "-" + addZeroDateFn(currentMonth.value, 1);
+  getSelectWeek('value');
+  weekSelDay.value =
+    currentYear.value +
+    "-" +
+    addZeroDateFn(currentMonth.value, 1) +
+    "-" +
+    addZeroDateFn(currentDay.value);
+
+  getApptInfpApi(currentYear.value, currentMonth.value + 1);
 }
 /**获取时间 */
 function getWeek(time: any) {
@@ -984,7 +993,7 @@ function editAddReserveBtn() {
         newApptDataRef.value.courses = element;
       }
     }
-    
+
     for (let i = 0; i < timeGroup.value.length; i++) {
       let element = timeGroup.value[i];
       if (element == oldSelList.timePeriod) {

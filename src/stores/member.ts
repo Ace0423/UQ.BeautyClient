@@ -42,13 +42,13 @@ export const useCounterStore = defineStore("member", () => {
         }
         try {
             const res = await apiPostMemberDataRequest(memberVal);
-            console.log(res)
             if (res.data.state == 1) {
                 updataMemberList(res.data.data.table[0]);
             }
-            return res.data.state
+            return res.data;
         } catch (error) {
             console.log(error);
+            return Promise.reject(error);
         }
     };
 
@@ -74,16 +74,16 @@ export const useCounterStore = defineStore("member", () => {
             }
             memberVal.groupList.push(val);
         }
-
         try {
             const res = await apiPostUpdateMemberDataRequest(memberVal);
             console.log(res.data);
             if (res.data.state == 1) {
                 updataMemberList(res.data.data.table[0]);
             }
-            return res.data.state
+            return res.data
         } catch (error) {
             console.log(error);
+            return Promise.reject(error);
         }
     };
 
@@ -130,12 +130,12 @@ export const useCounterStore = defineStore("member", () => {
         try {
             const res = await apiPostGroupDataRequest(data);
             if (res.data.state == 1) {
-                console.log(res.data.data);
                 updataGroupList(res.data.data);
             }
             return res.data.state
         } catch (error) {
             console.log(error);
+            return Promise.reject(error);
         }
     };
     const editGroupData = async (data: any) => {
@@ -147,6 +147,7 @@ export const useCounterStore = defineStore("member", () => {
             return res.data.state
         } catch (error) {
             console.log(error);
+            return Promise.reject(error);
         }
     };
     const updataGroupList = (data: any) => {
@@ -191,9 +192,7 @@ export const useCounterStore = defineStore("member", () => {
             }]
             const res = await apiPostGroupInfoRequest(val);
             if (res.data.state == 1) {
-                console.log('add');
                 updataGroupInfoData(data, res.data.data[0]);
-
             }
             return res.data.state;
         } catch (error) {

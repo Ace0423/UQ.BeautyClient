@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useCounterStore } from "@/stores/member";
+import { showErrorMsg, showApiStatus } from "@/types/IMessage";
 
 const store = useCounterStore();
 const { createGroupData, editGroupData } = store;
@@ -30,26 +31,32 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
 const handSubmit = () => {
     if (props.selectGroupItem) {
         editGroupData(newGroup).then((res) => {
-            if (res == 1) {
+            if (res.state == 1) {
                 handAlertView("修改成功", 2, 1);
                 setTimeout(() => {
                     props.handAddGroupView();
                 }, 1000)
             } else {
-                handAlertView("修改失敗", 2, 1);
+                handAlertView(showErrorMsg(res.msg), 2, 1);
             }
         })
+        .catch((e: any) => {
+        handAlertView(showApiStatus(e.response.status), 2, 1);
+      });
     } else {
         createGroupData(newGroup).then((res) => {
-            if (res == 1) {
+            if (res.state == 1) {
                 handAlertView("新增成功", 2, 1);
                 setTimeout(() => {
                     props.handAddGroupView();
                 }, 1000)
             }else{
-                handAlertView("新增失敗", 2, 1);
+                handAlertView(showErrorMsg(res.msg), 2, 1);
             }
         })
+        .catch((e: any) => {
+        handAlertView(showApiStatus(e.response.status), 2, 1);
+      });
     }
 }
 

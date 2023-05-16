@@ -5,18 +5,35 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="/majoyIcon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./src/assets/reset.css">
+    <link rel="stylesheet" href="./src/assets/reset.css" />
     <link href="./src/assets/HorizontalScreen.css" rel="stylesheet" />
     <title>UQ.BeautyClient</title>
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
-    <div id="MoblileR" class="mob-con" >
+    <div id="MoblileR" class="mob-con">
       <div class="mob-cen">
-          <i id="effect"></i>
-          <div id="strLanguage">為了更好的體驗，請將設備橫過來</div>
+        <i id="effect"></i>
+        <div id="strLanguage">為了更好的體驗，請將設備橫過來</div>
       </div>
-  </div>
+    </div>
   </body>
 </html>
+<script>
+  var isIE = navigator.userAgent.search("MSIE") > -1;
+  var isIE7 = navigator.userAgent.search("MSIE 7") > -1;
+  var isFirefox = navigator.userAgent.search("Firefox") > -1;
+  var isOpera = navigator.userAgent.search("Opera") > -1;
+  var isSafari = navigator.userAgent.search("Safari/") > -1; //Google瀏覽器是用
+  var isEdg = navigator.userAgent.search("Edg/") > -1;
+
+  var isChrome = navigator.userAgent.search("Chrome/") > -1;
+  var isChrome2 = navigator.userAgent.split("Chrome/").length > 0;
+  if (navigator.userAgent.split("Chrome/").length > 0) {
+    var checkChrome = navigator.userAgent.split("Chrome/")[1].split(".")[0];
+    if (checkChrome < 40) {
+      alert("瀏覽器版本過低請更新");
+    }
+  }
+</script>

@@ -74,6 +74,7 @@ import Icon_edit from "@/assets/Ico_edit.svg";
 import { storeToRefs } from "pinia";
 
 import draggable from "vuedraggable";
+import { showErrorMsg } from "@/types/IMessage";
 let addCourseTypesName = ref("");
 //alertUI
 const alertInformation = reactive({
@@ -182,7 +183,7 @@ let confirmShowAddForm = () => {
           let resData = res.data;
           if (resData.state == 1) {
             handAlertView("成功", 2, 2);
-          } else console.log(resData.msg, "失敗");
+          } else handAlertView(showErrorMsg(resData.msg), 2, 2);
         });
       }
       /**判斷改排序 */
@@ -219,18 +220,17 @@ let confirmShowAddForm = () => {
       nameEn: addCourseTypesName.value + "_en",
       nameTw: addCourseTypesName.value,
     };
-    addCourseTypeApi(curdata)
-      .then((res: any) => {
-        let resData = res.data;
-        if (resData.state == 1) {
-          handAlertView("成功", 2, 2);
-          setTimeout(() => {
-            props.showAddForm(false);
-          }, 1000);
-        } else {
-          handAlertView("失敗", 2, 2);
-        }
-      })
+    addCourseTypeApi(curdata).then((res: any) => {
+      let resData = res.data;
+      if (resData.state == 1) {
+        handAlertView("成功", 2, 2);
+        setTimeout(() => {
+          props.showAddForm(false);
+        }, 1000);
+      } else {
+        handAlertView(showErrorMsg(resData.msg), 2, 2);
+      }
+    });
   } else {
     setTimeout(() => {
       props.showAddForm(false);
@@ -262,18 +262,17 @@ const btnSumitHdr = (val: IBackStatus) => {
   switch (alertInformation.selfType) {
     case "delCourseDetail":
       if (val.btnStatus) {
-        delCourseTypeApi(alertInformation.selfData)
-          .then((res: any) => {
-            let resData = res.data;
-            if (resData.state == 1) {
-              handAlertView("刪除成功", 2, 2);
-              getCourseTypeApi(0);
-              // setTypeData();
-              setTimeout(() => {}, 1000);
-            } else {
-              handAlertView("刪除失敗(" + resData.msg + ")", 2, 2);
-            }
-          })
+        delCourseTypeApi(alertInformation.selfData).then((res: any) => {
+          let resData = res.data;
+          if (resData.state == 1) {
+            handAlertView("刪除成功", 2, 2);
+            getCourseTypeApi(0);
+            // setTypeData();
+            setTimeout(() => {}, 1000);
+          } else {
+            handAlertView(showErrorMsg(resData.msg), 2, 2);
+          }
+        });
       } else {
         console.log(val.btnStatus, "取消");
       }

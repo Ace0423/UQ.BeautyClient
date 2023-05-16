@@ -59,6 +59,7 @@
 </template>
 <script setup lang="ts">
 import { useApptStore } from "@/stores/apptStore";
+import { showErrorMsg } from "@/types/IMessage";
 import { verify_methods } from "@/types/utils";
 import type { FormRules } from "element-plus";
 //alertUI
@@ -200,7 +201,7 @@ const editConfirmHdr = () => {
           props.showEditForm(false);
         }, 1000);
       } else {
-        handAlertView("修改失敗", 2, 2);
+        handAlertView(showErrorMsg(resData.msg), 2, 2);
       }
     })
 };

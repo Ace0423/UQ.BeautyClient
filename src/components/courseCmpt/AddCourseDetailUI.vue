@@ -87,6 +87,7 @@ import { useApptStore } from "@/stores/apptStore";
 import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import type { IBackStatus } from "@/types/IData";
 import { verify_methods } from "@/types/utils";
+import { showErrorMsg } from "@/types/IMessage";
 const alertState = ref(false);
 let addCourseTypesName = ref("");
 
@@ -246,7 +247,7 @@ let confirmAddCourseDataForm = () => {
           props.showAddDetailForm(false);
         }, 1000);
       } else {
-        handAlertView("新增失敗", 2, 1);
+        handAlertView(showErrorMsg(resData.msg), 2, 2);
       }
     })
 };

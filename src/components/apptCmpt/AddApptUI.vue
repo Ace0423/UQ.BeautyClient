@@ -164,6 +164,7 @@ import { useApptStore } from "@/stores/apptStore";
 import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import { storeToRefs } from "pinia";
 import { verify_methods } from "@/types/utils";
+import { showErrorMsg } from "@/types/IMessage";
 let addCourseTypesName = ref("");
 
 let aptTitle = reactive(["預約時間", "預約項目", "顧客", "已完成"]);
@@ -284,6 +285,8 @@ onMounted(() => {
   newCourseDetailRef.value.price = "";
   newCourseDetailRef.value.state = false;
   newApptDataRef.value = props.curApptDataRef;
+  console.log(props.curApptDataRef.memberId);
+  
   showAddForm.value = props.curApptDataRef.memberId ? false : true;
 });
 
@@ -298,10 +301,12 @@ function getNowDay() {
 let confirmReserveForm = (btn: string) => {
   ruleLists.ruleItem.name.value = newApptDataRef.value.memberId;
   ruleLists.ruleItem.timeClock.value = newApptDataRef.value.timer;
-  if (showAddForm)
+  
+  if (!showAddForm.value){
     ruleLists.ruleItem.lessonItem.value = newApptDataRef.value.courses
       ? newApptDataRef.value.courses.nameTw
       : newApptDataRef.value.courses;
+  }
   else
     ruleLists.ruleItem.lessonItem.value =
       newApptDataRef.value.courses.length > 0
@@ -370,7 +375,7 @@ let confirmReserveForm = (btn: string) => {
             props.showAddReserveForm(false);
           }, 1000);
         } else {
-          handAlertView("新增失敗", 2, 1);
+        handAlertView(showErrorMsg(resData.msg), 2, 2);
         }
       })
   } else if ((btn = "edit" && props.oldSelList)) {
@@ -403,7 +408,7 @@ let confirmReserveForm = (btn: string) => {
           props.showAddReserveForm(false);
         }, 1000);
       } else {
-        handAlertView("修改失敗", 2, 1);
+        handAlertView(showErrorMsg(resData.msg), 2, 2);
       }
     });
   }

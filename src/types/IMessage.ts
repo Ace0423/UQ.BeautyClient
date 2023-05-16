@@ -14,9 +14,6 @@ export const showErrorMsg = (status: string): string => {
     case "DE04":
       message = "失敗的請求";
       break;
-    case "LM02":
-      message = "此課程有人預約，無法刪除";
-      break;
     case "UB01":
       message = "沖銷金額後，不可小於0";
       break;

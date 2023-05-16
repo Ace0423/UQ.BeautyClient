@@ -15,6 +15,6 @@ export const getToken = (name: string) => {
     }
 }
 
-export const delToken = () => {
-    Cookies.remove(TOKEN_KEY);
+export const delToken = (name: any) => {
+    Cookies.remove(name);
 }

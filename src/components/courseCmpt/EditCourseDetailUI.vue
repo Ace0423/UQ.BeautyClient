@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import { useApptStore } from "@/stores/apptStore";
 import { showErrorMsg } from "@/types/IMessage";
-import { verify_methods } from "@/types/utils";
+import { verify_methods } from "@/utils/utils";
 import type { FormRules } from "element-plus";
 //alertUI
 const alertInformation = reactive({

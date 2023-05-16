@@ -10,113 +10,170 @@ import bankImg from "@/assets/Icon awesome-money-check-alt.svg";
 import InfoIcon from "@/assets/Icon ionic-ios-list-box.svg";
 
 import closeIcon from "@/assets/Group32.svg";
-
+import { useCounterStore } from "@/stores/counter";
+import { storeToRefs } from "pinia";
+const store = useCounterStore();
+const { userInfo } = storeToRefs(store);
+const { handLogOut } = store;
 const props = defineProps<{
   handmemuStateBtn: Function;
 }>();
+const userMenuState = ref(false);
+const handUserMenuView = () => {
+  userMenuState.value = !userMenuState.value;
+};
 onMounted(() => {
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty("--vh", `${vh}px`);
 });
 </script>
 
-<template>
-  <div class="sideBar">
-    <button class="close-btn" v-on:click="handmemuStateBtn()">&lt;</button>
-    <img :src="logoImg" />
-    <diV class="nav">
-      <ul>
-        <li>
-          <img :src="customerImg" /><router-link to="/memberView"
-            >顧客管理</router-link
-          >
-        </li>
-        <li>
-          <img :src="courseImg" /><router-link to="/courseView"
-            >課程管理</router-link
-          >
-        </li>
-        <li>
-          <img :src="appointmentImg" /><router-link to="/"
-            >預約紀錄</router-link
-          >
-        </li>
-        <li>
-          <img :src="bankImg" /><router-link to="/memberBankView"
-            >儲值金</router-link
-          >
-        </li>
-        <!-- <li><img :src="orderImg" /><router-link to="/orderView">訂單紀錄</router-link></li>
+<template >
+  <div class="popup-mask" v-on:click.self="handmemuStateBtn()">
+    <div class="sideBar">
+      <img :src="logoImg" />
+      <diV class="nav">
+        <ul @click="handmemuStateBtn()">
+          <li>
+            <img :src="customerImg" /><router-link to="/memberView"
+              >顧客管理</router-link
+            >
+          </li>
+          <li>
+            <img :src="courseImg" /><router-link to="/courseView"
+              >課程管理</router-link
+            >
+          </li>
+          <li>
+            <img :src="appointmentImg" /><router-link to="/"
+              >預約紀錄</router-link
+            >
+          </li>
+          <li>
+            <img :src="bankImg" /><router-link to="/memberBankView"
+              >儲值金</router-link
+            >
+          </li>
+          <!-- <li><img :src="orderImg" /><router-link to="/orderView">訂單紀錄</router-link></li>
                     <li><img :src="commodityImg" /><router-link to="/commodityView">商品管理</router-link></li> -->
-        <!-- <li><img :src="settingImg" /><router-link to="/systemSettingView">系統設定</router-link></li> -->
-      </ul>
-    </diV>
+          <!-- <li><img :src="settingImg" /><router-link to="/systemSettingView">系統設定</router-link></li> -->
+        </ul>
+      </diV>
+      <div class="user-info">
+        <div class="user-name" @click="handUserMenuView()">
+          <div>
+            <p>{{ userInfo.name }}</p>
+            <p>{{ userInfo.email }}</p>
+          </div>
+          <button>></button>
+        </div>
+        <div class="user-menu" v-if="userMenuState">
+          <button @click="handLogOut()">登出</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template> 
 
 <style scoped lang='scss'>
-.sideBar {
-  z-index: 10;
+.popup-mask {
+  position: absolute;
   top: 0;
-  width: 259px;
-  min-width: 180px;
-  height: 100vh;
-  height: calc(var(--vh, 1vh) * 100);
-  background-color: #fff;
-  border: solid 1px #707070;
-  box-sizing: border-box;
-  position: relative;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.5);
+  .sideBar {
+    top: 0;
+    width: 259px;
+    min-width: 180px;
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    background-color: #fff;
+    border: solid 1px #707070;
+    box-sizing: border-box;
+    position: relative;
 
-  > .close-btn {
-    position: absolute;
-    right: -12%;
-    height: 10%;
-    border-radius: 0 5px 5px 0;
-    border: none;
-    width: 12%;
-    border-left: solid 1px #707070;
-    padding: 0;
-    text-align: center;
-  }
+    > img {
+      width: 100%;
+    }
 
-  > img {
-    width: 100%;
-  }
-
-  > .nav {
-    // padding-left: 15px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    > ul {
-      padding: 0 0;
+    > .nav {
+      // padding-left: 15px;
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
-      width: 100%;
+      align-items: center;
 
-      > li {
-        font-family: STXihei;
-        font-size: 20px;
-        color: #707070;
+      > ul {
+        padding: 0 0;
         display: flex;
-        align-items: center;
-        padding-left: 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
 
-        > img {
-          padding: 15px;
-          width: 30px;
-          height: 30px;
-        }
-
-        > a {
-          text-decoration: none;
+        > li {
+          font-family: STXihei;
+          font-size: 20px;
           color: #707070;
-        }
+          display: flex;
+          align-items: center;
+          padding-left: 15px;
 
-        > .router-link-active {
-          font-weight: bold;
+          > img {
+            padding: 15px;
+            width: 30px;
+            height: 30px;
+          }
+
+          > a {
+            text-decoration: none;
+            color: #707070;
+          }
+
+          > .router-link-active {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+    > .user-info {
+      position: absolute;
+      bottom: 0px;
+      left: 0px;
+      width: 100%;
+      border-top: solid 2px #707070;
+
+      > .user-name {
+        width: 100%;
+        display: flex;
+        font-family: STXihei;
+        font-size: 15px;
+        color: #707070;
+        background-color: transparent;
+        border: none;
+        > button {
+          background-color: transparent;
+          border: none;
+        }
+      }
+
+      > .user-menu {
+        display: flex;
+        flex-direction: column;
+        z-index: 10;
+        width: 100%;
+        position: absolute;
+        right: -102%;
+        bottom: 0px;
+        border-radius: 6px;
+        border: solid 1px #707070;
+        background-color: rgb(255, 255, 255);
+        > button {
+          margin: 5px 2px;
+          background-color: transparent;
+          border: none;
+          border-bottom: 1px solid #707070;
         }
       }
     }

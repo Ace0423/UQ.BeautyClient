@@ -69,12 +69,12 @@
 import { useApptStore } from "@/stores/apptStore";
 import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import type { IBackStatus } from "@/types/IData";
-import { verify_methods } from "@/types/utils";
 import Icon_edit from "@/assets/Ico_edit.svg";
 import { storeToRefs } from "pinia";
 
 import draggable from "vuedraggable";
 import { showErrorMsg } from "@/types/IMessage";
+import { verify_methods } from "@/utils/utils";
 let addCourseTypesName = ref("");
 //alertUI
 const alertInformation = reactive({

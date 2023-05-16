@@ -171,7 +171,7 @@ onMounted(() => {
               <th>
                 <p>顧客標籤(全部{{ filterGroupListData.length }}個)</p>
               </th>
-              <th></th>
+              <th><p>已加入顧客數量</p></th>
               <th>
                 <input placeholder="🔍搜尋顧客標籤" v-model="keyWord" />
               </th>
@@ -187,7 +187,9 @@ onMounted(() => {
               <td>
                 <p>{{ item.label }}</p>
               </td>
-              <td></td>
+              <td>
+                <p>{{ item.count }}</p>
+              </td>
               <td></td>
               <td class="td-btn">
                 <button class="header-btn" v-on:click="handGroupInfoView(item)">
@@ -282,7 +284,6 @@ onMounted(() => {
         border: solid 0.5px #ddd;
         font-family: STXihei;
         color: #717171;
-
         > .header-tab {
           display: block;
           height: 50px;
@@ -348,7 +349,9 @@ onMounted(() => {
             > td {
               display: flex;
               width: 25%;
-
+              > p {
+                padding: 0 5px 0 5px;
+              }
               > img {
                 padding: 0 10px;
               }

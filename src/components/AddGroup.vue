@@ -31,6 +31,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
 const handSubmit = () => {
     if (props.selectGroupItem) {
         editGroupData(newGroup).then((res) => {
+            console.log(res);
             if (res.state == 1) {
                 handAlertView("修改成功", 2, 1);
                 setTimeout(() => {

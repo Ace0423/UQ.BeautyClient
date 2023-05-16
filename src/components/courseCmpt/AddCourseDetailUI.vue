@@ -86,8 +86,8 @@
 import { useApptStore } from "@/stores/apptStore";
 import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import type { IBackStatus } from "@/types/IData";
-import { verify_methods } from "@/types/utils";
 import { showErrorMsg } from "@/types/IMessage";
+import { verify_methods } from "@/utils/utils";
 const alertState = ref(false);
 let addCourseTypesName = ref("");
 

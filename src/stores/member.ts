@@ -132,7 +132,7 @@ export const useCounterStore = defineStore("member", () => {
             if (res.data.state == 1) {
                 updataGroupList(res.data.data);
             }
-            return res.data.state
+            return res.data
         } catch (error) {
             console.log(error);
             return Promise.reject(error);
@@ -144,7 +144,7 @@ export const useCounterStore = defineStore("member", () => {
             if (res.data.state == 1) {
                 updataGroupList(res.data.data);
             }
-            return res.data.state
+            return res.data
         } catch (error) {
             console.log(error);
             return Promise.reject(error);

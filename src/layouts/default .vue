@@ -8,7 +8,7 @@ const store = useCounterStore();
 const { isLogin } = storeToRefs(store);
 const { setIsLogin, setUserData } = store;
 const router = useRouter();
-const memuState = ref(true);
+const memuState = ref(false);
 const handmemuStateBtn = () => {
   memuState.value = !memuState.value;
 };

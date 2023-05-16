@@ -31,10 +31,10 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
 
 const handSubmit = () => {
   if (newAddMemberBank.ubid == 0) {
-    if (newAddMemberBank.income <= 0) {
-      handAlertView("金額不能小於等於0", 2, 1);
-      return;
-    }
+    // if (newAddMemberBank.income <= 0) {
+    //   handAlertView(ErroeCode.DE02, 2, 1);
+    //   return;
+    // }
     newAddMemberBank.income = Number(newAddMemberBank.income);
     creatMemberBankData(newAddMemberBank)
       .then((res) => {

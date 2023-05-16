@@ -163,8 +163,8 @@
 import { useApptStore } from "@/stores/apptStore";
 import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import { storeToRefs } from "pinia";
-import { verify_methods } from "@/types/utils";
 import { showErrorMsg } from "@/types/IMessage";
+import { verify_methods } from "@/utils/utils";
 let addCourseTypesName = ref("");
 
 let aptTitle = reactive(["預約時間", "預約項目", "顧客", "已完成"]);

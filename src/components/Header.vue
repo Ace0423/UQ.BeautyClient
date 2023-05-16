@@ -25,10 +25,6 @@ onMounted(() => {
       <img :src="Icon" />
       <h1>{{ props.moduleType }}</h1>
     </div>
-
-    <div class="user-info">
-      <p>{{ userInfo.name }}</p>
-    </div>
   </header>
 </template>
 

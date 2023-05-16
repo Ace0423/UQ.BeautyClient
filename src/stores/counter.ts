@@ -5,7 +5,7 @@ import {
   apiGetMemberListRequest,
   apiPostMemberDataRequest,
 } from "@/api/index";
-import { setToken ,getToken} from "@/plugins/js-cookie";
+import { setToken, getToken, delToken } from "@/plugins/js-cookie";
 export const useCounterStore = defineStore("counter", () => {
   const isLogin = ref(false);
   const memberList: any = reactive({ data: [] });
@@ -20,11 +20,13 @@ export const useCounterStore = defineStore("counter", () => {
           token: res.data.data.token,
         };
         setToken("token", token);
+        res.data.data.userData.email = res.data.data.email;
         setToken("userData", res.data.data.userData);
         userInfo.user = res.data.data.userData.user;
         userInfo.name = res.data.data.userData.name;
         userInfo.phone = res.data.data.userData.phone;
         userInfo.roleMgrMappings = res.data.data.userData.roleMgrMappings;
+        userInfo.email = res.data.data.userData.email;
         setIsLogin(true);
       }
       return res.data;
@@ -32,7 +34,12 @@ export const useCounterStore = defineStore("counter", () => {
       console.log(error);
     }
   };
-
+  const handLogOut = () => {
+    delToken("token");
+    delToken("userData");
+    setIsLogin(false);
+    location.reload()
+  }
   const setUserData = () => {
     let val: any = getToken("userData");
     let userData = JSON.parse(val);
@@ -40,6 +47,7 @@ export const useCounterStore = defineStore("counter", () => {
     userInfo.name = userData.name;
     userInfo.phone = userData.phone;
     userInfo.roleMgrMappings = userData.roleMgrMappings;
+    userInfo.email = userData.email;
   };
 
   const setIsLogin = (bool: boolean) => {
@@ -77,5 +85,6 @@ export const useCounterStore = defineStore("counter", () => {
     createMember,
     userInfo,
     setUserData,
+    handLogOut
   };
 });

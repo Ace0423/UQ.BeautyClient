@@ -379,6 +379,15 @@ import { storeToRefs } from "pinia";
 import { getApptDataRequest } from "@/api/apptRequest";
 import type { IBackStatus } from "@/types/IData";
 import { useApptStore } from "@/stores/apptStore";
+
+// let alertBtnState: any = ref(false);
+// const onAlertBtn = (data: any) => {
+//   alertBtnState = data;
+//   console.log(alertBtnState, "alertBtnState");
+// };
+// Alert({ type: 0, message: "登录失败2", onAlertBtn });
+// // Alert.warning("登录失败", 1000);
+
 const props = defineProps<{
   memuState: any;
   handmemuStateBtn: Function;
@@ -731,27 +740,27 @@ function getWeek(time: any) {
       if (element2.things.length > 1) {
       }
       if (element2.range > 1) {
+        // for (let l = element2.range; l > 0; l--) {
         for (let l = 1; l < element2.range; l++) {
           if (monthsThingsRef.value[i + l]) {
-            //同事見衝突
+            //同事件衝突
             if (monthsThingsRef.value[i + l].newThings[j].id == 1) {
-              console.log(monthsThingsRef.value[i].newThings[j]);
-              console.log(monthsThingsRef.value[i + l].newThings[j]);
               let readyDelData =
                 monthsThingsRef.value[i + l].newThings[j].things;
+              monthsThingsRef.value[i].newThings[j].range += 1;
               for (let k = 0; k < readyDelData.length; k++) {
                 const element = readyDelData[k];
                 monthsThingsRef.value[i].newThings[j].things.push(element);
               }
             }
 
+            // if (monthsThingsRef.value[i + l].newThings.length == 0)
             monthsThingsRef.value[i + l].newThings.splice(j, 1);
           }
         }
       }
     }
   }
-  console.log(monthsThingsRef.value);
 
   delete months.value[0];
   let selWeek = months.value[7].date;
@@ -1485,10 +1494,11 @@ $borderCoder: #eaedf2;
 
                           .thing_group {
                             // height: 100%;
+                            height: 70px;
                             > div {
                               .thing_item {
                                 height: 100%;
-                                min-height: 56px;
+                                min-height: 70px;
                                 flex: 1;
                                 display: flex;
                                 font-size: 14px;
@@ -1505,15 +1515,15 @@ $borderCoder: #eaedf2;
                                 //   overflow: hidden;
                                 // }
                                 .timeSpan {
-                                  max-height: 18px;
+                                  max-height: 15px;
                                   overflow: hidden;
                                 }
                                 .nameSpan {
-                                  max-height: 18px;
+                                  max-height: 15px;
                                   overflow: hidden;
                                 }
                                 .lessonSpan {
-                                  max-height: 37px;
+                                  max-height: 40px;
                                   overflow: hidden;
                                 }
                               }

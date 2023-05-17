@@ -221,7 +221,7 @@ export const useApptStore = defineStore("apptStore", () => {
         });
       }
       //插入預約
-      if (res.data.data.table)
+      if (res.data.data)
         for (let i = 0; i < res.data.data.table.length; i++) {
           const bookingListEmt = res.data.data.table[i];
           if (bookingListEmt.state == 3) {

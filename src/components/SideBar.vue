@@ -152,9 +152,11 @@ onMounted(() => {
         color: #707070;
         background-color: transparent;
         border: none;
+        justify-content: center;
         > button {
           background-color: transparent;
           border: none;
+          margin: 0 0px 0 20px;
         }
       }
 
@@ -163,6 +165,7 @@ onMounted(() => {
         flex-direction: column;
         z-index: 10;
         width: 100%;
+        height: 100%;
         position: absolute;
         right: -102%;
         bottom: 0px;

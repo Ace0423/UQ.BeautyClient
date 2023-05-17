@@ -361,12 +361,12 @@
     :oldSelList="oldSelList"
     :resetApptTable="resetApptTable"
   ></AddApptUI>
-  <Alert
+  <!-- <Alert
     v-if="alertInformation.showAlert"
     :alert-information="alertInformation"
     :hand-alert-view="handAlertView"
     @callbackBtn="btnSumitHdr"
-  ></Alert>
+  ></Alert> -->
 </template>
 
 <script setup lang="ts" >
@@ -379,14 +379,15 @@ import { storeToRefs } from "pinia";
 import { getApptDataRequest } from "@/api/apptRequest";
 import type { IBackStatus } from "@/types/IData";
 import { useApptStore } from "@/stores/apptStore";
+import Alert from "@/components/alertCmpt";
 
 // let alertBtnState: any = ref(false);
 // const onAlertBtn = (data: any) => {
 //   alertBtnState = data;
 //   console.log(alertBtnState, "alertBtnState");
 // };
-// Alert({ type: 0, message: "登录失败2", onAlertBtn });
-// // Alert.warning("登录失败", 1000);
+// Alert({ type: 0, message: "登录失败", duration: 1000,onAlertBtn });
+// Alert.warning("登录失败", 1000);
 
 const props = defineProps<{
   memuState: any;

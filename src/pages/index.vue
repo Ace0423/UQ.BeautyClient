@@ -558,7 +558,7 @@ let filterAptData: any = computed(() => {
   }
 
   curAptData.sort(function (a: any, b: any) {
-    return a.date > b.date ? -1 : 1;
+    return a.date > b.date ? 1 : -1;
   });
 
   return curAptData;

@@ -112,6 +112,7 @@ import Icon from "@/assets/Icon awesome-spa.svg";
 import Icon_edit from "@/assets/Ico_edit.svg";
 import type { IBackStatus } from "@/types/IData";
 import { useApptStore } from "@/stores/apptStore";
+import { showErrorMsg } from "@/types/IMessage";
 const props = defineProps<{
   memuState: any;
   handmemuStateBtn: Function;
@@ -154,7 +155,7 @@ const btnSumitHdr = (val: IBackStatus) => {
             if (resData.state == 1) {
               handAlertView("刪除成功", 2, 1);
             } else {
-              handAlertView("刪除失敗", 2, 1);
+              handAlertView(showErrorMsg(resData.msg), 2, 1);
             }
           })
       } else {

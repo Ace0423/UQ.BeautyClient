@@ -380,6 +380,7 @@ import { getApptDataRequest } from "@/api/apptRequest";
 import type { IBackStatus } from "@/types/IData";
 import { useApptStore } from "@/stores/apptStore";
 import Alert from "@/components/alertCmpt";
+import { showErrorMsg } from "@/types/IMessage";
 
 // let alertBtnState: any = ref(false);
 // const onAlertBtn = (data: any) => {
@@ -509,7 +510,7 @@ const btnSumitHdr = (val: IBackStatus) => {
           if (resData.state == 1) {
             handAlertView("刪除成功", 2, 1);
           } else {
-            handAlertView("刪除失敗", 2, 1);
+            handAlertView(showErrorMsg(resData.msg), 2, 1);
             // alertInformation.messageText = resData.msg;
           }
         });
@@ -558,7 +559,7 @@ let filterAptData: any = computed(() => {
   }
 
   curAptData.sort(function (a: any, b: any) {
-    return a.date > b.date ? 1 : -1;
+    return a.dateBooking > b.dateBooking ? 1 : -1;
   });
 
   return curAptData;

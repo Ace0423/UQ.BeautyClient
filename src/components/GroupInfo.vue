@@ -80,6 +80,7 @@ const alertSumitBtn = (val: IBackStatus) => {
     default:
       break;
   }
+  alertState.value = !alertState.value;
 };
 onMounted(() => {
   if (props.groupInfoItem) {

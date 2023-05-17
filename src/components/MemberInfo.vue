@@ -58,6 +58,7 @@ const getmemberInfoApi = () => {
 };
 onMounted(() => {
   getmemberInfoApi();
+  console.log(props.selectMemberItem);
 });
 </script>
 
@@ -79,6 +80,14 @@ onMounted(() => {
             />
             <h1>{{ props.selectMemberItem.nameView }}</h1>
             <p>{{ props.selectMemberItem.phone }}</p>
+            <div class="group-lab">
+              <div
+                v-for="item in props.selectMemberItem.groupList"
+                :key="item.groupId"
+              >
+                {{ item.label }}
+              </div>
+            </div>
           </div>
           <div class="info-detail">
             <p>基本資料</p>
@@ -236,6 +245,18 @@ onMounted(() => {
           align-items: center;
           margin: 0 10px;
           border-bottom: 2px #707070 solid;
+          .group-lab {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+            > div {
+              border: solid 1px #707070;
+              background-color: #e6e2de;
+              padding: 1px 1px;
+              margin: 2px 2px;
+            }
+          }
           .head-photo {
             position: relative;
             top: -30px;

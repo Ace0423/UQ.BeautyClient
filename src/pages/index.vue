@@ -361,12 +361,12 @@
     :oldSelList="oldSelList"
     :resetApptTable="resetApptTable"
   ></AddApptUI>
-  <!-- <Alert
+  <Alert
     v-if="alertInformation.showAlert"
     :alert-information="alertInformation"
     :hand-alert-view="handAlertView"
     @callbackBtn="btnSumitHdr"
-  ></Alert> -->
+  ></Alert>
 </template>
 
 <script setup lang="ts" >

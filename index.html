@@ -32,7 +32,7 @@
   var isChrome2 = navigator.userAgent.split("Chrome/").length > 0;
   if (navigator.userAgent.split("Chrome/").length > 1) {
     console.log(navigator.userAgent.split("Chrome/")[1]);
-    if (navigator.userAgent.split("Chrome/")[1].split(".") > 0) {
+    if (navigator.userAgent.split("Chrome/")[1].split(".").length > 0) {
       var checkChrome = navigator.userAgent.split("Chrome/")[1].split(".")[0];
       if (checkChrome < 40) {
         alert("瀏覽器版本過低請更新");

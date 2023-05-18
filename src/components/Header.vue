@@ -35,6 +35,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background-color: #fff;
   // height: 100px;
   // background-color: burlywood;
   > .head-title {

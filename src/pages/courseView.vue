@@ -20,7 +20,9 @@
         </div>
         <div class="addcoursetype-btn">
           <!-- <img :src="addcoursetype" /> -->
-          <div class="btn-open" @click="showAddForm(true)">分類管理</div>
+          <div class="btn-open" @click="showAddForm(true)">
+            {{ $t("typeMgmt") }}
+          </div>
         </div>
       </div>
       <div class="course_table">
@@ -79,10 +81,7 @@
         </table>
       </div>
     </div>
-    <AddCourseTypeUI
-      v-if="showAddType"
-      :show-add-form="showAddForm"
-    />
+    <AddCourseTypeUI v-if="showAddType" :show-add-form="showAddForm" />
     <AddCourseDetailUI
       v-if="showCourseFormRef"
       :showAddDetailForm="showAddDetailForm"
@@ -113,12 +112,16 @@ import Icon_edit from "@/assets/Ico_edit.svg";
 import type { IBackStatus } from "@/types/IData";
 import { useApptStore } from "@/stores/apptStore";
 import { showErrorMsg } from "@/types/IMessage";
+import i18n from "@/i18n/i18n";
 const props = defineProps<{
   memuState: any;
   handmemuStateBtn: Function;
 }>();
 let search = ref("");
 let showAddType = ref(false);
+
+const { t } = i18n.global;
+console.log(t("typeMgmt"));
 
 let showCourseFormRef = ref(false);
 let coursetitle = reactive([
@@ -149,15 +152,14 @@ const btnSumitHdr = (val: IBackStatus) => {
   switch (alertInformation.selfType) {
     case "delCourseDetail":
       if (val.btnStatus) {
-        delCourseDetailApi(alertInformation.selfData)
-          .then((res: any) => {
-            let resData = res.data;
-            if (resData.state == 1) {
-              handAlertView("刪除成功", 2, 1);
-            } else {
-              handAlertView(showErrorMsg(resData.msg), 2, 1);
-            }
-          })
+        delCourseDetailApi(alertInformation.selfData).then((res: any) => {
+          let resData = res.data;
+          if (resData.state == 1) {
+            handAlertView("刪除成功", 2, 1);
+          } else {
+            handAlertView(showErrorMsg(resData.msg), 2, 1);
+          }
+        });
       } else {
         console.log(val.btnStatus, "取消");
       }

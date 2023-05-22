@@ -23,3 +23,16 @@ export default i18n;
 // import i18n from "@/i18n/i18n";
 // const { t } = i18n.global;
 // console.log(t("typeMgmt"));
+
+// 3.語系切換
+
+// <select @change="handleChangeLanguage">
+// <option value="zh-TW">中文</option>
+// <option value="en-US">English</option>
+// </select>
+
+// import { useI18n } from 'vue-i18n'
+// const { locale } = useI18n()
+// const handleChangeLanguage = (e:any) => {
+//   locale.value = e.target.value
+// }

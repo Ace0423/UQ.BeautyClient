@@ -16,3 +16,10 @@ const i18n = createI18n<[MessageSchema], "zh-TW" | "en-US">({
 });
 
 export default i18n;
+
+// 1.用法
+// <template>{{ $t("typeMgmt") }}</template>
+// 2.ts
+// import i18n from "@/i18n/i18n";
+// const { t } = i18n.global;
+// console.log(t("typeMgmt"));

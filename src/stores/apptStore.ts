@@ -63,6 +63,7 @@ export const useApptStore = defineStore("apptStore", () => {
           let element = res.data.data.table[i];
           // element.orderCheck = element.order;
           element.editState = false;
+          element.lessonTypeId = parseInt(element.lessonTypeId);
           (element.editNameTw = element.nameTw),
             courseTypesTabs.value.push(element);
         }
@@ -147,7 +148,7 @@ export const useApptStore = defineStore("apptStore", () => {
   const addCourseDetailApi = async (data: any) => {
     try {
       let res = await postAddUQLessonDetailReq(data);
-      if (res) getCourseDetailApi(data.lessonTypeId, 0);
+      if (res) getCourseDetailApi(0, 0);
       return res;
     } catch (error) {
       console.log(error);
@@ -159,7 +160,7 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(data);
 
       let res = await updateCourseDetailReq(data);
-      if (res) getCourseDetailApi(data.lessonTypeId, 0);
+      if (res) getCourseDetailApi(0, 0);
       return res;
     } catch (error) {
       console.log(error);

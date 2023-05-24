@@ -1,11 +1,16 @@
 <template>
   <div class="course_div">
-    <Header
-      :moduleType="'課程管理'"
-      :Icon="Icon"
-      :memuState="props.memuState"
-      :handmemuStateBtn="props.handmemuStateBtn"
-    ></Header>
+    <div class="top_box">
+      <Header
+        :moduleType="'課程管理'"
+        :Icon="Icon"
+        :memuState="props.memuState"
+        :handmemuStateBtn="props.handmemuStateBtn"
+      ></Header>
+      <div class="top_menu">
+        <div @click="showAddDetailForm(true)"><img :src="btn_add_ico" /></div>
+      </div>
+    </div>
     <div class="customer-top">
       <div class="customer-tab">
         <div class="item-tab">
@@ -18,23 +23,19 @@
             {{ item.nameTw }}
           </button>
         </div>
-        <div class="addcoursetype-btn">
-          <!-- <img :src="addcoursetype" /> -->
-          <div class="btn-open" @click="showAddForm(true)">
-            {{ $t("typeMgmt") }}
-          </div>
-        </div>
       </div>
       <div class="course_table">
         <div class="header-tab">
           <p>課程(全部{{ filterCourseData.length }}個)</p>
-          <input v-model="search" placeholder="搜尋產品" />
-          <div
-            v-if="courseTypesTabsValue != 0"
-            class="btn-open"
-            @click="showAddDetailForm(true)"
-          >
-            新增課程
+          <div>
+            <input
+              v-model="search"
+              class="seach-control"
+              placeholder="搜尋產品"
+            />
+            <div class="btn-open" @click="showAddForm(true)">
+              {{ $t("typeMgmt") }}
+            </div>
           </div>
         </div>
         <table>
@@ -57,16 +58,24 @@
               <td>
                 <p>{{ item.price }}</p>
               </td>
-              <td>
+              <td class="checkbox_state">
                 <!-- <p>{{ item.display ? '1' : '0' }}</p> -->
-                <input
+                <!-- <input
                   class="checked_status"
                   type="checkbox"
                   name="sub"
                   value=""
                   :checked="item.display == true"
                   v-on:click="changeStutusFn(index, item)"
+                /> -->
+                <input
+                  type="checkbox"
+                  :checked="item.display == true"
+                  v-on:click="changeStutusFn(index, item)"
                 />
+                <!-- <input type="checkbox" checked />
+                <input type="checkbox" disabled />
+                <input type="checkbox" checked disabled /> -->
               </td>
               <td>
                 <button v-on:click="showEditFormBtn(index, item)">
@@ -101,12 +110,13 @@
     @callbackBtn="btnSumitHdr"
   ></Alert>
 </template>
-    
+
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import DeleteIcon from "@/assets/Icon material-delete.svg";
 import addcoursetype from "@/assets/Icon course-addcoursetype.svg";
+import btn_add_ico from "@/assets/images/ico_add.png";
 import Icon from "@/assets/Icon awesome-spa.svg";
 import Icon_edit from "@/assets/Ico_edit.svg";
 import type { IBackStatus } from "@/types/IData";
@@ -119,7 +129,6 @@ const props = defineProps<{
 }>();
 let search = ref("");
 let showAddType = ref(false);
-
 const { t } = i18n.global;
 console.log(t("typeMgmt"));
 
@@ -187,9 +196,13 @@ let filterCourseData: any = computed(() =>
   courseDataList.value.filter(getCourseFn)
 );
 function getCourseFn(data: any) {
+  let selTypeTab =
+    courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId;
   return (
-    !search.value ||
-    data.nameTw.toLowerCase().includes(search.value.toLowerCase())
+    data.lessonTypeId == selTypeTab ||
+    (selTypeTab == 0 &&
+      (!search.value ||
+        data.nameTw.toLowerCase().includes(search.value.toLowerCase())))
   );
 }
 let addDetailTypeID = computed(() =>
@@ -228,7 +241,7 @@ let changeStutusFn = (index: number, item: any) => {
     discount: item.discount,
   };
   updateCourseDetailApi(curdata);
-  getCourseDetailApi(item.lessonTypeId, 0);
+  // getCourseDetailApi(courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId, 0);
 };
 let alertSumit: boolean = false;
 //刪除課程
@@ -248,10 +261,10 @@ function showEditFormBtn(index: number, item: any) {
 
 function showEditForm(state: boolean) {
   showEditCourse.value = state;
-  getCourseDetailApi(
-    courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
-    0
-  );
+  // getCourseDetailApi(
+  //   courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
+  //   0
+  // );
 }
 //新增分類-顯示
 let showAddForm = (state: boolean) => {
@@ -282,12 +295,28 @@ function sortthradHdr(name: number) {
     }
 }
 </script>
-    
+
 <style lang="scss" scoped>
 .course_div {
   height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
   position: relative;
+  .top_box {
+    display: flex;
+    width: 100%;
+    .top_menu {
+      display: flex;
+      width: calc(100% - 300px);
+      justify-content: right;
+      margin-top: 15px;
+      height: 29px;
+      > img {
+        margin-right: 10px;
+        height: 29px;
+        width: 29px;
+      }
+    }
+  }
 
   > .customer-top {
     position: absolute;
@@ -356,42 +385,65 @@ function sortthradHdr(name: number) {
     > .course_table {
       display: block;
       height: 87%;
+      width: 100%;
       > .header-tab {
         height: 47px;
-        // width: 100%;
+        width: 100%;
         font-weight: bold;
         display: flex;
         align-items: center;
         color: #717171;
         border: solid 1px #707070;
         background-color: #e6e2de;
-
-        > .btn-open {
-          width: 80px;
-          height: 20px;
-          margin: 0;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
+        > div {
           display: flex;
-          padding: 7px 11px 6px;
-          border-radius: 6px;
-          border: solid 1px #707070;
-          background-color: #84715c;
+          height: 100%;
+          align-items: center;
+          justify-content: right;
+          width: 85%;
+
+          .seach-control {
+            width: auto;
+            height: 60%;
+            border-radius: 6px;
+            border: solid 1px #707070;
+            background-color: #fff;
+            margin-right: 10px;
+
+            background: url("@/assets/images/ico_seach.png") no-repeat;
+            background-color: #fff;
+            // background-position: right;
+            background-position: 97%;
+            background-origin: content-box;
+            text-indent: 5px;
+          }
+          > .btn-open {
+            width: 80px;
+            height: 20px;
+            margin: 0;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            display: flex;
+            padding: 7px 11px 6px;
+            border-radius: 6px;
+            border: solid 1px #707070;
+            background-color: #84715c;
+          }
         }
 
         > p {
           margin: 0 10px;
         }
 
-        > input {
-          width: 134px;
-          height: 33px;
-          border-radius: 6px;
-          border: solid 1px #707070;
-          background-color: #fff;
-          margin-right: 10px;
-        }
+        // > input {
+        //   width: 134px;
+        //   height: 33px;
+        //   border-radius: 6px;
+        //   border: solid 1px #707070;
+        //   background-color: #fff;
+        //   margin-right: 10px;
+        // }
       }
 
       > table {
@@ -470,7 +522,6 @@ function sortthradHdr(name: number) {
                 height: 27px;
                 display: flex;
                 justify-content: center;
-                // margin: 43px 329px 30px 123.5px;
                 object-fit: contain;
               }
 
@@ -481,6 +532,78 @@ function sortthradHdr(name: number) {
                 line-height: 27px;
                 font-weight: bold;
                 background-color: #84715c;
+              }
+            }
+
+            .checkbox_state {
+              [type="checkbox"] {
+                width: 2rem;
+                height: 2rem;
+                color: #84715c;
+                vertical-align: middle;
+                -webkit-appearance: none;
+                background: none;
+                border: 0;
+                outline: 0;
+                flex-grow: 0;
+                border-radius: 50%;
+                background-color: #ffffff;
+                transition: background 300ms;
+                cursor: pointer;
+              }
+
+              /* Pseudo element for check styling */
+
+              [type="checkbox"]::before {
+                content: "";
+                color: transparent;
+                display: block;
+                width: inherit;
+                height: inherit;
+                border-radius: inherit;
+                border: 0;
+                background-color: transparent;
+                background-size: contain;
+                box-shadow: inset 0 0 0 1px #ccd3d8;
+              }
+
+              /* Checked */
+
+              [type="checkbox"]:checked {
+                background-color: currentcolor;
+              }
+
+              [type="checkbox"]:checked::before {
+                box-shadow: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+              }
+
+              /* Disabled */
+
+              [type="checkbox"]:disabled {
+                background-color: #ccd3d8;
+                opacity: 0.84;
+                cursor: not-allowed;
+              }
+
+              /* IE */
+
+              [type="checkbox"]::-ms-check {
+                content: "";
+                color: transparent;
+                display: block;
+                width: inherit;
+                height: inherit;
+                border-radius: inherit;
+                border: 0;
+                background-color: transparent;
+                background-size: contain;
+                box-shadow: inset 0 0 0 1px #ccd3d8;
+              }
+
+              [type="checkbox"]:checked::-ms-check {
+                box-shadow: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
               }
             }
           }
@@ -562,5 +685,3 @@ function sortthradHdr(name: number) {
   width: 25%;
 }
 </style>
-    
-    

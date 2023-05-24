@@ -3,6 +3,7 @@ import router from "@/router";
 
 const currentIndex = ref(0);
 const changeTab = (index: number) => {
+  console.log(index);
     currentIndex.value = index;
 };
 onMounted(() => {

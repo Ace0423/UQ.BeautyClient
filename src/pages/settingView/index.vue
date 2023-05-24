@@ -97,7 +97,7 @@
 
                     </div>
                     <div class="nav-content">
-                        <router-link to="">
+                        <router-link to="/settingView/discountManger/discountAll">
                             <div>
                                 <h1>折扣</h1>
                                 <p>管理商店內所有折扣項目</p>

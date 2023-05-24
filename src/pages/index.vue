@@ -1,11 +1,38 @@
 <template>
   <div class="container">
-    <Header
-      :Icon="Icon"
-      :moduleType="'預約紀錄'"
-      :memuState="props.memuState"
-      :handmemuStateBtn="props.handmemuStateBtn"
-    ></Header>
+    <div class="top_box">
+      <Header
+        :Icon="Icon"
+        :moduleType="'預約紀錄'"
+        :memuState="props.memuState"
+        :handmemuStateBtn="props.handmemuStateBtn"
+      ></Header>
+      <div class="top_menu">
+        <img
+          :src="date_Icon"
+          id="avatar-small"
+          @click="updataShowLittleDate(true)"
+        />
+        <img :src="btn_msg_ico" />
+        <el-dropdown trigger="click" @command="handleCommand">
+          <span class="el-dropdown-link">
+            <img :src="btn_add_ico" />
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu class="top-menu-drop">
+              <el-dropdown-item command="addAppt">新增預約</el-dropdown-item>
+              <el-dropdown-item command="addRest"
+                >加入休息時間</el-dropdown-item
+              >
+              <el-dropdown-item command="addBill"
+                >新增快速結帳單</el-dropdown-item
+              >
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
+    </div>
+
     <div class="appointment_main">
       <div class="appointment_box">
         <div class="item-tab">
@@ -141,7 +168,6 @@
                                       :class="{
                                         finish: thing.state == 1,
                                         waiting: thing.state == 0,
-                                        seldated: thing.state == 99,
                                       }"
                                     >
                                       <span class="timeSpan">{{
@@ -166,7 +192,7 @@
                 </div>
               </div>
             </div>
-            <div
+            <!-- <div
               class="weekEdit_btn"
               v-show="showWeekBoxRef && mainTabIndexRef != 1"
             >
@@ -175,7 +201,7 @@
                 <div class="btn_add" @click="editAddReserveBtn()">修改預約</div>
                 <div class="btn_add" @click="delReserveId()">刪除預約</div>
               </div>
-            </div>
+            </div> -->
           </div>
           <div
             class="date_main"
@@ -361,20 +387,29 @@
     :oldSelList="oldSelList"
     :resetApptTable="resetApptTable"
   ></AddApptUI>
-  <Alert
-    v-if="alertInformation.showAlert"
-    :alert-information="alertInformation"
-    :hand-alert-view="handAlertView"
-    @callbackBtn="btnSumitHdr"
-  ></Alert>
+  <!-- <LittleDateUI
+    v-if="showLittleDateRef"
+    :showUIFn="updataShowLittleDate"
+    :weekSelDay="weekSelDay"
+  /> -->
+  <!-- <Tui_calendar
+  ></Tui_calendar> -->
+  <ApptInfoUI
+    v-if="showApptInfoRef"
+    :showUIHdr="updataShowApptInfoRef"
+    :selItemData="oldSelList"
+  />
 </template>
 
-<script setup lang="ts" >
+<script setup lang="ts">
 import DeleteIcon from "@/assets/Icon material-delete.svg";
-import Icon from "@/assets/Icon awesome-calendar-check.svg";
 import arrow_left_ico from "@/assets/Icon appointment-left.svg";
 import arrow_right_ico from "@/assets/Icon appointment-right.svg";
 import stop_left_ico from "@/assets/Icon_stop_left.svg";
+import Icon from "@/assets/images/ico_appt.png";
+import date_Icon from "@/assets/images/ico_appt.png";
+import btn_add_ico from "@/assets/images/ico_add.png";
+import btn_msg_ico from "@/assets/images/ico_msg.png";
 import { storeToRefs } from "pinia";
 import { getApptDataRequest } from "@/api/apptRequest";
 import type { IBackStatus } from "@/types/IData";
@@ -421,6 +456,8 @@ let todayThingsRef: any = ref([]);
 let title = ["日", "一", "二", "三", "四", "五", "六"];
 let checkYM = ref(true);
 let showAddReserveFormRef = ref(false);
+let showApptInfoRef = ref(false);
+let showLittleDateRef = ref(false);
 let showOkBtnRef = ref(false);
 let oldWeekDateTime: any = null;
 let selDate = ref(
@@ -483,6 +520,22 @@ function selThisDate() {
     addZeroDateFn(currentDay.value)
   );
 }
+
+const handleCommand = (command: string | number | object) => {
+  console.log(command);
+  switch (command) {
+    case "addAppt":
+      addAddReserveBtn();
+      break;
+    case "addRest":
+      break;
+    case "addBill":
+      break;
+
+    default:
+      break;
+  }
+};
 
 const btnSumitHdr = (val: IBackStatus) => {
   switch (alertInformation.selfType) {
@@ -868,12 +921,12 @@ function handleDetail(row: any) {
     if (oldSelList && oldSelList.id != row.id) {
       //有舊數據點其他
       oldSelList.state = 0;
-      row.state = 99;
+      // row.state = 99;
       oldSelList = row;
     } else if (oldSelList && oldSelList.id == row.id) {
       //點同訂單
       if (row.state == 0) {
-        row.state = 99;
+        // row.state = 99;
         oldSelList = row;
       } else {
         row.state = 0;
@@ -882,13 +935,40 @@ function handleDetail(row: any) {
       }
     } else {
       //第一次點訂單
-      row.state = 99;
+      // row.state = 99;
       oldSelList = row;
     }
+    updataShowApptInfoRef(true);
   }
 
   onWeekSeldate(row.dateBooking.split("T")[0]);
 }
+const updataShowApptInfoRef = (state: boolean) => {
+  showApptInfoRef.value = state;
+};
+const updataShowLittleDate = (state: boolean) => {
+  showLittleDateRef.value = state;
+  // let btn: any = document.getElementById("avatar-small"),
+  //   mask: any = document.getElementById("popup-mask"),
+  //   nav: any = document.getElementById("nav");
+  // btn.addEventListener(
+  //   "click",
+  //   function () {
+  //     mask.style.display = "block";
+  //     nav.style.left = 0;
+  //   },
+  //   false
+  // );
+
+  // mask.addEventListener(
+  //   "click",
+  //   function () {
+  //     mask.style.display = "none";
+  //     nav.style.left = "-7rem";
+  //   },
+  //   false
+  // );
+};
 
 //---------------------------日曆
 
@@ -966,7 +1046,7 @@ function onSelect(value: any) {
 
   getApptInfpApi(currentYear.value, currentMonth.value + 1);
 }
-
+//-----------------------------------------------------------------------------------------------
 function onWeekSeldate(data: any) {
   weekSelDay.value = data;
   let curData = data.split("-");
@@ -1052,13 +1132,36 @@ let delReserveId = () => {
 //-------------------------------------------新增預約FORM
 </script>
 
+// 套件css
+<style lang="scss">
+.top-menu-drop li {
+  font-weight: bold;
+}
+</style>
+
 <style scoped lang="scss">
 $borderCoder: #eaedf2;
-
 .container {
-  position: relative;
   height: calc(var(--vh, 1vh) * 100);
+  position: relative;
   width: 100%;
+
+  .top_box {
+    display: flex;
+    width: 100%;
+    .top_menu {
+      display: flex;
+      width: calc(100% - 300px);
+      justify-content: right;
+      margin-top: 15px;
+      height: 29px;
+      > img {
+        margin-right: 10px;
+        height: 29px;
+        width: 29px;
+      }
+    }
+  }
 
   .appointment_main {
     position: absolute;
@@ -1076,10 +1179,10 @@ $borderCoder: #eaedf2;
         height: 8%;
         left: 0%;
         // height: 45px;
-
+        width: 98%;
         > div {
           display: flex;
-          width: 65.5%;
+          width: 71%;
           height: 100%;
 
           > button {
@@ -1109,7 +1212,7 @@ $borderCoder: #eaedf2;
         .weektoday_div {
           position: relative;
           display: flex;
-          width: 26%;
+          width: 28%;
           min-width: 105px;
           justify-content: right;
           align-items: center;
@@ -1167,9 +1270,9 @@ $borderCoder: #eaedf2;
               display: flex;
               align-items: center;
               // justify-content: center;
-              top: 2%;
-              width: 96%;
-              height: 96%;
+              top: 1%;
+              width: 98%;
+              height: 98%;
               border-radius: 15px;
               background: #e6e2de;
               margin: 0 auto;
@@ -1603,7 +1706,7 @@ $borderCoder: #eaedf2;
 
         .date_main {
           position: relative;
-          width: 90%;
+          width: 100%;
           height: 100%;
           border: 1px solid #ddd;
           // min-width: 900px;

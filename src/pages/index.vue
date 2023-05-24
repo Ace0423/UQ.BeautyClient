@@ -329,7 +329,11 @@
                     <th v-for="item in aptTitle" :key="item">
                       <p>{{ item }}</p>
                     </th>
-                    <input v-model="searchList" placeholder="搜尋顧客" />
+                    <input
+                      v-model="searchList"
+                      class="seach-control"
+                      placeholder="搜尋顧客"
+                    />
                   </tr>
                 </thead>
                 <tbody id="content">
@@ -2062,12 +2066,21 @@ $borderCoder: #eaedf2;
                   }
 
                   > input {
-                    width: 100px;
-                    display: inline;
+                    display: flex;
                     float: right;
-                    margin-top: 10px;
+                    margin-top: 12px;
+                    width: 150px;
+                    height: 30px;
+                    border-radius: 6px;
+                    border: solid 1px #707070;
+                    background-color: #fff;
                     margin-right: 10px;
-                    // padding: 0 10px;
+
+                    background: url("@/assets/images/ico_seach.png") no-repeat;
+                    background-color: #fff;
+                    background-position: 97%;
+                    background-origin: content-box;
+                    text-indent: 5px;
                   }
                 }
               }

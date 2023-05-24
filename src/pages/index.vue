@@ -121,7 +121,7 @@
                                     class="day_item"
                                     :class="{
                                       isCurDate: item.isCurDate,
-                                      isSelDate: weekSelDay == item.date,
+                                      isSelDate: selDate == item.date,
                                     }"
                                   >
                                     {{ item.showDate }}
@@ -345,21 +345,29 @@
                       <p>{{ item.timePeriod }}</p>
                     </td>
                     <td>
-                      <!-- <p v-for="(courseitem) in item.lesson" :key="courseitem">{{courseitem }}</p> -->
                       <p>{{ item.lesson }}</p>
                     </td>
                     <td>
                       <p>{{ item.customer }}</p>
                     </td>
                     <td>
-                      <input
+                      <!-- <input
                         class="checked_state"
                         type="checkbox"
                         name="sub"
                         value="item"
                         :checked="item.state == 1"
                         v-on:click="changeStutusFn(index, item)"
-                      />
+                      /> -->
+                      <div class="checked_state">
+                        <input
+                          type="checkbox"
+                          :id="item.bookingNo"
+                          :checked="item.state == 1"
+                          v-on:click="changeStutusFn(index, item)"
+                        />
+                        <label :for="item.bookingNo"></label>
+                      </div>
                     </td>
                     <td>
                       <button
@@ -390,7 +398,7 @@
   <LittleDateUI
     v-if="showLittleDateRef"
     :showUIFn="updataShowLittleDate"
-    :weekSelDay="weekSelDay"
+    :selDate="selDate"
   />
   <!-- <Tui_calendar
   ></Tui_calendar> -->
@@ -434,35 +442,27 @@ let showWeekBoxRef = ref(true);
 let mainTabIndexRef = ref(0);
 let aptTitle = reactive(["預約時間", "預約項目", "顧客", "已完成"]);
 
-let currentDay = ref(new Date().getDate());
-let currentMonth = ref(new Date().getMonth());
-let currentYear = ref(new Date().getFullYear());
-
-let nowdatetime =
-  new Date().getFullYear() +
-  "-" +
-  addZeroDateFn(new Date().getMonth(), 1) +
-  "-" +
-  addZeroDateFn(new Date().getDate());
-let weekSelDay = ref(nowdatetime);
+let title = ["日", "一", "二", "三", "四", "五", "六"];
 let weeks = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
 let weeekTodayTitle = ref("");
 let months: any = ref([""]);
 let curDate: any = ref();
-let showCourseDetail = false;
 let monthsThingsRef: any = ref([]);
 let todayThingsRef: any = ref([]);
 
-let title = ["日", "一", "二", "三", "四", "五", "六"];
-let checkYM = ref(true);
 let showAddReserveFormRef = ref(false);
 let showApptInfoRef = ref(false);
 let showLittleDateRef = ref(false);
 let showOkBtnRef = ref(false);
-let oldWeekDateTime: any = null;
-let selDate = ref(
-  new Date().getFullYear() + "-" + addZeroDateFn(new Date().getMonth(), 1)
-);
+
+let checkYM = ref(true);
+let currentDay = ref(new Date().getDate());
+let currentMonth = ref(new Date().getMonth());
+let currentYear = ref(new Date().getFullYear());
+
+let nowdatetime = selThisDate();
+let selDate = ref(nowdatetime);
+
 let mainTypeDataRef = ref([
   {
     id: 1,
@@ -474,20 +474,29 @@ let mainTypeDataRef = ref([
   },
 ]);
 
+//選擇那天 xxxx-xx-xx
+function selThisDate() {
+  return (
+    currentYear.value +
+    "-" +
+    addZeroDateFn(currentMonth.value, 1) +
+    "-" +
+    addZeroDateFn(currentDay.value)
+  );
+}
+
 let newApptDataRef: any = ref({
   memberId: null,
   timer: null,
   beauticianId: 0,
   courses: [],
-  selDate: selThisDate(),
+  selDate: selDate,
 });
 
 let store = useApptStore();
-let { bookingList, memberList, courseDataList, beauticianList, timeGroup } =
-  storeToRefs(store);
+let { bookingList, courseDataList, timeGroup } = storeToRefs(store);
 let {
   getApptDataApi,
-  postAddApptDataApi,
   getMemberData,
   getCourseDetailApi,
   postEditApptDataApi,
@@ -509,17 +518,6 @@ const alertInformation = reactive({
   timerVal: 0, //時間計時器
   showAlert: false, //時間計時器
 });
-//選擇那天 xxxx-xx-xx
-// let selThisDate = () => {
-function selThisDate() {
-  return (
-    currentYear.value +
-    "-" +
-    addZeroDateFn(currentMonth.value, 1) +
-    "-" +
-    addZeroDateFn(currentDay.value)
-  );
-}
 
 const handleCommand = (command: string | number | object) => {
   console.log(command);
@@ -674,28 +672,14 @@ function goTodayHdr() {
   currentYear.value = new Date().getFullYear();
   currentMonth.value = new Date().getMonth();
   currentDay.value = new Date().getDate();
-  weekSelDay.value =
-    currentYear.value +
-    "-" +
-    addZeroDateFn(currentMonth.value, 1) +
-    "-" +
-    addZeroDateFn(currentDay.value);
-
-  selDate.value =
-    currentYear.value + "-" + addZeroDateFn(currentMonth.value, 1);
-  getSelectWeek("value");
-  weekSelDay.value =
-    currentYear.value +
-    "-" +
-    addZeroDateFn(currentMonth.value, 1) +
-    "-" +
-    addZeroDateFn(currentDay.value);
+  selDate.value = selThisDate();
+  getSelectWeek();
 
   getApptInfpApi(currentYear.value, currentMonth.value + 1);
 }
 /**获取时间 */
 function getWeek(time: any) {
-  oldWeekDateTime = time;
+  // let oldWeekDateTime = time;
   //計算禮拜幾 (Sunday - Saturday : 0 - 6)
   let week = time.getDay();
 
@@ -894,8 +878,9 @@ function getNextWeek() {
   }, 1500);
 }
 let selLittleYMDateRef = ref("");
+
 /**指定日期 */
-function getSelectWeek(date: any) {
+function getSelectWeek() {
   setSelectdate();
   let newDate = new Date(
     currentYear.value,
@@ -916,7 +901,6 @@ let oldSelList: any = null;
 /**点击查看详情 */
 function handleDetail(row: any) {
   // 0:未點選 1:完成 99:點選
-  showCourseDetail = true;
   if (row.state != 1) {
     if (oldSelList && oldSelList.id != row.id) {
       //有舊數據點其他
@@ -948,26 +932,6 @@ const updataShowApptInfoRef = (state: boolean) => {
 };
 const updataShowLittleDate = (state: boolean) => {
   showLittleDateRef.value = state;
-  // let btn: any = document.getElementById("avatar-small"),
-  //   mask: any = document.getElementById("popup-mask"),
-  //   nav: any = document.getElementById("nav");
-  // btn.addEventListener(
-  //   "click",
-  //   function () {
-  //     mask.style.display = "block";
-  //     nav.style.left = 0;
-  //   },
-  //   false
-  // );
-
-  // mask.addEventListener(
-  //   "click",
-  //   function () {
-  //     mask.style.display = "none";
-  //     nav.style.left = "-7rem";
-  //   },
-  //   false
-  // );
 };
 
 //---------------------------日曆
@@ -1011,8 +975,8 @@ function lastMonth() {
     currentMonth.value--;
   }
   if (
-    nowdatetime.split("-")[0] == currentYear.value.toString() &&
-    nowdatetime.split("-")[1] == addZeroDateFn(currentMonth.value, 1)
+    selDate.value.split("-")[0] == currentYear.value.toString() &&
+    selDate.value.split("-")[1] == addZeroDateFn(currentMonth.value, 1)
   )
     checkYM.value = true;
   else checkYM.value = false;
@@ -1025,8 +989,8 @@ function nextMonth() {
     currentMonth.value++;
   }
   if (
-    nowdatetime.split("-")[0] == currentYear.value.toString() &&
-    nowdatetime.split("-")[1] == addZeroDateFn(currentMonth.value, 1)
+    selDate.value.split("-")[0] == currentYear.value.toString() &&
+    selDate.value.split("-")[1] == addZeroDateFn(currentMonth.value, 1)
   )
     checkYM.value = true;
   else checkYM.value = false;
@@ -1036,8 +1000,8 @@ function onSelect(value: any) {
   currentDay.value = value;
   selDate.value =
     currentYear.value + "-" + addZeroDateFn(currentMonth.value, 1);
-  getSelectWeek(value);
-  weekSelDay.value =
+  getSelectWeek();
+  selDate.value =
     currentYear.value +
     "-" +
     addZeroDateFn(currentMonth.value, 1) +
@@ -1048,12 +1012,11 @@ function onSelect(value: any) {
 }
 //-----------------------------------------------------------------------------------------------
 function onWeekSeldate(data: any) {
-  weekSelDay.value = data;
+  selDate.value = data;
   let curData = data.split("-");
   currentYear.value = parseInt(curData[0]);
   currentMonth.value = parseInt(curData[1]) - 1;
   currentDay.value = parseInt(curData[2]);
-  selDate.value = parseInt(curData[0]) + "-" + parseInt(curData[1]);
   checkYM.value = true;
 }
 
@@ -1070,7 +1033,7 @@ function resetAddReserveForm() {
   newApptDataRef.value.memberId = null;
   newApptDataRef.value.timer = null;
   newApptDataRef.value.beauticianId = 0;
-  newApptDataRef.value.selDate = selThisDate();
+  newApptDataRef.value.selDate = selDate;
 }
 
 function addAddReserveBtn() {
@@ -1084,12 +1047,6 @@ function changeWeekToday(state: boolean) {
 }
 function editAddReserveBtn() {
   if (oldSelList) {
-    // for (let i = 0; i < memberList.value.data.length; i++) {
-    //   let element = memberList.value.data[i];
-    //   if (element.userId == oldSelList.userId) {
-    //     newApptDataRef.value.memberId = element.userId;
-    //   }
-    // }
     newApptDataRef.value.memberId = oldSelList.userId;
 
     for (let i = 0; i < courseDataList.value.length; i++) {
@@ -1105,13 +1062,6 @@ function editAddReserveBtn() {
         newApptDataRef.value.timer = element;
       }
     }
-
-    // for (let i = 0; i < beauticianList.value.length; i++) {
-    //   let element = beauticianList.value[i];
-    //   if (element.userId == oldSelList.serverId) {
-    //     newApptDataRef.value.beauticianId = i;
-    //   }
-    // }
     newApptDataRef.value.beauticianId = oldSelList.serverId;
     newApptDataRef.value.selDate = oldSelList.date;
 
@@ -2231,21 +2181,39 @@ $borderCoder: #eaedf2;
                     }
 
                     .checked_state {
-                      width: 27px;
-                      height: 27px;
-                      display: flex;
-                      justify-content: center;
-                      // margin: 43px 329px 30px 123.5px;
-                      object-fit: contain;
-                    }
-
-                    .checked_state:checked::after {
-                      content: "✓";
-                      color: #fff;
-                      font-size: 36px;
-                      line-height: 27px;
-                      font-weight: bold;
-                      background-color: #84715c;
+                      input {
+                        display: none;
+                      }
+                      label {
+                        display: inline-block;
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 5px;
+                        border: 1px solid #8b6f6d;
+                        position: relative;
+                        cursor: pointer;
+                      }
+                      label::before {
+                        display: inline-block;
+                        content: " ";
+                        width: 12px;
+                        border: 2px solid #fff;
+                        height: 4px;
+                        border-top: none;
+                        border-right: none;
+                        transform: rotate(-45deg);
+                        top: 5px;
+                        left: 3px;
+                        position: absolute;
+                        opacity: 0;
+                      }
+                      input:checked + label {
+                        background: #8b6f6d;
+                      }
+                      input:checked + label::before {
+                        opacity: 1;
+                        transform: all 0.5s;
+                      }
                     }
                   }
                   > th:nth-child(0) {

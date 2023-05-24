@@ -17,13 +17,13 @@ let nowdatetime =
 let checkYM = ref(true);
 const props = defineProps<{
   showUIFn: Function;
-  weekSelDay: any;
+  selDate: any;
 }>();
 onMounted(() => {
-  currentYear.value = props.weekSelDay.split("-")[0];
-  currentMonth.value = props.weekSelDay.split("-")[1] - 1;
-  currentDay.value = props.weekSelDay.split("-")[2];
-  console.log(props.weekSelDay);
+  currentYear.value = props.selDate.split("-")[0];
+  currentMonth.value = props.selDate.split("-")[1] - 1;
+  currentDay.value = props.selDate.split("-")[2];
+  console.log(props.selDate);
 
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty("--vh", `${vh}px`);
@@ -101,7 +101,7 @@ function onSelect(value: any) {
   //   selDate.value =
   //     currentYear.value + "-" + addZeroDateFn(currentMonth.value, 1);
   //   getSelectWeek(value);
-  //   weekSelDay.value =
+  //   selDate.value =
   //     currentYear.value +
   //     "-" +
   //     addZeroDateFn(currentMonth.value, 1) +

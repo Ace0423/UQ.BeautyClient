@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="content">
     <div class="nav">
@@ -26,7 +24,6 @@ const changeTab = (index: number) => {
   currentIndex.value = index;
 };
 onMounted(() => {
-  console.log("index");
   router.push("/settingView/discountManger/discountAll");
 });
 </script>

@@ -8,11 +8,11 @@
         :handmemuStateBtn="props.handmemuStateBtn"
       ></Header>
       <div class="top_menu">
-        <img
+        <!-- <img
           :src="date_Icon"
           id="avatar-small"
           @click="updataShowLittleDate(true)"
-        />
+        /> -->
         <img :src="btn_msg_ico" />
         <el-dropdown trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
@@ -387,11 +387,11 @@
     :oldSelList="oldSelList"
     :resetApptTable="resetApptTable"
   ></AddApptUI>
-  <!-- <LittleDateUI
+  <LittleDateUI
     v-if="showLittleDateRef"
     :showUIFn="updataShowLittleDate"
     :weekSelDay="weekSelDay"
-  /> -->
+  />
   <!-- <Tui_calendar
   ></Tui_calendar> -->
   <ApptInfoUI

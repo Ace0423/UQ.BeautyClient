@@ -47,8 +47,8 @@ Alert.error = (message: string, duration?: number) => {
 Alert.warning = (message: string, duration?: number) => {
   Alert({ type: 2, message, duration });
 };
-Alert.select = (message: string, duration?: number, onAlertBtn?: Function) => {
-  Alert({ type: 2, message, duration });
+Alert.check = (message: string, duration?: number, onAlertBtn?: Function) => {
+  Alert({ type: 0, message, duration, onAlertBtn });
 };
 
 //---------------------使用

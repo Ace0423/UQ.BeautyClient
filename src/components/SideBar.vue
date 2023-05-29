@@ -45,11 +45,11 @@ onMounted(() => {
               >課程管理</router-link
             >
           </li>
-          <li>
+          <!-- <li>
             <img :src="ico_goods" /><router-link to="/goodsView"
               > {{ $t("goodsMgmt") }}</router-link
             >
-          </li>
+          </li> -->
           <li>
             <img :src="appointmentImg" /><router-link to="/"
               >預約紀錄</router-link

@@ -97,7 +97,7 @@
 
                     </div>
                     <div class="nav-content">
-                        <router-link to="/settingView/discountManger/discountAll">
+                        <router-link to="/settingView/discountMgmt/discountAllPage">
                             <div>
                                 <h1>折扣</h1>
                                 <p>管理商店內所有折扣項目</p>
@@ -110,7 +110,7 @@
                 <div class="nav">
                     <h1>票劵管理</h1>
                     <div class="nav-content">
-                        <router-link to="">
+                        <router-link to="/settingView/couponMgmt/couponPage">
                             <div>
                                 <h1>優惠劵</h1>
                                 <p>管理商店內所有優惠卷</p>
@@ -130,7 +130,7 @@
 
                     </div>
                     <div class="nav-content">
-                        <router-link to="">
+                        <router-link to="/settingView/countTicketMgmt/countTicketPage">
                             <div>
                                 <h1>計次劵</h1>
                                 <p>管理商店內所有計次劵</p>

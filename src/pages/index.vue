@@ -298,7 +298,7 @@
                         class="thisDay"
                         :class="{
                           active: currentDay == index + 1 && checkYM,
-                          todayEff: new Date().getDate() == item && checkYM,
+                          todayEff: new Date().getDate() == item && checkToday,
                         }"
                         v-for="(item, index) in currentDays"
                         :key="item"
@@ -403,6 +403,7 @@
     v-if="showLittleDateRef"
     :showUIFn="updataShowLittleDate"
     :selDate="selDate"
+    :selLittleDateFn="selLittleDateFn"
   />
   <!-- <Tui_calendar
   ></Tui_calendar> -->
@@ -410,7 +411,14 @@
     v-if="showApptInfoRef"
     :showUIHdr="updataShowApptInfoRef"
     :selItemData="oldSelList"
+    :infoBtnState="infoBtnState"
   />
+  <Alert
+    v-if="alertInformation.showAlert"
+    :alert-information="alertInformation"
+    :hand-alert-view="handAlertView"
+    @callbackBtn="btnSumitHdr"
+  ></Alert>
 </template>
 
 <script setup lang="ts">
@@ -426,7 +434,7 @@ import { storeToRefs } from "pinia";
 import { getApptDataRequest } from "@/api/apptRequest";
 import type { IBackStatus } from "@/types/IData";
 import { useApptStore } from "@/stores/apptStore";
-import Alert from "@/components/alertCmpt";
+// import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 
 // let alertBtnState: any = ref(false);
@@ -464,7 +472,7 @@ let currentDay = ref(new Date().getDate());
 let currentMonth = ref(new Date().getMonth());
 let currentYear = ref(new Date().getFullYear());
 
-let nowdatetime = selThisDate();
+let nowdatetime = curDateFn();
 let selDate = ref(nowdatetime);
 
 let mainTypeDataRef = ref([
@@ -479,7 +487,7 @@ let mainTypeDataRef = ref([
 ]);
 
 //選擇那天 xxxx-xx-xx
-function selThisDate() {
+function curDateFn() {
   return (
     currentYear.value +
     "-" +
@@ -559,6 +567,7 @@ const btnSumitHdr = (val: IBackStatus) => {
           bookingMemo: oldSelList.bookingMemo,
         };
 
+        console.log("刪除成功");
         //修改預約
         postEditApptDataApi(editApptDate).then((res: any) => {
           let resData = res.data;
@@ -676,7 +685,7 @@ function goTodayHdr() {
   currentYear.value = new Date().getFullYear();
   currentMonth.value = new Date().getMonth();
   currentDay.value = new Date().getDate();
-  selDate.value = selThisDate();
+  selDate.value = curDateFn();
   getSelectWeek();
 
   getApptInfpApi(currentYear.value, currentMonth.value + 1);
@@ -937,6 +946,28 @@ const updataShowApptInfoRef = (state: boolean) => {
 const updataShowLittleDate = (state: boolean) => {
   showLittleDateRef.value = state;
 };
+const infoBtnState = (state: number) => {
+  switch (state) {
+    case 1:
+      //完成
+      showApptInfoRef.value = false;
+      changeStutusFn(0, oldSelList);
+      break;
+    case 2:
+      //修改
+      showApptInfoRef.value = false;
+      editAddReserveBtn();
+      break;
+    case 3:
+      //刪除
+      showApptInfoRef.value = false;
+      delReserveId();
+      break;
+
+    default:
+      break;
+  }
+};
 
 //---------------------------日曆
 
@@ -968,7 +999,7 @@ function addZeroDateFn(data: any, num: number = 0) {
   let numDate = parseInt(data) + num;
   return numDate < 10 ? "0" + numDate : numDate;
 }
-
+let checkToday = ref(true);
 function lastMonth() {
   // 点击上个月，若是0月则年份-1
   // 0是1月  11是12月
@@ -978,12 +1009,8 @@ function lastMonth() {
   } else {
     currentMonth.value--;
   }
-  if (
-    selDate.value.split("-")[0] == currentYear.value.toString() &&
-    selDate.value.split("-")[1] == addZeroDateFn(currentMonth.value, 1)
-  )
-    checkYM.value = true;
-  else checkYM.value = false;
+  onCheckYM();
+  onCheckToday();
 }
 function nextMonth() {
   if (currentMonth.value == 11) {
@@ -992,6 +1019,11 @@ function nextMonth() {
   } else {
     currentMonth.value++;
   }
+  onCheckYM();
+  onCheckToday();
+}
+
+function onCheckYM() {
   if (
     selDate.value.split("-")[0] == currentYear.value.toString() &&
     selDate.value.split("-")[1] == addZeroDateFn(currentMonth.value, 1)
@@ -999,19 +1031,30 @@ function nextMonth() {
     checkYM.value = true;
   else checkYM.value = false;
 }
+function onCheckToday() {
+  if (
+    nowdatetime.split("-")[0] == currentYear.value.toString() &&
+    nowdatetime.split("-")[1] == addZeroDateFn(currentMonth.value, 1)
+  )
+    checkToday.value = true;
+  else checkToday.value = false;
+}
+
+//
+let selLittleDateFn = (data: any) => {
+  currentYear.value = parseInt(data.split("-")[0]);
+  currentMonth.value = parseInt(data.split("-")[1]) - 1;
+  currentDay.value = parseInt(data.split("-")[2]);
+  // selDate = data;
+  getSelectWeek();
+  getApptInfpApi(currentYear.value, currentMonth.value + 1);
+  onSelect(data.split("-")[2]);
+};
 
 function onSelect(value: any) {
   currentDay.value = value;
-  selDate.value =
-    currentYear.value + "-" + addZeroDateFn(currentMonth.value, 1);
   getSelectWeek();
-  selDate.value =
-    currentYear.value +
-    "-" +
-    addZeroDateFn(currentMonth.value, 1) +
-    "-" +
-    addZeroDateFn(currentDay.value);
-
+  selDate.value = curDateFn();
   getApptInfpApi(currentYear.value, currentMonth.value + 1);
 }
 //-----------------------------------------------------------------------------------------------
@@ -1130,7 +1173,7 @@ $borderCoder: #eaedf2;
       position: relative;
       > .item-tab {
         display: flex;
-        height: 8%;
+        height: 6%;
         left: 0%;
         // height: 45px;
         width: 98%;
@@ -1166,7 +1209,7 @@ $borderCoder: #eaedf2;
         .weektoday_div {
           position: relative;
           display: flex;
-          width: 28%;
+          width: 25%;
           min-width: 105px;
           justify-content: right;
           align-items: center;
@@ -1203,9 +1246,9 @@ $borderCoder: #eaedf2;
         position: relative;
         display: flex;
         height: 92%;
-        width: 97%;
+        width: 94%;
         // margin-left: 5%;
-        margin-left: 1%;
+        margin-left: 3%;
 
         .week_main {
           display: flex;
@@ -2054,10 +2097,6 @@ $borderCoder: #eaedf2;
                       height: 40px;
                       border-radius: 45px;
                     }
-
-                    // > p {
-                    //   margin: 3px 5px;
-                    // }
 
                     > button {
                       background-color: transparent;

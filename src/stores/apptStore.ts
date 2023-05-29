@@ -17,11 +17,13 @@ import {
   updateLessonTypeOrderReq,
   updateLessonTypeReq,
 } from "@/api/authRequest";
+import { addGoodsDetailReq, addGoodsTypeReq, delGoodsDetailReq, delGoodsTypeReq, getGoodsTypeReq, updateGoodsDetailReq, updateGoodsTypeOrderReq, updateGoodsTypeReq } from "@/api/goodsRequest";
 import { defineStore } from "pinia";
 
 export const useApptStore = defineStore("apptStore", () => {
   //---------------------------------course
   const beauticianList: any = ref([{ userId: 0, nameView: "不指定" }]);
+  /**取美容師 */
   const getBeauticianApi = async (data: any) => {
     try {
       const res = await getBeauticianReq(data);
@@ -81,42 +83,6 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
 
-  let courseDataList: any = ref([]);
-  //取資料
-  const getCourseDetailApi = async (g: any, id: any) => {
-    try {
-      let res: any = await getCourseDetailReq(g, id);
-      courseDataList.value = [];
-      if (res.data.data.table) courseDataList.value = res.data.data.table;
-      return res;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  //刪除分類
-  const delCourseTypeApi = async (data: any) => {
-    try {
-      let res = await delCourseTypeReq(data);
-      if (res) getCourseTypeApi(0);
-      return res;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  //刪除資料
-  const delCourseDetailApi = async (data: any) => {
-    try {
-      let res = await delCourseDetailReq(data);
-      if (res)
-        getCourseDetailApi(
-          courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
-          "0"
-        );
-      return res;
-    } catch (error) {
-      console.log(error);
-    }
-  };
   //新增分類
   const addCourseTypeApi = async (data: any) => {
     try {
@@ -144,6 +110,28 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+  //刪除分類
+  const delCourseTypeApi = async (data: any) => {
+    try {
+      let res = await delCourseTypeReq(data);
+      if (res) getCourseTypeApi(0);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  let courseDataList: any = ref([]);
+  //取資料
+  const getCourseDetailApi = async (g: any, id: any) => {
+    try {
+      let res: any = await getCourseDetailReq(g, id);
+      courseDataList.value = [];
+      if (res.data.data.table) courseDataList.value = res.data.data.table;
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //新增資料
   const addCourseDetailApi = async (data: any) => {
     try {
@@ -161,6 +149,20 @@ export const useApptStore = defineStore("apptStore", () => {
 
       let res = await updateCourseDetailReq(data);
       if (res) getCourseDetailApi(0, 0);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //刪除資料
+  const delCourseDetailApi = async (data: any) => {
+    try {
+      let res = await delCourseDetailReq(data);
+      if (res)
+        getCourseDetailApi(
+          courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
+          "0"
+        );
       return res;
     } catch (error) {
       console.log(error);
@@ -312,6 +314,139 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
 
+  //--------------------goods
+  //取分類
+  const goodsTypesListValueRef = ref(0);
+  let goodsTypesListRef: any = ref([
+    {
+      lessonTypeId: 0,
+      order: 0,
+      display: true,
+      nameTw: "全部",
+    },
+  ]);
+  const getGoodsTypeApi = async (data: any=0) => {
+    try {
+      let res: any = await getGoodsTypeReq(data);
+      goodsTypesListRef.value = [
+        {
+          lessonTypeId: 0,
+          display: true,
+          nameTw: "全部",
+          order: 0,
+        },
+      ];
+      goodsDetailListRef.value = [];
+      if (res.data.data.table) {
+        for (let i = 0; i < res.data.data.table.length; i++) {
+          let element = res.data.data.table[i];
+          // element.orderCheck = element.order;
+          element.editState = false;
+          element.lessonTypeId = parseInt(element.lessonTypeId);
+          (element.editNameTw = element.nameTw),
+            goodsTypesListRef.value.push(element);
+        }
+        goodsTypesListRef.value.sort(function (a: any, b: any) {
+          return a.order > b.order ? 1 : -1;
+        });
+        getGoodsDetailApi(
+          goodsTypesListRef.value[goodsTypesListValueRef.value].lessonTypeId,
+          "0"
+        );
+      }
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //新增分類
+  const addGoodsTypeApi = async (data: any) => {
+    try {
+      let res = await addGoodsTypeReq(data);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //更新分類
+  const updataGoodsTypeApi = async (data: any) => {
+    try {
+      let res = await updateGoodsTypeReq(data);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //更新分類排序
+  const updataGoodsTypeOrderApi = async (data: any) => {
+    try {
+      let res = await updateGoodsTypeOrderReq(data);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //刪除分類
+  const delGoodsTypeApi = async (data: any) => {
+    try {
+      let res = await delGoodsTypeReq(data);
+      if (res) getGoodsTypeApi(0);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+
+
+  let goodsDetailListRef: any = ref([]);
+  //取資料
+  const getGoodsDetailApi = async (g: any, id: any) => {
+    try {
+      let res: any = await getCourseDetailReq(g, id);
+      goodsDetailListRef.value = [];
+      if (res.data.data.table) goodsDetailListRef.value = res.data.data.table;
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //新增資料
+  const addGoodsDetailApi = async (data: any) => {
+    try {
+      let res = await addGoodsDetailReq(data);
+      if (res) getGoodsDetailApi(0, 0);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //更新資料
+  const updateGoodsDetailApi = async (data: any) => {
+    try {
+      let res = await updateGoodsDetailReq(data);
+      if (res) getCourseDetailApi(0, 0);
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //刪除資料
+  const delGoodsDetailApi = async (data: any) => {
+    try {
+      let res = await delGoodsDetailReq(data);
+      if (res)
+        getCourseDetailApi(
+          courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
+          "0"
+        );
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return {
     //--------------------course
     getCourseTypeApi,
@@ -336,5 +471,18 @@ export const useApptStore = defineStore("apptStore", () => {
     beauticianList,
     memberList,
     timeGroup,
+    //--------------------goods
+    goodsTypesListValueRef,
+    goodsTypesListRef,
+    getGoodsTypeApi,
+    goodsDetailListRef,
+    getGoodsDetailApi,
+    addGoodsTypeApi,
+    updataGoodsTypeApi,
+    updataGoodsTypeOrderApi,
+    delGoodsTypeApi,
+    addGoodsDetailApi,
+    updateGoodsDetailApi,
+    delGoodsDetailApi,
   };
 });

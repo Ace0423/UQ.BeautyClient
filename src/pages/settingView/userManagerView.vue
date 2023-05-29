@@ -7,6 +7,7 @@ const changeTab = (index: number) => {
     currentIndex.value = index;
 };
 onMounted(() => {
+  console.log('userManagerView');
     router.push("/settingView/userManagerView/userView")
 })
 </script>

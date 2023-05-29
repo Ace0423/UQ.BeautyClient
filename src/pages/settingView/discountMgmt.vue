@@ -4,13 +4,13 @@
       <router-link
         :class="currentIndex == 0 ? 'active' : ''"
         v-on:click="changeTab(0)"
-        to="/settingView/discountManger/discountAll"
+        to="/settingView/discountMgmt/discountAllPage"
         >全單折扣</router-link
       >
       <router-link
         :class="currentIndex == 1 ? 'active' : ''"
         v-on:click="changeTab(1)"
-        to="/settingView/discountManger/discountSingle"
+        to="/settingView/discountMgmt/discountSinglePage"
         >單品折扣</router-link
       >
     </div>
@@ -24,7 +24,7 @@ const changeTab = (index: number) => {
   currentIndex.value = index;
 };
 onMounted(() => {
-  router.push("/settingView/discountManger/discountAll");
+  router.push("/settingView/discountMgmt/discountAllPage");
 });
 </script>
 

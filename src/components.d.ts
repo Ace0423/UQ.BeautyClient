@@ -10,9 +10,12 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AddAdminManager: typeof import('./components/AddAdminManager.vue')['default']
+    AddAllDiscountUI: typeof import('./components/discountCmpt/AddAllDiscountUI.vue')['default']
     AddApptUI: typeof import('./components/apptCmpt/AddApptUI.vue')['default']
     AddCourseDetailUI: typeof import('./components/courseCmpt/AddCourseDetailUI.vue')['default']
     AddCourseTypeUI: typeof import('./components/courseCmpt/AddCourseTypeUI.vue')['default']
+    AddDiscountUI: typeof import('./components/discountCmpt/AddDiscountUI.vue')['default']
+    AddGoodsDetailUI: typeof import('./components/goodsCmpt/AddGoodsDetailUI.vue')['default']
     AddGroup: typeof import('./components/AddGroup.vue')['default']
     AddManager: typeof import('./components/AddManager.vue')['default']
     AddMember: typeof import('./components/AddMember.vue')['default']
@@ -23,6 +26,7 @@ declare module '@vue/runtime-core' {
     ApptInfoUI: typeof import('./components/apptCmpt/ApptInfoUI.vue')['default']
     BasicUI: typeof import('./components/apptCmpt/BasicUI.vue')['default']
     copy: typeof import('./components/apptCmpt/BasicUI.vue')['default']
+    EditAllDiscountUI: typeof import('./components/discountCmpt/EditAllDiscountUI.vue')['default']
     EditApptUI: typeof import('./components/apptCmpt/EditApptUI.vue')['default']
     EditCourseDetailUI: typeof import('./components/courseCmpt/EditCourseDetailUI.vue')['default']
     GroupInfo: typeof import('./components/GroupInfo.vue')['default']

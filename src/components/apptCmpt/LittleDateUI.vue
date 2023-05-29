@@ -15,27 +15,33 @@ let nowdatetime =
   addZeroDateFn(new Date().getDate());
 
 let checkYM = ref(true);
+let checkToday = ref(false);
+
+let selDate = ref("");
+
 const props = defineProps<{
   showUIFn: Function;
+  selLittleDateFn: Function;
   selDate: any;
 }>();
 onMounted(() => {
   currentYear.value = props.selDate.split("-")[0];
   currentMonth.value = props.selDate.split("-")[1] - 1;
   currentDay.value = props.selDate.split("-")[2];
-  console.log(props.selDate);
-
+  selDate.value = props.selDate;
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty("--vh", `${vh}px`);
   let nav: any = document.getElementById("nav");
   //滑出
-  nav.style.left = 0;
+  nav.style.right = 0;
 });
 
 function showDateUIFn(state: any) {
   let nav: any = document.getElementById("nav");
-  nav.style.left = "-100%";
-  props.showUIFn(state);
+  nav.style.right = "-100%";
+  setTimeout(() => {
+    props.showUIFn(state);
+  }, 300);
 }
 
 //显示：8月
@@ -70,13 +76,11 @@ function lastMonth() {
   } else {
     currentMonth.value--;
   }
-  if (
-    nowdatetime.split("-")[0] == currentYear.value.toString() &&
-    nowdatetime.split("-")[1] == addZeroDateFn(currentMonth.value, 1)
-  ) {
-    checkYM.value = true;
-  } else checkYM.value = false;
+
+  onCheckYM();
+  onCheckToday();
 }
+
 function nextMonth() {
   if (currentMonth.value == 11) {
     currentYear.value++;
@@ -84,12 +88,25 @@ function nextMonth() {
   } else {
     currentMonth.value++;
   }
+  onCheckYM();
+  onCheckToday();
+}
+
+function onCheckYM() {
+  if (
+    selDate.value.split("-")[0] == currentYear.value.toString() &&
+    selDate.value.split("-")[1] == addZeroDateFn(currentMonth.value, 1)
+  )
+    checkYM.value = true;
+  else checkYM.value = false;
+}
+function onCheckToday() {
   if (
     nowdatetime.split("-")[0] == currentYear.value.toString() &&
     nowdatetime.split("-")[1] == addZeroDateFn(currentMonth.value, 1)
   )
-    checkYM.value = true;
-  else checkYM.value = false;
+    checkToday.value = true;
+  else checkToday.value = false;
 }
 
 function addZeroDateFn(data: any, num: number = 0) {
@@ -98,16 +115,19 @@ function addZeroDateFn(data: any, num: number = 0) {
 }
 function onSelect(value: any) {
   currentDay.value = value;
-  //   selDate.value =
-  //     currentYear.value + "-" + addZeroDateFn(currentMonth.value, 1);
-  //   getSelectWeek(value);
-  //   selDate.value =
-  //     currentYear.value +
-  //     "-" +
-  //     addZeroDateFn(currentMonth.value, 1) +
-  //     "-" +
-  //     addZeroDateFn(currentDay.value);
-  //   getApptInfpApi(currentYear.value, currentMonth.value + 1);
+  selDate.value = curDateFn();
+  props.selLittleDateFn(selDate.value);
+  showDateUIFn(false);
+}
+//選擇那天 xxxx-xx-xx
+function curDateFn() {
+  return (
+    currentYear.value +
+    "-" +
+    addZeroDateFn(currentMonth.value, 1) +
+    "-" +
+    addZeroDateFn(currentDay.value)
+  );
 }
 </script>
 
@@ -172,32 +192,35 @@ function onSelect(value: any) {
   z-index: 2;
   background: rgba(255, 255, 255, 0.5);
   .dateBar {
-    top: 80px;
+    top: 142px;
     left: 2px;
-    width: 259px;
+    width: 310px;
     min-width: 180px;
     height: 100vh;
-    height: calc(var(--vh, 1vh) * 100 - 82px);
+    // height: calc(var(--vh, 1vh) * 100 - 82px);
+    height: 450px;
     box-sizing: border-box;
     position: relative;
 
     .nav {
-      position: absolute;
+      position: fixed;
       z-index: 11;
-      left: -7rem;
-      top: 0;
-      width: 259px;
-      height: 100%;
+      right: -100%;
+      top: auto;
+      width: 310px;
+      height: 450px;
       background: #ffffff;
-      transition: left linear 0.3s;
+      transition: right linear 0.3s;
+      border-radius: 15px;
 
       .little_date {
         position: relative;
-        top: 12px;
+        // top: 12px;
         right: 2px;
         border-radius: 15px;
         background: #ffffff;
-        height: calc(100% - 12px);
+        // height: calc(100% - 12px);
+        height: 100%;
         width: 100%;
         border: 1px solid #707070;
 
@@ -242,7 +265,7 @@ function onSelect(value: any) {
 
           .dateBox_content {
             width: 100%;
-            height: 210px;
+            height: 230px;
             border-bottom: 1px solid #707070;
 
             .row {

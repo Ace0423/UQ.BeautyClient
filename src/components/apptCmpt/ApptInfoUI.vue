@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="popup-mask" v-on:click.self="showUIHdr(false)">
     <div>
@@ -19,12 +17,16 @@
               <p>{{ customerDataCpt.phone }}</p>
             </div>
           </div>
+          <div class="list_btn">
+            <div class="btn_add" @click="infoBtnState(2)">修改預約</div>
+            <div class="btn_add" @click="infoBtnState(3)">刪除預約</div>
+          </div>
           <div class="link-bottom"></div>
           <div>
             <div class="grey-box">
               <span>人數1位</span>
             </div>
-            <button>預約完成</button>
+            <button @click="infoBtnState(1)">預約完成</button>
             <!-- <button v-on:click="handAddMemberView()">修改顧客</button> -->
           </div>
           <div class="link-bottom"></div>
@@ -48,7 +50,8 @@
         </div>
         <div class="link-bottom"></div>
         <div class="content-checkoutbtn">
-          <span>結帳</span>
+          <!-- <span>結帳</span> -->
+          <button>結帳</button>
         </div>
       </div>
     </div>
@@ -77,6 +80,7 @@ const memberDetailData: any = reactive({
 const props = defineProps<{
   selItemData: any;
   showUIHdr: Function;
+  infoBtnState: Function;
   // handMemberInfoView: Function;
   // handAddMemberView: Function;
 }>();
@@ -233,13 +237,16 @@ onMounted(() => {
           button {
             width: 84%;
             height: 55px;
-            opacity: 0.5;
+            // opacity: 0.5;
             border-radius: 10px;
             box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
             border: solid 1px #707070;
-            // background-color: #e6e2de;
             margin: 5px;
             font-weight: bold;
+
+            color: #906e6c;
+            background-color: #ffffff;
+            border: solid 1px #707070;
           }
           .grey-box {
             align-items: center;
@@ -309,25 +316,52 @@ onMounted(() => {
             margin-top: 5px;
           }
         }
-      }
-      // .link-bottom {
-      //   padding: 0 10px;
-      //   opacity: 0.5;
-      //   margin: auto;
-      //   width: 80%;
-      //   height: 2px;
-      //   background-color: #707070;
-      // }
 
+        .list_btn {
+          margin: 0px 30px;
+          position: relative;
+          height: 35px;
+          display: flex;
+          justify-content: center;
+
+          .btn_add {
+            margin-right: 5px;
+            position: relative;
+            width: 130px;
+            height: 35px;
+            margin-bottom: 5%;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            display: flex;
+            border-radius: 8px;
+            border: solid 1px #707070;
+            background-color: #ffffff;
+            color: #906e6c;
+            cursor: pointer;
+          }
+        }
+      }
       .current {
         display: none;
       }
       .content-checkoutbtn {
-        // width: 100%;
-        height: 50px;
+        height: 65px;
         display: flex;
         justify-content: center;
         align-items: center;
+        button {
+          width: 84%;
+          height: 55px;
+          border-radius: 10px;
+          box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
+          border: solid 1px #707070;
+          margin: 5px;
+          font-weight: bold;
+          color: #906e6c;
+          background-color: #ffffff;
+          border: solid 1px #707070;
+        }
       }
     }
   }

@@ -7,19 +7,33 @@ const handAddManagerView = () => {
 };
 </script>
 <template>
-  <div>
-    <div class="function-area">
-      <input class="seach-control" placeholder="搜尋折扣名稱、商品" />
-      <button class="header-btn" @click="handAddManagerView()">新增折扣</button>
+  <div class="discountSingle_div">
+    <div class="table-topBar">
+      <p class="bar-title">單品折扣(所有{{ 0 }}種折扣)</p>
+      <div>
+        <input class="seach-control" placeholder="搜尋折扣名稱、商品" />
+        <button class="header-btn" @click="handAddManagerView()">
+          新增
+        </button>
+      </div>
     </div>
     <table>
       <thead class="header-tab">
         <tr>
           <th>
-            <p class="nameview">全單折扣(所有{{ 0 }}種折扣)</p>
+            <p class="nameview">折扣名稱</p>
+          </th>
+          <th>
+            <p>套用服務數</p>
+          </th>
+          <th>
+            <p>套用商品數</p>
           </th>
           <th>
             <p>折扣內容</p>
+          </th>
+          <th>
+            <p>操作</p>
           </th>
         </tr>
       </thead>
@@ -39,7 +53,7 @@ const handAddManagerView = () => {
 </template>
 
 <style lang="scss" scoped>
-div {
+.discountSingle_div {
   position: absolute;
   top: 45px;
   bottom: 10px;
@@ -51,40 +65,47 @@ div {
   font-family: STXihei;
   color: #717171;
 
-  > .function-area {
+  > .table-topBar {
     height: 50px;
-    position: absolute;
-    top: -50px;
+    width: calc(100% - 2px);
     border: none;
     background-color: transparent;
     display: flex;
-    justify-content: end;
     align-items: center;
     left: auto;
-    width: auto;
+    color: #717171;
+    border: solid 1px #707070;
+    background-color: #e6e2de;
+    font-weight: 700;
+    > div {
+      display: flex;
+      height: 100%;
+      justify-content: right;
+      align-items: center;
+      > input {
+        width: auto;
+        height: 60%;
+        border-radius: 6px;
+        border: solid 1px #707070;
+        margin-right: 10px;
+        background: #fff url("@/assets/images/ico_seach.png") no-repeat;
+        background-position: 97%;
+        background-origin: content-box;
+        text-indent: 5px;
+      }
 
-    > input {
-      width: auto;
-      height: 60%;
-      border-radius: 6px;
-      border: solid 1px #707070;
-      background-color: #fff;
-      margin-right: 10px;
-
-      background: url("@/assets/images/ico_seach.png") no-repeat;
-      background-position: 97%;
-      background-origin: content-box;
-      text-indent: 5px;
+      > button {
+        border-radius: 6px;
+        min-width: 100px;
+        height: 70%;
+        border: solid 1px #707070;
+        background-color: #84715c;
+        color: #fff;
+        margin: 0 20px;
+      }
     }
-
-    > button {
-      border-radius: 6px;
-      min-width: 100px;
-      height: 70%;
-      border: solid 1px #707070;
-      background-color: #84715c;
-      color: #fff;
-      margin: 0 20px;
+    p {
+      width: 80%;
     }
   }
 
@@ -94,10 +115,6 @@ div {
 
     > .header-tab {
       display: block;
-      // height: 50px;
-      color: #717171;
-      border: solid 1px #707070;
-      background-color: #e6e2de;
       box-sizing: border-box;
 
       > tr {
@@ -110,10 +127,6 @@ div {
           > p {
             min-width: 108px;
             text-align: left;
-          }
-
-          > .nameview {
-            padding-left: 10px;
           }
         }
       }

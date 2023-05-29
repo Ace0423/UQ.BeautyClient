@@ -8,7 +8,7 @@
         :handmemuStateBtn="props.handmemuStateBtn"
       ></Header>
       <div class="top_menu">
-        <div @click="showAddDetailForm(true)"><img :src="btn_add_ico" /></div>
+        <div @click="showAddDetailForm(true)"><img :src="ico_add" /></div>
       </div>
     </div>
     <div class="customer-top">
@@ -41,8 +41,8 @@
         <table>
           <thead>
             <tr>
-              <td v-for="(item, value) in coursetitle" :key="item">
-                <p @click="sortthradHdr(value)">{{ item }}</p>
+              <td v-for="(item, value) in courseTableThead" :key="item">
+                <p @click="sorttheadHdr(value)">{{ item }}</p>
               </td>
             </tr>
           </thead>
@@ -59,30 +59,18 @@
                 <p>{{ item.price }}</p>
               </td>
               <td class="checkbox_state">
-                <!-- <p>{{ item.display ? '1' : '0' }}</p> -->
-                <!-- <input
-                  class="checked_status"
-                  type="checkbox"
-                  name="sub"
-                  value=""
-                  :checked="item.display == true"
-                  v-on:click="changeStutusFn(index, item)"
-                /> -->
                 <input
                   type="checkbox"
                   :checked="item.display == true"
-                  v-on:click="changeStutusFn(index, item)"
+                  v-on:click="updataStutusFn(index, item)"
                 />
-                <!-- <input type="checkbox" checked />
-                <input type="checkbox" disabled />
-                <input type="checkbox" checked disabled /> -->
               </td>
               <td>
                 <button v-on:click="showEditFormBtn(index, item)">
-                  <img class="edit_img" :src="Icon_edit" />
+                  <img class="edit_img" :src="icon_edit" />
                 </button>
                 <button v-on:click="deleteHdr(index, item.lessonId)">
-                  <img class="edit_img" :src="DeleteIcon" />
+                  <img class="delete_img" :src="icon_delete" />
                 </button>
               </td>
             </tr>
@@ -114,11 +102,10 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
-import DeleteIcon from "@/assets/Icon material-delete.svg";
-import addcoursetype from "@/assets/Icon course-addcoursetype.svg";
-import btn_add_ico from "@/assets/images/ico_add.png";
+import ico_add from "@/assets/images/ico_add.png";
 import Icon from "@/assets/Icon awesome-spa.svg";
-import Icon_edit from "@/assets/Ico_edit.svg";
+import icon_edit from "@/assets/images/icon_edit.png";
+import icon_delete from "@/assets/images/ico_delete.png";
 import type { IBackStatus } from "@/types/IData";
 import { useApptStore } from "@/stores/apptStore";
 import { showErrorMsg } from "@/types/IMessage";
@@ -133,13 +120,13 @@ const { t } = i18n.global;
 console.log(t("typeMgmt"));
 
 let showCourseFormRef = ref(false);
-let coursetitle = reactive([
+let courseTableThead = [
   "產品名稱",
   "服務時長(Min)",
   "售價(NT)",
   "上架",
   "操作",
-]);
+];
 
 const handAlertView = (msg: string, btnState: number, timer: number) => {
   alertInformation.messageText = msg;
@@ -229,7 +216,7 @@ let delCourseTypeHdr = (index: number, itemId: number) => {
 };
 
 //改變課程狀態
-let changeStutusFn = (index: number, item: any) => {
+let updataStutusFn = (index: number, item: any) => {
   let curdata: any = {
     lessonId: item.lessonId,
     lessonTypeId: item.lessonTypeId,
@@ -276,9 +263,9 @@ let showAddForm = (state: boolean) => {
 let showAddDetailForm = (state: boolean) => {
   showCourseFormRef.value = state;
 };
-let sortUpDown: string = "";
 //排序明細
-function sortthradHdr(name: number) {
+let sortUpDown: string = "";
+function sorttheadHdr(name: number) {
   let nameGroup = ["nameTw", "servicesTime", "price", "display"];
   let sortName = nameGroup[name];
   if (sortName)
@@ -329,7 +316,7 @@ function sortthradHdr(name: number) {
     > .customer-tab {
       display: flex;
       justify-content: space-between;
-      height: 7%;
+      height: 6%;
       overflow-y: scroll;
       > .item-tab {
         overflow-x: scroll;
@@ -339,23 +326,18 @@ function sortthradHdr(name: number) {
         height: 100%;
 
         > button {
-          // overflow: hidden;
-          white-space: nowrap;
-          // text-overflow: ellipsis;
           display: flex;
           justify-content: center;
           align-items: center;
           border: none;
-          // width: 120px;
-          // height: 45px;
-          height: 87%;
-          border-radius: 10px;
+          min-width: 100px;
+          height: 100%;
+          border-radius: 10px 10px 0 0;
           background-color: #faf9f8;
           font-size: 20px;
           font-weight: bold;
           font-family: HeitiTC;
           color: #717171;
-          min-width: 100px;
         }
 
         > button.active {
@@ -378,6 +360,7 @@ function sortthradHdr(name: number) {
           border-radius: 6px;
           border: solid 1px #707070;
           background-color: #84715c;
+          color: #ffffff;
         }
       }
     }
@@ -412,7 +395,6 @@ function sortthradHdr(name: number) {
 
             background: url("@/assets/images/ico_seach.png") no-repeat;
             background-color: #fff;
-            // background-position: right;
             background-position: 97%;
             background-origin: content-box;
             text-indent: 5px;
@@ -493,11 +475,6 @@ function sortthradHdr(name: number) {
               height: 47px;
               padding: 2px;
 
-              .edit_img {
-                width: 30px;
-                height: 30px;
-              }
-
               > img {
                 width: 40px;
                 height: 40px;
@@ -512,6 +489,14 @@ function sortthradHdr(name: number) {
               > button {
                 background-color: transparent;
                 border: none;
+                .edit_img {
+                  height: 27px;
+                  height: 27px;
+                }
+                .delete_img {
+                  width: 21px;
+                  height: 27px;
+                }
               }
 
               > input {

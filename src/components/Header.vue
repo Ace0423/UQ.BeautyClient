@@ -39,6 +39,8 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: absolute;
+  z-index: 3;
 
   // height: 100px;
   // background-color: burlywood;

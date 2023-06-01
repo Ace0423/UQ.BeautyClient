@@ -106,13 +106,9 @@ let filterGoodsData: any = computed(() =>
   goodsDetailListRef.value.filter(getGoodsFn)
 );
 function getGoodsFn(data: any) {
-  let selTypeTab =
-    goodsTypesListRef.value[goodsTypesListValueRef.value].lessonTypeId;
   return (
-    data.lessonTypeId == selTypeTab ||
-    (selTypeTab == 0 &&
-      (!search.value ||
-        data.nameTw.toLowerCase().includes(search.value.toLowerCase())))
+    !search.value ||
+    data.nameTw.toLowerCase().includes(search.value.toLowerCase())
   );
 }
 setTableFn();
@@ -192,7 +188,7 @@ function sorttheadHdr(name: number) {
 let updataStutusFn = (index: number, item: any) => {
   let curdata: any = {
     lessonId: item.lessonId,
-    lessonTypeId: item.lessonTypeId,
+    pgId: item.pgId,
     display: !item.display,
     nameEn: item.nameEn,
     nameTw: item.nameTw,
@@ -201,7 +197,7 @@ let updataStutusFn = (index: number, item: any) => {
     discount: item.discount,
   };
   updateGoodsDetailApi(curdata);
-  // getCourseDetailApi(courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId, 0);
+  // getCourseDetailApi(courseTypesTabs.value[courseTypesTabsValue.value].pgId, 0);
 };
 </script>
 
@@ -226,8 +222,10 @@ let updataStutusFn = (index: number, item: any) => {
         display: flex;
         width: 20%; // calc(100% - 300px);;
         justify-content: right;
-        margin-top: 15px;
         height: 29px;
+        position: relative;
+        right: 15px;
+        top: 15px;
         > img {
           margin-right: 10px;
           height: 29px;

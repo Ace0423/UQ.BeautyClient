@@ -413,10 +413,11 @@ export const useApptStore = defineStore("apptStore", () => {
       if (res.data.data.table) {
         let dataDetail = res.data.data.table;
         for (let i = 0; i < dataDetail.length; i++) {
-          const element = dataDetail[i].product;
+          const element = dataDetail[i];
           goodsDetailListRef.value.push(element);
         }
       }
+      
       return res;
     } catch (error) {
       console.log(error);
@@ -427,6 +428,7 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       let res: any = await getGoodsTypeReq(data, 1);
       goodsDetailListRef.value = [];
+      
       if (res.data.data.table)
         goodsDetailListRef.value = res.data.data.table[0].productList;
       return res;

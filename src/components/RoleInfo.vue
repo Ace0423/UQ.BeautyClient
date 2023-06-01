@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useCounterStore } from "@/stores/manager";
+import { useManagerStore } from "@/stores/manager";
 import DeleteIcon from "@/assets/Icon material-delete.svg";
 import { storeToRefs } from "pinia";
-const store = useCounterStore();
-const { adminList, roleInfoList } = storeToRefs(store);
-const { getRoleInfoData, addRoleManagerData, deleteRoleManagerData } = store;
+const managerStore = useManagerStore();
+const { adminList, roleInfoList } = storeToRefs(managerStore);
+const { getRoleInfoData, addRoleManagerData, deleteRoleManagerData } = managerStore;
 const alertState = ref(false);
 const alertInformation = reactive({
   messageText: "", // 提示內容

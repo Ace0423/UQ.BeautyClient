@@ -4,12 +4,12 @@ import AddIcon from "@/assets/Icon simple-addthis.svg";
 import DeleteIcon from "@/assets/Icon material-delete.svg";
 import InfoIcon from "@/assets/Icon ionic-ios-list-box.svg";
 import editIcon from "@/assets/Icon awesome-edit.svg";
-import { useCounterStore } from "@/stores/member";
+import { useMemberStore } from "@/stores/member";
 import { storeToRefs } from "pinia";
 
-const store = useCounterStore();
-const { memberList, groupListData } = storeToRefs(store);
-const { getMemberList, getGroupData } = store;
+const memberStore = useMemberStore();
+const { memberList, groupListData } = storeToRefs(memberStore);
+const { getMemberList, getGroupData } = memberStore;
 
 const currentIndex = ref(0);
 const memberInfoView = ref(false);

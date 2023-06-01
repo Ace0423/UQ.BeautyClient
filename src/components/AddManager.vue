@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useCounterStore } from "@/stores/manager";
+import { useManagerStore } from "@/stores/manager";
 import "vue-multiselect/dist/vue-multiselect.css";
-const store = useCounterStore();
-const { createAdminData, editAdminData } = store;
+const managerStore = useManagerStore();
+const { createAdminData, editAdminData } = managerStore;
 const alertState = ref(false);
 const alertInformation = reactive({
     messageText: "", // 提示內容

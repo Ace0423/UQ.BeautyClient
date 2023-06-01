@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useCounterStore } from "@/stores/memberBank";
+import { useMemberBankStore } from "@/stores/memberBank";
 
 import { storeToRefs } from "pinia";
-const store = useCounterStore();
-const { memberBankInfoList } = storeToRefs(store);
-const { getMemberBankDetailList } = store;
+const memberBankStore = useMemberBankStore();
+const { memberBankInfoList } = storeToRefs(memberBankStore);
+const { getMemberBankDetailList } = memberBankStore;
 const title = ref("儲值明細");
 const props = defineProps<{
   memberBankInfoItem: any;

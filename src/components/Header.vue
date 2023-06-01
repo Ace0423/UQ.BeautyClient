@@ -52,8 +52,9 @@ header {
       background-color: transparent;
 
       >img {
-        width: 30px;
-        height: 30px;
+        width: 35px;
+        height: 35px;
+        vertical-align: middle;
         // margin: 0 5px;
       }
 

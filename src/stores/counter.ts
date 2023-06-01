@@ -6,6 +6,7 @@ import {
   apiPostMemberDataRequest,
 } from "@/api/index";
 import { setToken, getToken, delToken } from "@/plugins/js-cookie";
+import router from "@/router";
 export const useCounterStore = defineStore("counter", () => {
   const isLogin = ref(false);
   const memberList: any = reactive({ data: [] });
@@ -35,10 +36,16 @@ export const useCounterStore = defineStore("counter", () => {
     }
   };
   const handLogOut = () => {
+
     delToken("token");
     delToken("userData");
-    setIsLogin(false);
-    location.reload()
+    router.push("/");
+    setTimeout(() => {
+      location.reload();
+    }, 500);
+    // 
+    // setIsLogin(false);
+
   }
   const setUserData = () => {
     let val: any = getToken("userData");

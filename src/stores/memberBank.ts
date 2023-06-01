@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { apiGetMemberBankListRequest, apiPostMemberBankRequest, apiGetMemberBankInfoListRequest, apiGetMemberBankDetailRequest, apiPutMemberBankInfoRequest } from "@/api/index";
-export const useCounterStore = defineStore("memberBank", () => {
+export const useMemberBankStore = defineStore("memberBank", () => {
     const memberBankList: any = reactive({ data: [] });
     const memberBankInfoList: any = reactive({ data: [] });
     const getMemberBankList = async (data: any) => {

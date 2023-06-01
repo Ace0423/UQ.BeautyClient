@@ -15,7 +15,7 @@ import customerImg from "@/assets/Icon zocial-guest.svg";
                 <img :src="customerImg" />
                 <p>顧客管理</p>
             </router-link>
-            <router-link class="router-btn" to="/commodityView">
+            <router-link class="router-btn" to="/settingView/goodsMgmt/goodsPage">
                 <img :src="commodityImg" />
                 <p>商品管理</p>
             </router-link>

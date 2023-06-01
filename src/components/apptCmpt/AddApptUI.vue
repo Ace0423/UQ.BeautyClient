@@ -35,6 +35,11 @@
         <div class="basic_info_item time">
           <p>選擇時段</p>
           <div class="news-filter">
+            <!-- <select name="name" v-model="newApptDataRef.timer">
+              <option v-for="item in timeGroup" :key="item" :value="item">
+                {{ item }}
+              </option>
+            </select> -->
             <el-select
               v-model="newApptDataRef.timer"
               allow-create

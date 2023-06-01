@@ -8,10 +8,10 @@ import lineIcon from "@/assets/Icon awesome-line.svg";
 import mailIcon from "@/assets/Icon feather-mail.svg";
 import gMailIcon from "@/assets/g-mail.svg";
 import editIcon from "@/assets/Icon awesome-edit.svg";
-import { useCounterStore } from "@/stores/memberBank";
+import { useMemberBankStore } from "@/stores/memberBank";
 
-const store = useCounterStore();
-const { getMemberBankDetail } = store;
+const memberBankStore = useMemberBankStore();
+const { getMemberBankDetail } = memberBankStore;
 const simpleView = ref(true);
 const currentIndex = ref(2);
 const memberDetailData: any = reactive({

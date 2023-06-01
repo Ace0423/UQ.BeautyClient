@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { useCounterStore } from "@/stores/member";
+import { useMemberStore } from "@/stores/member";
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.css";
 import { showErrorMsg, showApiStatus } from "@/types/IMessage";
 
-const store = useCounterStore();
-const { createMemberData, editMemberData, groupListData } = store;
+const memberStore = useMemberStore();
+const { createMemberData, editMemberData, groupListData } = memberStore;
 const alertState = ref(false);
 const alertInformation = reactive({
   messageText: "", // 提示內容

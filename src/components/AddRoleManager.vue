@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useCounterStore } from "@/stores/manager";
-const store = useCounterStore();
-const { createRoleData, editRoleData } = store;
+import { useManagerStore } from "@/stores/manager";
+const managerStore = useManagerStore();
+const { createRoleData, editRoleData } = managerStore;
 const alertState = ref(false);
 const alertInformation = reactive({
   messageText: "", // 提示內容

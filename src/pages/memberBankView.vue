@@ -3,12 +3,12 @@ import headIcon from "@/assets/Icon zocial-guest.svg";
 import Icon from "@/assets/Icon awesome-money-check-alt.svg";
 import InfoIcon from "@/assets/Icon ionic-ios-list-box.svg";
 import AddIcon from "@/assets/Icon simple-addthis.svg";
-import { useCounterStore } from "@/stores/memberBank";
+import { useMemberBankStore } from "@/stores/memberBank";
 import { storeToRefs } from "pinia";
 
-const store = useCounterStore();
-const { memberBankList } = storeToRefs(store);
-const { getMemberBankList } = store;
+const memberBankStore = useMemberBankStore();
+const { memberBankList } = storeToRefs(memberBankStore);
+const { getMemberBankList } = memberBankStore;
 
 const currentIndex = ref(0);
 const memberBankInfoView = ref(false);

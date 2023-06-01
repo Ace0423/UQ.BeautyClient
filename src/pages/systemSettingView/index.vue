@@ -6,15 +6,16 @@ const changeTab = (index: number) => {
     currentIndex.value = index;
 };
 onMounted(() => {
-    // router.push({ path: "/settingView/userManagerView/userView" })
+    router.push("/systemSettingView/managerAdmin")
 })
 </script>
 <template>
     <div class="content">
         <div class="nav">
-            <router-link to="userView">使用者</router-link>
-            <router-link to="scheduleView">排班</router-link>
-            <router-link to="permissionsView">權限</router-link>
+            <router-link :class="currentIndex == 0 ? 'active' : ''" v-on:click="changeTab(0)"
+                to="/systemSettingView/managerAdmin">管理員</router-link>
+            <router-link :class="currentIndex == 1 ? 'active' : ''" v-on:click="changeTab(1)" to="">站台腳色</router-link>
+            <router-link :class="currentIndex == 2 ? 'active' : ''" v-on:click="changeTab(2)" to="">功能列表</router-link>
         </div>
         <router-view />
     </div>
@@ -57,15 +58,11 @@ onMounted(() => {
             a:hover {
                 color: #717171;
             }
-
-            &.router-link-exact-active {
-                background-color: #e6e2de;
-            }
         }
 
-        // >a.active {
-        //     background-color: #e6e2de;
-        // }
+        >a.active {
+            background-color: #e6e2de;
+        }
     }
 }
 </style>

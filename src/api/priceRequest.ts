@@ -1,6 +1,5 @@
 import axios from "axios";
 import { getToken } from "@/plugins/js-cookie";
-let token: any = getToken("token");
 
 const apptRequest = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
@@ -19,6 +18,7 @@ const apptRequest_formbody = axios.create({
   },
 });
 
+let token: any = getToken("token");
 export const updataToken = () => {
   token = getToken("token");
   apptRequest.defaults.headers.common["Authorization"] =
@@ -45,16 +45,13 @@ export const getAllDiscountReq = (
 };
 
 export const postAddAllDiscountReq = (data: any) => {
-  updataToken();
   return apptRequest.post("/Discounts/Discount", data);
 };
 
 export const deleteAllDiscountReq = (id: any) => {
-  updataToken();
   return apptRequest.delete("/Discounts/Discount" + "?dcNo=" + id, id);
 };
 
 export const postEditApptDataReq = (data: any) => {
-  updataToken();
   return apptRequest.post("/Discounts/Discount", data);
 };

@@ -23,11 +23,21 @@
               </div>
               <div class="form-input">
                 <div>
-                  <el-input
-                    class="input-unit"
+                  <el-select
+                    class="select-unit"
+                    filterable
+                    placeholder="請選擇單位"
                     v-model="formInputRef.unit"
-                    placeholder="請輸入單位"
-                  />
+                  >
+                    <el-option
+                      v-for="(item, index) in unitGroup"
+                      :key="item"
+                      :value="index"
+                      :label="item"
+                    >
+                      {{ item }}
+                    </el-option>
+                  </el-select>
                   <span class="p_error" v-if="ruleItem.unit.is_error">
                     {{ ruleItem.unit.warn }}
                   </span>
@@ -39,6 +49,7 @@
                     class="input-capacity"
                     v-model="formInputRef.capacity"
                     placeholder="請輸入容量"
+                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
                   />
                   <span class="p_error" v-if="ruleItem.capacity.is_error">
                     {{ ruleItem.capacity.warn }}
@@ -54,7 +65,7 @@
                       class="input-basic"
                       v-model="formInputRef.NameNo"
                       placeholder="請輸入編號"
-                      onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                      onkeyup="value=value.replace(' ','')"
                     >
                     </el-input>
                   </div>
@@ -66,13 +77,28 @@
               <div class="form-input">
                 <div>
                   <div>
-                    <el-input
+                    <!-- <el-input
                       class="input-basic"
                       v-model="formInputRef.GoodsTypeId"
-                      placeholder="請輸入分類"
+                      placeholder="請選擇分類"
                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                    >
                     </el-input>
+                    > -->
+                    <el-select
+                      class="input-basic"
+                      filterable
+                      placeholder="請選擇分類"
+                      v-model="formInputRef.GoodsTypeId"
+                    >
+                      <el-option
+                        v-for="(item, index) in filterTypesTabs"
+                        :key="item.pgTitle"
+                        :value="item.pgId"
+                        :label="item.pgTitle"
+                      >
+                        {{ item.pgTitle }}
+                      </el-option>
+                    </el-select>
                   </div>
                   <span class="p_error" v-if="ruleItem.GoodsTypeId.is_error">
                     {{ ruleItem.GoodsTypeId.warn }}
@@ -87,7 +113,7 @@
                     <el-input
                       class="input-basic"
                       v-model="formInputRef.price"
-                      placeholder="請輸入訂價"
+                      placeholder="請輸入價格"
                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
                     >
                     </el-input>
@@ -99,29 +125,11 @@
               </div>
             </div>
             <div class="main-input">
-              <div class="form-input">
-                <div>
-                  <div>
-                    <el-input
-                      class="input-basic"
-                      v-model="formInputRef.sellPrice"
-                      placeholder="請輸入售價"
-                      onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                    >
-                    </el-input>
-                  </div>
-                  <span class="p_error" v-if="ruleItem.sellPrice.is_error">
-                    {{ ruleItem.sellPrice.warn }}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div class="main-input">
               <div class="form-total">
                 <div>
                   <p>庫存數量</p>
                   <div>
-                    <img :src="ico_minus" @click="countTotalBtn(-1)" />
+                    <img :src="icon_minus" @click="countTotalBtn(-1)" />
                     <el-input
                       class="input-total"
                       v-model="formInputRef.total"
@@ -139,16 +147,19 @@
                 <div>
                   <p>上架期間</p>
                   <div>
-                    <img
-                      v-if="formInputRef.state"
-                      :src="ico_sure"
-                      @click="updataOnlineBtn(true)"
-                    />
-                    <img
-                      v-if="!formInputRef.state"
-                      :src="ico_cancle"
-                      @click="updataOnlineBtn(true)"
-                    />
+                    <div>
+                      <img
+                        v-if="formInputRef.state"
+                        :src="icon_sure"
+                        @click="updataOnlineBtn(1)"
+                      />
+                      <img
+                        v-if="!formInputRef.state"
+                        :src="icon_cancle"
+                        @click="updataOnlineBtn(1)"
+                      />
+                      <span> 永久 </span>
+                    </div>
                     <el-input
                       class="input-state"
                       v-model="formInputRef.state"
@@ -156,16 +167,19 @@
                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
                     >
                     </el-input>
-                    <img
-                      v-if="formInputRef.state"
-                      :src="ico_cancle"
-                      @click="updataOnlineBtn(false)"
-                    />
-                    <img
-                      v-if="!formInputRef.state"
-                      :src="ico_sure"
-                      @click="updataOnlineBtn(false)"
-                    />
+                    <div>
+                      <img
+                        v-if="formInputRef.state"
+                        :src="icon_cancle"
+                        @click="updataOnlineBtn(0)"
+                      />
+                      <img
+                        v-if="!formInputRef.state"
+                        :src="icon_sure"
+                        @click="updataOnlineBtn(0)"
+                      />
+                      <span> 暫停 </span>
+                    </div>
                   </div>
                   <span class="p_error" v-if="ruleItem.state.is_error">
                     {{ ruleItem.state.warn }}
@@ -177,12 +191,6 @@
               <div class="form-input">
                 <div>
                   <div>
-                    <!-- <textarea
-                      class="input-msg"
-                      v-model="formInputRef.msg"
-                      placeholder="請輸入說明"
-                    >
-                    </textarea> -->
                     <el-input
                       class="input-msg"
                       v-model="formInputRef.msg"
@@ -190,9 +198,6 @@
                       type="textarea"
                     />
                   </div>
-                  <span class="p_error" v-if="ruleItem.msg.is_error">
-                    {{ ruleItem.msg.warn }}
-                  </span>
                 </div>
               </div>
             </div>
@@ -209,30 +214,41 @@
       </div>
     </div>
   </div>
-  <Alert
-    v-if="alertInformation.showAlert"
-    :alertInformation="alertInformation"
-    :handAlertView="handAlertView"
-  ></Alert>
 </template>
 <script setup lang="ts">
-import { useApptStore } from "@/stores/priceStore";
-import icon_plus from "@/assets/images/ico_plus.png";
-import ico_minus from "@/assets/images/ico_minus.png";
-import ico_sure from "@/assets/images/ico_sure.png";
-import ico_cancle from "@/assets/images/ico_cancle.png";
+import { useApptStore } from "@/stores/apptStore";
+import icon_plus from "@/assets/images/icon_plus.png";
+import icon_minus from "@/assets/images/icon_minus.png";
+import icon_sure from "@/assets/images/icon_sure.png";
+import icon_cancle from "@/assets/images/icon_cancle.png";
 import type { IBackStatus } from "@/types/IData";
 import { showErrorMsg } from "@/types/IMessage";
-import { verify_methods } from "@/utils/utils";
+import { GetRandomChar, GetRandomNumStr, verify_methods } from "@/utils/utils";
 import { storeToRefs } from "pinia";
+import Alert from "../alertCmpt";
 let store = useApptStore();
-let {} = storeToRefs(store);
-let { addtAllDiscountApi } = store;
-
+let { goodsTypesListRef } = storeToRefs(store);
+let { addGoodsDetailApi } = store;
 const props = defineProps<{
   showAddUIFn: Function;
   //   addDetailTypeID?: any;
 }>();
+let unitGroup: string[] = [
+  "不選擇",
+  "毫升",
+  "公升",
+  "功課",
+  "公斤",
+  "盎司",
+  "片",
+  "袋",
+  "包",
+  "個",
+  "組",
+  "式",
+  "瓶",
+  "罐",
+];
 
 let formInputRef: any = ref({
   name: "",
@@ -241,22 +257,27 @@ let formInputRef: any = ref({
   NameNo: null,
   GoodsTypeId: null,
   price: null,
-  sellPrice: null,
   total: 0,
-  state: false,
+  state: 0,
   msg: "",
 });
+
+let filterTypesTabs: any = computed(() =>
+  goodsTypesListRef.value.filter(function (value: any) {
+    return value.pgId > 0;
+  })
+);
 
 onMounted(() => {
   formInputRef.value.name = "";
   formInputRef.value.unit = "";
   formInputRef.value.capacity = "";
-  formInputRef.value.NameNo = "";
+  formInputRef.value.NameNo =
+    GetRandomChar(3) + "-" + GetRandomNumStr(1, 99999);
   formInputRef.value.GoodsTypeId = "";
   formInputRef.value.price = "";
-  formInputRef.value.sellPrice = "";
   formInputRef.value.total = 0;
-  formInputRef.value.state = false;
+  formInputRef.value.state = 0;
   formInputRef.value.msg = "";
 });
 
@@ -266,32 +287,54 @@ function countTotalBtn(data: number) {
   formInputRef.value.total += data;
   if (formInputRef.value.total < 0) formInputRef.value.total = 0;
 }
-function updataOnlineBtn(data: boolean) {
+function updataOnlineBtn(data: number) {
   formInputRef.value.state = data;
 }
 //新增課程-確認
 let submitBtn = () => {
-  ruleLists.ruleItem.discount.value = formInputRef.value.discount;
+  console.log(formInputRef.value);
+
   ruleLists.ruleItem.name.value = formInputRef.value.name;
+  ruleLists.ruleItem.price.value = formInputRef.value.price;
+  ruleLists.ruleItem.unit.value = formInputRef.value.unit;
+  ruleLists.ruleItem.capacity.value = formInputRef.value.capacity;
+  ruleLists.ruleItem.NameNo.value = formInputRef.value.NameNo;
+  ruleLists.ruleItem.GoodsTypeId.value = formInputRef.value.GoodsTypeId;
+  ruleLists.ruleItem.total.value = formInputRef.value.total;
+  ruleLists.ruleItem.state.value = formInputRef.value.state;
   if (!verify_all()) return;
 
   let curdata: any = {
-    title: formInputRef.value.name,
-    discount: formInputRef.value.dType
-      ? formInputRef.value.discount
-      : formInputRef.value.discount / 100,
-    dType: formInputRef.value.dType ? 1 : 0,
+    pCode: formInputRef.value.NameNo,
+    pName: formInputRef.value.name,
+    memo: formInputRef.value.msg,
+    price: formInputRef.value.price,
+    imageBig: "",
+    imageSmall: "",
+    unit: formInputRef.value.unit ? formInputRef.value.unit : 0,
+    amount: formInputRef.value.capacity ? formInputRef.value.capacity : 0,
+    brand: 0,
+    stockOpen: false,
+    stock: formInputRef.value.total,
+    stockTrace: false,
+    bonusOpen: false,
+    updateOpen: false,
+    display: formInputRef.value.state == 1,
+    productGroup: [formInputRef.value.GoodsTypeId],
+    productDiscount: [],
+    productProvider: [],
   };
+  console.log(curdata);
+
   /**新增明細 */
-  addtAllDiscountApi(curdata).then((res: any) => {
-    let resData = res.data;
-    if (resData.state == 1) {
-      handAlertView("新增成功", 2, 1);
+  addGoodsDetailApi(curdata).then((res: any) => {
+    if (res.state == 1) {
+        Alert.sussess("成功", 1000);
       setTimeout(() => {
         props.showAddUIFn(false);
       }, 1000);
     } else {
-      handAlertView(showErrorMsg(resData.msg), 2, 2);
+        Alert.warning(showErrorMsg(res.msg), 1000);
     }
   });
 };
@@ -315,29 +358,13 @@ const ruleLists: any = reactive({
     },
     unit: {
       type: "number",
-      rules: {
-        required: {
-          warn: "此項為必填",
-        },
-        length: {
-          max: 5,
-          warn: "不高於5字",
-        },
-      },
+      rules: {},
       is_error: false,
       warn: "",
     },
     capacity: {
       type: "number",
-      rules: {
-        required: {
-          warn: "此項為必填",
-        },
-        length: {
-          max: 5,
-          warn: "不高於5字",
-        },
-      },
+      rules: {},
       is_error: false,
       warn: "",
     },
@@ -346,10 +373,6 @@ const ruleLists: any = reactive({
       rules: {
         required: {
           warn: "此項為必填",
-        },
-        length: {
-          max: 5,
-          warn: "不高於5字",
         },
       },
       is_error: false,
@@ -361,10 +384,6 @@ const ruleLists: any = reactive({
         required: {
           warn: "此項為必填",
         },
-        length: {
-          max: 5,
-          warn: "不高於5字",
-        },
       },
       is_error: false,
       warn: "",
@@ -375,67 +394,19 @@ const ruleLists: any = reactive({
         required: {
           warn: "此項為必填",
         },
-        length: {
-          max: 5,
-          warn: "不高於5字",
-        },
-      },
-      is_error: false,
-      warn: "",
-    },
-    sellPrice: {
-      type: "number",
-      rules: {
-        required: {
-          warn: "此項為必填",
-        },
-        length: {
-          max: 5,
-          warn: "不高於5字",
-        },
       },
       is_error: false,
       warn: "",
     },
     total: {
       type: "number",
-      rules: {
-        required: {
-          warn: "此項為必填",
-        },
-        length: {
-          max: 5,
-          warn: "不高於5字",
-        },
-      },
+      rules: {},
       is_error: false,
       warn: "",
     },
     state: {
       type: "number",
-      rules: {
-        required: {
-          warn: "此項為必填",
-        },
-        length: {
-          max: 5,
-          warn: "不高於5字",
-        },
-      },
-      is_error: false,
-      warn: "",
-    },
-    msg: {
-      type: "number",
-      rules: {
-        required: {
-          warn: "此項為必填",
-        },
-        length: {
-          max: 5,
-          warn: "不高於5字",
-        },
-      },
+      rules: {},
       is_error: false,
       warn: "",
     },
@@ -456,22 +427,6 @@ const verify_all = () => {
   return is_valid;
 };
 //-----------------------------------我是底部-------------------------------------------
-
-//-------------------------------------------------------alertUI
-const alertInformation = reactive({
-  selfData: {},
-  selfType: "",
-  messageText: "", // 提示內容
-  buttonState: 2, //按鈕顯示狀態 0:全部 1:只顯示確定按鈕 2:不顯示按鈕
-  timerVal: 2, //時間計時器
-  showAlert: false, //顯示
-});
-const handAlertView = (msg: string, btnState: number, timer: number) => {
-  alertInformation.messageText = msg;
-  alertInformation.buttonState = btnState;
-  alertInformation.timerVal = timer;
-  alertInformation.showAlert = !alertInformation.showAlert;
-};
 </script>
 
 <style lang="scss" scoped>
@@ -559,49 +514,50 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
                 background-color: #877059;
               }
               ::placeholder {
-                color: #877059;
+                // color: #877059;
                 font-weight: bold;
               }
               font-size: 15px;
+              height: 38px;
             }
             .input-basic {
               height: 45px;
-              width: 206px;
+              width: 230px;
             }
             .input-name {
               height: 45px;
-              width: 206px;
+              width: 230px;
             }
-            .input-unit {
+            .select-unit {
               height: 45px;
-              width: 100px;
+              width: 125px;
             }
             .input-capacity {
               height: 45px;
               width: 100px;
             }
             .input-msg {
-              width: 418px;
+              width: 460px;
               height: 140px;
               border: solid 2px #877059;
               background-color: #fff;
               ::placeholder {
-                color: #877059;
+                // color: #877059;
                 font-size: 15px;
                 font-weight: bold;
               }
               :deep(.el-textarea__inner) {
-                width: 418px;
+                width: 460px;
                 height: 140px;
                 font-size: 15px;
               }
             }
           }
           .form-total {
-            width: 206px;
+            width: 230px;
             height: 100px;
             > div {
-              width: 206px;
+              width: 230px;
               border: solid 2px #877059;
               background-color: #fff;
               > div {
@@ -632,10 +588,10 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
             }
           }
           .form-state {
-            width: 206px;
+            width: 230px;
             height: 100px;
             > div {
-              width: 206px;
+              width: 230px;
               border: solid 2px #877059;
               background-color: #fff;
               > div {

@@ -15,6 +15,7 @@ declare module '@vue/runtime-core' {
     AddCourseDetailUI: typeof import('./components/courseCmpt/AddCourseDetailUI.vue')['default']
     AddCourseTypeUI: typeof import('./components/courseCmpt/AddCourseTypeUI.vue')['default']
     AddGoodsDetailUI: typeof import('./components/goodsCmpt/AddGoodsDetailUI.vue')['default']
+    AddGoodsTypeUI: typeof import('./components/goodsCmpt/AddGoodsTypeUI.vue')['default']
     AddGroup: typeof import('./components/AddGroup.vue')['default']
     AddManager: typeof import('./components/AddManager.vue')['default']
     AddMember: typeof import('./components/AddMember.vue')['default']

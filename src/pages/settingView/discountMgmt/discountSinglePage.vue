@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import seach_ico from "@/assets/images/ico_seach.png";
+import seach_ico from "@/assets/images/icon_seach.png";
 const addAdminManagerView = ref(false);
 const handAddManagerView = () => {
   console.log(111);
@@ -88,7 +88,7 @@ const handAddManagerView = () => {
         border-radius: 6px;
         border: solid 1px #707070;
         margin-right: 10px;
-        background: #fff url("@/assets/images/ico_seach.png") no-repeat;
+        background: #fff url("@/assets/images/icon_seach.png") no-repeat;
         background-position: 97%;
         background-origin: content-box;
         text-indent: 5px;

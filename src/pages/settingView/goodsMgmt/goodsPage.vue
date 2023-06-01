@@ -2,12 +2,6 @@
   <div class="container">
     <div class="goods-div">
       <div class="header">
-        <Header
-          :moduleType="'商品管理'"
-          :Icon="icon_goods"
-          :memuState="props.memuState"
-          :handmemuStateBtn="props.handmemuStateBtn"
-        ></Header>
         <div class="top_menu">
           <div @click="showAddDetailFormHdr(true)"><img :src="icon_add" /></div>
         </div>
@@ -17,10 +11,10 @@
           <button
             :class="goodsTypesListValueRef == index ? 'active' : ''"
             v-for="(item, index) in goodsTypesListRef"
-            :key="item.lessonTypeId"
+            :key="item.pgTitle"
             v-on:click="changeTab(index, item)"
           >
-            {{ item.nameTw }}
+            {{ item.pgTitle }}
           </button>
         </div>
         <div class="content-main">
@@ -48,10 +42,10 @@
             <tbody>
               <tr v-for="(item, index) in filterGoodsData" :key="item.lessonId">
                 <td>
-                  <p>{{ item.lessonId }}</p>
+                  <p>{{ item.pCode }}</p>
                 </td>
                 <td>
-                  <p>{{ item.nameTw }}</p>
+                  <p>{{ item.pName }}</p>
                 </td>
                 <td>
                   <p>{{ item.price }}</p>
@@ -79,9 +73,8 @@
       <div class="foot"></div>
     </div>
   </div>
-  <AddGoodsDetailUI v-if="showAddUIRef" 
-    :showAddUIFn="showAddDetailFormHdr"
-  />
+  <AddGoodsDetailUI v-if="showAddUIRef" :showAddUIFn="showAddDetailFormHdr" />
+  <AddGoodsTypeUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" />
 </template>
 
 <script lang="ts" setup>
@@ -92,10 +85,7 @@ import icon_delete from "@/assets/images/icon_delete.png";
 import { useApptStore } from "@/stores/apptStore";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
-const props = defineProps<{
-  memuState: any;
-  handmemuStateBtn: Function;
-}>();
+
 let store = useApptStore();
 let { goodsTypesListRef, goodsTypesListValueRef, goodsDetailListRef } =
   storeToRefs(store);
@@ -104,6 +94,7 @@ let {
   getGoodsDetailApi,
   updateGoodsDetailApi,
   delGoodsDetailApi,
+  getGoodsTypeDataApi,
 } = store;
 let showAddUIRef = ref(false);
 let showEditUIRef = ref(false);
@@ -124,9 +115,15 @@ function getGoodsFn(data: any) {
         data.nameTw.toLowerCase().includes(search.value.toLowerCase())))
   );
 }
-
-getGoodsTypeApi();
-
+setTableFn();
+function setTableFn() {
+  getGoodsTypeApi().then((res: any) => {
+    getGoodsDetailApi(
+      goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
+      0
+    );
+  });
+}
 //新增-顯示
 let showAddDetailFormHdr = (state: boolean) => {
   showAddUIRef.value = state;
@@ -137,6 +134,8 @@ let showAddTypeFormHdr = (state: boolean) => {
   getGoodsTypeApi(0);
 };
 const showEditUIFn = (state: boolean) => {
+  console.log(state);
+
   showEditUIRef.value = state;
   getGoodsDetailApi(0, 0);
 };
@@ -164,7 +163,12 @@ function showEditFormFn(index: number, item: any) {
 
 let changeTab = (index: number, item: any) => {
   goodsTypesListValueRef.value = index;
-  getGoodsDetailApi(item.lessonTypeId, 0);
+
+  if (item.pgId == 0) {
+    getGoodsDetailApi(item.pgId, 0);
+  } else {
+    getGoodsTypeDataApi(item.pgId);
+  }
 };
 //排序明細
 let sortUpDown: string = "";
@@ -207,17 +211,20 @@ let updataStutusFn = (index: number, item: any) => {
   height: calc(var(--vh, 1vh) * 100);
   width: 100%;
   position: relative;
+  //   pointer-events: none;
   .goods-div {
     width: 100%;
     height: 100%;
+    // pointer-events: none;
     .header {
       display: flex;
       width: 100%;
       height: 80px;
-
+      justify-content: end;
+      //   pointer-events: none;
       .top_menu {
         display: flex;
-        width: calc(100% - 300px);
+        width: 20%; // calc(100% - 300px);;
         justify-content: right;
         margin-top: 15px;
         height: 29px;

@@ -3,7 +3,7 @@ import logoImg from "@/assets/images/logo.png";
 import appointmentImg from "@/assets/Icon awesome-calendar-check.svg";
 import commodityImg from "@/assets/Icon awesome-shopping-bag.svg";
 import courseImg from "@/assets/Icon awesome-spa.svg";
-import ico_goods from "@/assets/images/ico_goods.png";
+import icon_goods from "@/assets/images/icon_goods.png";
 import settingImg from "@/assets/Icon material-settings.svg";
 import orderImg from "@/assets/Icon metro-shop.svg";
 import customerImg from "@/assets/Icon zocial-guest.svg";
@@ -45,13 +45,8 @@ onMounted(() => {
               >課程管理</router-link
             >
           </li>
-          <!-- <li>
-            <img :src="ico_goods" /><router-link to="/goodsView"
-              > {{ $t("goodsMgmt") }}</router-link
-            >
-          </li> -->
           <li>
-            <img :src="appointmentImg" /><router-link to="/"
+            <img :src="appointmentImg" /><router-link to="/appointmentView"
               >預約紀錄</router-link
             >
           </li>

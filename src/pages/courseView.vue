@@ -8,7 +8,7 @@
         :handmemuStateBtn="props.handmemuStateBtn"
       ></Header>
       <div class="top_menu">
-        <div @click="showAddDetailForm(true)"><img :src="ico_add" /></div>
+        <div @click="showAddDetailForm(true)"><img :src="icon_add" /></div>
       </div>
     </div>
     <div class="customer-top">
@@ -102,10 +102,10 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
-import ico_add from "@/assets/images/ico_add.png";
+import icon_add from "@/assets/images/icon_add.png";
 import Icon from "@/assets/Icon awesome-spa.svg";
 import icon_edit from "@/assets/images/icon_edit.png";
-import icon_delete from "@/assets/images/ico_delete.png";
+import icon_delete from "@/assets/images/icon_delete.png";
 import type { IBackStatus } from "@/types/IData";
 import { useApptStore } from "@/stores/apptStore";
 import { showErrorMsg } from "@/types/IMessage";
@@ -393,7 +393,7 @@ function sorttheadHdr(name: number) {
             background-color: #fff;
             margin-right: 10px;
 
-            background: url("@/assets/images/ico_seach.png") no-repeat;
+            background: url("@/assets/images/icon_seach.png") no-repeat;
             background-color: #fff;
             background-position: 97%;
             background-origin: content-box;

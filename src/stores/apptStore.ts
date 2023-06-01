@@ -17,7 +17,17 @@ import {
   updateLessonTypeOrderReq,
   updateLessonTypeReq,
 } from "@/api/authRequest";
-import { addGoodsDetailReq, addGoodsTypeReq, delGoodsDetailReq, delGoodsTypeReq, getGoodsTypeReq, updateGoodsDetailReq, updateGoodsTypeOrderReq, updateGoodsTypeReq } from "@/api/goodsRequest";
+import {
+  addGoodsDetailReq,
+  addGoodsTypeReq,
+  delGoodsDetailReq,
+  delGoodsTypeReq,
+  getGoodsDetailReq,
+  getGoodsTypeReq,
+  updateGoodsDetailReq,
+  updateGoodsTypeOrderReq,
+  updateGoodsTypeReq,
+} from "@/api/goodsRequest";
 import { defineStore } from "pinia";
 
 export const useApptStore = defineStore("apptStore", () => {
@@ -317,42 +327,39 @@ export const useApptStore = defineStore("apptStore", () => {
   //--------------------goods
   //取分類
   const goodsTypesListValueRef = ref(0);
-  let goodsTypesListRef: any = ref([
-    {
-      lessonTypeId: 0,
-      order: 0,
-      display: true,
-      nameTw: "全部",
-    },
-  ]);
-  const getGoodsTypeApi = async (data: any=0) => {
+  let goodsTypesListRef: any = ref([]);
+  const getGoodsTypeApi = async (data: any = 0) => {
     try {
-      let res: any = await getGoodsTypeReq(data);
+      let res: any = await getGoodsTypeReq(data, 0);
       goodsTypesListRef.value = [
         {
-          lessonTypeId: 0,
+          pgId: 0,
           display: true,
-          nameTw: "全部",
+          pgTitle: "全部",
           order: 0,
+          isList: 0,
         },
       ];
       goodsDetailListRef.value = [];
       if (res.data.data.table) {
         for (let i = 0; i < res.data.data.table.length; i++) {
-          let element = res.data.data.table[i];
-          // element.orderCheck = element.order;
+          let element = res.data.data.table[i].group;
           element.editState = false;
-          element.lessonTypeId = parseInt(element.lessonTypeId);
-          (element.editNameTw = element.nameTw),
+          element.isList = 0;
+          element.pIdList = [];
+          element.pgId = parseInt(element.pgId);
+          (element.editNameTw = element.pgTitle),
             goodsTypesListRef.value.push(element);
         }
         goodsTypesListRef.value.sort(function (a: any, b: any) {
-          return a.order > b.order ? 1 : -1;
+          return a.pgId > b.pgId ? 1 : -1;
         });
-        getGoodsDetailApi(
-          goodsTypesListRef.value[goodsTypesListValueRef.value].lessonTypeId,
-          "0"
-        );
+        // if (goodsTypesListRef.value[goodsTypesListValueRef.value].pgId == 0) {
+        //   getGoodsDetailApi(
+        //     goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
+        //     "0"
+        //   );
+        // }
       }
       return res;
     } catch (error) {
@@ -397,16 +404,31 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
 
-
-
-
   let goodsDetailListRef: any = ref([]);
   //取資料
   const getGoodsDetailApi = async (g: any, id: any) => {
     try {
-      let res: any = await getCourseDetailReq(g, id);
+      let res: any = await getGoodsDetailReq(g, id);
       goodsDetailListRef.value = [];
-      if (res.data.data.table) goodsDetailListRef.value = res.data.data.table;
+      if (res.data.data.table) {
+        let dataDetail = res.data.data.table;
+        for (let i = 0; i < dataDetail.length; i++) {
+          const element = dataDetail[i].product;
+          goodsDetailListRef.value.push(element);
+        }
+      }
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //查詢群組分類資料
+  const getGoodsTypeDataApi = async (data: any = 0) => {
+    try {
+      let res: any = await getGoodsTypeReq(data, 1);
+      goodsDetailListRef.value = [];
+      if (res.data.data.table)
+        goodsDetailListRef.value = res.data.data.table[0].productList;
       return res;
     } catch (error) {
       console.log(error);
@@ -484,5 +506,6 @@ export const useApptStore = defineStore("apptStore", () => {
     addGoodsDetailApi,
     updateGoodsDetailApi,
     delGoodsDetailApi,
+    getGoodsTypeDataApi,
   };
 });

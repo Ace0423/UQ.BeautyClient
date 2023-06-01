@@ -108,7 +108,7 @@ let filterGoodsData: any = computed(() =>
 function getGoodsFn(data: any) {
   return (
     !search.value ||
-    data.nameTw.toLowerCase().includes(search.value.toLowerCase())
+    data.pName.toLowerCase().includes(search.value.toLowerCase())
   );
 }
 setTableFn();
@@ -154,6 +154,11 @@ let selData: any = [];
 function showEditFormFn(index: number, item: any) {
   selData.value = item;
   showEditUIFn(true);
+
+  getGoodsDetailApi(0, item.pId).then((res: any) => {
+    console.log(res);
+    
+  });
 }
 
 let changeTab = (index: number, item: any) => {

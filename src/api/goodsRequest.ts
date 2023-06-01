@@ -6,13 +6,6 @@ const httpRequest = axios.create({
   withCredentials: true,
 });
 
-let token: any = getToken("token");
-export const updataToken = () => {
-  token = getToken("token");
-  httpRequest.defaults.headers.common["Authorization"] =
-    "bearer " + JSON.parse(token).token;
-};
-
 //分類
 export const getGoodsTypeReq = (data: any, isList: any = 0) =>
   getHttps(
@@ -39,7 +32,7 @@ export const delGoodsTypeReq = (data: any) =>
 export const getGoodsDetailReq = (Group: any, id: any) =>
   getHttps(
     httpRequest,
-    "Product/ProductInfo?pid=" + Group + "&pageIndex=0&count=0"
+    "Product/ProductInfo?pid=" + id + "&pageIndex=0&count=0"
   );
 
 export const addGoodsDetailReq = (data: any) =>

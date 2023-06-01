@@ -220,7 +220,7 @@ export const useApptStore = defineStore("apptStore", () => {
   const getApptDataApi = async (year: any, month: any) => {
     try {
       let data = "?year=" + year + "&month=" + month;
-      let res = await getApptDataRequest(data);
+      let res: any = await getApptDataRequest(data);
       bookingList.value = [];
 
       //重製預約
@@ -417,7 +417,7 @@ export const useApptStore = defineStore("apptStore", () => {
           goodsDetailListRef.value.push(element);
         }
       }
-      
+
       return res;
     } catch (error) {
       console.log(error);
@@ -428,7 +428,7 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       let res: any = await getGoodsTypeReq(data, 1);
       goodsDetailListRef.value = [];
-      
+
       if (res.data.data.table)
         goodsDetailListRef.value = res.data.data.table[0].productList;
       return res;
@@ -458,9 +458,9 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   //刪除資料
-  const delGoodsDetailApi = async (data: any,pgId: any) => {
+  const delGoodsDetailApi = async (data: any, pgId: any) => {
     try {
-      let res = await delGoodsDetailReq(data,pgId);
+      let res = await delGoodsDetailReq(data, pgId);
       if (res)
         getCourseDetailApi(
           courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,

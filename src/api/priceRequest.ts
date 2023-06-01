@@ -1,38 +1,17 @@
-import axios from "axios";
+import axios, { type AxiosInstance } from "axios";
 import { getToken } from "@/plugins/js-cookie";
+import { deleteHttps, getHttps, postHttps } from "./sendHttps";
 
-const apptRequest = axios.create({
+const httpRequest = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
   withCredentials: true,
-  headers: {
-    // "Content-Type": "application/x-www-form-urlencoded; charset=utf-8;",
-    // Authorization: "bearer " + JSON.parse(token).token,
-  },
+  headers: {},
 });
-const apptRequest_formbody = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL,
-  withCredentials: true,
-  headers: {
-    // "Content-Type": "application/x-www-form-urlencoded; charset=utf-8;",
-    // Authorization: "bearer " + JSON.parse(token).token,
-  },
-});
-
-let token: any = getToken("token");
-export const updataToken = () => {
-  token = getToken("token");
-  apptRequest.defaults.headers.common["Authorization"] =
-    "bearer " + JSON.parse(token).token;
-};
 
 /**獲取折扣清單 */
-export const getAllDiscountReq = (
-  id: any = 0,
-  page: any = 0,
-  count: any = 0
-) => {
-  updataToken();
-  return apptRequest.get(
+export const getAllDiscountReq = (id: any = 0, page: any = 0, count: any = 0) =>
+  getHttps(
+    httpRequest,
     "/Discounts/Discount" +
       "?no=" +
       id +
@@ -42,16 +21,9 @@ export const getAllDiscountReq = (
       count,
     id
   );
-};
-
-export const postAddAllDiscountReq = (data: any) => {
-  return apptRequest.post("/Discounts/Discount", data);
-};
-
-export const deleteAllDiscountReq = (id: any) => {
-  return apptRequest.delete("/Discounts/Discount" + "?dcNo=" + id, id);
-};
-
-export const postEditApptDataReq = (data: any) => {
-  return apptRequest.post("/Discounts/Discount", data);
-};
+export const postAddAllDiscountReq = (data: any) =>
+  postHttps(httpRequest, "/Discounts/Discount", data);
+export const postEditApptDataReq = (data: any) =>
+  postHttps(httpRequest, "/Discounts/Discount", data);
+export const deleteAllDiscountReq = (data: any) =>
+  deleteHttps(httpRequest, "/Discounts/Discount" + "?dcNo=" + data, data);

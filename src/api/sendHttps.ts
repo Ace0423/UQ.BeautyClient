@@ -3,12 +3,10 @@ import { getToken } from "@/plugins/js-cookie";
 import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
 import axios from "axios"; // 參照axios
 
-const instancexx = axios.create({
+const httpRequest = axios.create({
+  baseURL: import.meta.env.VITE_BASE_URL,
   withCredentials: true,
-  // baseURL: config.baseUrl.dev,
-  // baseURL: "/loginApi",
-  timeout: 60000,
-  headers: { "content-type": "application/json; charset=utf-8" },
+  // headers: { "content-type": "application/json; charset=utf-8" },
 });
 
 export const updataToken = (instance: any) => {
@@ -18,7 +16,7 @@ export const updataToken = (instance: any) => {
 };
 
 //get請求
-export function getHttps(instance: any, url: any, params = {}) {
+export function getHttps(instance: any = httpRequest, url: any, params = {}) {
   updataToken(instance);
   instance.defaults.withCredentials = true;
   return new Promise((resolve, reject) => {
@@ -36,7 +34,7 @@ export function getHttps(instance: any, url: any, params = {}) {
   });
 }
 //post請求
-export function postHttps(instance: any, url: any, data = {}) {
+export function postHttps(instance: any = httpRequest, url: any, data = {}) {
   updataToken(instance);
   return new Promise((resolve, reject) => {
     instance.post(url, data).then(
@@ -51,7 +49,7 @@ export function postHttps(instance: any, url: any, data = {}) {
   });
 }
 //post請求
-export function putHttps(instance: any, url: any, data = {}) {
+export function putHttps(instance: any = httpRequest, url: any, data = {}) {
   updataToken(instance);
   return new Promise((resolve, reject) => {
     instance.put(url, data).then(
@@ -67,7 +65,7 @@ export function putHttps(instance: any, url: any, data = {}) {
 }
 
 //post請求
-export function deleteHttps(instance: any, url: any, data = {}) {
+export function deleteHttps(instance: any = httpRequest, url: any, data = {}) {
   updataToken(instance);
   return new Promise((resolve, reject) => {
     instance.delete(url, data).then(

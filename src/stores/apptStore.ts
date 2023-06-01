@@ -451,16 +451,16 @@ export const useApptStore = defineStore("apptStore", () => {
   const updateGoodsDetailApi = async (data: any) => {
     try {
       let res = await updateGoodsDetailReq(data);
-      if (res) getCourseDetailApi(0, 0);
+      // if (res) getCourseDetailApi(0, 0);
       return res;
     } catch (error) {
       console.log(error);
     }
   };
   //刪除資料
-  const delGoodsDetailApi = async (data: any) => {
+  const delGoodsDetailApi = async (data: any,pgId: any) => {
     try {
-      let res = await delGoodsDetailReq(data);
+      let res = await delGoodsDetailReq(data,pgId);
       if (res)
         getCourseDetailApi(
           courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,

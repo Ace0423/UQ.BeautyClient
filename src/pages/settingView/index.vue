@@ -1,4 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
+import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
+</script>
 <template>
   <div class="content">
     <div class="menu">
@@ -11,7 +14,7 @@
                 <h1>商店設定</h1>
                 <p>管理商店資訊、營業時間與顧客付款方式</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
           <div class="nav-content">
@@ -20,7 +23,7 @@
                 <h1>人員管理</h1>
                 <p>管理商店人員、排班與權限等相關設定</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
           <div class="nav-content">
@@ -29,7 +32,7 @@
                 <h1>線上網站設定</h1>
                 <p>管理商店線上網站相關設定</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
           <div class="nav-content">
@@ -38,7 +41,7 @@
                 <h1>帳單與訂閱</h1>
                 <p>瀏覽商店目前訂閱方案</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
           <div class="nav-content">
@@ -47,7 +50,7 @@
                 <h1>訊息管理</h1>
                 <p>管理與新增商店的訊息發送相關設定</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
         </div>
@@ -59,7 +62,7 @@
                 <h1>問卷表單</h1>
                 <p>管理商店給顧客填寫的所有表單</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
         </div>
@@ -75,7 +78,7 @@
                 <h1>項目管理</h1>
                 <p>管理商店內所有服務項目</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
           <div class="nav-content">
@@ -84,7 +87,7 @@
                 <h1>{{ $t("goodsMgmt") }}</h1>
                 <p>管理商店內所有商品</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
           <div class="nav-content">
@@ -93,7 +96,7 @@
                 <h1>折扣</h1>
                 <p>管理商店內所有折扣項目</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
         </div>
@@ -105,7 +108,7 @@
                 <h1>優惠劵</h1>
                 <p>管理商店內所有優惠卷</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
           <div class="nav-content">
@@ -114,7 +117,7 @@
                 <h1>儲值卡</h1>
                 <p>管理商店內所有儲值卡</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
           <div class="nav-content">
@@ -123,7 +126,7 @@
                 <h1>計次劵</h1>
                 <p>管理商店內所有計次劵</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
         </div>
@@ -135,7 +138,7 @@
                 <h1>LINE OA 串接</h1>
                 <p>管理LiINE OA 與系統的串接相關規定</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
           <div class="nav-content">
@@ -144,7 +147,7 @@
                 <h1>LINE Pay 串接</h1>
                 <p>管理LiINE Pay 與系統的串接相關規定</p>
               </div>
-              <p>></p>
+              <img :src="icon_right_arrow" />
             </router-link>
           </div>
         </div>
@@ -201,7 +204,7 @@
         > a {
           display: flex;
           justify-content: space-between;
-
+          align-items: center;
           > div {
             > h1 {
               font-size: 20px;
@@ -217,6 +220,10 @@
           > p {
             display: flex;
             align-items: center;
+          }
+          >img{
+            width: 20px;
+            height: 20px;
           }
         }
       }

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getToken } from "@/plugins/js-cookie";
-import { deleteHttps, getHttps, postHttps } from "./sendHttps";
+import { deleteHttps, getHttps, postHttps, putHttps } from "./sendHttps";
 const httpRequest = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
   withCredentials: true,
@@ -45,9 +45,9 @@ export const getGoodsDetailReq = (Group: any, id: any) =>
 export const addGoodsDetailReq = (data: any) =>
   postHttps(httpRequest, "/Product/ProductInfo", data);
 export const updateGoodsDetailReq = (data: any) =>
-  postHttps(httpRequest, "/Lesson/DetailUpdate", data);
-export const delGoodsDetailReq = (data: any) =>
-  deleteHttps(httpRequest, "/Lesson/Detail/" + data);
+  putHttps(httpRequest, "/Product/ProductInfo?pId=" + data.pId, data);
+export const delGoodsDetailReq = (data: any, pgId: any) =>
+  deleteHttps(httpRequest, "/Product/ProductGroup/" + pgId + "/" + data);
 
 // //分類
 // export const getGoodsTypeReq = (data: any) => {

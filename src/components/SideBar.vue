@@ -10,6 +10,8 @@ import customerImg from "@/assets/Icon zocial-guest.svg";
 import bankImg from "@/assets/Icon awesome-money-check-alt.svg";
 import InfoIcon from "@/assets/Icon ionic-ios-list-box.svg";
 
+import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
+import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
 import closeIcon from "@/assets/Group32.svg";
 import { useCounterStore } from "@/stores/counter";
 import { storeToRefs } from "pinia";
@@ -29,7 +31,7 @@ onMounted(() => {
 });
 </script>
 
-<template >
+<template>
   <div class="popup-mask" v-on:click.self="handmemuStateBtn()">
     <div class="sideBar">
       <img :src="logoImg" />
@@ -71,7 +73,7 @@ onMounted(() => {
             <p>{{ userInfo.name }}</p>
             <p>{{ userInfo.email }}</p>
           </div>
-          <button>></button>
+          <button><img :src="icon_right_arrow" /></button>
         </div>
         <div class="user-menu" v-if="userMenuState">
           <button @click="handLogOut()">登出</button>
@@ -79,9 +81,9 @@ onMounted(() => {
       </div>
     </div>
   </div>
-</template> 
+</template>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .popup-mask {
   position: absolute;
   top: 0;
@@ -163,6 +165,10 @@ onMounted(() => {
           background-color: transparent;
           border: none;
           margin: 0 0px 0 20px;
+          > img {
+            width: 30px;
+            height: 30px;
+          }
         }
       }
 

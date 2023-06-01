@@ -51,6 +51,22 @@ export function postHttps(instance: any, url: any, data = {}) {
   });
 }
 //post請求
+export function putHttps(instance: any, url: any, data = {}) {
+  updataToken(instance);
+  return new Promise((resolve, reject) => {
+    instance.put(url, data).then(
+      (response: any) => {
+        resolve(response.data);
+      },
+      (err: any) => {
+        Alert.warning(showHttpsStatus(err.request.status), 1000);
+        reject(err);
+      }
+    );
+  });
+}
+
+//post請求
 export function deleteHttps(instance: any, url: any, data = {}) {
   updataToken(instance);
   return new Promise((resolve, reject) => {

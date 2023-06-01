@@ -293,14 +293,20 @@ function sorttheadHdr(name: number) {
     width: 100%;
     .top_menu {
       display: flex;
-      width: calc(100% - 300px);
+      width: calc(100%);
       justify-content: right;
-      margin-top: 15px;
-      height: 29px;
-      > img {
-        margin-right: 10px;
+      height: 80px;
+      > div {
+        display: flex;
         height: 29px;
-        width: 29px;
+        position: relative;
+        right: 15px;
+        top: 15px;
+        > img {
+          // margin-right: 10px;
+          height: 29px;
+          width: 29px;
+        }
       }
     }
   }

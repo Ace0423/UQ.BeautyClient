@@ -61,7 +61,7 @@
                   <button v-on:click="showEditFormFn(index, item)">
                     <img class="edit_img" :src="icon_edit" />
                   </button>
-                  <button v-on:click="deleteHdr(index, item.lessonId)">
+                  <button @click="deleteHdr(item, index)">
                     <img class="delete_img" :src="icon_delete" />
                   </button>
                 </td>
@@ -136,14 +136,13 @@ const showEditUIFn = (state: boolean) => {
   getGoodsDetailApi(0, 0);
 };
 //刪除
-let deleteHdr = (index: number, item: any) => {
+let deleteHdr = (item: any, index: number) => {
   selData = item;
   Alert.check("是否刪除", 1000, onDeleteAlertBtn);
 };
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
-    console.log("確認刪除");
-    delGoodsDetailApi(selData.discountNo);
+    delGoodsDetailApi(selData.pId,goodsTypesListRef.value[goodsTypesListValueRef.value].pgId);
   } else {
     console.log("取消刪除");
   }
@@ -187,15 +186,24 @@ function sorttheadHdr(name: number) {
 //改變狀態
 let updataStutusFn = (index: number, item: any) => {
   let curdata: any = {
-    lessonId: item.lessonId,
-    pgId: item.pgId,
+    amount: item.amount,
+    bonusOpen: item.amount,
+    brand: item.brand,
     display: !item.display,
-    nameEn: item.nameEn,
-    nameTw: item.nameTw,
-    servicesTime: item.servicesTime,
+    imageBig: item.imageBig,
+    imageSmall: item.imageSmall,
+    memo: item.memo,
+    pCode: item.pCode,
+    pId: item.pId,
+    pName: item.pName,
     price: item.price,
-    discount: item.discount,
+    stock: item.stock,
+    stockOpen: item.stockOpen,
+    stockTrace: item.stockTrace,
+    unit: item.unit,
+    updateOpen: item.updateOpen,
   };
+  console.log(curdata, "curdata");
   updateGoodsDetailApi(curdata);
   // getCourseDetailApi(courseTypesTabs.value[courseTypesTabsValue.value].pgId, 0);
 };

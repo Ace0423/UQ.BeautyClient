@@ -8,28 +8,25 @@
         :handmemuStateBtn="props.handmemuStateBtn"
       ></Header>
       <div class="top_menu">
-        <!-- <img
-          :src="date_Icon"
-          id="avatar-small"
-          @click="updataShowLittleDate(true)"
-        /> -->
-        <img :src="btn_msg_ico" />
-        <el-dropdown trigger="click" @command="handleCommand">
-          <span class="el-dropdown-link">
-            <img :src="btn_add_ico" />
-          </span>
-          <template #dropdown>
-            <el-dropdown-menu class="top-menu-drop">
-              <el-dropdown-item command="addAppt">新增預約</el-dropdown-item>
-              <el-dropdown-item command="addRest"
-                >加入休息時間</el-dropdown-item
-              >
-              <el-dropdown-item command="addBill"
-                >新增快速結帳單</el-dropdown-item
-              >
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <div>
+          <img :src="btn_msg_ico" />
+          <el-dropdown trigger="click" @command="handleCommand">
+            <span class="el-dropdown-link">
+              <img :src="btn_add_ico" />
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu class="top-menu-drop">
+                <el-dropdown-item command="addAppt">新增預約</el-dropdown-item>
+                <el-dropdown-item command="addRest"
+                  >加入休息時間</el-dropdown-item
+                >
+                <el-dropdown-item command="addBill"
+                  >新增快速結帳單</el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </div>
       </div>
     </div>
 
@@ -1147,14 +1144,19 @@ $borderCoder: #eaedf2;
     width: 100%;
     .top_menu {
       display: flex;
-      width: calc(100% - 300px);
+      width: calc(100%);
       justify-content: right;
-      margin-top: 15px;
-      height: 29px;
-      > img {
-        margin-right: 10px;
+      height: 80px;
+      > div {
         height: 29px;
-        width: 29px;
+        position: relative;
+        right: 15px;
+        top: 15px;
+        > img {
+          margin-right: 10px;
+          height: 29px;
+          width: 29px;
+        }
       }
     }
   }

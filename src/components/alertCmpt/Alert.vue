@@ -17,6 +17,7 @@ const props = defineProps({
   },
   alertBtnHdr: {
     type: Function,
+    required: true,
   },
 });
 

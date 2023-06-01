@@ -118,7 +118,7 @@ onMounted(() => {
     }
 
     >.btn {
-      padding: 5px 5px;
+      padding: 10px 10px;
       margin: 10px 10px;
       font-size: 18px;
       color: #717171;

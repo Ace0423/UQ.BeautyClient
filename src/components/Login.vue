@@ -180,7 +180,6 @@ const loginFn = () => {
     user.username = state.form_items.email.value;
     user.password = state.form_items.password.value;
     authHandler(user).then((res) => {
-      console.log(res);
       if (res.state == 2) {
         error_message.request = "帳號或密碼錯誤";
       }

@@ -21,7 +21,6 @@ export const useSettingStore = defineStore("setting", () => {
 
     const editOptionRole = async (data: any) => {
         try {
-            console.log(data)
             const res = await apiPutOptionRoleRequest(data);
             return res.data;
         } catch (error) {

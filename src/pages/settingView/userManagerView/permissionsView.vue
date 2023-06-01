@@ -5,8 +5,6 @@ import { useManagerStore } from "@/stores/manager";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
 import { showApiStatus, showErrorMsg } from "@/types/IMessage";
-import { add } from "lodash";
-import { devtools } from "vue";
 
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
@@ -68,7 +66,7 @@ const getRoleName = () => {
     }
     getRoleList(data)
         .then(() => {
-            // width.value = 100 / ((roleList.value.data).length + 2) + "%";
+            width.value = 100 / ((roleList.value.data).length + 2) + "%";
         })
         .catch((e: any) => {
             Alert.warning(showApiStatus(e.response.status), 2000);
@@ -82,7 +80,7 @@ const getRoleName = () => {
 const getPermissions = () => {
     getPermissionsList()
         .then(() => {
-            // width.value = 100 / ((permissionsList.value.data[0].optionRoleLists[0].roleLists).length + 2) + "%";
+            width.value = 100 / ((permissionsList.value.data[0].optionRoleLists[0].roleLists).length + 2) + "%";
         })
         .catch((e: any) => {
             Alert.warning(showApiStatus(e.response.status), 2000);
@@ -111,8 +109,8 @@ onMounted(() => {
             <thead class="header-tab">
                 <tr>
                     <!-- <th :style="{ '--width': width }">功能</th>
-                                            <th :style="{ '--width': width }">權限描述</th>
-                                            <th :style="{ '--width': width }" v-for="item in roleNameList" :key="item.roleId">{{ item.memo }} </th> -->
+                                                <th :style="{ '--width': width }">權限描述</th>
+                                                <th :style="{ '--width': width }" v-for="item in roleNameList" :key="item.roleId">{{ item.memo }} </th> -->
                     <th>功能</th>
                     <th>權限描述</th>
                     <th v-for="item in roleNameList" :key="item.roleId">{{ item.memo }} </th>
@@ -121,7 +119,7 @@ onMounted(() => {
             <tbody class="content-tab">
                 <tr class="permissionsList" v-for="items, index in permissionsList.data" :key="index">
                     <!-- <td :style="{ '--width': width }" class="a">{{ items.controllerText }}</td>
-                                        <td :style="{ '--width': width }" class="a"> -->
+                                            <td :style="{ '--width': width }" class="a"> -->
                     <td :style="{ '--width': width }" class="a">{{ items.controllerText }}</td>
                     <td :style="{ '--width': width }" class="a">
                         <p v-for="item in items.optionRoleLists" :key="item.olId">{{ item.actionText }}</p>
@@ -212,8 +210,8 @@ onMounted(() => {
                 >th {
                     align-items: center;
                     justify-content: center;
-                    // width: var(--width);
-                    width: calc(100%/8);
+                    width: var(--width);
+                    // width: calc(100%/8);
 
                     >.fixed-th {
                         width: 10%;
@@ -267,8 +265,8 @@ onMounted(() => {
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    // width: var(--width);
-                    width: calc(100%/8);
+                    width: var(--width);
+                    // width: calc(100%/8);
 
                     >P {
                         margin: 15px 0;

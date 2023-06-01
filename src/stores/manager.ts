@@ -1,23 +1,25 @@
 import { defineStore } from "pinia";
 import { apiGetAdminListRequest, apiPostAdminDataRequest, apiPutAdminDataRequest, apiGetRoleListRequest, apiPostRoleDataRequest, apiPutRoleDataRequest, apiGetRoleInfoRequest, apiDeleteRoleManagerRequest, apiPostRoleManagerDataRequest } from "@/api/index";
 export const useManagerStore = defineStore("manager", () => {
-    const adminList: any = reactive({ data: [] });
+    const managerList: any = reactive({ data: [] });
     const roleList: any = reactive({ data: [] });
     const roleInfoList: any = reactive({ data: [] });
     const getAdminList = async (data: any) => {
         try {
             const res = await apiGetAdminListRequest(data);
-            adminList.data = res.data.data.table;
+            managerList.data = res.data.data.table;
         } catch (error) {
             console.log(error);
         }
     };
 
-    const createAdminData = async (data: any) => {
+    const createManagerData = async (data: any) => {
         try {
             const res = await apiPostAdminDataRequest(data);
-            updataAdminList(res.data.data)
-            return res.data.state;
+            if (res.data.state) {
+                updataManagerList(res.data.data.table[0]);
+            }
+            return res.data;
         } catch (error) {
             console.log(error);
         }
@@ -25,15 +27,15 @@ export const useManagerStore = defineStore("manager", () => {
     const editAdminData = async (data: any) => {
         try {
             const res = await apiPutAdminDataRequest(data);
-            updataAdminList(res.data.data)
+            updataManagerList(res.data.data)
             return res.data.state;
         } catch (error) {
             console.log(error);
         }
     };
-    const updataAdminList = (data: any) => {
-        if (adminList.data.filter((item: any) => item.managerId == data.managerId).length > 0) {
-            adminList.data.findIndex((item: any) => {
+    const updataManagerList = (data: any) => {
+        if (managerList.data.filter((item: any) => item.managerId == data.managerId).length > 0) {
+            managerList.data.findIndex((item: any) => {
                 if (item.managerId == data.managerId) {
                     item.email = data.email;
                     item.phone = data.phone;
@@ -47,7 +49,7 @@ export const useManagerStore = defineStore("manager", () => {
                 }
             })
         } else {
-            adminList.data.push(data);
+            managerList.data.push(data);
         }
     };
     const getRoleList = async (data: any) => {
@@ -119,9 +121,9 @@ export const useManagerStore = defineStore("manager", () => {
     };
 
     return {
-        adminList,
+        managerList,
         getAdminList,
-        createAdminData,
+        createManagerData,
         editAdminData,
         roleList,
         getRoleList,

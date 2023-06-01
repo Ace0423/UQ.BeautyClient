@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { apiGetMemberListRequest, apiPostMemberDataRequest, apiPostUpdateMemberDataRequest, apiGetGroupDataRequest, apiPostGroupDataRequest, apiPutGroupDataRequest, apiGetGroupInfoRequest, apiPostGroupInfoRequest, apiDeleteGroupInfoRequest } from "@/api/index";
-export const useCounterStore = defineStore("member", () => {
+export const useMemberStore = defineStore("member", () => {
     const memberList: any = reactive({ data: [] });
     const groupListData: any = reactive({ data: [] });
     // const groupListData: any = reactive({ notselected: [], selected: [] });
@@ -175,7 +175,6 @@ export const useCounterStore = defineStore("member", () => {
             const res = await apiGetGroupInfoRequest(dataRequest);
 
             if (res.data.state == 1) {
-                console.log(res.data.data);
                 groupInfoData.data = res.data.data.table;
 
             }

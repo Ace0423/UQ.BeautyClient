@@ -39,7 +39,7 @@
                   />
                   <img
                     class="add-coursedetail-ico"
-                    :src="Icon_back"
+                    :src="formDeleteIcon"
                     v-on:click="delCourseTypeHdr(element, element.lessonTypeId)"
                   />
                 </button>
@@ -67,9 +67,9 @@
 </template>
 <script setup lang="ts">
 import { useApptStore } from "@/stores/apptStore";
+import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import type { IBackStatus } from "@/types/IData";
-import Icon_edit from "@/assets/images/icon_edit.png";
-import Icon_back from "@/assets/images/icon_back.png";
+import Icon_edit from "@/assets/Ico_edit.svg";
 import { storeToRefs } from "pinia";
 
 import draggable from "vuedraggable";

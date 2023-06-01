@@ -1,3 +1,4 @@
+
 <template>
   <div id="ck1" class="form_bg" @click.self="showAddDetailForm(false)">
     <div class="add-coursedetail-form">
@@ -6,119 +7,54 @@
         <div class="userinfo">
           <div class="formname">
             <span>名稱</span>
-            <!-- <input
-              v-model="formInputRef.name"
-              placeholder="請輸入課程名稱"
-            /> -->
-            <el-input
-              class="input-name"
-              v-model="formInputRef.name"
-              placeholder="請輸入課程名稱"
-            />
+            <input v-model="newCourseDetailRef.name" />
             <span class="p_error" v-if="ruleItem.name.is_error">
               {{ ruleItem.name.warn }}
             </span>
           </div>
           <div class="formtime">
-            <span>時長(min)</span>
-            <el-select
-              class="input-timer"
-              v-model="formInputRef.timer"
-              allow-create
-              default-first-option
-              :reserve-keyword="false"
-              placeholder=" "
-            >
-              <el-option
-                v-for="(item, index) in timeGroup"
-                :key="index"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
-            <!-- <el-input
-              class="input-timer"
-              v-model="formInputRef.timer"
+            <span>時長(Min)</span>
+            <input
+              v-model="newCourseDetailRef.timer"
               onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-            /> -->
+            />
             <span class="p_error" v-if="ruleItem.timer.is_error">
               {{ ruleItem.timer.warn }}
             </span>
           </div>
-        </div>
-        <div class="userinfo">
-          <div class="formtype">
-            <span>類別</span>
-            <el-select
-              class="info-type"
-              filterable
-              placeholder="請選擇類別"
-              v-model="formInputRef.lessonTypeId"
-            >
-              <el-option
-                v-for="item in filterTypesTabs"
-                :key="item.nameTw"
-                :value="item.lessonTypeId"
-                :label="item.nameTw"
-              >
-                {{ item.nameTw + "" }}
-              </el-option>
-            </el-select>
-            <span class="p_error" v-if="ruleItem.lessonTypeId.is_error">
-              {{ ruleItem.lessonTypeId.warn }}
-            </span>
-          </div>
           <div class="formprice">
             <span>售價(NT)</span>
-            <el-input
-              class="input-price"
-              v-model="formInputRef.price"
+            <input
+              v-model="newCourseDetailRef.price"
               onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
             />
             <span class="p_error" v-if="ruleItem.price.is_error">
               {{ ruleItem.price.warn }}
             </span>
           </div>
+          <div>
+            <div class="online">
+              <span>上架</span>
+              <input
+                class="checked_status"
+                type="checkbox"
+                name="sub"
+                value=""
+                v-model="newCourseDetailRef.state"
+              />
+            </div>
+          </div>
         </div>
-        <div class="switch-info">
-          <span>上架</span>
-          <div class="online">
-            <div class="switch">
-              <input
-                type="checkbox"
-                id="switch"
-                v-model="formInputRef.isBonusOpen"
-              /><label for="switch">Toggle</label>
-            </div>
-            <div class="label-info">
-              <label>服務是否提供抽成</label>
-              <span>開啟後，系統將按人員分潤設定比例白動計算抽成金額</span>
-            </div>
-          </div>
-          <div class="online">
-            <div class="switch">
-              <input
-                type="checkbox"
-                id="switch2"
-                v-model="formInputRef.isEditAccounting"
-              /><label for="switch2">Toggle1</label>
-            </div>
-            <div class="label-info">
-              <label>是否允許結帳畤修改金額 </label>
-              <span>開啟後，結帳時可手動調整服務金額</span>
-            </div>
-          </div>
-          <div class="online">
-            <div class="switch">
-              <input
-                type="checkbox"
-                id="switch3"
-                v-model="formInputRef.state"
-              /><label for="switch3">Toggle2</label>
-            </div>
-            <div class="label-info">
-              <label>上架 </label>
-              <span>開啟後，該項目即為可供客戶預約之正式課程</span>
+        <div class="add-coursedetail-btndiv">
+          <div>
+            <div v-for="(item, index) in filterCourseData" :key="item.lessonId">
+              <button
+                class="add-coursedetail-btn"
+                v-on:click="delCourseDetailHdr(index, item.lessonId)"
+              >
+                <span>{{ item.nameTw }}</span>
+                <img class="add-coursedetail-ico" :src="formDeleteIcon" />
+              </button>
             </div>
           </div>
         </div>
@@ -152,43 +88,8 @@ import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import type { IBackStatus } from "@/types/IData";
 import { showErrorMsg } from "@/types/IMessage";
 import { verify_methods } from "@/utils/utils";
-import { storeToRefs } from "pinia";
-import type { FormInstance, FormRules } from "element-plus";
 const alertState = ref(false);
-let addCourseTypesName = ref();
-let formInputRef: any = ref({
-  name: null,
-  timer: null,
-  lessonTypeId: null,
-  price: null,
-  isBonusOpen: false,
-  isEditAccounting: false,
-  state: false,
-});
-
-function clickType(val: any) {
-  console.log(filterTypesTabs.value[val]);
-  addCourseTypesName.value = filterTypesTabs.value[val].nameTw;
-}
-let store = useApptStore();
-let { courseTypesTabs } = storeToRefs(store);
-let { delCourseDetailApi, addCourseDetailApi, getCourseTypeApi } = store;
-
-let timeGroup: any = ref(["30", "60", "90", "120", "150", "180", "210", "240"]);
-onMounted(() => {
-  formInputRef.value.name = "";
-  formInputRef.value.timer = "";
-  formInputRef.value.lessonTypeId = "";
-  formInputRef.value.price = "";
-  formInputRef.value.state = false;
-  formInputRef.isBonusOpen = true;
-  formInputRef.isEditAccounting = false;
-});
-let filterTypesTabs: any = computed(() =>
-  courseTypesTabs.value.filter(function (value: any) {
-    return value.lessonTypeId > 0;
-  })
-);
+let addCourseTypesName = ref("");
 
 //alertUI
 const alertInformation = reactive({
@@ -210,66 +111,12 @@ const props = defineProps<{
   filterCourseData: any;
   addDetailTypeID?: any;
 }>();
-
-//刪除課程2
-let delCourseDetailHdr = (index: number, itemId: number) => {
-  // delCourseDetailApi(itemId);
-  alertInformation.selfType = "delCourseDetail";
-  alertInformation.buttonState = 0;
-  alertInformation.messageText = "是否刪除";
-  alertInformation.showAlert = true;
-  alertInformation.selfData = itemId;
-};
-
-const btnSumitHdr = (val: IBackStatus) => {
-  switch (alertInformation.selfType) {
-    case "delCourseDetail":
-      if (val.btnStatus) {
-        delCourseDetailApi(alertInformation.selfData);
-      } else {
-        console.log(val.btnStatus, "取消");
-      }
-      break;
-    default:
-      break;
-  }
-  alertInformation.showAlert = !alertInformation.showAlert;
-};
-//新增課程-確認
-let confirmAddCourseDataForm = () => {
-  console.log(formInputRef.value);
-
-  ruleLists.ruleItem.lessonTypeId.value = formInputRef.value.lessonTypeId;
-  ruleLists.ruleItem.timer.value = formInputRef.value.timer;
-  ruleLists.ruleItem.price.value = formInputRef.value.price;
-  ruleLists.ruleItem.name.value = formInputRef.value.name;
-  if (!verify_all()) return;
-
-  let curdata: any = {
-    lessonId: 0,
-    lessonTypeId: formInputRef.value.lessonTypeId,
-    display: formInputRef.value.state,
-    nameEn: formInputRef.value.name + "_en",
-    nameTw: formInputRef.value.name,
-    servicesTime: formInputRef.value.timer,
-    price: formInputRef.value.price,
-    discount: 0,
-    isBonusOpen: formInputRef.value.isBonusOpen,
-    isEditAccounting: formInputRef.value.isEditAccounting,
-  };
-  /**新增明細 */
-  addCourseDetailApi(curdata).then((res: any) => {
-    let resData = res.data;
-    if (resData.state == 1) {
-      handAlertView("新增成功", 2, 1);
-      setTimeout(() => {
-        props.showAddDetailForm(false);
-      }, 1000);
-    } else {
-      handAlertView(showErrorMsg(resData.msg), 2, 2);
-    }
-  });
-};
+let newCourseDetailRef: any = ref({
+  name: "",
+  timer: "",
+  price: "",
+  state: false,
+});
 //-------------------------------------form驗證
 const ruleLists: any = reactive({
   ruleItem: {
@@ -294,21 +141,6 @@ const ruleLists: any = reactive({
     },
     timer: {
       label: "時長",
-      component: "input",
-      type: "number",
-      is_readonly: false,
-      value: "",
-      rules: {
-        required: {
-          warn: "此項為必填",
-        },
-      },
-      is_error: false,
-      warn: "",
-      is_show: true,
-    },
-    lessonTypeId: {
-      label: "類別",
       component: "input",
       type: "number",
       is_readonly: false,
@@ -354,6 +186,71 @@ const verify_all = () => {
   return is_valid;
 };
 //-------------------------------------------------------------------
+const store = useApptStore();
+const { delCourseDetailApi, addCourseDetailApi } = store;
+
+onMounted(() => {
+  newCourseDetailRef.value.name = "";
+  newCourseDetailRef.value.timer = "";
+  newCourseDetailRef.value.price = "";
+  newCourseDetailRef.value.state = false;
+});
+
+//刪除課程2
+let delCourseDetailHdr = (index: number, itemId: number) => {
+  // delCourseDetailApi(itemId);
+  alertInformation.selfType = "delCourseDetail";
+  alertInformation.buttonState = 0;
+  alertInformation.messageText = "是否刪除";
+  alertInformation.showAlert = true;
+  alertInformation.selfData = itemId;
+};
+
+const btnSumitHdr = (val: IBackStatus) => {
+  switch (alertInformation.selfType) {
+    case "delCourseDetail":
+      if (val.btnStatus) {
+        delCourseDetailApi(alertInformation.selfData);
+      } else {
+        console.log(val.btnStatus, "取消");
+      }
+      break;
+    default:
+      break;
+  }
+  alertInformation.showAlert = !alertInformation.showAlert;
+};
+//新增課程-確認
+let confirmAddCourseDataForm = () => {
+  ruleLists.ruleItem.timer.value = newCourseDetailRef.value.timer;
+  ruleLists.ruleItem.price.value = newCourseDetailRef.value.price;
+  ruleLists.ruleItem.name.value = newCourseDetailRef.value.name;
+  if (!verify_all()) return;
+
+  let curdata: any = {
+    lessonId: 0,
+    lessonTypeId: props.addDetailTypeID,
+    display: newCourseDetailRef.value.state,
+    nameEn: newCourseDetailRef.value.name + "_en",
+    nameTw: newCourseDetailRef.value.name,
+    servicesTime: newCourseDetailRef.value.timer,
+    price: newCourseDetailRef.value.price,
+    discount: 0,
+  };
+  /**新增明細 */
+  addCourseDetailApi(curdata)
+    .then((res: any) => {
+      let resData = res.data;
+      if (resData.state == 1) {
+        handAlertView("新增成功", 2, 1);
+        setTimeout(() => {
+          props.showAddDetailForm(false);
+        }, 1000);
+      } else {
+        handAlertView(showErrorMsg(resData.msg), 2, 2);
+      }
+    })
+};
 </script>
 
 <style lang="scss" scoped>
@@ -371,7 +268,7 @@ const verify_all = () => {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 400px;
+    width: 566px;
 
     .Column {
       // width: 100%;
@@ -383,7 +280,7 @@ const verify_all = () => {
     .add-coursedetail-bg {
       padding: 10px 10px 10px 10px;
       background-color: #e6e2de;
-      width: 400px;
+      width: 566px;
 
       p {
         font-weight: bold;
@@ -397,9 +294,9 @@ const verify_all = () => {
 
       .decide,
       .userinfo {
-        width: 400px;
+        width: 566px;
         display: flex;
-        // height: 80px;
+        height: 90px;
         justify-content: center;
         > div {
           p {
@@ -458,41 +355,24 @@ const verify_all = () => {
           width: 260px;
           // margin-right: 10px;
           padding: 0px 10px;
-          .input-name {
-            width: 255px;
-            // border: solid 1px #707070;
-          }
-        }
-        .formtype {
-          width: 260px;
-          padding: 0px 10px;
-          .info-type {
-            width: 255px;
-            // border: solid 1px #707070;
-          }
         }
 
         .formtime {
           width: 95px;
           padding: 0px 10px;
-          .input-timer {
-            width: 95px;
-            margin-left: 0;
-          }
         }
 
         .formprice {
-          width: 95px;
+          width: 80px;
           padding: 0px 10px;
-          .input-price {
-            width: 95px;
-          }
         }
 
+        .online {
+          padding: 0px 10px;
+        }
         .p_error {
           color: #fc0505;
           width: 100%;
-          height: 20px;
         }
 
         .confirm-coursedetail-btn {
@@ -509,89 +389,6 @@ const verify_all = () => {
         }
       }
 
-      .switch-info {
-        padding: 0px 15px;
-        width: 100%;
-        > span {
-          display: block;
-          height: 30px;
-          width: 95%;
-          text-align: left;
-          font-size: 15px;
-          text-align: left;
-          color: #877059;
-          font-weight: bold;
-        }
-        > div {
-          display: flex;
-          width: 100%;
-          .label-info {
-            display: grid;
-            width: 80%;
-            > label {
-              color: #707070;
-              font-size: 15px;
-            }
-            > span {
-              color: #c1bdb8;
-              font-size: 8px;
-            }
-          }
-        }
-        .switch {
-          align-items: center;
-          display: flex;
-          width: 20%;
-          input[type="checkbox"] {
-            height: 0;
-            width: 0;
-            visibility: hidden;
-          }
-          label {
-            cursor: pointer;
-            text-indent: -9999px;
-            width: 50px;
-            height: 28px;
-            background: grey;
-            display: block;
-            border-radius: 50px;
-            position: relative;
-          }
-
-          label:after {
-            content: "";
-            position: absolute;
-            top: 1px;
-            left: 0px;
-            width: 25px;
-            height: 25px;
-            background: #fff;
-            border-radius: 90px;
-            transition: 0.3s;
-          }
-
-          input:checked + label {
-            background: #877059;
-          }
-
-          input:checked + label:after {
-            left: calc(100% - 1px);
-            transform: translateX(-100%);
-          }
-
-          label:active:after {
-            width: 25px;
-          }
-
-          // centering
-          body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-          }
-        }
-      }
       .add-coursedetail-btndiv {
         padding: 0px 20px;
         max-height: 250px;

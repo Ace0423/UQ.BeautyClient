@@ -4,15 +4,20 @@ import Icon from "@/assets/Icon zocial-guest.svg";
 import { useManagerStore } from "@/stores/manager";
 import { storeToRefs } from "pinia";
 const managerstore = useManagerStore();
-const { managerList } = storeToRefs(managerstore);
+const { adminList } = storeToRefs(managerstore);
 const { getAdminList } = managerstore;
 const addAdminManagerView = ref(false);
+const selectAdminItem = ref();
 const keyWord = ref("");
 const handAddManagerView = () => {
     addAdminManagerView.value = !addAdminManagerView.value;
 };
+const handAddAdminManagerView = (item: any) => {
+    selectAdminItem.value = item;
+    addAdminManagerView.value = !addAdminManagerView.value;
+};
 const filterAdminListData = computed(() => {
-    const filter = managerList.value.data.filter(getAdminListFn);
+    const filter = adminList.value.data.filter(getAdminListFn);
     return filter;
 });
 const getAdminListFn = (data: any) => {
@@ -21,7 +26,6 @@ const getAdminListFn = (data: any) => {
         data.nameView.toLowerCase().includes(keyWord.value.toLowerCase())
     );
 };
-
 onMounted(() => {
     let allAamin = {
         id: 0,

@@ -1,23 +1,25 @@
 import { defineStore } from "pinia";
-import { apiGetAdminListRequest, apiPostAdminDataRequest, apiPutAdminDataRequest, apiGetRoleListRequest, apiPostRoleDataRequest, apiPutRoleDataRequest, apiGetRoleInfoRequest, apiDeleteRoleManagerRequest,apiPostRoleManagerDataRequest } from "@/api/index";
-export const useCounterStore = defineStore("manager", () => {
-    const adminList: any = reactive({ data: [] });
+import { apiGetAdminListRequest, apiPostAdminDataRequest, apiPutAdminDataRequest, apiGetRoleListRequest, apiPostRoleDataRequest, apiPutRoleDataRequest, apiGetRoleInfoRequest, apiDeleteRoleManagerRequest, apiPostRoleManagerDataRequest } from "@/api/index";
+export const useManagerStore = defineStore("manager", () => {
+    const managerList: any = reactive({ data: [] });
     const roleList: any = reactive({ data: [] });
     const roleInfoList: any = reactive({ data: [] });
     const getAdminList = async (data: any) => {
         try {
             const res = await apiGetAdminListRequest(data);
-            adminList.data = res.data.data.table;
+            managerList.data = res.data.data.table;
         } catch (error) {
             console.log(error);
         }
     };
 
-    const createAdminData = async (data: any) => {
+    const createManagerData = async (data: any) => {
         try {
             const res = await apiPostAdminDataRequest(data);
-            updataAdminList(res.data.data)
-            return res.data.state;
+            if (res.data.state) {
+                updataManagerList(res.data.data.table[0]);
+            }
+            return res.data;
         } catch (error) {
             console.log(error);
         }
@@ -25,15 +27,15 @@ export const useCounterStore = defineStore("manager", () => {
     const editAdminData = async (data: any) => {
         try {
             const res = await apiPutAdminDataRequest(data);
-            updataAdminList(res.data.data)
+            updataManagerList(res.data.data)
             return res.data.state;
         } catch (error) {
             console.log(error);
         }
     };
-    const updataAdminList = (data: any) => {
-        if (adminList.data.filter((item: any) => item.managerId == data.managerId).length > 0) {
-            adminList.data.findIndex((item: any) => {
+    const updataManagerList = (data: any) => {
+        if (managerList.data.filter((item: any) => item.managerId == data.managerId).length > 0) {
+            managerList.data.findIndex((item: any) => {
                 if (item.managerId == data.managerId) {
                     item.email = data.email;
                     item.phone = data.phone;
@@ -47,7 +49,7 @@ export const useCounterStore = defineStore("manager", () => {
                 }
             })
         } else {
-            adminList.data.push(data);
+            managerList.data.push(data);
         }
     };
     const getRoleList = async (data: any) => {
@@ -60,11 +62,12 @@ export const useCounterStore = defineStore("manager", () => {
             console.log(error);
         }
     };
+
     const createRoleData = async (data: any) => {
         try {
             const res = await apiPostRoleDataRequest(data);
             updataRoleList(res.data.data);
-            return res.data.state;
+            return res.data;
         } catch (error) {
             console.log(error);
         }
@@ -72,22 +75,18 @@ export const useCounterStore = defineStore("manager", () => {
     const editRoleData = async (data: any) => {
         try {
             const res = await apiPutRoleDataRequest(data);
-            updataRoleList(res.data.data);
-            return res.data.state;
+            if (res.data.state == 1) {
+                updataRoleList(res.data.data);
+            }
+            return res.data;
         } catch (error) {
             console.log(error);
         }
     };
     const updataRoleList = (data: any) => {
-        if (roleList.data.filter((item: any) => item.roleId == data.id).length > 0) {
-            roleList.data.findIndex((item: any) => {
-                if (item.roleId == data.id) {
-                    item.label = data.name;
-                    item.memo = data.memo;
-                }
-            })
-        } else {
-            roleList.data.push(data);
+        for (let i = 0; i < data.length; i++) {
+            const index = roleList.data.findIndex((e: any) => e.roleId === data[i].id);
+            roleList.data[index].memo = data[i].memo
         }
     };
     const getRoleInfoData = async (data: any) => {
@@ -120,10 +119,11 @@ export const useCounterStore = defineStore("manager", () => {
             console.log(error);
         }
     };
+
     return {
-        adminList,
+        managerList,
         getAdminList,
-        createAdminData,
+        createManagerData,
         editAdminData,
         roleList,
         getRoleList,

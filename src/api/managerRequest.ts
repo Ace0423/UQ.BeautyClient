@@ -23,6 +23,7 @@ export const putAdminDataRequest = (data: any) => {
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return managerRequest.put("/manager/Admin/" + data.managerId, data);
 }
+
 export const getRoleListRequest = (data: any) => {
     let token: any = getToken('token');
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
@@ -36,10 +37,9 @@ export const postRoleDataRequest = (data: any) => {
 }
 
 export const putRoleDataRequest = (data: any) => {
-    console.log(data);
     let token: any = getToken('token');
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
-    return managerRequest.put("/manager/Role?id=" + data.id, data);
+    return managerRequest.put("/manager/Role", data);
 }
 export const getRoleInfoRequest = (data: any) => {
     let token: any = getToken('token');

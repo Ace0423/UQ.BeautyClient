@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { useCounterStore } from "@/stores/member";
+import { useMemberStore } from "@/stores/member";
 import DeleteIcon from "@/assets/Icon material-delete.svg";
 import type { IBackStatus } from "@/types/IData";
-const store = useCounterStore();
+const memberStore = useMemberStore();
 const {
   getGroupInfoData,
   groupInfoData,
   deleteGroupInfoData,
   memberList,
   addGroupInfoData,
-} = store;
+} = memberStore;
 const alertState = ref(false);
 const alertInformation = reactive({
   selfData: {},
@@ -141,11 +141,7 @@ onMounted(() => {
       <div class="content">
         <p>客戶</p>
         <select v-model="selectMember">
-          <option
-            v-for="item in memberList.data"
-            :key="item.userId"
-            :value="item"
-          >
+          <option v-for="item in memberList.data" :key="item.userId" :value="item">
             {{ item.nameView }}
           </option>
         </select>
@@ -153,12 +149,8 @@ onMounted(() => {
       <div><button @click="handAddGroupMenberBtn">新增</button></div>
     </div>
   </div>
-  <Alert
-    v-if="alertState"
-    :alert-information="alertInformation"
-    :hand-alert-view="handAlertView"
-    @callback-btn="alertSumitBtn"
-  ></Alert>
+  <Alert v-if="alertState" :alert-information="alertInformation" :hand-alert-view="handAlertView"
+    @callback-btn="alertSumitBtn"></Alert>
 </template>
 
 <style scoped lang="scss">
@@ -187,33 +179,34 @@ onMounted(() => {
     color: #84715c;
     font-weight: bold;
 
-    > h1 {
+    >h1 {
       // height: 20px;
       font-size: 30px;
     }
 
-    > .group-information {
+    >.group-information {
       display: flex;
       justify-content: space-around;
       align-items: center;
 
-      > p {
+      >p {
         margin: 0px 0px;
       }
-      > button {
+
+      >button {
         height: 100%;
         margin: 2px 2px;
       }
     }
 
-    > .group-information-list {
+    >.group-information-list {
       position: absolute;
       left: 0px;
       right: 0px;
       top: 75px;
       bottom: 0px;
 
-      > table {
+      >table {
         display: block;
         position: absolute;
         top: 0px;
@@ -225,7 +218,7 @@ onMounted(() => {
         font-family: STXihei;
         color: #717171;
 
-        > .header-tab {
+        >.header-tab {
           display: block;
           height: 50px;
           position: absolute;
@@ -236,20 +229,20 @@ onMounted(() => {
           background-color: #e6e2de;
           box-sizing: border-box;
 
-          > tr {
+          >tr {
             display: flex;
             align-items: center;
             height: 100%;
             justify-content: space-between;
             margin: 0 10px;
 
-            > th {
+            >th {
               width: 25%;
             }
           }
         }
 
-        > .content-tab {
+        >.content-tab {
           position: absolute;
           width: 100%;
           top: 52px;
@@ -263,12 +256,12 @@ onMounted(() => {
             justify-content: space-between;
             border-bottom: 1px #717171 solid;
 
-            > td {
+            >td {
               display: flex;
               justify-content: center;
               width: 25%;
 
-              > img {
+              >img {
                 cursor: pointer;
                 width: 40px;
                 height: 40px;
@@ -276,13 +269,13 @@ onMounted(() => {
                 border-radius: 45px;
               }
 
-              > button {
+              >button {
                 height: 100%;
                 background-color: transparent;
                 border: none;
               }
 
-              > p {
+              >p {
                 cursor: pointer;
                 margin: 10px 0;
               }
@@ -307,12 +300,12 @@ onMounted(() => {
     flex-direction: column;
     justify-content: center;
 
-    > h1 {
+    >h1 {
       text-align: center;
       font-size: 35px;
     }
 
-    > .content {
+    >.content {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -320,24 +313,24 @@ onMounted(() => {
       padding: 40px 0px;
       width: 100%;
 
-      > p {
+      >p {
         min-width: 50px;
         margin: 10px;
         font-size: 25px;
       }
 
-      > select {
+      >select {
         width: 60%;
         height: 100%;
         margin: 10px;
       }
     }
 
-    > div {
+    >div {
       display: flex;
       justify-content: center;
 
-      > button {
+      >button {
         width: 30%;
         display: flex;
         justify-content: center;

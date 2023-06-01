@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useCounterStore } from "@/stores/member";
+import { useMemberStore } from "@/stores/member";
 import { showErrorMsg, showApiStatus } from "@/types/IMessage";
 
-const store = useCounterStore();
-const { createGroupData, editGroupData } = store;
+const memberStore = useMemberStore();
+const { createGroupData, editGroupData } = memberStore;
 const alertState = ref(false);
 const alertInformation = reactive({
     messageText: '', // 提示內容

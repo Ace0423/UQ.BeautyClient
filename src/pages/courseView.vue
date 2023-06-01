@@ -1,16 +1,11 @@
 <template>
   <div class="course_div">
-    <div class="top_box">
-      <Header
-        :moduleType="'課程管理'"
-        :Icon="Icon"
-        :memuState="props.memuState"
-        :handmemuStateBtn="props.handmemuStateBtn"
-      ></Header>
-      <div class="top_menu">
-        <div @click="showAddDetailForm(true)"><img :src="icon_add" /></div>
-      </div>
-    </div>
+    <Header
+      :moduleType="'課程管理'"
+      :Icon="Icon"
+      :memuState="props.memuState"
+      :handmemuStateBtn="props.handmemuStateBtn"
+    ></Header>
     <div class="customer-top">
       <div class="customer-tab">
         <div class="item-tab">
@@ -23,26 +18,28 @@
             {{ item.nameTw }}
           </button>
         </div>
+        <div class="addcoursetype-btn">
+          <!-- <img :src="addcoursetype" /> -->
+          <div class="btn-open" @click="showAddForm(true)">分類管理</div>
+        </div>
       </div>
       <div class="course_table">
         <div class="header-tab">
           <p>課程(全部{{ filterCourseData.length }}個)</p>
-          <div>
-            <input
-              v-model="search"
-              class="seach-control"
-              placeholder="搜尋產品"
-            />
-            <div class="btn-open" @click="showAddForm(true)">
-              {{ $t("typeMgmt") }}
-            </div>
+          <input v-model="search" placeholder="搜尋產品" />
+          <div
+            v-if="courseTypesTabsValue != 0"
+            class="btn-open"
+            @click="showAddDetailForm(true)"
+          >
+            新增課程
           </div>
         </div>
         <table>
           <thead>
             <tr>
-              <td v-for="(item, value) in courseTableThead" :key="item">
-                <p @click="sorttheadHdr(value)">{{ item }}</p>
+              <td v-for="(item, value) in coursetitle" :key="item">
+                <p @click="sortthradHdr(value)">{{ item }}</p>
               </td>
             </tr>
           </thead>
@@ -58,19 +55,23 @@
               <td>
                 <p>{{ item.price }}</p>
               </td>
-              <td class="checkbox_state">
+              <td>
+                <!-- <p>{{ item.display ? '1' : '0' }}</p> -->
                 <input
+                  class="checked_status"
                   type="checkbox"
+                  name="sub"
+                  value=""
                   :checked="item.display == true"
-                  v-on:click="updataStutusFn(index, item)"
+                  v-on:click="changeStutusFn(index, item)"
                 />
               </td>
               <td>
                 <button v-on:click="showEditFormBtn(index, item)">
-                  <img class="edit_img" :src="icon_edit" />
+                  <img class="edit_img" :src="Icon_edit" />
                 </button>
                 <button v-on:click="deleteHdr(index, item.lessonId)">
-                  <img class="delete_img" :src="icon_delete" />
+                  <img class="edit_img" :src="DeleteIcon" />
                 </button>
               </td>
             </tr>
@@ -78,7 +79,10 @@
         </table>
       </div>
     </div>
-    <AddCourseTypeUI v-if="showAddType" :show-add-form="showAddForm" />
+    <AddCourseTypeUI
+      v-if="showAddType"
+      :show-add-form="showAddForm"
+    />
     <AddCourseDetailUI
       v-if="showCourseFormRef"
       :showAddDetailForm="showAddDetailForm"
@@ -98,35 +102,32 @@
     @callbackBtn="btnSumitHdr"
   ></Alert>
 </template>
-
+    
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
-import icon_add from "@/assets/images/icon_add.png";
+import DeleteIcon from "@/assets/Icon material-delete.svg";
+import addcoursetype from "@/assets/Icon course-addcoursetype.svg";
 import Icon from "@/assets/Icon awesome-spa.svg";
-import icon_edit from "@/assets/images/icon_edit.png";
-import icon_delete from "@/assets/images/icon_delete.png";
+import Icon_edit from "@/assets/Ico_edit.svg";
 import type { IBackStatus } from "@/types/IData";
 import { useApptStore } from "@/stores/apptStore";
 import { showErrorMsg } from "@/types/IMessage";
-import i18n from "@/i18n/i18n";
 const props = defineProps<{
   memuState: any;
   handmemuStateBtn: Function;
 }>();
 let search = ref("");
 let showAddType = ref(false);
-const { t } = i18n.global;
-console.log(t("typeMgmt"));
 
 let showCourseFormRef = ref(false);
-let courseTableThead = [
+let coursetitle = reactive([
   "產品名稱",
   "服務時長(Min)",
   "售價(NT)",
   "上架",
   "操作",
-];
+]);
 
 const handAlertView = (msg: string, btnState: number, timer: number) => {
   alertInformation.messageText = msg;
@@ -148,14 +149,15 @@ const btnSumitHdr = (val: IBackStatus) => {
   switch (alertInformation.selfType) {
     case "delCourseDetail":
       if (val.btnStatus) {
-        delCourseDetailApi(alertInformation.selfData).then((res: any) => {
-          let resData = res.data;
-          if (resData.state == 1) {
-            handAlertView("刪除成功", 2, 1);
-          } else {
-            handAlertView(showErrorMsg(resData.msg), 2, 1);
-          }
-        });
+        delCourseDetailApi(alertInformation.selfData)
+          .then((res: any) => {
+            let resData = res.data;
+            if (resData.state == 1) {
+              handAlertView("刪除成功", 2, 1);
+            } else {
+              handAlertView(showErrorMsg(resData.msg), 2, 1);
+            }
+          })
       } else {
         console.log(val.btnStatus, "取消");
       }
@@ -183,13 +185,9 @@ let filterCourseData: any = computed(() =>
   courseDataList.value.filter(getCourseFn)
 );
 function getCourseFn(data: any) {
-  let selTypeTab =
-    courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId;
   return (
-    data.lessonTypeId == selTypeTab ||
-    (selTypeTab == 0 &&
-      (!search.value ||
-        data.nameTw.toLowerCase().includes(search.value.toLowerCase())))
+    !search.value ||
+    data.nameTw.toLowerCase().includes(search.value.toLowerCase())
   );
 }
 let addDetailTypeID = computed(() =>
@@ -216,7 +214,7 @@ let delCourseTypeHdr = (index: number, itemId: number) => {
 };
 
 //改變課程狀態
-let updataStutusFn = (index: number, item: any) => {
+let changeStutusFn = (index: number, item: any) => {
   let curdata: any = {
     lessonId: item.lessonId,
     lessonTypeId: item.lessonTypeId,
@@ -228,7 +226,7 @@ let updataStutusFn = (index: number, item: any) => {
     discount: item.discount,
   };
   updateCourseDetailApi(curdata);
-  // getCourseDetailApi(courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId, 0);
+  getCourseDetailApi(item.lessonTypeId, 0);
 };
 let alertSumit: boolean = false;
 //刪除課程
@@ -248,10 +246,10 @@ function showEditFormBtn(index: number, item: any) {
 
 function showEditForm(state: boolean) {
   showEditCourse.value = state;
-  // getCourseDetailApi(
-  //   courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
-  //   0
-  // );
+  getCourseDetailApi(
+    courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
+    0
+  );
 }
 //新增分類-顯示
 let showAddForm = (state: boolean) => {
@@ -263,9 +261,9 @@ let showAddForm = (state: boolean) => {
 let showAddDetailForm = (state: boolean) => {
   showCourseFormRef.value = state;
 };
-//排序明細
 let sortUpDown: string = "";
-function sorttheadHdr(name: number) {
+//排序明細
+function sortthradHdr(name: number) {
   let nameGroup = ["nameTw", "servicesTime", "price", "display"];
   let sortName = nameGroup[name];
   if (sortName)
@@ -282,34 +280,12 @@ function sorttheadHdr(name: number) {
     }
 }
 </script>
-
+    
 <style lang="scss" scoped>
 .course_div {
   height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
   position: relative;
-  .top_box {
-    display: flex;
-    width: 100%;
-    .top_menu {
-      display: flex;
-      width: calc(100%);
-      justify-content: right;
-      height: 80px;
-      > div {
-        display: flex;
-        height: 29px;
-        position: relative;
-        right: 15px;
-        top: 15px;
-        > img {
-          // margin-right: 10px;
-          height: 29px;
-          width: 29px;
-        }
-      }
-    }
-  }
 
   > .customer-top {
     position: absolute;
@@ -322,7 +298,7 @@ function sorttheadHdr(name: number) {
     > .customer-tab {
       display: flex;
       justify-content: space-between;
-      height: 6%;
+      height: 7%;
       overflow-y: scroll;
       > .item-tab {
         overflow-x: scroll;
@@ -332,18 +308,23 @@ function sorttheadHdr(name: number) {
         height: 100%;
 
         > button {
+          // overflow: hidden;
+          white-space: nowrap;
+          // text-overflow: ellipsis;
           display: flex;
           justify-content: center;
           align-items: center;
           border: none;
-          min-width: 100px;
-          height: 100%;
-          border-radius: 10px 10px 0 0;
+          // width: 120px;
+          // height: 45px;
+          height: 87%;
+          border-radius: 10px;
           background-color: #faf9f8;
           font-size: 20px;
           font-weight: bold;
           font-family: HeitiTC;
           color: #717171;
+          min-width: 100px;
         }
 
         > button.active {
@@ -366,7 +347,6 @@ function sorttheadHdr(name: number) {
           border-radius: 6px;
           border: solid 1px #707070;
           background-color: #84715c;
-          color: #ffffff;
         }
       }
     }
@@ -374,64 +354,42 @@ function sorttheadHdr(name: number) {
     > .course_table {
       display: block;
       height: 87%;
-      width: 100%;
       > .header-tab {
         height: 47px;
-        width: 100%;
+        // width: 100%;
         font-weight: bold;
         display: flex;
         align-items: center;
         color: #717171;
         border: solid 1px #707070;
         background-color: #e6e2de;
-        > div {
-          display: flex;
-          height: 100%;
+
+        > .btn-open {
+          width: 80px;
+          height: 20px;
+          margin: 0;
           align-items: center;
-          justify-content: right;
-          width: 85%;
-
-          .seach-control {
-            width: auto;
-            height: 60%;
-            border-radius: 6px;
-            border: solid 1px #707070;
-            background-color: #fff;
-            margin-right: 10px;
-
-            background: url("@/assets/images/icon_seach.png") no-repeat;
-            background-color: #fff;
-            background-position: 97%;
-            background-origin: content-box;
-            text-indent: 5px;
-          }
-          > .btn-open {
-            width: 80px;
-            height: 20px;
-            margin: 0;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            display: flex;
-            padding: 7px 11px 6px;
-            border-radius: 6px;
-            border: solid 1px #707070;
-            background-color: #84715c;
-          }
+          justify-content: center;
+          font-weight: bold;
+          display: flex;
+          padding: 7px 11px 6px;
+          border-radius: 6px;
+          border: solid 1px #707070;
+          background-color: #84715c;
         }
 
         > p {
           margin: 0 10px;
         }
 
-        // > input {
-        //   width: 134px;
-        //   height: 33px;
-        //   border-radius: 6px;
-        //   border: solid 1px #707070;
-        //   background-color: #fff;
-        //   margin-right: 10px;
-        // }
+        > input {
+          width: 134px;
+          height: 33px;
+          border-radius: 6px;
+          border: solid 1px #707070;
+          background-color: #fff;
+          margin-right: 10px;
+        }
       }
 
       > table {
@@ -481,6 +439,11 @@ function sorttheadHdr(name: number) {
               height: 47px;
               padding: 2px;
 
+              .edit_img {
+                width: 30px;
+                height: 30px;
+              }
+
               > img {
                 width: 40px;
                 height: 40px;
@@ -495,14 +458,6 @@ function sorttheadHdr(name: number) {
               > button {
                 background-color: transparent;
                 border: none;
-                .edit_img {
-                  height: 27px;
-                  height: 27px;
-                }
-                .delete_img {
-                  width: 21px;
-                  height: 27px;
-                }
               }
 
               > input {
@@ -513,6 +468,7 @@ function sorttheadHdr(name: number) {
                 height: 27px;
                 display: flex;
                 justify-content: center;
+                // margin: 43px 329px 30px 123.5px;
                 object-fit: contain;
               }
 
@@ -523,78 +479,6 @@ function sorttheadHdr(name: number) {
                 line-height: 27px;
                 font-weight: bold;
                 background-color: #84715c;
-              }
-            }
-
-            .checkbox_state {
-              [type="checkbox"] {
-                width: 2rem;
-                height: 2rem;
-                color: #84715c;
-                vertical-align: middle;
-                -webkit-appearance: none;
-                background: none;
-                border: 0;
-                outline: 0;
-                flex-grow: 0;
-                border-radius: 50%;
-                background-color: #ffffff;
-                transition: background 300ms;
-                cursor: pointer;
-              }
-
-              /* Pseudo element for check styling */
-
-              [type="checkbox"]::before {
-                content: "";
-                color: transparent;
-                display: block;
-                width: inherit;
-                height: inherit;
-                border-radius: inherit;
-                border: 0;
-                background-color: transparent;
-                background-size: contain;
-                box-shadow: inset 0 0 0 1px #ccd3d8;
-              }
-
-              /* Checked */
-
-              [type="checkbox"]:checked {
-                background-color: currentcolor;
-              }
-
-              [type="checkbox"]:checked::before {
-                box-shadow: none;
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
-              }
-
-              /* Disabled */
-
-              [type="checkbox"]:disabled {
-                background-color: #ccd3d8;
-                opacity: 0.84;
-                cursor: not-allowed;
-              }
-
-              /* IE */
-
-              [type="checkbox"]::-ms-check {
-                content: "";
-                color: transparent;
-                display: block;
-                width: inherit;
-                height: inherit;
-                border-radius: inherit;
-                border: 0;
-                background-color: transparent;
-                background-size: contain;
-                box-shadow: inset 0 0 0 1px #ccd3d8;
-              }
-
-              [type="checkbox"]:checked::-ms-check {
-                box-shadow: none;
-                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
               }
             }
           }
@@ -676,3 +560,5 @@ function sorttheadHdr(name: number) {
   width: 25%;
 }
 </style>
+    
+    

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useCounterStore } from "@/stores/memberBank";
+import { useMemberBankStore } from "@/stores/memberBank";
 import { showErrorMsg, showApiStatus } from "@/types/IMessage";
-const store = useCounterStore();
-const { creatMemberBankData, editMemberBankInfoData } = store;
+const memberBankStore = useMemberBankStore();
+const { creatMemberBankData, editMemberBankInfoData } = memberBankStore;
 const title = ref("儲值");
 const alertState = ref(false);
 const alertInformation = reactive({

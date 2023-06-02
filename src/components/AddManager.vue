@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useManagerStore } from "@/stores/manager";
 import Alert from "@/components/alertCmpt";
-import { showApiStatus, showErrorMsg } from "@/types/IMessage";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
 
 const managerStore = useManagerStore();
 const { createManagerData, editAdminData, getRoleList } = managerStore;
@@ -227,7 +227,7 @@ const handSubmit = () => {
             }
         })
         .catch((e: any) => {
-            Alert.warning(showApiStatus(e.response.status), 2000);
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
         });
 };
 const getRoleName = () => {
@@ -240,7 +240,7 @@ const getRoleName = () => {
         .then(() => {
         })
         .catch((e: any) => {
-            Alert.warning(showApiStatus(e.response.status), 2000);
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
         })
 }
 

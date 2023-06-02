@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMemberStore } from "@/stores/member";
-import { showErrorMsg, showApiStatus } from "@/types/IMessage";
+import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
 
 const memberStore = useMemberStore();
 const { createGroupData, editGroupData } = memberStore;
@@ -41,7 +41,7 @@ const handSubmit = () => {
             }
         })
         .catch((e: any) => {
-        handAlertView(showApiStatus(e.response.status), 2, 1);
+        handAlertView(showHttpsStatus(e.response.status), 2, 1);
       });
     } else {
         createGroupData(newGroup).then((res) => {
@@ -55,7 +55,7 @@ const handSubmit = () => {
             }
         })
         .catch((e: any) => {
-        handAlertView(showApiStatus(e.response.status), 2, 1);
+        handAlertView(showHttpsStatus(e.response.status), 2, 1);
       });
     }
 }

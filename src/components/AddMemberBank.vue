@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useMemberBankStore } from "@/stores/memberBank";
-import { showErrorMsg, showApiStatus } from "@/types/IMessage";
+import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
 const memberBankStore = useMemberBankStore();
 const { creatMemberBankData, editMemberBankInfoData } = memberBankStore;
 const title = ref("儲值");
@@ -48,7 +48,7 @@ const handSubmit = () => {
         }
       })
       .catch((e: any) => {
-        handAlertView(showApiStatus(e.response.status), 2, 1);
+        handAlertView(showHttpsStatus(e.response.status), 2, 1);
       });
   } else {
     let editMemberBankInfo = {
@@ -68,7 +68,7 @@ const handSubmit = () => {
         }
       })
       .catch((e: any) => {
-        handAlertView(showApiStatus(e.response.status), 2, 1);
+        handAlertView(showHttpsStatus(e.response.status), 2, 1);
       });
   }
 };

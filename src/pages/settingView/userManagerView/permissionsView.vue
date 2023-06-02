@@ -4,7 +4,7 @@ import { useCounterStore } from "@/stores/counter";
 import { useManagerStore } from "@/stores/manager";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
-import { showApiStatus, showErrorMsg } from "@/types/IMessage";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
 
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
@@ -50,7 +50,7 @@ const handSubmit = (() => {
             }
         })
         .catch((e: any) => {
-            Alert.warning(showApiStatus(e.response.status), 2000);
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
             if (e.response.status == 401) {
                 setTimeout(() => {
                     handLogOut();
@@ -69,7 +69,7 @@ const getRoleName = () => {
             width.value = 100 / ((roleList.value.data).length + 2) + "%";
         })
         .catch((e: any) => {
-            Alert.warning(showApiStatus(e.response.status), 2000);
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
             if (e.response.status == 401) {
                 setTimeout(() => {
                     handLogOut();
@@ -83,7 +83,7 @@ const getPermissions = () => {
             width.value = 100 / ((permissionsList.value.data[0].optionRoleLists[0].roleLists).length + 2) + "%";
         })
         .catch((e: any) => {
-            Alert.warning(showApiStatus(e.response.status), 2000);
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
             if (e.response.status == 401) {
                 setTimeout(() => {
                     handLogOut();

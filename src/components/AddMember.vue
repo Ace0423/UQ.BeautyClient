@@ -2,7 +2,7 @@
 import { useMemberStore } from "@/stores/member";
 import Multiselect from "vue-multiselect";
 import "vue-multiselect/dist/vue-multiselect.css";
-import { showErrorMsg, showApiStatus } from "@/types/IMessage";
+import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
 
 const memberStore = useMemberStore();
 const { createMemberData, editMemberData, groupListData } = memberStore;
@@ -219,7 +219,7 @@ const handSubmit = () => {
         }
       })
       .catch((e: any) => {
-        handAlertView(showApiStatus(e.response.status), 2, 1);
+        handAlertView(showHttpsStatus(e.response.status), 2, 1);
       });
   } else {
     newMember.nameView = newMember.nameFirst;
@@ -235,7 +235,7 @@ const handSubmit = () => {
         }
       })
       .catch((e: any) => {
-        handAlertView(showApiStatus(e.response.status), 2, 1);
+        handAlertView(showHttpsStatus(e.response.status), 2, 1);
       });
   }
 };

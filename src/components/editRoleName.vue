@@ -2,7 +2,7 @@
 import { useManagerStore } from "@/stores/manager";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
-import { showApiStatus, showErrorMsg } from "@/types/IMessage";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
 import { useCounterStore } from "@/stores/counter";
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
@@ -27,7 +27,7 @@ const handSubmit = () => {
 
     })
     .catch((e: any) => {
-      Alert.warning(showApiStatus(e.response.status), 2000);
+      Alert.warning(showHttpsStatus(e.response.status), 2000);
       if (e.response.status == 401) {
         setTimeout(() => {
           handLogOut();

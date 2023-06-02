@@ -4,7 +4,7 @@ export const useManagerStore = defineStore("manager", () => {
     const managerList: any = reactive({ data: [] });
     const roleList: any = reactive({ data: [] });
     const roleInfoList: any = reactive({ data: [] });
-    const getAdminList = async (data: any) => {
+    const getManagerList = async (data: any) => {
         try {
             const res = await apiGetAdminListRequest(data);
             managerList.data = res.data.data.table;
@@ -27,7 +27,7 @@ export const useManagerStore = defineStore("manager", () => {
     const editManagerData  = async (data: any) => {
         try {
             const res = await apiPutAdminDataRequest(data);
-            updataManagerList(res.data.data)
+            updataManagerList(res.data.data.table[0])
             return res.data;
         } catch (error) {
             console.log(error);
@@ -122,7 +122,7 @@ export const useManagerStore = defineStore("manager", () => {
 
     return {
         managerList,
-        getAdminList,
+        getManagerList,
         createManagerData,
         editManagerData,
         roleList,

@@ -10,7 +10,6 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     AddAdminManager: typeof import('./components/AddAdminManager.vue')['default']
-    AddAllDiscountUI: typeof import('./components/discountCmpt/AddAllDiscountUI.vue')['default']
     AddApptUI: typeof import('./components/apptCmpt/AddApptUI.vue')['default']
     AddCourseDetailUI: typeof import('./components/courseCmpt/AddCourseDetailUI.vue')['default']
     AddCourseTypeUI: typeof import('./components/courseCmpt/AddCourseTypeUI.vue')['default']
@@ -22,9 +21,6 @@ declare module '@vue/runtime-core' {
     AddMemberBank: typeof import('./components/AddMemberBank.vue')['default']
     AddRoleManager: typeof import('./components/AddRoleManager.vue')['default']
     Alert: typeof import('./components/Alert.vue')['default']
-    ApptInfoUI: typeof import('./components/apptCmpt/ApptInfoUI.vue')['default']
-    BasicUI: typeof import('./components/apptCmpt/BasicUI.vue')['default']
-    EditAllDiscountUI: typeof import('./components/discountCmpt/EditAllDiscountUI.vue')['default']
     EditApptUI: typeof import('./components/apptCmpt/EditApptUI.vue')['default']
     EditCourseDetailUI: typeof import('./components/courseCmpt/EditCourseDetailUI.vue')['default']
     EditRoleName: typeof import('./components/editRoleName.vue')['default']
@@ -36,7 +32,6 @@ declare module '@vue/runtime-core' {
     IconEcosystem: typeof import('./components/icons/IconEcosystem.vue')['default']
     IconSupport: typeof import('./components/icons/IconSupport.vue')['default']
     IconTooling: typeof import('./components/icons/IconTooling.vue')['default']
-    LittleDateUI: typeof import('./components/apptCmpt/LittleDateUI.vue')['default']
     Login: typeof import('./components/Login.vue')['default']
     MemberBankInfo: typeof import('./components/MemberBankInfo.vue')['default']
     MemberInfo: typeof import('./components/MemberInfo.vue')['default']
@@ -45,7 +40,6 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView']
     SideBar: typeof import('./components/SideBar.vue')['default']
     TheWelcome: typeof import('./components/TheWelcome.vue')['default']
-    Tui_calendar: typeof import('./components/tui_calendarCmpt/Tui_calendar.vue')['default']
     WelcomeItem: typeof import('./components/WelcomeItem.vue')['default']
   }
 }

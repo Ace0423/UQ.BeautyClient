@@ -18,7 +18,7 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
             </router-link>
           </div>
           <div class="nav-content">
-            <router-link to="/settingView/userManagerView/userView">
+            <router-link to="/settingView/userManagerView/managerView">
               <div>
                 <h1>人員管理</h1>
                 <p>管理商店人員、排班與權限等相關設定</p>

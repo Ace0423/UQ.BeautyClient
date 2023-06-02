@@ -6,7 +6,7 @@ import { useManagerStore } from "@/stores/manager";
 import { storeToRefs } from "pinia";
 const managerstore = useManagerStore();
 const { managerList } = storeToRefs(managerstore);
-const { getAdminList } = managerstore;
+const { getManagerList } = managerstore;
 const addManagerView = ref(false);
 const selectManagerItem = ref();
 const keyWord = ref("");
@@ -14,24 +14,34 @@ const handAddManagerView = (item: any) => {
     selectManagerItem.value = item;
     addManagerView.value = !addManagerView.value;
 };
-const filterAdminListData = computed(() => {
-    const filter = managerList.value.data.filter(getAdminListFn);
+const filterManagerListData = computed(() => {
+    const filter = managerList.value.data.filter(getManagerListFn);
     return filter;
 });
-const getAdminListFn = (data: any) => {
-    return (
-        !keyWord.value ||
-        data.nameView.toLowerCase().includes(keyWord.value.toLowerCase())
-    );
+const getManagerListFn = (data: any) => {
+    if (
+        keyWord.value.substring(0, 1) == "0" ||
+        keyWord.value.substring(0, 2) == "09"
+    ) {
+        return (
+            !keyWord.value ||
+            data.phone.toLowerCase().includes(keyWord.value.toLowerCase())
+        );
+    } else {
+        return (
+            !keyWord.value ||
+            data.nameView.toLowerCase().includes(keyWord.value.toLowerCase())
+        );
+    }
 };
 
 onMounted(() => {
-    let allAamin = {
+    let allManager = {
         id: 0,
         pageindex: 0,
         count: 0,
     };
-    getAdminList(allAamin);
+    getManagerList(allManager);
 })
 </script>
 <template>
@@ -47,7 +57,7 @@ onMounted(() => {
                 <tr>
                     <th>
                         <p class="nameview">
-                            使用者(全部{{ filterAdminListData.length }}個)
+                            使用者(全部{{ filterManagerListData.length }}個)
                         </p>
                     </th>
                     <th>
@@ -62,7 +72,7 @@ onMounted(() => {
                 </tr>
             </thead>
             <tbody class="content-tab">
-                <tr v-for="item in filterAdminListData" :key="item.managerId">
+                <tr v-for="item in filterManagerListData" :key="item.managerId">
                     <td class="content-name">
                         <img :src="Icon" />
                         <p>{{ item.nameView }}</p>
@@ -151,7 +161,7 @@ div {
                 justify-content: space-between;
 
                 >th {
-                    width: calc(100%/3);
+                    width: calc(100%/4);
 
                     >p {
                         min-width: 108px;
@@ -177,10 +187,21 @@ div {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-
+                position: relative;
+                &::after {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    bottom: 0;
+                    width: 98%;
+                    height: 1px;
+                    background: #ddd;
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
                 >td {
                     display: flex;
-                    width: calc(100%/3);
+                    width: calc(100%/4);
 
                     >button {
                         height: 100%;

@@ -65,6 +65,7 @@ onMounted(() => {
                         <p>{{ item.phone }}</p>
                     </td>
                     <td>
+                        <p>{{ item.dateCreate }}</p>
                     </td>
                 </tr>
             </tbody>

@@ -73,18 +73,11 @@ onMounted(() => {
         <div class="info-content">
           <div class="info-simple">
             <img class="head-photo" :src="Icon" />
-            <img
-              class="edit-btn"
-              :src="editIcon"
-              v-on:click="handAddMemberView()"
-            />
+            <img class="edit-btn" :src="editIcon" v-on:click="handAddMemberView()" />
             <h1>{{ props.selectMemberItem.nameView }}</h1>
             <p>{{ props.selectMemberItem.phone }}</p>
             <div class="group-lab">
-              <div
-                v-for="item in props.selectMemberItem.groupList"
-                :key="item.groupId"
-              >
+              <div v-for="item in props.selectMemberItem.groupList" :key="item.groupId">
                 {{ item.label }}
               </div>
             </div>
@@ -115,30 +108,18 @@ onMounted(() => {
       </div>
       <div class="consumption-frame" v-if="simpleView">
         <div class="item-tab">
-          <button
-            :class="currentIndex == 0 ? 'active' : ''"
-            v-on:click="changeTab(0)"
-          >
+          <button :class="currentIndex == 0 ? 'active' : ''" v-on:click="changeTab(0)">
             消費表現
           </button>
-          <button
-            :class="currentIndex == 1 ? 'active' : ''"
-            v-on:click="changeTab(1)"
-          >
+          <button :class="currentIndex == 1 ? 'active' : ''" v-on:click="changeTab(1)">
             消費紀錄
           </button>
-          <button
-            :class="currentIndex == 2 ? 'active' : ''"
-            v-on:click="changeTab(2)"
-          >
+          <button :class="currentIndex == 2 ? 'active' : ''" v-on:click="changeTab(2)">
             儲值紀錄
           </button>
         </div>
         <div class="consumption-content">
-          <div
-            class="consumption-performance"
-            :class="currentIndex != 0 ? 'current' : ''"
-          >
+          <div class="consumption-performance" :class="currentIndex != 0 ? 'current' : ''">
             <div>
               <h1>0</h1>
               <p>平均消費金額</p>
@@ -160,14 +141,8 @@ onMounted(() => {
               <p>棄單次數</p>
             </div>
           </div>
-          <div
-            class="consumption-performance"
-            :class="currentIndex != 1 ? 'current' : ''"
-          ></div>
-          <div
-            class="consumption-performance"
-            :class="currentIndex != 2 ? 'current' : ''"
-          >
+          <div class="consumption-performance" :class="currentIndex != 1 ? 'current' : ''"></div>
+          <div class="consumption-performance" :class="currentIndex != 2 ? 'current' : ''">
             <div>
               <h1>{{ memberDetailData.accountBalance }}</h1>
               <p>儲值金餘額</p>
@@ -209,7 +184,7 @@ onMounted(() => {
   align-items: center;
   justify-content: end;
 
-  > .content {
+  >.content {
     display: flex;
     height: 100%;
     border-radius: 10px 0 0 10px;
@@ -218,51 +193,60 @@ onMounted(() => {
     box-sizing: border-box;
     display: flex;
     color: #717171;
-    > .info-frame {
+
+    >.info-frame {
       display: flex;
       height: 100%;
       flex-direction: column;
       min-width: 360px;
       margin: 0 10px;
-      > .info-head {
+
+      >.info-head {
         justify-content: space-between;
         display: flex;
-        > img {
+
+        >img {
           justify-content: center;
           margin: 10px 10px 10px 10px;
         }
       }
-      > .info-content {
+
+      >.info-content {
         border-radius: 10px;
         box-shadow: inset 0 10px 6px 0 rgba(0, 0, 0, 0.16);
         min-width: 360px;
         border: solid 1px #707070;
         height: calc(99% - 65px);
-        > .info-simple {
+
+        >.info-simple {
           position: relative;
           display: flex;
           flex-direction: column;
           align-items: center;
           margin: 0 10px;
           border-bottom: 2px #707070 solid;
+
           .group-lab {
             display: flex;
             width: 100%;
             justify-content: center;
             flex-wrap: wrap;
-            > div {
+
+            >div {
               border: solid 1px #707070;
               background-color: #e6e2de;
               padding: 1px 1px;
               margin: 2px 2px;
             }
           }
+
           .head-photo {
             position: relative;
             top: -30px;
             width: 60px;
             height: 60px;
           }
+
           .edit-btn {
             position: absolute;
             top: 10px;
@@ -271,18 +255,22 @@ onMounted(() => {
             height: 50px;
           }
         }
-        > .info-detail {
+
+        >.info-detail {
           margin: 0 10px;
           border-bottom: 2px #707070 solid;
           color: #877059;
-          > .content-box {
+
+          >.content-box {
             border: solid 1px #707070;
             background-color: #e6e2de;
             border-radius: 10px;
             margin-bottom: 25px;
+
             P {
               margin: 0 0 5px 0;
             }
+
             .flex-box {
               display: flex;
               height: 40px;
@@ -300,6 +288,7 @@ onMounted(() => {
             }
           }
         }
+
         .info-memo {
           display: flex;
           flex-direction: column;
@@ -318,14 +307,16 @@ onMounted(() => {
         }
       }
     }
-    > .consumption-frame {
+
+    >.consumption-frame {
       margin: 0 10px;
-      > .item-tab {
+
+      >.item-tab {
         display: flex;
 
         margin: 20px 10px 8px;
 
-        > button {
+        >button {
           // display: flex;
           justify-content: center;
           align-items: center;
@@ -341,22 +332,23 @@ onMounted(() => {
           text-decoration: none;
         }
 
-        > button.active {
+        >button.active {
           box-shadow: 0 2px;
           padding-bottom: 3px;
           // text-decoration: underline;
           color: #877059;
         }
       }
-      > .consumption-content {
+
+      >.consumption-content {
         border-radius: 10px;
         box-shadow: inset 0 10px 6px 0 rgba(0, 0, 0, 0.16);
         min-width: 360px;
         border: solid 1px #707070;
         height: calc(99% - 65px);
 
-        > .consumption-performance {
-          > div {
+        >.consumption-performance {
+          >div {
             margin: 20px 30px;
             padding: 5px 15px;
             border: solid 1px #707070;
@@ -364,21 +356,23 @@ onMounted(() => {
             border-radius: 10px;
             color: #717171;
 
-            > h1 {
+            >h1 {
               font-size: 30px;
             }
 
-            > p {
+            >p {
               font-size: 16px;
               margin: 0;
             }
           }
         }
+
         .current {
           display: none;
         }
       }
     }
+
     // > .bitmap-img {
     //   position: relative;
     //   left: 220px;

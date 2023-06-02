@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useManagerStore } from "@/stores/manager";
 import Alert from "@/components/alertCmpt";
-import { showApiStatus, showErrorMsg } from "@/types/IMessage";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
 
 const managerStore = useManagerStore();
 const { createManagerData, editAdminData, getRoleList } = managerStore;
@@ -23,6 +23,7 @@ const newManager: any = reactive({
 });
 
 const props = defineProps<{
+    selectManagerItem: any
     handAddManagerView: Function;
 }>();
 const state: any = reactive({
@@ -227,7 +228,7 @@ const handSubmit = () => {
             }
         })
         .catch((e: any) => {
-            Alert.warning(showApiStatus(e.response.status), 2000);
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
         });
 };
 const getRoleName = () => {
@@ -240,11 +241,26 @@ const getRoleName = () => {
         .then(() => {
         })
         .catch((e: any) => {
-            Alert.warning(showApiStatus(e.response.status), 2000);
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
         })
 }
 
 onMounted(() => {
+    if (props.selectManagerItem) {
+        console.log(props.selectManagerItem);
+        form_items.value.name.value = props.selectManagerItem.nameView;
+        form_items.value.email.value  = props.selectManagerItem.email;
+        form_items.value.password.value  = props.selectManagerItem.password;
+        form_items.value.phone.value  = props.selectManagerItem.phone;
+        newManager.sex 
+    sex: 1,
+    photo: "",
+    memo: "",
+    userLock: true,
+    lineUserID: "",
+    googleUserID: "",
+    roleList: []
+    }
     getRoleName();
 });
 </script>

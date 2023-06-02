@@ -1,15 +1,18 @@
 
 <script setup lang="ts">
 import Icon from "@/assets/Icon zocial-guest.svg";
+import editIcon from "@/assets/Icon awesome-edit.svg";
 import { useManagerStore } from "@/stores/manager";
 import { storeToRefs } from "pinia";
 const managerstore = useManagerStore();
 const { managerList } = storeToRefs(managerstore);
 const { getAdminList } = managerstore;
-const addAdminManagerView = ref(false);
+const addManagerView = ref(false);
+const selectManagerItem = ref();
 const keyWord = ref("");
-const handAddManagerView = () => {
-    addAdminManagerView.value = !addAdminManagerView.value;
+const handAddManagerView = (item: any) => {
+    selectManagerItem.value = item;
+    addManagerView.value = !addManagerView.value;
 };
 const filterAdminListData = computed(() => {
     const filter = managerList.value.data.filter(getAdminListFn);
@@ -35,7 +38,7 @@ onMounted(() => {
     <div>
         <div class="function-area">
             <input placeholder="🔍搜尋名稱、暱稱或手機" v-model="keyWord" />
-            <button class="header-btn" @click="handAddManagerView()">
+            <button class="header-btn" @click="handAddManagerView('')">
                 新增使用者
             </button>
         </div>
@@ -53,6 +56,9 @@ onMounted(() => {
                     <th>
                         <p>加入時間</p>
                     </th>
+                    <th>
+
+                    </th>
                 </tr>
             </thead>
             <tbody class="content-tab">
@@ -67,11 +73,17 @@ onMounted(() => {
                     <td>
                         <p>{{ item.dateCreate }}</p>
                     </td>
+                    <td>
+                        <button class="header-btn" v-on:click="handAddManagerView(item)">
+                            <img :src="editIcon" />
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <AddManager v-if="addAdminManagerView" :hand-add-manager-view="handAddManagerView"></AddManager>
+    <AddManager v-if="addManagerView" :hand-add-manager-view="handAddManagerView" :select-manager-item="selectManagerItem">
+    </AddManager>
 </template>
 
 <style lang="scss" scoped>
@@ -169,12 +181,28 @@ div {
                 >td {
                     display: flex;
                     width: calc(100%/3);
+
+                    >button {
+                        height: 100%;
+                        background-color: transparent;
+                        border: none;
+                        padding: 0 0 0 0;
+                        margin: 0 2px;
+
+                        >img {
+                            cursor: pointer;
+                            width: 40px;
+                            height: 40px;
+                            vertical-align: middle;
+                        }
+                    }
                 }
 
                 .content-name {
                     padding-left: 10px;
                     display: flex;
-                    img{
+
+                    img {
                         margin: 0 10px;
                     }
                 }

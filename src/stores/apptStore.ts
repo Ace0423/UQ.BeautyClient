@@ -219,10 +219,9 @@ export const useApptStore = defineStore("apptStore", () => {
   };
   const getApptDataApi = async (year: any, month: any) => {
     try {
-      let data = "?year=" + year + "&month=" + month;
+      let data = "?year=" + year + "&month=" + month+"&pageIndex=0&count=0";
       let res: any = await getApptDataRequest(data);
       bookingList.value = [];
-
       //重製預約
       for (let i = 0; i < timeGroup.value.length; i++) {
         const element = timeGroup.value[i];
@@ -283,6 +282,7 @@ export const useApptStore = defineStore("apptStore", () => {
         }
       return res;
     } catch (error) {
+      console.log('error');
       console.log(error);
     }
   };

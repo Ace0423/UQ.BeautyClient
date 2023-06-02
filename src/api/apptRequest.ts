@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getHttps, postHttps, putHttps } from "./sendHttps";
+import { getToken } from "@/plugins/js-cookie";
 
 const httpRequest = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
@@ -13,6 +14,9 @@ const httpRequest = axios.create({
 export const getApptDataRequest = (data: any) =>
   getHttps(httpRequest, "/Booking" + data, data);
 
+  // export const getApptDataRequest = (data: any) => {
+  //   return httpRequest.get("/Booking" + data, data);
+// }
 export const postAddApptDataReq = (data: any) =>
   postHttps(httpRequest, "/Booking/Booking", data);
 

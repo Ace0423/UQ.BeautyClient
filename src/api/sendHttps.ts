@@ -18,17 +18,16 @@ export const updataToken = (instance: any) => {
 //get請求
 export function getHttps(instance: any = httpRequest, url: any, params = {}) {
   updataToken(instance);
-  instance.defaults.withCredentials = true;
+  // instance.defaults.withCredentials = true;
   return new Promise((resolve, reject) => {
     instance
-      .get(url, {
-        params: params,
-      })
+      .get(url,params)
       .then((response: any) => {
         resolve(response);
       })
       .catch((err: any) => {
-        Alert.warning(showHttpsStatus(err.request.status), 1000);
+        if (err && err.request && err.request.status)
+          Alert.warning(showHttpsStatus(err.request.status), 1000);
         reject(err);
       });
   });
@@ -42,7 +41,8 @@ export function postHttps(instance: any = httpRequest, url: any, data = {}) {
         resolve(response.data);
       },
       (err: any) => {
-        Alert.warning(showHttpsStatus(err.request.status), 1000);
+        if (err && err.request && err.request.status)
+          Alert.warning(showHttpsStatus(err.request.status), 1000);
         reject(err);
       }
     );
@@ -57,7 +57,8 @@ export function putHttps(instance: any = httpRequest, url: any, data = {}) {
         resolve(response.data);
       },
       (err: any) => {
-        Alert.warning(showHttpsStatus(err.request.status), 1000);
+        if (err && err.request && err.request.status)
+          Alert.warning(showHttpsStatus(err.request.status), 1000);
         reject(err);
       }
     );
@@ -73,7 +74,8 @@ export function deleteHttps(instance: any = httpRequest, url: any, data = {}) {
         resolve(response.data);
       },
       (err: any) => {
-        Alert.warning(showHttpsStatus(err.request.status), 1000);
+        if (err && err.request && err.request.status)
+          Alert.warning(showHttpsStatus(err.request.status), 1000);
         reject(err);
       }
     );

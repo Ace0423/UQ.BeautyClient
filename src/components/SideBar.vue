@@ -41,7 +41,7 @@ onMounted(() => {
             <img :src="courseImg" /><router-link to="/courseView">課程管理</router-link>
           </li>
           <li>
-            <img :src="appointmentImg" /><router-link to="/">預約紀錄</router-link>
+            <img :src="appointmentImg" /><router-link to="/appointmentView">預約紀錄</router-link>
           </li>
           <li>
             <img :src="bankImg" /><router-link to="/memberBankView">儲值金</router-link>

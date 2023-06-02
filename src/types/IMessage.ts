@@ -50,7 +50,7 @@ export const showErrorMsg = (status: string): string => {
   return message;
 };
 /**api失敗連線 */
-export const showApiStatus = (status: number | string): string => {
+export const showHttpsStatus = (status: number | string): string => {
   let message = "";
   console.log(status);
   switch (status) {

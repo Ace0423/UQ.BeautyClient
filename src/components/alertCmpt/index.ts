@@ -49,6 +49,9 @@ Alert.warning = (message: string, duration?: number) => {
 Alert.check = (message: string, duration?: number, onAlertBtn?: Function) => {
   Alert({ type: 0, message, duration, onAlertBtn });
 };
+Alert.tip = (message: string, duration?: number, onAlertBtn?: Function) => {
+  Alert({ type: 1, message, duration, onAlertBtn });
+};
 
 //---------------------使用
 

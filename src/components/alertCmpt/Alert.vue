@@ -9,7 +9,7 @@ const props = defineProps({
   },
   message: {
     type: String,
-    default: "恭喜你，这是一条消息",
+    default: "!!!",
   },
   showTimer: {
     type: Number,
@@ -17,6 +17,7 @@ const props = defineProps({
   },
   alertBtnHdr: {
     type: Function,
+    required: true,
   },
 });
 

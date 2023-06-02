@@ -18,7 +18,6 @@ export default function Alert({
   duration = 3000,
 }: Props) {
   const alertBtnHdr = (data: any) => {
-    console.log(onAlertBtn);
     if (onAlertBtn) onAlertBtn(data == 1);
     onClose();
   };
@@ -48,7 +47,7 @@ Alert.warning = (message: string, duration?: number) => {
   Alert({ type: 2, message, duration });
 };
 Alert.check = (message: string, duration?: number, onAlertBtn?: Function) => {
-  Alert({ type: 2, message, duration });
+  Alert({ type: 0, message, duration, onAlertBtn });
 };
 
 //---------------------使用
@@ -58,5 +57,5 @@ Alert.check = (message: string, duration?: number, onAlertBtn?: Function) => {
 //   alertBtnState = data;
 //   console.log(alertBtnState, "alertBtnState");
 // };
-// Alert({ type: 0, message: "登录失败", duration: 1000, onAlertBtn });
+// Alert({ type: 0, message: "登录失败", duration: 1000, onAlertBtn: onDelReturn });
 // Alert.warning("登录失败", 1000);

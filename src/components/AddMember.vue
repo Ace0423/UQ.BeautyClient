@@ -188,6 +188,7 @@ const verify_all = () => {
   let is_valid = true;
   for (let component in state.form_items) {
     let item = state.form_items[component];
+    if (component == 'password' && item.value == undefined) {break;}
     for (let rule in item.rules) {
       if (!verify_methods[rule](item)) {
         is_valid = false;

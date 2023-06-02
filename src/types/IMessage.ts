@@ -50,7 +50,7 @@ export const showErrorMsg = (status: string): string => {
   return message;
 };
 /**api失敗連線 */
-export const showApiStatus = (status: number | string): string => {
+export const showHttpsStatus = (status: number | string): string => {
   let message = "";
   console.log(status);
   switch (status) {
@@ -58,7 +58,7 @@ export const showApiStatus = (status: number | string): string => {
       message = "请求错误(400)";
       break;
     case 401:
-      message = "未授权，请重新登录(401)";
+      message = "未授權(401)，請重新登入";
       break;
     case 403:
       message = "拒绝访问(403)";

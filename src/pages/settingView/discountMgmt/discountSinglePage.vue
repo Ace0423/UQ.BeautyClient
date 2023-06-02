@@ -46,10 +46,6 @@ const handAddManagerView = () => {
       </tbody>
     </table>
   </div>
-  <AddManager
-    v-if="addAdminManagerView"
-    :hand-add-manager-view="handAddManagerView"
-  ></AddManager>
 </template>
 
 <style lang="scss" scoped>

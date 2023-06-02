@@ -35,13 +35,16 @@ onMounted(() => {
       <diV class="nav">
         <ul @click="handmemuStateBtn()">
           <li>
+            <img :src="appointmentImg" /><router-link to="/appointmentView">預約紀錄</router-link>
+          </li>
+          <li>
             <img :src="customerImg" /><router-link to="/memberView">顧客管理</router-link>
           </li>
           <li>
-            <img :src="courseImg" /><router-link to="/courseView">課程管理</router-link>
+            <img :src="customerImg" /><router-link to="/orderView">訂單紀錄</router-link>
           </li>
           <li>
-            <img :src="appointmentImg" /><router-link to="/appointmentView">預約紀錄</router-link>
+            <img :src="courseImg" /><router-link to="/courseView">課程管理</router-link>
           </li>
           <li>
             <img :src="bankImg" /><router-link to="/memberBankView">儲值金</router-link>

@@ -253,13 +253,13 @@ onMounted(() => {
         form_items.value.password.value  = props.selectManagerItem.password;
         form_items.value.phone.value  = props.selectManagerItem.phone;
         newManager.sex 
-    sex: 1,
-    photo: "",
-    memo: "",
-    userLock: true,
-    lineUserID: "",
-    googleUserID: "",
-    roleList: []
+    // sex: 1,
+    // photo: "",
+    // memo: "",
+    // userLock: true,
+    // lineUserID: "",
+    // googleUserID: "",
+    // roleList: []
     }
     getRoleName();
 });

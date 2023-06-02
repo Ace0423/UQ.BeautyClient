@@ -203,6 +203,8 @@ const verify_all = () => {
     let is_valid = true;
     for (let component in state.form_items) {
         let item = state.form_items[component];
+        console.log(item.value)
+        if (component == 'password' && item.value == undefined) {break;};
         for (let rule in item.rules) {
             if (!verify_methods[rule](item)) {
                 is_valid = false;
@@ -220,10 +222,8 @@ const handSubmit = () => {
     newManager.phone = state.form_items.cellphone.value;
     if (props.selectManagerItem) {
         newManager.managerId = props.selectManagerItem.managerId;
-
         editManagerData(newManager)
             .then((res) => {
-                console.log(res)
                 if (res.state == 1) {
                     Alert.sussess('修改成功', 2000);
                     props.handAddManagerView();
@@ -267,7 +267,6 @@ const getRoleName = () => {
 
 onMounted(() => {
     if (props.selectManagerItem) {
-        console.log(props.selectManagerItem);
         form_items.value.name.value = props.selectManagerItem.nameView;
         form_items.value.email.value = props.selectManagerItem.email;
         form_items.value.password.value = props.selectManagerItem.password;

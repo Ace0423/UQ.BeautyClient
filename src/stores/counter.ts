@@ -38,7 +38,7 @@ export const useCounterStore = defineStore("counter", () => {
     delToken("token");
     delToken("userData");
     setIsLogin(false);
-    location.reload()
+    location.reload();
   }
   const setUserData = () => {
     let val: any = getToken("userData");

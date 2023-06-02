@@ -89,6 +89,7 @@ import icon_delete from "@/assets/images/icon_delete.png";
 import { useApptStore } from "@/stores/apptStore";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
+import { showErrorMsg } from "@/types/IMessage";
 
 let store = useApptStore();
 let { goodsTypesListRef, goodsTypesListValueRef, goodsDetailListRef } =
@@ -186,26 +187,39 @@ function sorttheadHdr(name: number) {
 //改變狀態
 let updataStutusFn = (index: number, item: any) => {
   let curdata: any = {
-    amount: item.amount,
-    bonusOpen: item.amount,
-    brand: item.brand,
-    display: !item.display,
+    pId: item.pId,
+    pCode: item.pCode,
+    pName: item.pName,
+    memo: item.memo,
+    price: item.price,
     imageBig: item.imageBig,
     imageSmall: item.imageSmall,
-    memo: item.memo,
-    pCode: item.pCode,
-    pId: item.pId,
-    pName: item.pName,
-    price: item.price,
-    stock: item.stock,
-    stockOpen: item.stockOpen,
-    stockTrace: item.stockTrace,
     unit: item.unit,
+    amount: item.amount,
+    brand: item.brand,
+    stock: item.stock,
+    stockTrace: item.stockTrace,
+    bonusOpen: item.amount,
     updateOpen: item.updateOpen,
+    display: !item.display,
+    stockOpen: item.stockOpen,
+    productGroup: item.groupList,
+    productProvider: item.providerList,
+    productDiscount: item.discountList,
   };
-  console.log(curdata, "curdata");
-  updateGoodsDetailApi(curdata);
-  // getCourseDetailApi(courseTypesTabs.value[courseTypesTabsValue.value].pgId, 0);
+
+  updateGoodsDetailApi(curdata).then((res: any) => {
+    if (res.state == 1) {
+      Alert.sussess("成功", 1000);
+    } else {
+      Alert.warning(showErrorMsg(res.msg), 1000);
+    }
+  });
+
+  getGoodsDetailApi(
+    goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
+    0
+  );
 };
 </script>
 

@@ -30,6 +30,7 @@ export function getHttps(instance: any = httpRequest, url: any, params = {}) {
         resolve(response);
       })
       .catch((err: any) => {
+        errorFn(err);
         reject(err);
       });
   });
@@ -84,6 +85,8 @@ export function deleteHttps(instance: any = httpRequest, url: any, data = {}) {
 //
 function errorFn(err: any) {
   if (err && err.request && err.request.status) {
+    console.log(err.request.status);
+    
     if (err.request.status == 401)
       Alert.tip(showHttpsStatus(err.request.status), 1000, onAlertBtn);
     else Alert.warning(showHttpsStatus(err.request.status), 1000);

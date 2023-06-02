@@ -219,7 +219,7 @@ export const useApptStore = defineStore("apptStore", () => {
   };
   const getApptDataApi = async (year: any, month: any) => {
     try {
-      let data = "?year=" + year + "&month=" + month+"&pageIndex=0&count=0";
+      let data = "?year=" + year + "&month=" + month + "&pageIndex=0&count=0";
       let res: any = await getApptDataRequest(data);
       bookingList.value = [];
       //重製預約
@@ -282,7 +282,7 @@ export const useApptStore = defineStore("apptStore", () => {
         }
       return res;
     } catch (error) {
-      console.log('error');
+      console.log("error");
       console.log(error);
     }
   };
@@ -406,31 +406,35 @@ export const useApptStore = defineStore("apptStore", () => {
 
   let goodsDetailListRef: any = ref([]);
   //取資料
-  const getGoodsDetailApi = async (g: any, id: any) => {
+  const getGoodsDetailApi = async (group: any, id: any) => {
     try {
-      let res: any = await getGoodsDetailReq(g, id);
+      let res: any = null;
       goodsDetailListRef.value = [];
-      if (res.data.data.table) {
-        let dataDetail = res.data.data.table;
-        for (let i = 0; i < dataDetail.length; i++) {
-          const element = dataDetail[i];
-          goodsDetailListRef.value.push(element);
+      if (group == 0) {
+        //查全部
+        res = await getGoodsDetailReq(group, id);
+        if (res.data.data.table) {
+          let dataDetail = res.data.data.table;
+          for (let i = 0; i < dataDetail.length; i++) {
+            const element = dataDetail[i];
+            goodsDetailListRef.value.push(element);
+          }
+        }
+      } else {
+        //查群組
+        res = await getGoodsTypeReq(group, 1);
+        goodsDetailListRef.value = [];
+        if (res.data.data.table) {
+          let curProductList = res.data.data.table[0].productList;
+          for (let i = 0; i < curProductList.length; i++) {
+            const element = curProductList[i];
+            element.groupList = [{ pgId: group }];
+            element.discountList = [];
+            element.providerList = [];
+          }
+          goodsDetailListRef.value = res.data.data.table[0].productList;
         }
       }
-
-      return res;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  //查詢群組分類資料
-  const getGoodsTypeDataApi = async (data: any = 0) => {
-    try {
-      let res: any = await getGoodsTypeReq(data, 1);
-      goodsDetailListRef.value = [];
-
-      if (res.data.data.table)
-        goodsDetailListRef.value = res.data.data.table[0].productList;
       return res;
     } catch (error) {
       console.log(error);
@@ -451,7 +455,6 @@ export const useApptStore = defineStore("apptStore", () => {
   const updateGoodsDetailApi = async (data: any) => {
     try {
       let res = await updateGoodsDetailReq(data);
-      // if (res) getCourseDetailApi(0, 0);
       return res;
     } catch (error) {
       console.log(error);
@@ -461,11 +464,6 @@ export const useApptStore = defineStore("apptStore", () => {
   const delGoodsDetailApi = async (data: any, pgId: any) => {
     try {
       let res = await delGoodsDetailReq(data, pgId);
-      if (res)
-        getCourseDetailApi(
-          courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
-          "0"
-        );
       return res;
     } catch (error) {
       console.log(error);
@@ -508,6 +506,5 @@ export const useApptStore = defineStore("apptStore", () => {
     addGoodsDetailApi,
     updateGoodsDetailApi,
     delGoodsDetailApi,
-    getGoodsTypeDataApi,
   };
 });

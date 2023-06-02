@@ -74,11 +74,15 @@
     </div>
   </div>
   <AddGoodsDetailUI v-if="showAddUIRef" :showAddUIFn="showAddDetailFormHdr" />
+  <EditGoodsDetailUI
+    v-if="showEditUIRef"
+    :showUIFn="showEditDetailUIHdr"
+    :formInfo="selItem"
+  />
   <AddGoodsTypeUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" />
 </template>
 
 <script lang="ts" setup>
-import icon_goods from "@/assets/images/icon_goods.png";
 import icon_add from "@/assets/images/icon_add.png";
 import icon_edit from "@/assets/images/icon_edit.png";
 import icon_delete from "@/assets/images/icon_delete.png";
@@ -94,7 +98,6 @@ let {
   getGoodsDetailApi,
   updateGoodsDetailApi,
   delGoodsDetailApi,
-  getGoodsTypeDataApi,
 } = store;
 let showAddUIRef = ref(false);
 let showEditUIRef = ref(false);
@@ -129,46 +132,38 @@ let showAddTypeFormHdr = (state: boolean) => {
   showAddTypeRef.value = state;
   getGoodsTypeApi(0);
 };
-const showEditUIFn = (state: boolean) => {
-  console.log(state);
-
+const showEditDetailUIHdr = (state: boolean) => {
   showEditUIRef.value = state;
-  getGoodsDetailApi(0, 0);
+  // getGoodsDetailApi(0, 0);
 };
 //刪除
 let deleteHdr = (item: any, index: number) => {
-  selData = item;
+  selItem = item;
   Alert.check("是否刪除", 1000, onDeleteAlertBtn);
 };
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
-    delGoodsDetailApi(selData.pId,goodsTypesListRef.value[goodsTypesListValueRef.value].pgId);
+    let curPgId = goodsTypesListRef.value[goodsTypesListValueRef.value].pgId;
+    delGoodsDetailApi(selItem.pId, curPgId).then((res: any) => {
+      console.log(res);
+      getGoodsDetailApi(curPgId, 0);
+    });
   } else {
     console.log("取消刪除");
   }
-  selData.value = [];
+  selItem.value = [];
 };
 
 //編輯
-let selData: any = [];
+let selItem: any = [];
 function showEditFormFn(index: number, item: any) {
-  selData.value = item;
-  showEditUIFn(true);
-
-  getGoodsDetailApi(0, item.pId).then((res: any) => {
-    console.log(res);
-    
-  });
+  selItem.value = item;
+  showEditDetailUIHdr(true);
 }
 
 let changeTab = (index: number, item: any) => {
   goodsTypesListValueRef.value = index;
-
-  if (item.pgId == 0) {
-    getGoodsDetailApi(item.pgId, 0);
-  } else {
-    getGoodsTypeDataApi(item.pgId);
-  }
+  getGoodsDetailApi(item.pgId, 0);
 };
 //排序明細
 let sortUpDown: string = "";

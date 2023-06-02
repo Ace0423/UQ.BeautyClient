@@ -80,7 +80,6 @@ let { addtAllDiscountApi } = store;
 const props = defineProps<{
   showEditUIFn: Function;
   formInfo: any;
-  //   addDetailTypeID?: any;
 }>();
 
 let formInputRef: any = ref({

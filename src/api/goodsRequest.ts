@@ -40,7 +40,7 @@ export const addGoodsDetailReq = (data: any) =>
 export const updateGoodsDetailReq = (data: any) =>
   putHttps(httpRequest, "/Product/ProductInfo?pId=" + data.pId, data);
 export const delGoodsDetailReq = (data: any, pgId: any) =>
-  deleteHttps(httpRequest, "/Product/ProductGroup/" + pgId + "/" + data);
+  deleteHttps(httpRequest, "/Product/ProductInfo/" + data);
 
 // //分類
 // export const getGoodsTypeReq = (data: any) => {

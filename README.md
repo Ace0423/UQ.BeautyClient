@@ -38,3 +38,15 @@ npm run dev
 ```sh
 npm run build
 ```
+
+
+### 手動安裝
+```sh
+yarn add element-plus
+npm install --save @fullcalendar/vue3
+npm install --save @fullcalendar/daygrid
+npm install --save @fullcalendar/timegrid
+npm install --save @fullcalendar/interaction
+npm install jquery --save
+npm install vue-i18n@9
+```

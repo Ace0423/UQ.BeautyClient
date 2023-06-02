@@ -3,6 +3,10 @@ import { getToken } from "@/plugins/js-cookie";
 import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
 import axios from "axios"; // 參照axios
 
+import { useCounterStore } from "@/stores/counter";
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
+
 const httpRequest = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
   withCredentials: true,
@@ -21,13 +25,11 @@ export function getHttps(instance: any = httpRequest, url: any, params = {}) {
   // instance.defaults.withCredentials = true;
   return new Promise((resolve, reject) => {
     instance
-      .get(url,params)
+      .get(url, params)
       .then((response: any) => {
         resolve(response);
       })
       .catch((err: any) => {
-        if (err && err.request && err.request.status)
-          Alert.warning(showHttpsStatus(err.request.status), 1000);
         reject(err);
       });
   });
@@ -41,8 +43,7 @@ export function postHttps(instance: any = httpRequest, url: any, data = {}) {
         resolve(response.data);
       },
       (err: any) => {
-        if (err && err.request && err.request.status)
-          Alert.warning(showHttpsStatus(err.request.status), 1000);
+        errorFn(err);
         reject(err);
       }
     );
@@ -57,8 +58,7 @@ export function putHttps(instance: any = httpRequest, url: any, data = {}) {
         resolve(response.data);
       },
       (err: any) => {
-        if (err && err.request && err.request.status)
-          Alert.warning(showHttpsStatus(err.request.status), 1000);
+        errorFn(err);
         reject(err);
       }
     );
@@ -74,10 +74,23 @@ export function deleteHttps(instance: any = httpRequest, url: any, data = {}) {
         resolve(response.data);
       },
       (err: any) => {
-        if (err && err.request && err.request.status)
-          Alert.warning(showHttpsStatus(err.request.status), 1000);
+        errorFn(err);
         reject(err);
       }
     );
   });
 }
+
+//
+function errorFn(err: any) {
+  if (err && err.request && err.request.status) {
+    if (err.request.status == 401)
+      Alert.tip(showHttpsStatus(err.request.status), 1000, onAlertBtn);
+    else Alert.warning(showHttpsStatus(err.request.status), 1000);
+  }
+}
+
+const onAlertBtn = (err: any) => {
+  console.log(err, "err");
+  handLogOut();
+};

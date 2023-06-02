@@ -24,11 +24,11 @@ export const useManagerStore = defineStore("manager", () => {
             console.log(error);
         }
     };
-    const editAdminData = async (data: any) => {
+    const editManagerData  = async (data: any) => {
         try {
             const res = await apiPutAdminDataRequest(data);
             updataManagerList(res.data.data)
-            return res.data.state;
+            return res.data;
         } catch (error) {
             console.log(error);
         }
@@ -124,7 +124,7 @@ export const useManagerStore = defineStore("manager", () => {
         managerList,
         getAdminList,
         createManagerData,
-        editAdminData,
+        editManagerData,
         roleList,
         getRoleList,
         createRoleData,

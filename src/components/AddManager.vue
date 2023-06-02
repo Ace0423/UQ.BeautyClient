@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useManagerStore } from "@/stores/manager";
-import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
+import Alert from "./alertCmpt";
 
 const managerStore = useManagerStore();
-const { createManagerData, editAdminData, getRoleList } = managerStore;
+const { createManagerData, editManagerData, getRoleList } = managerStore;
 const { roleList } = storeToRefs(managerStore);
 const title = ref("新增使用者");
 const newManager: any = reactive({
@@ -218,18 +218,38 @@ const handSubmit = () => {
     newManager.password = state.form_items.password.value;
     newManager.email = state.form_items.email.value;
     newManager.phone = state.form_items.cellphone.value;
-    createManagerData(newManager)
-        .then((res) => {
-            if (res.state == 1) {
-                Alert.warning('修改成功', 2000);
-                props.handAddManagerView();
-            } else {
-                Alert.warning(showErrorMsg(res.msg), 2000);
-            }
-        })
-        .catch((e: any) => {
-            Alert.warning(showHttpsStatus(e.response.status), 2000);
-        });
+    if (props.selectManagerItem) {
+        newManager.managerId = props.selectManagerItem.managerId;
+
+        editManagerData(newManager)
+            .then((res) => {
+                console.log(res)
+                if (res.state == 1) {
+                    Alert.sussess('修改成功', 2000);
+                    props.handAddManagerView();
+                } else {
+                    Alert.warning(showErrorMsg(res.msg), 2000);
+                }
+            })
+            .catch((e: any) => {
+                Alert.warning(showHttpsStatus(e.response.status), 2000);
+            });
+    }
+    else {
+        createManagerData(newManager)
+            .then((res) => {
+                if (res.state == 1) {
+                    Alert.sussess('修改成功', 2000);
+                    props.handAddManagerView();
+                } else {
+                    Alert.warning(showErrorMsg(res.msg), 2000);
+                }
+            })
+            .catch((e: any) => {
+                Alert.warning(showHttpsStatus(e.response.status), 2000);
+            });
+    }
+
 };
 const getRoleName = () => {
     let data = {
@@ -249,17 +269,16 @@ onMounted(() => {
     if (props.selectManagerItem) {
         console.log(props.selectManagerItem);
         form_items.value.name.value = props.selectManagerItem.nameView;
-        form_items.value.email.value  = props.selectManagerItem.email;
-        form_items.value.password.value  = props.selectManagerItem.password;
-        form_items.value.phone.value  = props.selectManagerItem.phone;
-        newManager.sex 
-    // sex: 1,
-    // photo: "",
-    // memo: "",
-    // userLock: true,
-    // lineUserID: "",
-    // googleUserID: "",
-    // roleList: []
+        form_items.value.email.value = props.selectManagerItem.email;
+        form_items.value.password.value = props.selectManagerItem.password;
+        form_items.value.cellphone.value = props.selectManagerItem.phone;
+        newManager.sex = props.selectManagerItem.sex;
+        newManager.photo = props.selectManagerItem.photo;
+        newManager.memo = props.selectManagerItem.memo;
+        newManager.userLock = props.selectManagerItem.userLock;
+        newManager.lineUserID = props.selectManagerItem.lineUserID;
+        newManager.googleUserID = props.selectManagerItem.googleUserID;
+        newManager.roleList = props.selectManagerItem.roleList;
     }
     getRoleName();
 });
@@ -294,7 +313,7 @@ onMounted(() => {
                 <span>電話</span>
                 <div>
                     <input v-model="form_items.cellphone.value" />
-                    <!-- <p v-if="form_items.cellphone.is_error"> {{ form_items.cellphone.warn }} </p> -->
+                    <p v-if="form_items.cellphone.is_error"> {{ form_items.cellphone.warn }} </p>
                     <p> {{ form_items.cellphone.warn }} </p>
                 </div>
             </div>
@@ -302,7 +321,7 @@ onMounted(() => {
                 <span>信箱</span>
                 <div>
                     <input type="email" v-model="form_items.email.value" />
-                    <!-- <p v-if="form_items.email.is_error">{{ form_items.email.warn }}</p> -->
+                    <p v-if="form_items.email.is_error">{{ form_items.email.warn }}</p>
                     <p> {{ form_items.email.warn }} </p>
                 </div>
             </div>

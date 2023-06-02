@@ -39,6 +39,8 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: absolute;
+  z-index: 3;
 
   // height: 100px;
   // background-color: burlywood;
@@ -52,9 +54,8 @@ header {
       background-color: transparent;
 
       >img {
-        width: 35px;
-        height: 35px;
-        vertical-align: middle;
+        width: 30px;
+        height: 30px;
         // margin: 0 5px;
       }
 

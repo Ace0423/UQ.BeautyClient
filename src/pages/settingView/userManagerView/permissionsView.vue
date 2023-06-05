@@ -109,8 +109,8 @@ onMounted(() => {
             <thead class="header-tab">
                 <tr>
                     <!-- <th :style="{ '--width': width }">功能</th>
-                                                <th :style="{ '--width': width }">權限描述</th>
-                                                <th :style="{ '--width': width }" v-for="item in roleNameList" :key="item.roleId">{{ item.memo }} </th> -->
+                                                            <th :style="{ '--width': width }">權限描述</th>
+                                                            <th :style="{ '--width': width }" v-for="item in roleNameList" :key="item.roleId">{{ item.memo }} </th> -->
                     <th>功能</th>
                     <th>權限描述</th>
                     <th v-for="item in roleNameList" :key="item.roleId">{{ item.memo }} </th>
@@ -119,7 +119,7 @@ onMounted(() => {
             <tbody class="content-tab">
                 <tr class="permissionsList" v-for="items, index in permissionsList.data" :key="index">
                     <!-- <td :style="{ '--width': width }" class="a">{{ items.controllerText }}</td>
-                                            <td :style="{ '--width': width }" class="a"> -->
+                                                        <td :style="{ '--width': width }" class="a"> -->
                     <td :style="{ '--width': width }" class="a">{{ items.controllerText }}</td>
                     <td :style="{ '--width': width }" class="a">
                         <p v-for="item in items.optionRoleLists" :key="item.olId">{{ item.actionText }}</p>
@@ -291,7 +291,22 @@ onMounted(() => {
                             margin: 15px auto;
                             width: 20px;
                             height: 20px;
+                            position: relative;
+                            appearance: none;
+                            border: 1px solid;
+                            &:checked {
+                                background-color: #e6e2de;
+                                &::after {
+                                    content: '✓';
+                                    color: #717171;
+                                    position: absolute;
+                                    top: 50%;
+                                    transform: translateY(-50%);
+                                }
+                            }
                         }
+
+
                     }
                 }
             }

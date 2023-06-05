@@ -220,11 +220,11 @@ div {
                 }
 
                 .content-name {
-                    padding-left: 10px;
+                    // padding-left: 10px;
                     display: flex;
 
                     img {
-                        margin: 0 10px;
+                        margin: 0 15px;
                     }
                 }
             }

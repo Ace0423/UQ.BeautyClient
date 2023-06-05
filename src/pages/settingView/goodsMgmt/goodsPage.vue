@@ -263,6 +263,7 @@ let updataStutusFn = (index: number, item: any) => {
         display: flex;
         overflow-x: scroll;
         height: 45px;
+        display: -webkit-box;
         > button {
           display: flex;
           justify-content: center;
@@ -276,6 +277,7 @@ let updataStutusFn = (index: number, item: any) => {
           font-weight: bold;
           font-family: HeitiTC;
           color: #717171;
+          white-space:nowrap
         }
 
         > button.active {

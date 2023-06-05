@@ -153,6 +153,9 @@ let submitTypeHdr = () => {
       pgId: 0,
       pgTitle: formInputRef.value.name,
     };
+
+    console.log(curdata);
+    
     addGoodsTypeApi(curdata).then((res: any) => {
       let resData = res.data;
       if (res.state == 1) {

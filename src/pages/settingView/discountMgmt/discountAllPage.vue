@@ -111,8 +111,6 @@ let deleteHdr = (index: number, item: any) => {
   position: absolute;
   top: 45px;
   bottom: 10px;
-  left: 0px;
-  right: 0px;
   width: 100%;
   background-color: #faf9f8;
   border: solid 0.5px #ddd;
@@ -165,7 +163,7 @@ let deleteHdr = (index: number, item: any) => {
 
   > table {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 50px);
 
     > .table-thead {
       display: block;

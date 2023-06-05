@@ -21,9 +21,9 @@ export const updateGoodsTypeOrderReq = (data: any) =>
 export const addGoodsTypeReq = (data: any) =>
   postHttps(httpRequest, "/Product/ProductGroup", data);
 export const updateGoodsTypeReq = (data: any) =>
-  postHttps(
+  putHttps(
     httpRequest,
-    "/Product/ProductGroup?pgid=" + data.pgid + "&isList=" + data.isList,
+    "/Product/ProductGroup?pgid=" + data.pgId + "&isList=" + data.isList,
     data
   );
 export const delGoodsTypeReq = (data: any) =>

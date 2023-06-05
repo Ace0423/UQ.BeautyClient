@@ -277,7 +277,9 @@ onMounted(() => {
   formInputRef.value.capacity = props.formInfo.value.amount;
   formInputRef.value.total = props.formInfo.value.stock;
   formInputRef.value.state = props.formInfo.value.display;
-  formInputRef.value.GoodsTypeId = props.formInfo.value.groupList[0].pgId;
+  formInputRef.value.GoodsTypeId = props.formInfo.value.groupList[0]
+    ? props.formInfo.value.groupList[0].pgId
+    : [];
 });
 
 function countTotalBtn(data: number) {

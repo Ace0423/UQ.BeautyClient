@@ -78,9 +78,7 @@ let formInputRef: any = ref({
   name: "",
 });
 
-onMounted(() => {
-  
-});
+onMounted(() => {});
 
 let oldInput: any = "";
 let editTypeHdr = (index: number, item: any) => {
@@ -130,7 +128,14 @@ let submitTypeHdr = () => {
         if (!verify_all()) return;
         element.nameTw = element.editNameTw;
         changeNameList.push(element);
-        updataGoodsTypeApi(element).then((res: any) => {
+        let curdata: any = {
+          pgId: element.pgId,
+          pgTitle: element.nameTw,
+          pIdList: element.pIdList,
+          isList: 0,
+        };
+
+        updataGoodsTypeApi(curdata).then((res: any) => {
           if (res.state == 1) {
             Alert.sussess("成功", 1000);
           } else Alert.warning(showErrorMsg(res.msg), 2);

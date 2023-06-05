@@ -79,10 +79,7 @@
         </table>
       </div>
     </div>
-    <AddCourseTypeUI
-      v-if="showAddType"
-      :show-add-form="showAddForm"
-    />
+    <AddCourseTypeUI v-if="showAddType" :show-add-form="showAddForm" />
     <AddCourseDetailUI
       v-if="showCourseFormRef"
       :showAddDetailForm="showAddDetailForm"
@@ -102,7 +99,7 @@
     @callbackBtn="btnSumitHdr"
   ></Alert>
 </template>
-    
+
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
@@ -149,15 +146,14 @@ const btnSumitHdr = (val: IBackStatus) => {
   switch (alertInformation.selfType) {
     case "delCourseDetail":
       if (val.btnStatus) {
-        delCourseDetailApi(alertInformation.selfData)
-          .then((res: any) => {
-            let resData = res.data;
-            if (resData.state == 1) {
-              handAlertView("刪除成功", 2, 1);
-            } else {
-              handAlertView(showErrorMsg(resData.msg), 2, 1);
-            }
-          })
+        delCourseDetailApi(alertInformation.selfData).then((res: any) => {
+          let resData = res.data;
+          if (resData.state == 1) {
+            handAlertView("刪除成功", 2, 1);
+          } else {
+            handAlertView(showErrorMsg(resData.msg), 2, 1);
+          }
+        });
       } else {
         console.log(val.btnStatus, "取消");
       }
@@ -280,7 +276,7 @@ function sortthradHdr(name: number) {
     }
 }
 </script>
-    
+
 <style lang="scss" scoped>
 .course_div {
   height: 100vh;
@@ -308,23 +304,20 @@ function sortthradHdr(name: number) {
         height: 100%;
 
         > button {
-          // overflow: hidden;
           white-space: nowrap;
-          // text-overflow: ellipsis;
           display: flex;
           justify-content: center;
           align-items: center;
           border: none;
-          // width: 120px;
-          // height: 45px;
-          height: 87%;
-          border-radius: 10px;
           background-color: #faf9f8;
-          font-size: 20px;
           font-weight: bold;
           font-family: HeitiTC;
           color: #717171;
+          height: 87%;
+          border-radius: 10px;
+          font-size: 20px;
           min-width: 100px;
+          border-radius: 10px 10px 0 0;
         }
 
         > button.active {
@@ -560,5 +553,3 @@ function sortthradHdr(name: number) {
   width: 25%;
 }
 </style>
-    
-    

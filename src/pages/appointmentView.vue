@@ -1195,6 +1195,7 @@ $borderCoder: #eaedf2;
             font-weight: bold;
             font-family: HeitiTC;
             color: #717171;
+            border-radius: 10px 10px 0 0;
           }
 
           > button.active {

@@ -49,6 +49,12 @@ const handSubmit = (() => {
             <div class="logo-content">
                 <h1>商店Logo</h1>
                 <p>商店Logo，建議尺寸200px*200px</p>
+                <div> 
+                    <div> 
+
+                    </div>
+                    <p>上傳圖片</p>
+                </div>
             </div>
         </div>
         <div class="submitBtn">
@@ -83,6 +89,9 @@ td {
     >.content {
         width: 100%;
         display: flex;
+        position: absolute;
+        top: 0px;
+        bottom: 55px;
 
         >.setting-content {
             width: 50%;
@@ -97,6 +106,7 @@ td {
                         height: 70px;
 
                         >td {
+
                             input {
                                 border: transparent;
                                 display: inline-block;

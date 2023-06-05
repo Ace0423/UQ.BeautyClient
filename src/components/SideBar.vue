@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import logoImg from "@/assets/images/logo.png";
 import appointmentImg from "@/assets/Icon awesome-calendar-check.svg";
-import commodityImg from "@/assets/Icon awesome-shopping-bag.svg";
 import courseImg from "@/assets/Icon awesome-spa.svg";
 import settingImg from "@/assets/Icon material-settings.svg";
-import orderImg from "@/assets/Icon metro-shop.svg";
 import customerImg from "@/assets/Icon zocial-guest.svg";
 import bankImg from "@/assets/Icon awesome-money-check-alt.svg";
-import InfoIcon from "@/assets/Icon ionic-ios-list-box.svg";
+import orderImg from "@/assets/images/ico_order.png";
 
 import closeIcon from "@/assets/Group32.svg";
 import { useCounterStore } from "@/stores/counter";
@@ -41,7 +39,7 @@ onMounted(() => {
             <img :src="customerImg" /><router-link to="/memberView">顧客管理</router-link>
           </li>
           <li>
-            <img :src="customerImg" /><router-link to="/orderView">訂單紀錄</router-link>
+            <img :src="orderImg" /><router-link to="/orderView">訂單紀錄</router-link>
           </li>
           <li>
             <img :src="courseImg" /><router-link to="/courseView">課程管理</router-link>

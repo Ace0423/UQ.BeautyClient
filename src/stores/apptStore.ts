@@ -11,6 +11,7 @@ import {
   getBeauticianReq,
   getCourseDetailReq,
   getCourseTypeReq,
+  getOrderDetailReq,
   postAddUQLessonDetailReq,
   postAddUQLessonTypeReq,
   updateCourseDetailReq,
@@ -469,6 +470,21 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+
+  //-------------------------------------------------------------------
+  
+  let orderDetailListRef: any = ref([]);
+  //取資料
+  const getOrderDetailApi = async (g: any, id: any) => {
+    try {
+      let res: any = await getOrderDetailReq(g, id);
+      orderDetailListRef.value = [];
+      if (res.data.data.table) orderDetailListRef.value = res.data.data.table;
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return {
     //--------------------course
     getCourseTypeApi,
@@ -506,5 +522,8 @@ export const useApptStore = defineStore("apptStore", () => {
     addGoodsDetailApi,
     updateGoodsDetailApi,
     delGoodsDetailApi,
+    //--------------------Order
+    getOrderDetailApi,
+    orderDetailListRef,
   };
 });

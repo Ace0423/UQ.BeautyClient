@@ -37,10 +37,10 @@ function logoutFn() {
         <img :src="appointmentImg" />
         <p>預約紀錄</p>
       </router-link>
-      <router-link class="router-btn" to="/orderView">
+      <!-- <router-link class="router-btn" to="/orderView">
         <img :src="orderImg" />
         <p>訂單紀錄</p>
-      </router-link>
+      </router-link> -->
       <router-link class="router-btn" to="/settingView">
         <img class="" :src="settingImg" />
         <p>設定</p>

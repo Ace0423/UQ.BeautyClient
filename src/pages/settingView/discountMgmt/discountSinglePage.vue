@@ -1,20 +1,25 @@
 <script setup lang="ts">
-import seach_ico from "@/assets/images/icon_seach.png";
+import search_ico from "@/assets/images/icon_search.png";
 const addAdminManagerView = ref(false);
-const handAddManagerView = () => {
-  console.log(111);
-  addAdminManagerView.value = !addAdminManagerView.value;
+const showAddUI: any = ref(false);
+let selData: any = [];
+const showAddUIFn = (state: boolean) => {
+  showAddUI.value = state;
+  // getAllDiscountFn();
 };
+//新增
+function showAddFormFn() {
+  selData.value = [];
+  showAddUIFn(true);
+}
 </script>
 <template>
   <div class="discountSingle_div">
     <div class="table-topBar">
       <p class="bar-title">單品折扣(所有{{ 0 }}種折扣)</p>
       <div>
-        <input class="seach-control" placeholder="搜尋折扣名稱、商品" />
-        <button class="header-btn" @click="handAddManagerView()">
-          新增
-        </button>
+        <input class="search-control" placeholder="搜尋折扣名稱、商品" />
+        <button class="header-btn" @click="showAddFormFn()">新增</button>
       </div>
     </div>
     <table>
@@ -46,6 +51,10 @@ const handAddManagerView = () => {
       </tbody>
     </table>
   </div>
+  <AddSingleDiscountUI
+    v-if="showAddUI"
+    :showAddUIFn="showAddUIFn"
+  ></AddSingleDiscountUI>
 </template>
 
 <style lang="scss" scoped>
@@ -84,7 +93,7 @@ const handAddManagerView = () => {
         border-radius: 6px;
         border: solid 1px #707070;
         margin-right: 10px;
-        background: #fff url("@/assets/images/icon_seach.png") no-repeat;
+        background: #fff url("@/assets/images/icon_search.png") no-repeat;
         background-position: 97%;
         background-origin: content-box;
         text-indent: 5px;

@@ -34,11 +34,7 @@
                 <input type="date" v-model="selDateRef.endDate" />
                 <span>&nbsp;&nbsp;&nbsp;</span>
               </div>
-              <input
-                v-model="search"
-                class="seach-control"
-                placeholder="搜尋產品"
-              />
+              <input v-model="search" class="search-control" placeholder="" />
             </div>
           </div>
           <table>
@@ -54,7 +50,7 @@
                 v-for="(item, index) in filterOrderData"
                 :key="item.lessonId"
               >
-                <tr v-if="item.display == checkStateRef">
+                <tr v-if="item.state == showStateRef">
                   <td>
                     <p>{{ item.nameTw }}</p>
                   </td>
@@ -65,7 +61,7 @@
                     <p>{{ item.price }}</p>
                   </td>
                   <td>
-                    <p>{{ item.display }}</p>
+                    <p>{{ item.state }}</p>
                   </td>
                   <td>
                     <p>{{ item.display }}</p>
@@ -73,7 +69,7 @@
                   <td class="checkbox_state">
                     <input
                       type="checkbox"
-                      :checked="item.display == true"
+                      :checked="item.state == selStateRef"
                       v-on:click="updataStutusFn(index, item)"
                     />
                   </td>
@@ -89,6 +85,9 @@
               </template>
             </tbody>
           </table>
+        </div>
+        <div class="content-foot">
+          <button class="submit-btn" v-on:click="submitStateFn()">確認</button>
         </div>
       </div>
       <div class="foot"></div>
@@ -123,7 +122,8 @@ let selDateRef = ref({
   startDate: "",
   endDate: "",
 });
-let checkStateRef = ref(true);
+let showStateRef = ref(0);
+let selStateRef = ref(1);
 let orderTableThead = [
   "訂單資訊",
   "顧客",
@@ -155,15 +155,18 @@ let tableTabs = [
 ];
 
 let changeTab = (index: number, item: any) => {
+  curChangeState = [];
+  showStateRef = item.id;
+  selStateRef.value = item.id + 1;
   tableTabsValueRef.value = index;
   switch (item.id) {
     case 0:
-      checkStateRef.value = true;
+      // checkStateRef.value = 0;
 
       break;
 
     default:
-      checkStateRef.value = false;
+      // checkStateRef.value = 1;
 
       break;
   }
@@ -202,8 +205,13 @@ function sorttheadHdr(name: number) {
   //     sortUpDown = sortName;
   //   }
 }
+let curChangeState: any = [];
 //改變狀態
 let updataStutusFn = (index: number, item: any) => {
+  // item.state = selStateRef;
+  item.changeState = selStateRef;
+  curChangeState.push(item);
+
   // let curdata: any = {
   //   pId: item.pId,
   //   pCode: item.pCode,
@@ -237,6 +245,13 @@ let updataStutusFn = (index: number, item: any) => {
   //   0
   // );
 };
+function submitStateFn() {
+  for (let i = 0; i < curChangeState.length; i++) {
+    const element = curChangeState[i];
+    element.state = element.changeState;
+  }
+  curChangeState = [];
+}
 //刪除
 let deleteHdr = (item: any, index: number) => {
   // selItem = item;
@@ -307,7 +322,7 @@ let deleteHdr = (item: any, index: number) => {
       .content-main {
         // margin: 0px 40px;
         // width: calc(100% - 80px);
-        height: calc(100% - 80px);
+        height: calc(90% - 45px);
         .search-bar {
           height: 47px;
           width: calc(100% - 2px);
@@ -323,7 +338,7 @@ let deleteHdr = (item: any, index: number) => {
             align-items: center;
             justify-content: right;
             width: 88%;
-            .seach-control {
+            .search-control {
               width: auto;
               height: 60%;
               border-radius: 6px;
@@ -331,7 +346,7 @@ let deleteHdr = (item: any, index: number) => {
               background-color: #fff;
               margin-right: 10px;
 
-              background: url("@/assets/images/icon_seach.png") no-repeat;
+              background: url("@/assets/images/icon_search.png") no-repeat;
               background-color: #fff;
               background-position: 97%;
               background-origin: content-box;
@@ -349,10 +364,11 @@ let deleteHdr = (item: any, index: number) => {
               width: 110px;
               height: 60%;
               border-radius: 6px;
+              border: solid 1px #707070;
             }
             > input[type="date"]::-webkit-calendar-picker-indicator {
               background: url("@/assets/images/icon_date.png") no-repeat center;
-              background-size:19px 22px;
+              background-size: 19px 22px;
               // background-position: 70%;
             }
           }
@@ -366,7 +382,7 @@ let deleteHdr = (item: any, index: number) => {
           background-color: #faf9f8;
           border: solid 0.5px #ddd;
           color: #717171;
-          height: 95%;
+          height: calc(100% - 49px);
           overflow-y: scroll;
           // display: inline-table;
           > thead {
@@ -551,6 +567,22 @@ let deleteHdr = (item: any, index: number) => {
               width: 10%;
             }
           }
+        }
+      }
+      .content-foot {
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        height: 10%;
+        .submit-btn {
+          width: 110px;
+          height: 40px;
+          border-radius: 10px;
+          border: solid 1px #707070;
+          background-color: #fff;
+          font-size: 20px;
+          font-weight: bold;
+          color: #84715c;
         }
       }
     }

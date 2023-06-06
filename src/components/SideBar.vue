@@ -38,9 +38,9 @@ onMounted(() => {
           <li>
             <img :src="customerImg" /><router-link to="/memberView">顧客管理</router-link>
           </li>
-          <li>
+          <!-- <li>
             <img :src="orderImg" /><router-link to="/orderView">訂單紀錄</router-link>
-          </li>
+          </li> -->
           <li>
             <img :src="courseImg" /><router-link to="/courseView">課程管理</router-link>
           </li>

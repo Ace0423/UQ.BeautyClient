@@ -23,7 +23,7 @@
             <div>
               <input
                 v-model="search"
-                class="seach-control"
+                class="search-control"
                 placeholder="搜尋產品"
               />
               <div class="btn-open" @click="showAddTypeFormHdr(true)">
@@ -303,7 +303,7 @@ let updataStutusFn = (index: number, item: any) => {
             align-items: center;
             justify-content: right;
             width: 88%;
-            .seach-control {
+            .search-control {
               width: auto;
               height: 60%;
               border-radius: 6px;
@@ -311,7 +311,7 @@ let updataStutusFn = (index: number, item: any) => {
               background-color: #fff;
               margin-right: 10px;
 
-              background: url("@/assets/images/icon_seach.png") no-repeat;
+              background: url("@/assets/images/icon_search.png") no-repeat;
               background-color: #fff;
               background-position: 97%;
               background-origin: content-box;

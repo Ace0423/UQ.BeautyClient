@@ -328,7 +328,7 @@
                     </th>
                     <input
                       v-model="searchList"
-                      class="seach-control"
+                      class="search-control"
                       placeholder="搜尋顧客"
                     />
                   </tr>
@@ -2117,7 +2117,7 @@ $borderCoder: #eaedf2;
                     background-color: #fff;
                     margin-right: 10px;
 
-                    background: url("@/assets/images/icon_seach.png") no-repeat;
+                    background: url("@/assets/images/icon_search.png") no-repeat;
                     background-color: #fff;
                     background-position: 97%;
                     background-origin: content-box;

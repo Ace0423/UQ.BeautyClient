@@ -133,7 +133,7 @@ export const useApptStore = defineStore("apptStore", () => {
   };
   let courseDataList: any = ref([]);
   //取資料
-  const getCourseDetailApi = async (g: any, id: any) => {
+  const getCourseDetailApi = async (g: any = 0, id: any = 0) => {
     try {
       let res: any = await getCourseDetailReq(g, id);
       courseDataList.value = [];
@@ -472,14 +472,22 @@ export const useApptStore = defineStore("apptStore", () => {
   };
 
   //-------------------------------------------------------------------
-  
+
   let orderDetailListRef: any = ref([]);
   //取資料
   const getOrderDetailApi = async (g: any, id: any) => {
     try {
       let res: any = await getOrderDetailReq(g, id);
       orderDetailListRef.value = [];
-      if (res.data.data.table) orderDetailListRef.value = res.data.data.table;
+      if (res.data.data.table) {
+        // orderDetailListRef.value = res.data.data.table;
+        let curData = res.data.data.table;
+        for (let i = 0; i < curData.length; i++) {
+          const element = curData[i];
+          element.state = 0;
+          orderDetailListRef.value.push(element);
+        }
+      }
       return res;
     } catch (error) {
       console.log(error);

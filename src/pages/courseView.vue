@@ -21,6 +21,10 @@
         <div class="addcoursetype-btn">
           <!-- <img :src="addcoursetype" /> -->
           <div class="btn-open" @click="showAddForm(true)">分類管理</div>
+
+          <!-- <button class="btn-open" v-on:click="showAddForm(true)">
+            分類管理
+          </button> -->
         </div>
       </div>
       <div class="course_table">
@@ -57,14 +61,19 @@
               </td>
               <td>
                 <!-- <p>{{ item.display ? '1' : '0' }}</p> -->
-                <input
-                  class="checked_status"
-                  type="checkbox"
-                  name="sub"
-                  value=""
-                  :checked="item.display == true"
-                  v-on:click="changeStutusFn(index, item)"
-                />
+
+                <div class="checked_state">
+                  <input
+                    class="checked_status"
+                    type="checkbox"
+                    name="sub"
+                    value=""
+                    :id="item.lessonId"
+                    :checked="item.display == true"
+                    v-on:click="changeStutusFn(index, item)"
+                  />
+                  <label :for="item.lessonId"></label>
+                </div>
               </td>
               <td>
                 <button v-on:click="showEditFormBtn(index, item)">
@@ -291,12 +300,12 @@ function sortthradHdr(name: number) {
     right: 0px;
     margin: 2px 40px;
 
-    > .customer-tab {
+    .customer-tab {
       display: flex;
       justify-content: space-between;
       height: 7%;
       overflow-y: scroll;
-      > .item-tab {
+      .item-tab {
         overflow-x: scroll;
         height: 100%;
         // display: flex;
@@ -328,7 +337,7 @@ function sortthradHdr(name: number) {
       .addcoursetype-btn {
         margin-left: 25px;
         margin-top: 3px;
-        > .btn-open {
+        .btn-open {
           width: 80px;
           height: 20px;
           margin: 0;
@@ -357,7 +366,7 @@ function sortthradHdr(name: number) {
         border: solid 1px #707070;
         background-color: #e6e2de;
 
-        > .btn-open {
+        .btn-open {
           width: 80px;
           height: 20px;
           margin: 0;
@@ -453,25 +462,40 @@ function sortthradHdr(name: number) {
                 border: none;
               }
 
-              > input {
-              }
-
-              .checked_status {
-                width: 27px;
-                height: 27px;
-                display: flex;
-                justify-content: center;
-                // margin: 43px 329px 30px 123.5px;
-                object-fit: contain;
-              }
-
-              .checked_status:checked::after {
-                content: "✓";
-                color: #fff;
-                font-size: 36px;
-                line-height: 27px;
-                font-weight: bold;
-                background-color: #84715c;
+              .checked_state {
+                input {
+                  display: none;
+                }
+                label {
+                  display: inline-block;
+                  width: 20px;
+                  height: 20px;
+                  border-radius: 5px;
+                  border: 1px solid #8b6f6d;
+                  position: relative;
+                  cursor: pointer;
+                }
+                label::before {
+                  display: inline-block;
+                  content: " ";
+                  width: 12px;
+                  border: 2px solid #fff;
+                  height: 4px;
+                  border-top: none;
+                  border-right: none;
+                  transform: rotate(-45deg);
+                  top: 5px;
+                  left: 3px;
+                  position: absolute;
+                  opacity: 0;
+                }
+                input:checked + label {
+                  background: #8b6f6d;
+                }
+                input:checked + label::before {
+                  opacity: 1;
+                  transform: all 0.5s;
+                }
               }
             }
           }

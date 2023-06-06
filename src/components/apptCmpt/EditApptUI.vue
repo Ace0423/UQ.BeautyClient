@@ -30,7 +30,7 @@
           <span class="p_error" v-if="ruleItem.name.is_error">
             {{ ruleItem.name.warn }}
           </span>
-          <!-- <SelectSeachUI :dataList="memberList.data" /> -->
+          <!-- <SelectSearchUI :dataList="memberList.data" /> -->
         </div>
         <div class="basic_info_item time">
           <p>選擇時段</p>
@@ -493,11 +493,11 @@ function resetAddReserveForm() {
             }
           }
         }
-        .seach_item {
+        .search_item {
           height: 100px;
-          .seach_item2 {
+          .search_item2 {
             height: 100px;
-            .seach_item3 {
+            .search_item3 {
               height: 100px;
             }
           }

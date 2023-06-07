@@ -27,6 +27,11 @@ const props = defineProps<{
   //   formInfo: any;
   //   addDetailTypeID?: any;
 }>();
+
+onMounted(() => {
+  // console.log('onMounted');
+  
+});
 let formInputRef: any = ref({
   name: "",
 });
@@ -69,7 +74,7 @@ function submitBtn() {
       display: block;
     }
     .bottom-content {
-        display: flex;
+      display: flex;
       > button {
         position: relative;
         width: 100px;

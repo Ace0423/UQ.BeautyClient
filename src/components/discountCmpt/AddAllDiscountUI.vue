@@ -34,11 +34,22 @@
                   >
                   </el-input>
                   <div class="switch">
-                    <input
-                      type="checkbox"
-                      id="switch3"
-                      v-model="formInputRef.dType"
-                    /><label for="switch3">Toggle2</label>
+                    <span
+                      class="box_item"
+                      :class="{ actived_box: formInputRef.dType }"
+                    ></span>
+                    <span
+                      class="left"
+                      :class="{ actived_Area: !formInputRef.dType }"
+                      @click="formInputRef.dType = !formInputRef.dType"
+                      >%</span
+                    >
+                    <span
+                      class="right"
+                      :class="{ actived_Area: formInputRef.dType }"
+                      @click="formInputRef.dType = !formInputRef.dType"
+                      >$</span
+                    >
                   </div>
                 </div>
                 <span class="p_error" v-if="ruleItem.discount.is_error">
@@ -59,11 +70,6 @@
       </div>
     </div>
   </div>
-  <Alert
-    v-if="alertInformation.showAlert"
-    :alertInformation="alertInformation"
-    :handAlertView="handAlertView"
-  ></Alert>
 </template>
 <script setup lang="ts">
 import { useApptStore } from "@/stores/priceStore";
@@ -76,6 +82,8 @@ import type { FormInstance, FormRules } from "element-plus";
 let store = useApptStore();
 let {} = storeToRefs(store);
 let { addtAllDiscountApi } = store;
+
+const isRateActive = ref("");
 
 const props = defineProps<{
   showAddUIFn: Function;
@@ -107,17 +115,14 @@ let submitBtn = () => {
       ? formInputRef.value.discount
       : formInputRef.value.discount / 100,
     dType: formInputRef.value.dType ? 1 : 0,
+    orderBy: 0,
   };
   /**新增明細 */
   addtAllDiscountApi(curdata).then((res: any) => {
-    let resData = res.data;
-    if (resData.state == 1) {
-      handAlertView("新增成功", 2, 1);
+    if (res.state == 1) {
       setTimeout(() => {
         props.showAddUIFn(false);
       }, 1000);
-    } else {
-      handAlertView(showErrorMsg(resData.msg), 2, 2);
     }
   });
 };
@@ -297,58 +302,43 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
               }
 
               .switch {
-                align-items: center;
+                width: 56px;
                 display: flex;
-                width: 60px;
-                input[type="checkbox"] {
-                  height: 0;
-                  width: 0;
-                  visibility: hidden;
-                }
-                label {
+                align-items: center;
+                border-radius: 5px;
+                padding: 2px 2px;
+                background-color: #877059;
+                filter: brightness(90%);
+                span {
                   cursor: pointer;
-                  text-indent: -9999px;
-                  width: 70px;
-                  height: 35px;
-                  background: grey;
-                  display: block;
-                  border-radius: 9px;
-                  position: relative;
-                }
-
-                label:after {
-                  content: "";
-                  position: absolute;
-                  top: 1px;
-                  left: 0px;
-                  width: 33px;
-                  height: 33px;
-                  background: #fff;
-                  border-radius: 9px;
-                  transition: 0.3s;
-                }
-
-                input:checked + label {
-                  background: #877059;
-                }
-
-                input:checked + label:after {
-                  left: calc(100% - 1px);
-                  transform: translateX(-100%);
-                }
-
-                label:active:after {
-                  width: 33px;
-                }
-
-                // centering
-                body {
+                  font-size: 12px;
                   display: flex;
                   justify-content: center;
                   align-items: center;
-                  height: 100vh;
+                  color: #fff;
+                  width: 50%;
+                }
+                .box_item {
+                  position: absolute;
+                  color: #fff;
+                  transition: all 0.5s;
+                  border-radius: 5px;
+                  background-color: #fff;
+                }
+                .actived_Area {
+                  color: #877059;
+                  border-radius: 5px;
+                  z-index: 1;
+                  font-weight: 60;
+                  width: 50%;
+                }
+                .actived_box {
+                  margin-left: 43%;
+                  width: 50%;
                 }
               }
+
+              
             }
           }
         }

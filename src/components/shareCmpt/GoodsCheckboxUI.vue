@@ -2,7 +2,7 @@
   <div class="popup-mask" v-on:click.self="showUIFn(false)">
     <div class="popup-content">
       <div class="top-content">
-        <p>加入服務</p>
+        <p>加入商品</p>
       </div>
       <div class="main-content">
         <p>已選擇({{ formInputRef.courses.length }})項服務</p>
@@ -13,12 +13,12 @@
               <input
                 class="input-group"
                 type="checkbox"
-                id="lessonId"
+                id="pId"
                 value="item"
                 v-model="clickGroupRef"
                 @click="clickGroup"
               />
-              <label for="lessonId"></label>
+              <label for="pId"></label>
               <span> 全選 </span>
             </label>
           </div>
@@ -27,14 +27,14 @@
               <input
                 class="input-item"
                 type="checkbox"
-                :id="item.lessonId"
+                :id="item.pId"
                 :value="item"
                 v-model="formInputRef.courses"
                 @click="clickItem"
               />
-              <label :for="item.lessonId"></label>
-              <span value="{{item}}" name="{{item.nameTw}}">{{
-                item.nameTw + "(" + item.servicesTime + ")"
+              <label :for="item.pId"></label>
+              <span value="{{item}}" name="{{item.pName}}">{{
+                item.pName + "(" + item.pCode + ")"
               }}</span>
             </label>
             <!-- <input type="checkbox" name="item_001" value="1" />1 -->
@@ -55,8 +55,8 @@ import { useApptStore } from "@/stores/apptStore";
 import search_ico from "@/assets/images/icon_search.png";
 
 let store = useApptStore();
-let { courseDataList } = storeToRefs(store);
-let { getCourseDetailApi } = store;
+let { goodsDetailListRef } = storeToRefs(store);
+let { getGoodsDetailApi } = store;
 
 const props = defineProps<{
   showUIFn: Function;
@@ -71,17 +71,18 @@ let formInputRef: any = ref({
   search: "",
   courses: [],
 });
-getCourseDetailApi();
+getGoodsDetailApi(0, 0);
 formInputRef.value.courses = props.selData;
+console.log(goodsDetailListRef.value);
 
 let filterCourseData: any = computed(() =>
-  courseDataList.value.filter(getCourseFn)
+  goodsDetailListRef.value.filter(getCourseFn)
 );
 function getCourseFn(data: any) {
   return (
     data.display &&
     (!formInputRef.value.search ||
-      data.nameTw
+      data.pName
         .toLowerCase()
         .includes(formInputRef.value.search.toLowerCase()))
   );

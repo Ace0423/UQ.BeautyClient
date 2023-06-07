@@ -31,6 +31,7 @@ declare module '@vue/runtime-core' {
     EditCourseDetailUI: typeof import('./components/courseCmpt/EditCourseDetailUI.vue')['default']
     EditGoodsDetailUI: typeof import('./components/goodsCmpt/EditGoodsDetailUI.vue')['default']
     EditRoleName: typeof import('./components/editRoleName.vue')['default']
+    GoodsCheckboxUI: typeof import('./components/shareCmpt/GoodsCheckboxUI.vue')['default']
     GroupInfo: typeof import('./components/GroupInfo.vue')['default']
     Header: typeof import('./components/Header.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']

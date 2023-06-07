@@ -407,7 +407,7 @@ export const useApptStore = defineStore("apptStore", () => {
 
   let goodsDetailListRef: any = ref([]);
   //取資料
-  const getGoodsDetailApi = async (group: any, id: any) => {
+  const getGoodsDetailApi = async (group: any = 0, id: any = 0) => {
     try {
       let res: any = null;
       goodsDetailListRef.value = [];

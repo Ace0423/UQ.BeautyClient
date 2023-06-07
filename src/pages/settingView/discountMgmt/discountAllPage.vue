@@ -1,7 +1,7 @@
 <template>
   <div class="discountAll_div">
     <div class="table-topBar">
-      <p class="bar-title">全單折扣(所有{{ 0 }}種折扣)</p>
+      <p class="bar-title">全單折扣(所有{{ allDiscountList.length }}種折扣)</p>
       <div>
         <input class="search-control" placeholder="搜尋折扣名稱、商品" />
         <button class="header-btn" @click="showAddFormFn()">新增折扣</button>
@@ -53,11 +53,11 @@
   ></EditAllDiscountUI>
 </template>
 <script setup lang="ts">
+import { useApptStore } from "@/stores/priceStore";
+import { storeToRefs } from "pinia";
 import search_ico from "@/assets/images/icon_search.png";
 import Icon_edit from "@/assets/images/icon_edit.png";
 import Icon_delete from "@/assets/images/icon_delete.png";
-import { useApptStore } from "@/stores/priceStore";
-import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
 let store = useApptStore();
 let { allDiscountList } = storeToRefs(store);
@@ -83,7 +83,7 @@ let selData: any = [];
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     console.log("確認刪除");
-    delAllDiscountApi(selData.discountNo);
+    delAllDiscountApi(selData.discountNo)
   } else {
     console.log("取消刪除");
   }

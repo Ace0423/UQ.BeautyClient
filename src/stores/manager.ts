@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
-import { apiGetAdminListRequest, apiPostAdminDataRequest, apiPutAdminDataRequest, apiGetRoleListRequest, apiPostRoleDataRequest, apiPutRoleDataRequest, apiGetRoleInfoRequest, apiDeleteRoleManagerRequest, apiPostRoleManagerDataRequest } from "@/api/index";
+import { apiGetAdminListRequest, apiPostAdminDataRequest, apiPutAdminDataRequest, apiGetRoleListRequest, apiPostRoleDataRequest, apiPutRoleDataRequest, apiGetRoleInfoRequest, apiDeleteRoleManagerRequest, apiPostRoleManagerDataRequest, apiGetWorkingHoursRequest } from "@/api/index";
 export const useManagerStore = defineStore("manager", () => {
     const managerList: any = reactive({ data: [] });
     const roleList: any = reactive({ data: [] });
     const roleInfoList: any = reactive({ data: [] });
+    const workingHoursList: any = reactive({ data: [] });
     const getManagerList = async (data: any) => {
         try {
             const res = await apiGetAdminListRequest(data);
@@ -24,7 +25,7 @@ export const useManagerStore = defineStore("manager", () => {
             console.log(error);
         }
     };
-    const editManagerData  = async (data: any) => {
+    const editManagerData = async (data: any) => {
         try {
             const res = await apiPutAdminDataRequest(data);
             updataManagerList(res.data.data.table[0])
@@ -119,7 +120,16 @@ export const useManagerStore = defineStore("manager", () => {
             console.log(error);
         }
     };
-
+    const getWorkingHoursList = async (data: any) => {
+        try {
+            const res = await apiGetWorkingHoursRequest(data);
+            if (res.data.data.table) {
+                workingHoursList.data = res.data.data.table;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return {
         managerList,
         getManagerList,
@@ -132,6 +142,8 @@ export const useManagerStore = defineStore("manager", () => {
         roleInfoList,
         getRoleInfoData,
         addRoleManagerData,
-        deleteRoleManagerData
+        deleteRoleManagerData,
+        getWorkingHoursList,
+        workingHoursList
     }
 })

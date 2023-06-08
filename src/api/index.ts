@@ -1,7 +1,7 @@
 import { postLoginRequest, getUserNameRequest } from "./authRequest";
 import { getMemberListRequest, postMemberDataRequest, postUpdateMemberDataRequest, getGroupDataRequest, putGroupDataRequest, postGroupDataRequest, getGroupInfoRequest, postGroupInfoRequest, deleteGroupInfoRequest, } from "./memberRequest";
 import { getMemberBankListRequest, postMemberBankRequest, getMemberBankInfoListRequest, getMemberBankDetailRequest, putMemberBankInfoRequest } from "./memberBankRequest";
-import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest } from "./managerRequest";
+import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest,getWorkingHoursRequest } from "./managerRequest";
 import { getPermissionsListRequest, putOptionRoleRequest } from "./settingRequest";
 
 export const apiPostLoginRequest = postLoginRequest;
@@ -34,6 +34,7 @@ export const apiPutAdminDataRequest = putAdminDataRequest;
 export const apiGetRoleListRequest = getRoleListRequest;
 export const apiPostRoleDataRequest = postRoleDataRequest;
 export const apiPutRoleDataRequest = putRoleDataRequest;
+export const apiGetWorkingHoursRequest = getWorkingHoursRequest;
 
 export const apiGetRoleInfoRequest = getRoleInfoRequest;
 export const apiPostRoleManagerDataRequest = postRoleManagerDataRequest;

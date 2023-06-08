@@ -26,6 +26,7 @@ onMounted(() => {
 
     >.nav {
         display: flex;
+        // pointer-events: none;
 
         >a {
             border: none;
@@ -63,4 +64,5 @@ onMounted(() => {
         }
 
     }
-}</style>
+}
+</style>

@@ -1,4 +1,12 @@
 <script setup lang="ts">
+import Alert from "@/components/alertCmpt";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
+import { storeToRefs } from "pinia";
+import { useManagerStore } from "@/stores/manager";
+const managerStore = useManagerStore();
+const { getWorkingHoursList } = managerStore;
+const { workingHoursList } = storeToRefs(managerStore);
+const width = ref(100 / 8 + "%");
 let weeks = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
 const currentSundayTime = ref();
 const currentSaturdayTime = ref();
@@ -56,13 +64,49 @@ const handNextWeek = (() => {
     currentSundayTime.value = format.value(sunday.value);
     currentSaturdayTime.value = format.value(saturday.value);
 })
+const WorkingHoursList = (data: any) => {
+
+    getWorkingHoursList(data)
+        .then(() => {
+
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    // handLogOut();
+                }, 2000);
+            }
+        })
+}
+const timeDifference = computed((onTime: any, offTime: any) => {
+    return ''
+})
+const scheduleList = computed(() => {
+    for (let index = 0; index < workingHoursList.value.data.length; index++) {
+        let onDay = new Date(workingHoursList.value.data[index].data + workingHoursList.value.data[index].dayOn);
+        console.log(workingHoursList.value.data[index]);
+    }
+    const filter = workingHoursList.value.data;
+    return filter;
+})
 onMounted(() => {
     currentSundayTime.value = format.value(sunday.value);
     currentSaturdayTime.value = format.value(saturday.value);
+    let data = {
+        managerId: 0,
+        year: 0,
+        month: 0,
+        day: 0,
+        pageIndex: 0,
+        count: 0
+    }
+    WorkingHoursList(data);
+
 })
 </script>
 <template>
-    <div>
+    <div class="schedule-content">
         <div class="function-area">
             <button @click="handLastWeek()">
                 &lt;
@@ -78,19 +122,30 @@ onMounted(() => {
         <table>
             <thead class="header-tab">
                 <tr>
-                    <th>
-                    </th>
-                    <th v-for="item, index in weeks" :key="index">
+                    <th>人員</th>
+                    <th v-for="item, index in weeks" :key="weekDay[index]">
                         <p>{{ weeks[index] }}</p>
                         <p>{{ weekDay[index] }}</p>
                     </th>
                 </tr>
             </thead>
             <tbody class="content-tab">
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                <tr v-for="item in scheduleList" :key="item.managerId">
+                    <td>
+                        <div>
+                            <p>{{ item.nameView }}</p>
+                        </div>
+
+                    </td>
+                    <td class="time-td" v-for="i, index in item.workinglists" :key="index">
+                        <div class="off-day" v-if="!i.dayOn">
+                            <p>+</p>
+                        </div>
+                        <div class="on-day" v-if="i.dayOn">
+                            <p>{{ timeDifference }} </p>
+                            <p>{{ i.dayOn }}~{{ i.dayOff }}</p>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -98,7 +153,7 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-div {
+.schedule-content {
     position: absolute;
     top: 45px;
     bottom: 10px;
@@ -113,16 +168,17 @@ div {
 
 
     >.function-area {
-        height: 50px;
         position: absolute;
+        height: 50px;
         top: -50px;
         border: none;
         background-color: transparent;
         display: flex;
         justify-content: end;
         align-items: center;
-        left: auto;
-        width: auto;
+        right: 0px;
+        // width: 100%;
+        // pointer-events: none;
 
         >p {
             min-width: 50px;
@@ -176,22 +232,25 @@ div {
             border: solid 1px #707070;
             background-color: #e6e2de;
             box-sizing: border-box;
+
             p {
                 margin: 0 0 0 0;
             }
+
             >tr {
                 display: flex;
                 align-items: center;
+                width: 100%;
                 height: 50px;
                 justify-content: space-between;
 
 
                 >th {
-                    widows: 100%/7;
+                    width: calc(100%/8);
 
                     >p {
                         min-width: 108px;
-                        text-align: left;
+                        text-align: center;
                     }
 
                     >.nameview {
@@ -209,6 +268,66 @@ div {
             overflow: auto;
             display: flex;
             flex-direction: column;
+
+
+            >tr {
+                display: flex;
+                position: relative;
+                align-items: center;
+                width: 100%;
+                // height: 50px;
+                justify-content: space-between;
+
+                &::after {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    bottom: 0;
+                    width: 98%;
+                    height: 1px;
+                    background: #ddd;
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+
+                >td {
+                    width: calc(100%/8);
+                    height: 0;
+                    padding-bottom: calc(100%/8);
+                    position: relative;
+
+                    >div {
+                        position: absolute;
+                        top: 0px;
+                        bottom: 0px;
+                        left: 0px;
+                        right: 0px;
+                        // display: flex;
+                        // justify-content: center;
+                        // align-items: center;
+                        // margin-top: 50%;
+                        // transform: translateY(-50%);
+
+                        p {
+                            // min-width: 108px;
+
+                            // align-items: center;
+                            text-align: center;
+                            // border: solid 1px #707070;
+                            // background-color: #e6e2de;
+                        }
+                    }
+
+                    &.time-td {
+                        border-radius: 6px;
+                        margin: 20px 10px;
+                        border: solid 1px #707070;
+                        background-color: #e6e2de;
+                    }
+
+
+                }
+            }
         }
     }
 }

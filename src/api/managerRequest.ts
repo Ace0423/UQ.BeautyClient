@@ -51,8 +51,13 @@ export const postRoleManagerDataRequest = (data: any) => {
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return managerRequest.post("/manager/RoleMapping", data);
 }
-export const deleteRoleManagerRequest = (data: any) =>{
+export const deleteRoleManagerRequest = (data: any) => {
     let token: any = getToken('token');
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
-    return  managerRequest.delete("/manager/RoleMapping/" + data.roleId +'/' +data.mgrId);
+    return managerRequest.delete("/manager/RoleMapping/" + data.roleId + '/' + data.mgrId);
+}
+export const getWorkingHoursRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.get("/manager/WorkingHours", { params: data });
 }

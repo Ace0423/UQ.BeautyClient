@@ -47,13 +47,25 @@ const handSubmit = (() => {
                 </table>
             </div>
             <div class="logo-content">
-                <h1>商店Logo</h1>
-                <p>商店Logo，建議尺寸200px*200px</p>
-                <div> 
-                    <div> 
+                <div class="logo">
+                    <h1>商店Logo</h1>
+                    <p>商店Logo，建議尺寸200px*200px</p>
+                    <div class="photo-box">
+                        <div>
 
+                        </div>
+                        <p>上傳圖片</p>
                     </div>
-                    <p>上傳圖片</p>
+                </div>
+                <div class="background-content">
+                    <h1>商店Logo</h1>
+                    <p>商店Logo，建議尺寸200px*200px</p>
+                    <div class="photo-box">
+                        <div>
+
+                        </div>
+                        <p>上傳圖片</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -91,12 +103,12 @@ td {
         display: flex;
         position: absolute;
         top: 0px;
-        bottom: 55px;
+        bottom: 65px;
+        overflow: auto;
 
         >.setting-content {
             width: 50%;
             margin: 10px 15px;
-            overflow: auto;
 
             >table {
                 width: 100%;
@@ -106,8 +118,10 @@ td {
                         height: 70px;
 
                         >td {
+                            text-align: center;
 
                             input {
+                                text-align: center;
                                 border: transparent;
                                 display: inline-block;
                                 width: 100%;
@@ -124,8 +138,39 @@ td {
         }
 
         >.logo-content {
+
             width: 50%;
             margin: 10px 15px;
+
+            >.logo {
+                >.photo-box {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                    >div {
+                        border: solid 0.5px #ddd;
+                        width: 200px;
+                        height: 200px;
+                    }
+                }
+            }
+
+            >.background-content {
+                >.photo-box {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+
+                    >div {
+                        // border: solid 0.5px #ddd;
+                        // width: 400px;
+                        // height: 400px;
+                    }
+                }
+            }
         }
     }
 
@@ -154,6 +199,5 @@ td {
         color: #717171;
 
     }
-
 }
 </style>

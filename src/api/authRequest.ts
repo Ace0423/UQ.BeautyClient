@@ -34,3 +34,9 @@ export const updateCourseDetailReq = (data: any) =>
 
 export const getBeauticianReq = (id: any) =>
   authRequest.get("member/Beautician?id=" + id);
+
+
+//-----------------------------------------Order
+  
+export const getOrderDetailReq = (Group: any, id: any) =>
+authRequest.get("Lesson/Detail?id=" + Group + "&lid=" + id);

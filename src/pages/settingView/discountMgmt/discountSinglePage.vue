@@ -1,24 +1,14 @@
-<script setup lang="ts">
-import seach_ico from "@/assets/images/icon_seach.png";
-const addAdminManagerView = ref(false);
-const handAddManagerView = () => {
-  console.log(111);
-  addAdminManagerView.value = !addAdminManagerView.value;
-};
-</script>
 <template>
   <div class="discountSingle_div">
     <div class="table-topBar">
-      <p class="bar-title">單品折扣(所有{{ 0 }}種折扣)</p>
+      <p class="bar-title">單品折扣(所有{{ singleDiscountListRef.length }}種折扣)</p>
       <div>
-        <input class="seach-control" placeholder="搜尋折扣名稱、商品" />
-        <button class="header-btn" @click="handAddManagerView()">
-          新增
-        </button>
+        <input class="search-control" placeholder="搜尋折扣名稱、商品" />
+        <button class="header-btn" @click="showAddFormFn()">新增</button>
       </div>
     </div>
     <table>
-      <thead class="header-tab">
+      <thead class="table-thead">
         <tr>
           <th>
             <p class="nameview">折扣名稱</p>
@@ -37,17 +27,99 @@ const handAddManagerView = () => {
           </th>
         </tr>
       </thead>
-      <tbody class="content-tab">
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
+      <tbody class="content-tbody">
+        <tr
+          v-for="(item, index) in singleDiscountListRef"
+          :key="item.discountNo"
+        >
+          <td>
+            <p>{{ item.title }}</p>
+          </td>
+          <td>
+            <p>{{ item.discount }}</p>
+          </td>
+          <td>
+            <p>{{ item.discount }}</p>
+          </td>
+          <td>
+            <p>{{ item.discount }}</p>
+          </td>
+          <td>
+            <button v-on:click="showEditFormFn(index, item)">
+              <img class="edit_img" :src="Icon_edit" />
+            </button>
+            <button v-on:click="deleteHdr(index, item)">
+              <img class="delete_img" :src="Icon_delete" />
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
+  <AddSingleDiscountUI
+    v-if="showAddUI"
+    :showAddUIFn="showAddUIFn"
+  ></AddSingleDiscountUI>
 </template>
+<script setup lang="ts">
+import { useApptStore } from "@/stores/priceStore";
+import { storeToRefs } from "pinia";
+import search_ico from "@/assets/images/icon_search.png";
+import Icon_edit from "@/assets/images/icon_edit.png";
+import Icon_delete from "@/assets/images/icon_delete.png";
+import Alert from "@/components/alertCmpt";
 
+let store = useApptStore();
+let { singleDiscountListRef } = storeToRefs(store);
+let { getSingleDiscountApi, delSingleDiscountApi } = store;
+
+const showAddUI = ref(false);
+const showEditUI = ref(false);
+let selData: any = [];
+
+getSingleDiscountApi();
+
+const showAddUIFn = (state: boolean) => {
+  showAddUI.value = state;
+};
+const showEditUIFn = (state: boolean) => {
+  showEditUI.value = state;
+  getSingleDiscountApi().then((res: any) => {
+    if (res.state == 1) {
+    } else {
+    }
+  });
+};
+//新增
+function showAddFormFn() {
+  selData.value = [];
+  showAddUIFn(true);
+}
+//編輯
+function showEditFormFn(index: number, item: any) {
+  selData.value = item;
+  showEditUIFn(true);
+}
+//刪除
+let deleteHdr = (index: number, item: any) => {
+  selData = item;
+  Alert.check("是否刪除", 1000, onDeleteAlertBtn);
+};
+const onDeleteAlertBtn = (data: any) => {
+  if (data) {
+    console.log("確認刪除");
+    delSingleDiscountApi(selData.discountNo).then((res: any) => {
+        console.log(res);
+      if (res.state == 1) {
+      } else {
+      }
+    });
+  } else {
+    console.log("取消刪除");
+  }
+  selData.value = [];
+};
+</script>
 <style lang="scss" scoped>
 .discountSingle_div {
   position: absolute;
@@ -84,7 +156,7 @@ const handAddManagerView = () => {
         border-radius: 6px;
         border: solid 1px #707070;
         margin-right: 10px;
-        background: #fff url("@/assets/images/icon_seach.png") no-repeat;
+        background: #fff url("@/assets/images/icon_search.png") no-repeat;
         background-position: 97%;
         background-origin: content-box;
         text-indent: 5px;
@@ -107,12 +179,10 @@ const handAddManagerView = () => {
 
   > table {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 50px);
 
-    > .header-tab {
+    > .table-thead {
       display: block;
-      box-sizing: border-box;
-
       > tr {
         display: flex;
         align-items: center;
@@ -126,16 +196,63 @@ const handAddManagerView = () => {
           }
         }
       }
+
+      > tr > th:nth-child(1) {
+        width: 60%;
+      }
+      > tr > th:nth-child(2) {
+        width: 10%;
+      }
+      > tr > th:nth-child(3) {
+        width: 10%;
+      }
+      > tr > th:nth-child(4) {
+        width: 10%;
+      }
+      > tr > th:nth-child(5) {
+        width: 10%;
+      }
     }
 
-    > .content-tab {
-      position: absolute;
+    > .content-tbody {
+      display: block;
       width: 100%;
-      top: 52px;
-      bottom: 0px;
-      overflow: auto;
-      display: flex;
-      flex-direction: column;
+      overflow-y: auto;
+      > tr {
+        display: flex;
+        border-bottom: solid 1px #707070;
+        align-items: center;
+        > td {
+          > button {
+            background-color: transparent;
+            border: none;
+            .edit_img {
+              width: 27px;
+              height: 27px;
+            }
+            .delete_img {
+              width: 21px;
+              height: 27px;
+            }
+          }
+        }
+      }
+
+      > tr > td:nth-child(1) {
+        width: 60%;
+      }
+      > tr > td:nth-child(2) {
+        width: 10%;
+      }
+      > tr > td:nth-child(3) {
+        width: 10%;
+      }
+      > tr > td:nth-child(4) {
+        width: 10%;
+      }
+      > tr > td:nth-child(5) {
+        width: 10%;
+      }
     }
   }
 }

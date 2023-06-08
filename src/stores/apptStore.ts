@@ -11,6 +11,7 @@ import {
   getBeauticianReq,
   getCourseDetailReq,
   getCourseTypeReq,
+  getOrderDetailReq,
   postAddUQLessonDetailReq,
   postAddUQLessonTypeReq,
   updateCourseDetailReq,
@@ -132,7 +133,7 @@ export const useApptStore = defineStore("apptStore", () => {
   };
   let courseDataList: any = ref([]);
   //取資料
-  const getCourseDetailApi = async (g: any, id: any) => {
+  const getCourseDetailApi = async (g: any = 0, id: any = 0) => {
     try {
       let res: any = await getCourseDetailReq(g, id);
       courseDataList.value = [];
@@ -406,7 +407,7 @@ export const useApptStore = defineStore("apptStore", () => {
 
   let goodsDetailListRef: any = ref([]);
   //取資料
-  const getGoodsDetailApi = async (group: any, id: any) => {
+  const getGoodsDetailApi = async (group: any = 0, id: any = 0) => {
     try {
       let res: any = null;
       goodsDetailListRef.value = [];
@@ -469,6 +470,29 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+
+  //-------------------------------------------------------------------
+
+  let orderDetailListRef: any = ref([]);
+  //取資料
+  const getOrderDetailApi = async (g: any, id: any) => {
+    try {
+      let res: any = await getOrderDetailReq(g, id);
+      orderDetailListRef.value = [];
+      if (res.data.data.table) {
+        // orderDetailListRef.value = res.data.data.table;
+        let curData = res.data.data.table;
+        for (let i = 0; i < curData.length; i++) {
+          const element = curData[i];
+          element.state = 0;
+          orderDetailListRef.value.push(element);
+        }
+      }
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return {
     //--------------------course
     getCourseTypeApi,
@@ -506,5 +530,8 @@ export const useApptStore = defineStore("apptStore", () => {
     addGoodsDetailApi,
     updateGoodsDetailApi,
     delGoodsDetailApi,
+    //--------------------Order
+    getOrderDetailApi,
+    orderDetailListRef,
   };
 });

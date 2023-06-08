@@ -3,7 +3,7 @@
     <div class="table-topBar">
       <p class="bar-title">優惠券(全部{{ 0 }}個)</p>
       <div>
-        <input class="seach-control" placeholder="搜尋折扣名稱、商品" />
+        <input class="search-control" placeholder="搜尋折扣名稱、商品" />
         <button class="header-btn" @click="showAddFormFn()">新增</button>
       </div>
     </div>
@@ -71,7 +71,7 @@
   ></EditAllDiscountUI>
 </template>
 <script setup lang="ts">
-import seach_ico from "@/assets/images/icon_seach.png";
+import search_ico from "@/assets/images/icon_search.png";
 import Icon_edit from "@/assets/images/icon_edit.png";
 import Icon_delete from "@/assets/images/icon_delete.png";
 import { useApptStore } from "@/stores/priceStore";
@@ -160,7 +160,7 @@ let deleteHdr = (index: number, item: any) => {
         border-radius: 6px;
         border: solid 1px #707070;
         margin-right: 10px;
-        background: #fff url("@/assets/images/icon_seach.png") no-repeat;
+        background: #fff url("@/assets/images/icon_search.png") no-repeat;
         background-position: 97%;
         background-origin: content-box;
         text-indent: 5px;

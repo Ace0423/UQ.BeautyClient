@@ -30,7 +30,7 @@ onMounted(() => {
   <div class="popup-mask" v-on:click.self="handmemuStateBtn()">
     <div class="sideBar">
       <img :src="logoImg" />
-      <diV class="nav">
+      <div class="nav">
         <ul @click="handmemuStateBtn()">
           <li>
             <img :src="appointmentImg" /><router-link to="/appointmentView">預約紀錄</router-link>

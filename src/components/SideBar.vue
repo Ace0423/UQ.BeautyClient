@@ -38,9 +38,6 @@ onMounted(() => {
           <li>
             <img :src="customerImg" /><router-link to="/memberView">顧客管理</router-link>
           </li>
-          <!-- <li>
-            <img :src="orderImg" /><router-link to="/orderView">訂單紀錄</router-link>
-          </li> -->
           <li>
             <img :src="courseImg" /><router-link to="/courseView">課程管理</router-link>
           </li>
@@ -50,8 +47,6 @@ onMounted(() => {
           <li>
             <img :src="settingImg" /><router-link to="/settingView">設定</router-link>
           </li>
-          <!-- <li><img :src="orderImg" /><router-link to="/orderView">訂單紀錄</router-link></li>
-                      <li><img :src="commodityImg" /><router-link to="/commodityView">商品管理</router-link></li> -->
           <li><img :src="settingImg" /><router-link to="/systemSettingView">系統設定</router-link></li>
         </ul>
       </diV>

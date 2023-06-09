@@ -145,10 +145,7 @@ let deleteHdr = (item: any, index: number) => {
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     let curPgId = goodsTypesListRef.value[goodsTypesListValueRef.value].pgId;
-    delGoodsDetailApi(selItem.pId, curPgId).then((res: any) => {
-      console.log(res);
-      getGoodsDetailApi(curPgId, 0);
-    });
+    delGoodsDetailApi(selItem.pId, curPgId).then((res: any) => {});
   } else {
     console.log("取消刪除");
   }
@@ -210,9 +207,6 @@ let updataStutusFn = (index: number, item: any) => {
 
   updateGoodsDetailApi(curdata).then((res: any) => {
     if (res.state == 1) {
-      Alert.sussess("成功", 1000);
-    } else {
-      Alert.warning(showErrorMsg(res.msg), 1000);
     }
   });
 
@@ -277,7 +271,7 @@ let updataStutusFn = (index: number, item: any) => {
           font-weight: bold;
           font-family: HeitiTC;
           color: #717171;
-          white-space:nowrap
+          white-space: nowrap;
         }
 
         > button.active {
@@ -290,12 +284,13 @@ let updataStutusFn = (index: number, item: any) => {
         height: calc(100% - 80px);
         .search-bar {
           height: 47px;
-          width: calc(100% - 2px);
+          width: calc(100% );
           font-weight: bold;
           display: flex;
           align-items: center;
           color: #717171;
           border: solid 1px #707070;
+          box-sizing: border-box;
           background-color: #e6e2de;
           > div {
             display: flex;
@@ -308,6 +303,7 @@ let updataStutusFn = (index: number, item: any) => {
               height: 60%;
               border-radius: 6px;
               border: solid 1px #707070;
+              box-sizing: border-box;
               background-color: #fff;
               margin-right: 10px;
 
@@ -318,16 +314,17 @@ let updataStutusFn = (index: number, item: any) => {
               text-indent: 5px;
             }
             > .btn-open {
-              width: 80px;
-              height: 20px;
+              width: 90px;
+              height: 30px;
               margin: 0;
               align-items: center;
               justify-content: center;
               font-weight: bold;
               display: flex;
-              padding: 7px 11px 6px;
+              // padding: 7px 11px 6px;
               border-radius: 6px;
               border: solid 1px #707070;
+              box-sizing: border-box;
               background-color: #84715c;
               color: #ffffff;
             }
@@ -341,6 +338,7 @@ let updataStutusFn = (index: number, item: any) => {
           font-family: STXihei;
           background-color: #faf9f8;
           border: solid 0.5px #ddd;
+          box-sizing: border-box;
           color: #717171;
           height: 95%;
           overflow-y: scroll;

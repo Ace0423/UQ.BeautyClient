@@ -1,4 +1,3 @@
-
 <template>
   <div id="add_form" class="form_bg" @click.self="showAddReserveForm(false)">
     <div class="add-reserve-form">
@@ -148,7 +147,7 @@
 import { useApptStore } from "@/stores/apptStore";
 import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import { storeToRefs } from "pinia";
-import { verify_methods } from "@/types/utils";
+import { verify_methods } from "@/utils/utils";
 let addCourseTypesName = ref("");
 
 let aptTitle = reactive(["預約時間", "預約項目", "顧客", "已完成"]);
@@ -354,8 +353,6 @@ let confirmReserveForm = (btn: string) => {
       .then((res: any) => {
         let resData = res.data;
         if (resData.state == 1) {
-          // alertInformation.showAlert = true;
-          handAlertView("新增成功", 2, 1);
           //新增厚查詢
           getApptDataApi(
             newApptDataRef.value.selDate.split("-")[0],
@@ -379,9 +376,6 @@ let confirmReserveForm = (btn: string) => {
           setTimeout(() => {
             props.showAddReserveForm(false);
           }, 1000);
-        } else {
-          console.log(res, "錯誤");
-          handAlertView("新增失敗", 2, 1);
         }
       })
       .catch((error) => {
@@ -408,12 +402,9 @@ let confirmReserveForm = (btn: string) => {
       .then((res: any) => {
         let resData = res.data;
         if (resData.state == 1) {
-          handAlertView("修改成功", 2, 1);
           setTimeout(() => {
             props.showAddReserveForm(false);
           }, 1000);
-        } else {
-          handAlertView("修改失敗", 2, 1);
         }
       })
       .catch((error) => {

@@ -1,11 +1,16 @@
 <template>
   <div class="course_div">
-    <Header
-      :moduleType="'課程管理'"
-      :Icon="Icon"
-      :memuState="props.memuState"
-      :handmemuStateBtn="props.handmemuStateBtn"
-    ></Header>
+    <div class="top_box">
+      <Header
+        :moduleType="'課程管理'"
+        :Icon="Icon"
+        :memuState="props.memuState"
+        :handmemuStateBtn="props.handmemuStateBtn"
+      ></Header>
+      <div class="top_menu">
+        <img @click="showAddDetailForm(true)" :src="icon_add" />
+      </div>
+    </div>
     <div class="customer-top">
       <div class="customer-tab">
         <div class="item-tab">
@@ -18,26 +23,22 @@
             {{ item.nameTw }}
           </button>
         </div>
-        <div class="addcoursetype-btn">
-          <!-- <img :src="addcoursetype" /> -->
+        <!-- <div class="addcoursetype-btn">
           <div class="btn-open" @click="showAddForm(true)">分類管理</div>
-
-          <!-- <button class="btn-open" v-on:click="showAddForm(true)">
-            分類管理
-          </button> -->
-        </div>
+        </div> -->
       </div>
       <div class="course_table">
         <div class="header-tab">
           <p>課程(全部{{ filterCourseData.length }}個)</p>
           <input v-model="search" placeholder="搜尋產品" />
-          <div
-            v-if="courseTypesTabsValue != 0"
+          <!-- <div
             class="btn-open"
+            v-if="courseTypesTabsValue != 0"
             @click="showAddDetailForm(true)"
           >
             新增課程
-          </div>
+          </div> -->
+          <div class="btn-open" @click="showAddForm(true)">分類管理</div>
         </div>
         <table>
           <thead>
@@ -119,6 +120,7 @@ import Icon_edit from "@/assets/Ico_edit.svg";
 import type { IBackStatus } from "@/types/IData";
 import { useApptStore } from "@/stores/apptStore";
 import { showErrorMsg } from "@/types/IMessage";
+import icon_add from "@/assets/images/icon_add.png";
 const props = defineProps<{
   memuState: any;
   handmemuStateBtn: Function;
@@ -155,14 +157,7 @@ const btnSumitHdr = (val: IBackStatus) => {
   switch (alertInformation.selfType) {
     case "delCourseDetail":
       if (val.btnStatus) {
-        delCourseDetailApi(alertInformation.selfData).then((res: any) => {
-          let resData = res.data;
-          if (resData.state == 1) {
-            handAlertView("刪除成功", 2, 1);
-          } else {
-            handAlertView(showErrorMsg(resData.msg), 2, 1);
-          }
-        });
+        delCourseDetailApi(alertInformation.selfData).then((res: any) => {});
       } else {
         console.log(val.btnStatus, "取消");
       }
@@ -230,8 +225,14 @@ let changeStutusFn = (index: number, item: any) => {
     price: item.price,
     discount: item.discount,
   };
-  updateCourseDetailApi(curdata);
-  getCourseDetailApi(item.lessonTypeId, 0);
+  updateCourseDetailApi(curdata).then((res: any) => {
+    setTimeout(() => {
+      getCourseDetailApi(
+        courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
+        0
+      );
+    }, 1000);
+  });
 };
 let alertSumit: boolean = false;
 //刪除課程
@@ -292,23 +293,40 @@ function sortthradHdr(name: number) {
   height: calc(var(--vh, 1vh) * 100);
   position: relative;
 
+  .top_box {
+    display: flex;
+    width: 100%;
+    .top_menu {
+      display: flex;
+      position: relative;
+      width: calc(100%);
+      height: 29px;
+      justify-content: right;
+      top: 15px;
+      right: 15px;
+      > img {
+        // margin-right: 10px;
+        height: 29px;
+        width: 29px;
+      }
+    }
+  }
   > .customer-top {
     position: absolute;
     top: 80px;
-    bottom: 0px;
+    bottom: 10px;
     left: 0px;
     right: 0px;
-    margin: 2px 40px;
+    margin: 0px 40px;
 
     .customer-tab {
       display: flex;
       justify-content: space-between;
-      height: 7%;
-      overflow-y: scroll;
+      height: 50px;
+      width: 100%;
+      overflow-x: scroll;
       .item-tab {
         overflow-x: scroll;
-        height: 100%;
-        // display: flex;
         display: -webkit-box;
         height: 100%;
 
@@ -322,7 +340,7 @@ function sortthradHdr(name: number) {
           font-weight: bold;
           font-family: HeitiTC;
           color: #717171;
-          height: 87%;
+          height: 100%;
           border-radius: 10px;
           font-size: 20px;
           min-width: 100px;
@@ -333,50 +351,32 @@ function sortthradHdr(name: number) {
           background-color: #e6e2de;
         }
       }
-
-      .addcoursetype-btn {
-        margin-left: 25px;
-        margin-top: 3px;
-        .btn-open {
-          width: 80px;
-          height: 20px;
-          margin: 0;
-          align-items: center;
-          justify-content: center;
-          font-weight: bold;
-          display: flex;
-          padding: 7px 11px 6px;
-          border-radius: 6px;
-          border: solid 1px #707070;
-          background-color: #84715c;
-        }
-      }
     }
 
     > .course_table {
       display: block;
-      height: 87%;
+      height: calc(100% - 50px);
       > .header-tab {
-        height: 47px;
+        height: 50px;
         // width: 100%;
         font-weight: bold;
         display: flex;
         align-items: center;
         color: #717171;
         border: solid 1px #707070;
+        box-sizing: border-box;
         background-color: #e6e2de;
 
         .btn-open {
-          width: 80px;
-          height: 20px;
-          margin: 0;
+          width: 90px;
+          height: 33px;
           align-items: center;
           justify-content: center;
           font-weight: bold;
           display: flex;
-          padding: 7px 11px 6px;
           border-radius: 6px;
           border: solid 1px #707070;
+          box-sizing: border-box;
           background-color: #84715c;
         }
 
@@ -389,6 +389,7 @@ function sortthradHdr(name: number) {
           height: 33px;
           border-radius: 6px;
           border: solid 1px #707070;
+          box-sizing: border-box;
           background-color: #fff;
           margin-right: 10px;
         }
@@ -401,8 +402,9 @@ function sortthradHdr(name: number) {
         font-family: STXihei;
         background-color: #faf9f8;
         border: solid 0.5px #ddd;
+        box-sizing: border-box;
         color: #717171;
-        height: 95%;
+        height: calc(100% - 50px);
         overflow-y: scroll;
         // display: inline-table;
         > thead {
@@ -472,6 +474,7 @@ function sortthradHdr(name: number) {
                   height: 20px;
                   border-radius: 5px;
                   border: 1px solid #8b6f6d;
+                  box-sizing: border-box;
                   position: relative;
                   cursor: pointer;
                 }
@@ -480,6 +483,7 @@ function sortthradHdr(name: number) {
                   content: " ";
                   width: 12px;
                   border: 2px solid #fff;
+                  box-sizing: border-box;
                   height: 4px;
                   border-top: none;
                   border-right: none;

@@ -58,12 +58,6 @@
       </div>
     </div>
   </div>
-  <Alert
-    v-if="alertInformation.showAlert"
-    :alertInformation="alertInformation"
-    :handAlertView="handAlertView"
-    @callbackBtn="btnSumitHdr"
-  ></Alert>
 </template>
 <script setup lang="ts">
 import { useApptStore } from "@/stores/apptStore";
@@ -75,25 +69,10 @@ import { storeToRefs } from "pinia";
 import draggable from "vuedraggable";
 import { showErrorMsg } from "@/types/IMessage";
 import { verify_methods } from "@/utils/utils";
+import Alert from "../alertCmpt";
 let addCourseTypesName = ref("");
-//alertUI
-const alertInformation = reactive({
-  selfData: {},
-  selfType: "",
-  messageText: "", // 提示內容
-  buttonState: 0, //按鈕顯示狀態 0:全部 1:只顯示確定按鈕 2:不顯示按鈕
-  timerVal: 2, //時間計時器
-  showAlert: false, //顯示
-});
-const handAlertView = (msg: string, btnState: number, timer: number) => {
-  alertInformation.messageText = msg;
-  alertInformation.buttonState = btnState;
-  alertInformation.timerVal = timer;
-  alertInformation.showAlert = !alertInformation.showAlert;
-};
 const props = defineProps<{
   showAddForm: Function;
-  // courseTypesTabs: any;
 }>();
 
 //-------------------------------------form驗證
@@ -148,22 +127,20 @@ let { courseTypesTabs, courseTypesTabsValue } = storeToRefs(store);
 // let courseTypesTabs: any = ref([]);
 onMounted(() => {
   addCourseTypesName.value = "";
-  setTypeData();
 });
 
+setTypeData();
 function setTypeData() {
-  let data = courseTypesTabs.value;
-  courseTypesTabs.value = [];
-  for (let i = 0; i < data.length; i++) {
-    const element = data[i];
-    courseTypesTabs.value.push({
-      lessonTypeId: element.lessonTypeId,
-      nameTw: element.nameTw,
-      display: element.display,
-      editNameTw: element.nameTw,
-      editState: false,
-    });
-  }
+  // let data = courseTypesTabs.value;
+  // courseTypesTabs.value = [];
+  // for (let i = 0; i < data.length; i++) {
+  //   const element = data[i];
+  //   courseTypesTabs.value.push({
+  //     lessonTypeId: element.lessonTypeId,
+  //     nameTw: element.nameTw,
+  //     display: element.display,
+  //   });
+  // }
 }
 
 //新增分類--確認
@@ -179,12 +156,7 @@ let confirmShowAddForm = () => {
         if (!verify_all()) return;
         element.nameTw = element.editNameTw;
         changeNameList.push(element);
-        editCourseTypeApi(element).then((res: any) => {
-          let resData = res.data;
-          if (resData.state == 1) {
-            handAlertView("成功", 2, 2);
-          } else handAlertView(showErrorMsg(resData.msg), 2, 2);
-        });
+        editCourseTypeApi(element).then((res: any) => {});
       }
       /**判斷改排序 */
       if (element.order != i + 1) {
@@ -198,13 +170,7 @@ let confirmShowAddForm = () => {
   }
 
   if (changeOrderList.length > 0) {
-    editCourseTypeOrderApi(changeOrderList).then((res: any) => {
-      let resData = res.data;
-      if (resData.state == 1) {
-        handAlertView("成功", 2, 2);
-        console.log("修改排序成功");
-      } else console.log(resData.msg, "修改排序失敗");
-    });
+    editCourseTypeOrderApi(changeOrderList).then((res: any) => {});
   }
 
   if (changeOrderList.length == 0 && changeNameList.length == 0) {
@@ -221,28 +187,32 @@ let confirmShowAddForm = () => {
       nameTw: addCourseTypesName.value,
     };
     addCourseTypeApi(curdata).then((res: any) => {
-      let resData = res.data;
-      if (resData.state == 1) {
-        handAlertView("成功", 2, 2);
-        setTimeout(() => {
-          props.showAddForm(false);
-        }, 1000);
-      } else {
-        handAlertView(showErrorMsg(resData.msg), 2, 2);
-      }
+      // if (res.state == 1)
+      //   setTimeout(() => {
+      //     props.showAddForm(false);
+      //   }, 1000);
     });
-  } else {
-    setTimeout(() => {
-      props.showAddForm(false);
-    }, 1000);
   }
+
+  setTimeout(() => {
+    props.showAddForm(false);
+  }, 1000);
 };
+let selItem: any = ref([]);
 //刪除課程
-let delCourseTypeHdr = (index: number, itemId: number) => {
-  // delCourseTypeApi(itemId);
-  alertInformation.selfType = "delCourseDetail";
-  alertInformation.selfData = itemId;
-  handAlertView("是否刪除", 0, 0);
+let delCourseTypeHdr = (item: any, itemId: number) => {
+  selItem = item;
+  Alert({
+    type: 0,
+    message: "是否刪除",
+    duration: 1000,
+    onAlertBtn: onDelReturn,
+  });
+};
+const onDelReturn = (data: any) => {
+  if (data) {
+    delCourseTypeApi(selItem.lessonTypeId).then((res: any) => {});
+  }
 };
 //編輯課程
 let oldInput: any = "";
@@ -256,31 +226,6 @@ let editCourseTypeHdr = (index: number, item: any) => {
   setTimeout(() => {
     input?.focus();
   }, 10);
-};
-
-const btnSumitHdr = (val: IBackStatus) => {
-  switch (alertInformation.selfType) {
-    case "delCourseDetail":
-      if (val.btnStatus) {
-        delCourseTypeApi(alertInformation.selfData).then((res: any) => {
-          let resData = res.data;
-          if (resData.state == 1) {
-            handAlertView("刪除成功", 2, 2);
-            getCourseTypeApi(0);
-            // setTypeData();
-            setTimeout(() => {}, 1000);
-          } else {
-            handAlertView(showErrorMsg(resData.msg), 2, 2);
-          }
-        });
-      } else {
-        console.log(val.btnStatus, "取消");
-      }
-      break;
-    default:
-      break;
-  }
-  alertInformation.showAlert = false;
 };
 </script>
 

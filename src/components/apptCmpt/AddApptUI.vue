@@ -1,4 +1,3 @@
-
 <template>
   <div id="add_form" class="form_bg" @click.self="showAddReserveForm(false)">
     <div class="add-reserve-form">
@@ -281,7 +280,7 @@ onMounted(() => {
   newCourseDetailRef.value.state = false;
   newApptDataRef.value = props.curApptDataRef;
   console.log(props.curApptDataRef.memberId);
-  
+
   showAddForm.value = props.curApptDataRef.memberId ? false : true;
 });
 
@@ -296,13 +295,12 @@ function getNowDay() {
 let confirmReserveForm = (btn: string) => {
   ruleLists.ruleItem.name.value = newApptDataRef.value.memberId;
   ruleLists.ruleItem.timeClock.value = newApptDataRef.value.timer;
-  
-  if (!showAddForm.value){
+
+  if (!showAddForm.value) {
     ruleLists.ruleItem.lessonItem.value = newApptDataRef.value.courses
       ? newApptDataRef.value.courses.nameTw
       : newApptDataRef.value.courses;
-  }
-  else
+  } else
     ruleLists.ruleItem.lessonItem.value =
       newApptDataRef.value.courses.length > 0
         ? newApptDataRef.value.courses[0].nameTw
@@ -344,35 +342,30 @@ let confirmReserveForm = (btn: string) => {
       bookingMemo: "string",
     };
     //新增預約
-    postAddApptDataApi(addApptData)
-      .then((res: any) => {
-        let resData = res.data;
-        if (resData.state == 1) {
-          // alertInformation.showAlert = true;
-          handAlertView("新增成功", 2, 1);
-          //新增厚查詢
-          getApptDataApi(
+    postAddApptDataApi(addApptData).then((res: any) => {
+      let resData = res.data;
+      if (resData.state == 1) {
+        //新增厚查詢
+        getApptDataApi(
+          newApptDataRef.value.selDate.split("-")[0],
+          newApptDataRef.value.selDate.split("-")[1]
+        ).then((res: any) => {
+          props.resetApptTable(
             newApptDataRef.value.selDate.split("-")[0],
-            newApptDataRef.value.selDate.split("-")[1]
-          ).then((res: any) => {
-            props.resetApptTable(
-              newApptDataRef.value.selDate.split("-")[0],
-              newApptDataRef.value.selDate.split("-")[1],
-              newApptDataRef.value.selDate.split("-")[2]
-            );
-          });
-          //新增成功查詢資料
-          props.getApptInfpApi(
-            newApptDataRef.value.selDate.split("-")[0],
-            newApptDataRef.value.selDate.split("-")[1]
+            newApptDataRef.value.selDate.split("-")[1],
+            newApptDataRef.value.selDate.split("-")[2]
           );
-          setTimeout(() => {
-            props.showAddReserveForm(false);
-          }, 1000);
-        } else {
-        handAlertView(showErrorMsg(resData.msg), 2, 2);
-        }
-      })
+        });
+        //新增成功查詢資料
+        props.getApptInfpApi(
+          newApptDataRef.value.selDate.split("-")[0],
+          newApptDataRef.value.selDate.split("-")[1]
+        );
+        setTimeout(() => {
+          props.showAddReserveForm(false);
+        }, 1000);
+      }
+    });
   } else if ((btn = "edit" && props.oldSelList)) {
     let editApptDate = {
       bookingNo: props.oldSelList.id,
@@ -393,7 +386,6 @@ let confirmReserveForm = (btn: string) => {
     postEditApptDataApi(editApptDate).then((res: any) => {
       let resData = res.data;
       if (resData.state == 1) {
-        handAlertView("修改成功", 2, 1);
         //新增成功查詢資料
         props.getApptInfpApi(
           newApptDataRef.value.selDate.split("-")[0],
@@ -402,8 +394,6 @@ let confirmReserveForm = (btn: string) => {
         setTimeout(() => {
           props.showAddReserveForm(false);
         }, 1000);
-      } else {
-        handAlertView(showErrorMsg(resData.msg), 2, 2);
       }
     });
   }

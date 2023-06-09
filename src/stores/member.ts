@@ -3,7 +3,6 @@ import { apiGetMemberListRequest, apiPostMemberDataRequest, apiPostUpdateMemberD
 export const useMemberStore = defineStore("member", () => {
     const memberList: any = reactive({ data: [] });
     const groupListData: any = reactive({ data: [] });
-    // const groupListData: any = reactive({ notselected: [], selected: [] });
     const groupInfoData: any = reactive({ data: [] });
     const getMemberList = async () => {
         try {
@@ -76,7 +75,6 @@ export const useMemberStore = defineStore("member", () => {
         }
         try {
             const res = await apiPostUpdateMemberDataRequest(memberVal);
-            console.log(res.data);
             if (res.data.state == 1) {
                 updataMemberList(res.data.data.table[0]);
             }

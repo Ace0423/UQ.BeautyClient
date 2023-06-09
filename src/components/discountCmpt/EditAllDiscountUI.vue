@@ -75,7 +75,7 @@ import { storeToRefs } from "pinia";
 import type { FormInstance, FormRules } from "element-plus";
 let store = useApptStore();
 let {} = storeToRefs(store);
-let { addtAllDiscountApi } = store;
+let { updateAllDiscountApi } = store;
 
 const props = defineProps<{
   showEditUIFn: Function;
@@ -86,9 +86,11 @@ let formInputRef: any = ref({
   name: null,
   type: null,
   price: null,
+  discountNo: null,
 });
 
 onMounted(() => {
+  formInputRef.value.discountNo = props.formInfo.value.discountNo;
   formInputRef.value.name = props.formInfo.value.title;
   formInputRef.value.dType = props.formInfo.value.dType ? true : false;
   formInputRef.value.discount = props.formInfo.value.dType
@@ -108,17 +110,14 @@ let submitBtn = () => {
       ? formInputRef.value.discount
       : formInputRef.value.discount / 100,
     dType: formInputRef.value.dType ? 1 : 0,
+    discountNo: formInputRef.value.discountNo,
   };
   /**新增明細 */
-  addtAllDiscountApi(curdata).then((res: any) => {
-    let resData = res.data;
-    if (resData.state == 1) {
-      handAlertView("新增成功", 2, 1);
+  updateAllDiscountApi(curdata).then((res: any) => {
+    if (res.state == 1) {
       setTimeout(() => {
         props.showEditUIFn(false);
       }, 1000);
-    } else {
-      handAlertView(showErrorMsg(resData.msg), 2, 2);
     }
   });
 };

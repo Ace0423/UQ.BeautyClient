@@ -568,10 +568,7 @@ const btnSumitHdr = (val: IBackStatus) => {
         postEditApptDataApi(editApptDate).then((res: any) => {
           let resData = res.data;
           if (resData.state == 1) {
-            handAlertView("刪除成功", 2, 1);
           } else {
-            handAlertView(showErrorMsg(resData.msg), 2, 1);
-            // alertInformation.messageText = resData.msg;
           }
         });
         getApptInfpApi(currentYear.value, currentMonth.value + 1);

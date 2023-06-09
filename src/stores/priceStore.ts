@@ -7,6 +7,8 @@ import {
   getSingleDiscountReq,
   postAddSingleDiscountReq,
   deleteSingleDiscountReq,
+  postUpdateAllDiscountReq,
+  postUpdateSingleDiscountReq,
 } from "@/api/priceRequest";
 import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
@@ -15,7 +17,6 @@ export const useApptStore = defineStore("priceStore", () => {
   let singleDiscountListRef: any = ref([]);
 
   function alertStateFn(res: any, apiName: string = "") {
-    console.log(res.state);
     if (res.state == 1) {
       Alert.sussess("成功", 1000);
     } else {
@@ -44,9 +45,21 @@ export const useApptStore = defineStore("priceStore", () => {
   };
 
   //新增全單折扣分類
-  const addtAllDiscountApi = async (data: any) => {
+  const addAllDiscountApi = async (data: any) => {
     try {
       let res = await postAddAllDiscountReq(data).then((res: any) => {
+        alertStateFn(res, "新增全單折扣分類");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //更新全單折扣分類
+  const updateAllDiscountApi = async (data: any) => {
+    try {
+      let res = await postUpdateAllDiscountReq(data).then((res: any) => {
         alertStateFn(res, "新增全單折扣分類");
         return res;
       });
@@ -102,6 +115,18 @@ export const useApptStore = defineStore("priceStore", () => {
       console.log(error);
     }
   };
+  //更新單品折扣分類
+  const updateSingleDiscountApi = async (data: any) => {
+    try {
+      let res = await postUpdateSingleDiscountReq(data).then((res: any) => {
+        alertStateFn(res, "更新單品折扣分類");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   //刪除全單折扣資料
   const delSingleDiscountApi = async (data: any) => {
@@ -119,12 +144,14 @@ export const useApptStore = defineStore("priceStore", () => {
   return {
     getAllDiscountApi,
     allDiscountList,
-    addtAllDiscountApi,
+    addAllDiscountApi,
     delAllDiscountApi,
+    updateAllDiscountApi,
     //--------------------------------單品
     getSingleDiscountApi,
     singleDiscountListRef,
     addSingleDiscountApi,
     delSingleDiscountApi,
+    updateSingleDiscountApi,
   };
 });

@@ -104,13 +104,12 @@ let delTypeHdr = (item: any, index: number) => {
     onAlertBtn: onDelReturn,
   });
 };
-let selItemBtn: any = ref(false);
+let selItemBtn: any = ref([]);
 const onDelReturn = (data: any) => {
   if (data) {
     delGoodsTypeApi(selItemBtn.pgId).then((res: any) => {
       if (res.state == 1) {
-        Alert.sussess("成功", 1000);
-      } else Alert.warning(showErrorMsg(res.msg), 2);
+      } 
     });
   }
 };
@@ -137,8 +136,7 @@ let submitTypeHdr = () => {
 
         updataGoodsTypeApi(curdata).then((res: any) => {
           if (res.state == 1) {
-            Alert.sussess("成功", 1000);
-          } else Alert.warning(showErrorMsg(res.msg), 2);
+          }
         });
       }
     }
@@ -155,16 +153,13 @@ let submitTypeHdr = () => {
     };
 
     console.log(curdata);
-    
+
     addGoodsTypeApi(curdata).then((res: any) => {
       let resData = res.data;
       if (res.state == 1) {
-        Alert.sussess("成功", 1000);
         setTimeout(() => {
           props.showAddUIFn(false);
         }, 1000);
-      } else {
-        Alert.warning(showErrorMsg(res.msg), 2);
       }
     });
   } else {

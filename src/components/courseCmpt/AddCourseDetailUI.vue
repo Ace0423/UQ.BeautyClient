@@ -139,12 +139,6 @@
       </div>
     </div>
   </div>
-  <Alert
-    v-if="alertInformation.showAlert"
-    :alertInformation="alertInformation"
-    :handAlertView="handAlertView"
-    @callbackBtn="btnSumitHdr"
-  ></Alert>
 </template>
 <script setup lang="ts">
 import { useApptStore } from "@/stores/apptStore";
@@ -189,52 +183,11 @@ let filterTypesTabs: any = computed(() =>
     return value.lessonTypeId > 0;
   })
 );
-
-//alertUI
-const alertInformation = reactive({
-  selfData: {},
-  selfType: "",
-  messageText: "", // 提示內容
-  buttonState: 2, //按鈕顯示狀態 0:全部 1:只顯示確定按鈕 2:不顯示按鈕
-  timerVal: 2, //時間計時器
-  showAlert: false, //顯示
-});
-const handAlertView = (msg: string, btnState: number, timer: number) => {
-  alertInformation.messageText = msg;
-  alertInformation.buttonState = btnState;
-  alertInformation.timerVal = timer;
-  alertInformation.showAlert = !alertInformation.showAlert;
-};
 const props = defineProps<{
   showAddDetailForm: Function;
   filterCourseData: any;
   addDetailTypeID?: any;
 }>();
-
-//刪除課程2
-let delCourseDetailHdr = (index: number, itemId: number) => {
-  // delCourseDetailApi(itemId);
-  alertInformation.selfType = "delCourseDetail";
-  alertInformation.buttonState = 0;
-  alertInformation.messageText = "是否刪除";
-  alertInformation.showAlert = true;
-  alertInformation.selfData = itemId;
-};
-
-const btnSumitHdr = (val: IBackStatus) => {
-  switch (alertInformation.selfType) {
-    case "delCourseDetail":
-      if (val.btnStatus) {
-        delCourseDetailApi(alertInformation.selfData);
-      } else {
-        console.log(val.btnStatus, "取消");
-      }
-      break;
-    default:
-      break;
-  }
-  alertInformation.showAlert = !alertInformation.showAlert;
-};
 //新增課程-確認
 let confirmAddCourseDataForm = () => {
   console.log(formInputRef.value);
@@ -259,14 +212,10 @@ let confirmAddCourseDataForm = () => {
   };
   /**新增明細 */
   addCourseDetailApi(curdata).then((res: any) => {
-    let resData = res.data;
-    if (resData.state == 1) {
-      handAlertView("新增成功", 2, 1);
+    if (res.state == 1) {
       setTimeout(() => {
         props.showAddDetailForm(false);
       }, 1000);
-    } else {
-      handAlertView(showErrorMsg(resData.msg), 2, 2);
     }
   });
 };

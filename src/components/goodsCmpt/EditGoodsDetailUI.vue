@@ -329,13 +329,10 @@ let submitBtn = () => {
   /**新增明細 */
   updateGoodsDetailApi(curdata).then((res: any) => {
     if (res.state == 1) {
-      Alert.sussess("成功", 1000);
       setTimeout(() => {
         props.showUIFn(false);
       }, 1000);
-    } else {
-      Alert.warning(showErrorMsg(res.msg), 1000);
-    }
+    } 
   });
 };
 

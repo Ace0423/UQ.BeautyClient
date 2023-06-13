@@ -134,19 +134,20 @@ let deleteHdr = (index: number, item: any) => {
   width: 100%;
   background-color: #faf9f8;
   border: solid 0.5px #ddd;
+  box-sizing: border-box;
   font-family: STXihei;
   color: #717171;
 
   > .table-topBar {
     height: 50px;
-    width: calc(100% - 2px);
-    border: none;
+    width: calc(100%);
     background-color: transparent;
     display: flex;
     align-items: center;
     left: auto;
     color: #717171;
     border: solid 1px #707070;
+    box-sizing: border-box;
     background-color: #e6e2de;
     font-weight: 700;
     > div {
@@ -159,6 +160,7 @@ let deleteHdr = (index: number, item: any) => {
         height: 60%;
         border-radius: 6px;
         border: solid 1px #707070;
+        box-sizing: border-box;
         margin-right: 10px;
         background: #fff url("@/assets/images/icon_search.png") no-repeat;
         background-position: 97%;
@@ -171,6 +173,7 @@ let deleteHdr = (index: number, item: any) => {
         min-width: 100px;
         height: 70%;
         border: solid 1px #707070;
+        box-sizing: border-box;
         background-color: #84715c;
         color: #fff;
         margin: 0 20px;
@@ -187,6 +190,7 @@ let deleteHdr = (index: number, item: any) => {
 
     > .table-thead {
       display: block;
+      height: 50px;
       > tr {
         display: flex;
         align-items: center;
@@ -225,6 +229,7 @@ let deleteHdr = (index: number, item: any) => {
       display: block;
       width: 100%;
       overflow-y: auto;
+      height: calc(100% - 50px);
       > tr {
         display: flex;
         border-bottom: solid 1px #707070;
@@ -232,7 +237,6 @@ let deleteHdr = (index: number, item: any) => {
         > td {
           > button {
             background-color: transparent;
-            border: none;
             .edit_img {
               width: 27px;
               height: 27px;

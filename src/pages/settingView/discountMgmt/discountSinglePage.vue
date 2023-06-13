@@ -1,7 +1,9 @@
 <template>
   <div class="discountSingle_div">
     <div class="table-topBar">
-      <p class="bar-title">單品折扣(所有{{ singleDiscountListRef.length }}種折扣)</p>
+      <p class="bar-title">
+        單品折扣(所有{{ singleDiscountListRef.length }}種折扣)
+      </p>
       <div>
         <input class="search-control" placeholder="搜尋折扣名稱、商品" />
         <button class="header-btn" @click="showAddFormFn()">新增</button>
@@ -60,6 +62,11 @@
     v-if="showAddUI"
     :showAddUIFn="showAddUIFn"
   ></AddSingleDiscountUI>
+  <EditSingleDiscountUI
+    v-if="showEditUI"
+    :showEditUIFn="showEditUIFn"
+    :formInfo="selData"
+  ></EditSingleDiscountUI>
 </template>
 <script setup lang="ts">
 import { useApptStore } from "@/stores/priceStore";
@@ -84,11 +91,7 @@ const showAddUIFn = (state: boolean) => {
 };
 const showEditUIFn = (state: boolean) => {
   showEditUI.value = state;
-  getSingleDiscountApi().then((res: any) => {
-    if (res.state == 1) {
-    } else {
-    }
-  });
+  getSingleDiscountApi();
 };
 //新增
 function showAddFormFn() {
@@ -98,6 +101,7 @@ function showAddFormFn() {
 //編輯
 function showEditFormFn(index: number, item: any) {
   selData.value = item;
+  console.log(showEditUI.value);
   showEditUIFn(true);
 }
 //刪除
@@ -109,7 +113,7 @@ const onDeleteAlertBtn = (data: any) => {
   if (data) {
     console.log("確認刪除");
     delSingleDiscountApi(selData.discountNo).then((res: any) => {
-        console.log(res);
+      console.log(res);
       if (res.state == 1) {
       } else {
       }
@@ -130,12 +134,13 @@ const onDeleteAlertBtn = (data: any) => {
   width: 100%;
   background-color: #faf9f8;
   border: solid 0.5px #ddd;
+  box-sizing: border-box;
   font-family: STXihei;
   color: #717171;
 
   > .table-topBar {
     height: 50px;
-    width: calc(100% - 2px);
+    width: calc(100%);
     border: none;
     background-color: transparent;
     display: flex;
@@ -143,6 +148,7 @@ const onDeleteAlertBtn = (data: any) => {
     left: auto;
     color: #717171;
     border: solid 1px #707070;
+    box-sizing: border-box;
     background-color: #e6e2de;
     font-weight: 700;
     > div {
@@ -155,6 +161,7 @@ const onDeleteAlertBtn = (data: any) => {
         height: 60%;
         border-radius: 6px;
         border: solid 1px #707070;
+        box-sizing: border-box;
         margin-right: 10px;
         background: #fff url("@/assets/images/icon_search.png") no-repeat;
         background-position: 97%;
@@ -167,6 +174,7 @@ const onDeleteAlertBtn = (data: any) => {
         min-width: 100px;
         height: 70%;
         border: solid 1px #707070;
+        box-sizing: border-box;
         background-color: #84715c;
         color: #fff;
         margin: 0 20px;
@@ -183,6 +191,7 @@ const onDeleteAlertBtn = (data: any) => {
 
     > .table-thead {
       display: block;
+      height: 50px;
       > tr {
         display: flex;
         align-items: center;
@@ -218,6 +227,7 @@ const onDeleteAlertBtn = (data: any) => {
       display: block;
       width: 100%;
       overflow-y: auto;
+      height: calc(100% - 50px);
       > tr {
         display: flex;
         border-bottom: solid 1px #707070;

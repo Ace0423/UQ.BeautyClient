@@ -20,7 +20,7 @@
                 <el-dropdown-item command="addRest"
                   >加入休息時間</el-dropdown-item
                 >
-                <el-dropdown-item command="addBill"
+                <el-dropdown-item command="addCheckOut"
                   >新增快速結帳單</el-dropdown-item
                 >
               </el-dropdown-menu>
@@ -60,7 +60,7 @@
             </div>
           </div>
         </div>
-        <div>
+        <div class="appt_main">
           <div
             class="week_main"
             v-show="showWeekBoxRef && mainTabIndexRef != 1"
@@ -416,6 +416,10 @@
     :hand-alert-view="handAlertView"
     @callbackBtn="btnSumitHdr"
   ></Alert>
+  <FastCheckOutUI
+    v-if="showFastCheckOutRef"
+    :showUIFn="showFastCheckOutUIHdr"
+  />
 </template>
 
 <script setup lang="ts">
@@ -447,6 +451,7 @@ const props = defineProps<{
 }>();
 let searchList = ref("");
 let showWeekBoxRef = ref(true);
+let showFastCheckOutRef = ref(false);
 let mainTabIndexRef = ref(0);
 let aptTitle = reactive(["預約時間", "預約項目", "顧客", "已完成"]);
 
@@ -535,12 +540,18 @@ const handleCommand = (command: string | number | object) => {
       break;
     case "addRest":
       break;
-    case "addBill":
+    case "addCheckOut":
+      showFastCheckOutUIHdr(true);
       break;
 
     default:
       break;
   }
+};
+//新增分類-顯示
+let showFastCheckOutUIHdr = (state: boolean) => {
+  showFastCheckOutRef.value = state;
+  // getGoodsTypeApi(0);
 };
 
 const btnSumitHdr = (val: IBackStatus) => {
@@ -568,10 +579,7 @@ const btnSumitHdr = (val: IBackStatus) => {
         postEditApptDataApi(editApptDate).then((res: any) => {
           let resData = res.data;
           if (resData.state == 1) {
-            handAlertView("刪除成功", 2, 1);
           } else {
-            handAlertView(showErrorMsg(resData.msg), 2, 1);
-            // alertInformation.messageText = resData.msg;
           }
         });
         getApptInfpApi(currentYear.value, currentMonth.value + 1);
@@ -1163,24 +1171,24 @@ $borderCoder: #eaedf2;
 
   .appointment_main {
     position: absolute;
-    top: 83px;
-    bottom: 0px;
+    top: 80px;
+    bottom: 10px;
     left: 0px;
     right: 0px;
 
     .appointment_box {
       // height: 100%;
-      height: 99%;
+      height: 100%;
       position: relative;
       > .item-tab {
         display: flex;
-        height: 6%;
-        left: 0%;
-        // height: 45px;
-        width: 98%;
+        height: 45px;
+        width: 94%;
+        position: relative;
+        left: 3%;
         > div {
           display: flex;
-          width: 71%;
+          width: calc(100% - 106px);
           height: 100%;
 
           > button {
@@ -1211,8 +1219,8 @@ $borderCoder: #eaedf2;
         .weektoday_div {
           position: relative;
           display: flex;
-          width: 25%;
-          min-width: 105px;
+          width: 160px;
+          // min-width: 105px;
           justify-content: right;
           align-items: center;
 
@@ -1244,12 +1252,11 @@ $borderCoder: #eaedf2;
         }
       }
 
-      > div {
+      .appt_main {
         position: relative;
         display: flex;
-        height: 92%;
+        height: calc(100% - 45px);
         width: 94%;
-        // margin-left: 5%;
         margin-left: 3%;
 
         .week_main {

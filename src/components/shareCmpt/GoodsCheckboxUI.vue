@@ -5,7 +5,7 @@
         <p>加入商品</p>
       </div>
       <div class="main-content">
-        <p>已選擇({{ formInputRef.courses.length }})項服務</p>
+        <p>已選擇({{ formInputRef.goods.length }})項服務</p>
         <input v-model="formInputRef.search" />
         <div class="div-item">
           <div>
@@ -22,20 +22,29 @@
               <span> 全選 </span>
             </label>
           </div>
-          <div v-for="item in filterCourseData" :key="item">
+          <div v-for="item in filterGoodsData" :key="item">
             <label class="label-item" :value="item">
               <input
                 class="input-item"
                 type="checkbox"
+                :key="item"
                 :id="item.pId"
-                :value="item"
-                v-model="formInputRef.courses"
-                @click="clickItem"
+                :value="item.pId"
+                v-model="formInputRef.goods"
+                @click="clickItem(item, item.pId)"
               />
               <label :for="item.pId"></label>
-              <span value="{{item}}" name="{{item.pName}}">{{
-                item.pName + "(" + item.pCode + ")"
-              }}</span>
+              <div>
+                <span value="{{item}}" name="{{item.pName}}">{{
+                  item.pName
+                }}</span>
+                <span
+                  class="pCode-msg"
+                  value="{{item}}"
+                  name="{{item.pName}}"
+                  >{{ item.pCode }}</span
+                >
+              </div>
             </label>
             <!-- <input type="checkbox" name="item_001" value="1" />1 -->
           </div>
@@ -69,16 +78,22 @@ let clickGroupRef = ref(false);
 let formInputRef: any = ref({
   name: "",
   search: "",
-  courses: [],
+  goods: [],
 });
-getGoodsDetailApi(0, 0);
-formInputRef.value.courses = props.selData;
-console.log(goodsDetailListRef.value);
 
-let filterCourseData: any = computed(() =>
-  goodsDetailListRef.value.filter(getCourseFn)
+setUI();
+function setUI() {
+  getGoodsDetailApi(0, 0);
+  for (let i = 0; i < props.selData.length; i++) {
+    const element = props.selData[i];
+    element.pId = element.pId ? element.pId : element.pid;
+    formInputRef.value.goods.push(element.pId);
+  }
+}
+let filterGoodsData: any = computed(() =>
+  goodsDetailListRef.value.filter(getGoodsFn)
 );
-function getCourseFn(data: any) {
+function getGoodsFn(data: any) {
   return (
     data.display &&
     (!formInputRef.value.search ||
@@ -89,27 +104,37 @@ function getCourseFn(data: any) {
 }
 
 function clickGroup() {
-  let curCourse = formInputRef.value.courses;
-  if (curCourse.length > 0) {
-    formInputRef.value.courses = [];
+  let curGoods = formInputRef.value.goods;
+  if (curGoods.length > 0) {
+    formInputRef.value.goods = [];
   } else {
-    for (let i = 0; i < filterCourseData.value.length; i++) {
-      const element = filterCourseData.value[i];
-      formInputRef.value.courses.push(element);
+    for (let i = 0; i < filterGoodsData.value.length; i++) {
+      const element = filterGoodsData.value[i];
+      formInputRef.value.goods.push(element.pId);
     }
   }
 }
 watchEffect(() => {
-  clickGroupRef.value = formInputRef.value.courses.length > 0;
+  clickGroupRef.value = formInputRef.value.goods.length > 0;
 });
 
-function clickItem() {
-  // console.log(formInputRef.value.courses);
+function clickItem(item: any, id: number) {
+  // console.log(formInputRef.value.goods);
 }
 
 function submitBtn() {
-  // console.log(formInputRef.value.courses, "提交");
-  props.getDataFn(formInputRef.value.courses);
+  let curGoodsData = [];
+  for (let i = 0; i < formInputRef.value.goods.length; i++) {
+    const element = formInputRef.value.goods[i];
+    for (let j = 0; j < filterGoodsData.value.length; j++) {
+      const element2 = filterGoodsData.value[j];
+      if (element2.pId == element) {
+        curGoodsData.push(element2);
+        break;
+      }
+    }
+  }
+  props.getDataFn(curGoodsData);
   props.showUIFn(false);
 }
 </script>
@@ -129,9 +154,10 @@ function submitBtn() {
   justify-content: space-around;
 
   .popup-content {
-    max-width: 360px;
-    background-color: #e6e2de;
+    width: 250px;
+    height: 450px;
     padding: 15px 50px;
+    background-color: #e6e2de;
     font-size: 20px;
     font-family: HeitiTC;
     color: #84715c;
@@ -151,7 +177,8 @@ function submitBtn() {
       }
       .div-item {
         width: 100%;
-        max-height: 300px;
+        // max-height: 300px;
+        height: 250px;
         overflow-y: auto;
         > div {
           display: flex;
@@ -201,6 +228,13 @@ function submitBtn() {
 
             > span {
               margin-left: 10px;
+            }
+            > div {
+              display: grid;
+              margin-left: 10px;
+              .pCode-msg {
+                font-size: 15px;
+              }
             }
           }
 

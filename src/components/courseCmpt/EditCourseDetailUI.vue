@@ -123,10 +123,7 @@
           </div>
         </div>
         <div class="decide">
-          <button
-            class="confirm-coursedetail-btn"
-            @click="editConfirmHdr()"
-          >
+          <button class="confirm-coursedetail-btn" @click="editConfirmHdr()">
             確認
           </button>
           <button class="confirm-coursedetail-btn" @click="showEditForm(false)">
@@ -197,7 +194,6 @@ if (props.editCourseInfo) {
   formInputRef.value.isBonusOpen = props.editCourseInfo.isBonusOpen;
   formInputRef.value.isEditAccounting = props.editCourseInfo.isEditAccounting;
   console.log(props.editCourseInfo);
-  
 }
 
 onMounted(() => {});
@@ -225,13 +221,9 @@ const editConfirmHdr = () => {
   updateCourseDetailApi(apiEditCourseData).then((res: any) => {
     let resData = res.data;
     if (resData.state == 1) {
-      handAlertView("修改成功", 2, 2);
-      // getCourseDetailApi(props.editCourseInfo.lessonTypeId, 0);
       setTimeout(() => {
         props.showEditForm(false);
       }, 1000);
-    } else {
-      handAlertView(showErrorMsg(resData.msg), 2, 2);
     }
   });
 };

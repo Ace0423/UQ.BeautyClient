@@ -1,16 +1,10 @@
 <template>
   <div class="content">
     <div class="nav">
-      <router-link
-        :class="currentIndex == 0 ? 'active' : ''"
-        v-on:click="changeTab(0)"
-        to="/settingView/discountMgmt/discountAllPage"
+      <router-link to="/settingView/discountMgmt/discountAllPage"
         >全單折扣</router-link
       >
-      <router-link
-        :class="currentIndex == 1 ? 'active' : ''"
-        v-on:click="changeTab(1)"
-        to="/settingView/discountMgmt/discountSinglePage"
+      <router-link to="/settingView/discountMgmt/discountSinglePage"
         >單品折扣</router-link
       >
     </div>
@@ -18,14 +12,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import router from "@/router";
-const currentIndex = ref(0);
-const changeTab = (index: number) => {
-  currentIndex.value = index;
-};
-onMounted(() => {
-  router.push("/settingView/discountMgmt/discountAllPage");
-});
+onMounted(() => {});
 </script>
 
 <style lang="scss" scoped>
@@ -65,9 +52,17 @@ onMounted(() => {
       a:hover {
         color: #717171;
       }
+
+      > .router-link-exact-active {
+        background-color: #e6e2de;
+      }
     }
 
     > a.active {
+      background-color: #e6e2de;
+    }
+
+    > .router-link-exact-active {
       background-color: #e6e2de;
     }
   }

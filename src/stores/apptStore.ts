@@ -240,7 +240,7 @@ export const useApptStore = defineStore("apptStore", () => {
     "18:30",
   ]);
   let bookingList: any = ref([]);
-  const memberList: any = reactive({ data: [] });
+  const memberList: any = ref([]);
   /**獲取會員資料 */
   const getMemberData = async () => {
     try {
@@ -251,7 +251,7 @@ export const useApptStore = defineStore("apptStore", () => {
       });
       const res = await apiGetMemberListRequest(dataRequest).then(
         (res: any) => {
-          memberList.data = res.data.data.table;
+          memberList.value = res.data.data.table;
           return res;
         }
       );

@@ -5,7 +5,7 @@
         <p>加入服務</p>
       </div>
       <div class="main-content">
-        <p>已選擇({{ formInputRef.courses.length }})項服務</p>
+        <p>已選擇({{ formInputRef.service.length }})項服務</p>
         <input v-model="formInputRef.search" />
         <div class="div-item">
           <div>
@@ -28,14 +28,22 @@
                 class="input-item"
                 type="checkbox"
                 :id="item.lessonId"
-                :value="item"
-                v-model="formInputRef.courses"
+                :value="item.lessonId"
+                v-model="formInputRef.service"
                 @click="clickItem"
               />
               <label :for="item.lessonId"></label>
-              <span value="{{item}}" name="{{item.nameTw}}">{{
-                item.nameTw + "(" + item.servicesTime + ")"
-              }}</span>
+              <div>
+                <span value="{{item}}" name="{{item.nameTw}}">{{
+                  item.nameTw
+                }}</span>
+                <span
+                  class="timer-msg"
+                  value="{{item}}"
+                  name="{{item.nameTw}}"
+                  >{{ item.servicesTime + " Min" }}</span
+                >
+              </div>
             </label>
             <!-- <input type="checkbox" name="item_001" value="1" />1 -->
           </div>
@@ -69,14 +77,23 @@ let clickGroupRef = ref(false);
 let formInputRef: any = ref({
   name: "",
   search: "",
-  courses: [],
+  service: [],
 });
-getCourseDetailApi();
-formInputRef.value.courses = props.selData;
+setUI();
+function setUI() {
+  getCourseDetailApi();
+  for (let i = 0; i < props.selData.length; i++) {
+    const element = props.selData[i];
+    // element.lid = element.lid ? element.lid : element.lessonId;
+    element.lessonId = element.lessonId ? element.lessonId : element.lid;
+    formInputRef.value.service.push(element.lessonId);
+  }
+}
 
 let filterCourseData: any = computed(() =>
   courseDataList.value.filter(getCourseFn)
 );
+
 function getCourseFn(data: any) {
   return (
     data.display &&
@@ -88,18 +105,18 @@ function getCourseFn(data: any) {
 }
 
 function clickGroup() {
-  let curCourse = formInputRef.value.courses;
+  let curCourse = formInputRef.value.service;
   if (curCourse.length > 0) {
-    formInputRef.value.courses = [];
+    formInputRef.value.service = [];
   } else {
     for (let i = 0; i < filterCourseData.value.length; i++) {
       const element = filterCourseData.value[i];
-      formInputRef.value.courses.push(element);
+      formInputRef.value.service.push(element);
     }
   }
 }
 watchEffect(() => {
-  clickGroupRef.value = formInputRef.value.courses.length > 0;
+  clickGroupRef.value = formInputRef.value.service.length > 0;
 });
 
 function clickItem() {
@@ -107,8 +124,18 @@ function clickItem() {
 }
 
 function submitBtn() {
-  // console.log(formInputRef.value.courses, "提交");
-  props.getDataFn(formInputRef.value.courses);
+  let curServiceData = [];
+  for (let i = 0; i < formInputRef.value.service.length; i++) {
+    const element = formInputRef.value.service[i];
+    for (let j = 0; j < filterCourseData.value.length; j++) {
+      const element2 = filterCourseData.value[j];
+      if (element2.pId == element) {
+        curServiceData.push(element2);
+        break;
+      }
+    }
+  }
+  props.getDataFn(curServiceData);
   props.showUIFn(false);
 }
 </script>
@@ -128,7 +155,8 @@ function submitBtn() {
   justify-content: space-around;
 
   .popup-content {
-    max-width: 360px;
+    width: 250px;
+    height: 450px;
     background-color: #e6e2de;
     padding: 15px 50px;
     font-size: 20px;
@@ -150,7 +178,7 @@ function submitBtn() {
       }
       .div-item {
         width: 100%;
-        max-height: 300px;
+        height: 250px;
         overflow-y: auto;
         > div {
           display: flex;
@@ -200,6 +228,13 @@ function submitBtn() {
 
             > span {
               margin-left: 10px;
+            }
+            > div {
+              display: grid;
+              margin-left: 10px;
+              .timer-msg {
+                font-size: 15px;
+              }
             }
           }
 

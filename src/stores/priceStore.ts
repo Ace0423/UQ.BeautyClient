@@ -93,8 +93,9 @@ export const useApptStore = defineStore("priceStore", () => {
       singleDiscountListRef.value = [];
       let res: any = await getSingleDiscountReq(id, page, count).then(
         (res: any) => {
-          if (res.data.data.table)
+          if (res.data.data.table) {
             singleDiscountListRef.value = res.data.data.table;
+          }
           return res;
         }
       );

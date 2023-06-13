@@ -403,8 +403,8 @@
     :selDate="selDate"
     :selLittleDateFn="selLittleDateFn"
   />
-  <Tui_calendar
-  ></Tui_calendar>
+  <!-- <Tui_calendar
+  ></Tui_calendar> -->
   <ApptInfoUI
     v-if="showApptInfoRef"
     :showUIHdr="updataShowApptInfoRef"

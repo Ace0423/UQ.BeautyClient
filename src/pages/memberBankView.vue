@@ -73,18 +73,11 @@ onMounted(() => {
 
 <template>
   <div class="container">
-    <Header
-      :Icon="Icon"
-      :moduleType="'儲值金'"
-      :memuState="props.memuState"
-      :handmemuStateBtn="props.handmemuStateBtn"
-    ></Header>
+    <Header :Icon="Icon" :moduleType="'儲值金'" :memuState="props.memuState" :handmemuStateBtn="props.handmemuStateBtn">
+    </Header>
     <div class="customer-tab">
       <div class="item-tab">
-        <button
-          :class="currentIndex == 0 ? 'active' : ''"
-          v-on:click="changeTab(0)"
-        >
+        <button :class="currentIndex == 0 ? 'active' : ''" v-on:click="changeTab(0)">
           所有顧客
         </button>
       </div>
@@ -122,16 +115,10 @@ onMounted(() => {
                 <p>{{ item.storedDate }}</p>
               </td>
               <td class="td-btn">
-                <button
-                  class="header-btn"
-                  v-on:click="handmemberBankInfoView(item)"
-                >
+                <button class="header-btn" v-on:click="handmemberBankInfoView(item)">
                   <img :src="InfoIcon" />
                 </button>
-                <button
-                  class="header-btn"
-                  v-on:click="handAddMemberBankView(item)"
-                >
+                <button class="header-btn" v-on:click="handAddMemberBankView(item)">
                   <img :src="AddIcon" />
                 </button>
               </td>
@@ -141,18 +128,10 @@ onMounted(() => {
       </div>
     </div>
   </div>
-  <AddMemberBank
-    v-if="addMemberBankView"
-    :addMemberBankItem="addMemberBankItem"
-    :handAddMemberBankView="handAddMemberBankView"
-    :memberBankInfo="memberBankInfo"
-  />
-  <MemberBankInfo
-    v-if="memberBankInfoView"
-    :memberBankInfoItem="memberBankInfoItem"
-    :handmemberBankInfoView="handmemberBankInfoView"
-    @handEditmemberBank="handEditmemberBank"
-  />
+  <AddMemberBank v-if="addMemberBankView" :addMemberBankItem="addMemberBankItem"
+    :handAddMemberBankView="handAddMemberBankView" :memberBankInfo="memberBankInfo" />
+  <MemberBankInfo v-if="memberBankInfoView" :memberBankInfoItem="memberBankInfoItem"
+    :handmemberBankInfoView="handmemberBankInfoView" @handEditmemberBank="handEditmemberBank" />
 </template>
 
 <style scoped lang="scss">
@@ -161,7 +140,7 @@ onMounted(() => {
   height: calc(var(--vh, 1vh) * 100);
   position: relative;
 
-  > .customer-tab {
+  >.customer-tab {
     position: absolute;
     top: 80px;
     bottom: 0px;
@@ -169,7 +148,7 @@ onMounted(() => {
     right: 0px;
     margin: 2px 40px;
 
-    > .item-tab {
+    >.item-tab {
       position: absolute;
       top: 0px;
       bottom: 0px;
@@ -177,7 +156,7 @@ onMounted(() => {
       right: 0px;
       display: flex;
 
-      > button {
+      >button {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -192,19 +171,19 @@ onMounted(() => {
         color: #717171;
       }
 
-      > button.active {
+      >button.active {
         background-color: #e6e2de;
       }
     }
 
-    > div {
+    >div {
       position: absolute;
       top: 45px;
       bottom: 10px;
       left: 0px;
       right: 0px;
 
-      > table {
+      >table {
         width: 100%;
         height: 100%;
         background-color: #faf9f8;
@@ -212,30 +191,30 @@ onMounted(() => {
         font-family: STXihei;
         color: #717171;
 
-        > .header-tab {
+        >.header-tab {
           display: block;
           height: 50px;
           color: #717171;
-          border: solid 1px #707070;
+          border: solid 0.5px #707070;
           background-color: #e6e2de;
           box-sizing: border-box;
 
-          > tr {
+          >tr {
             display: flex;
             align-items: center;
             height: 100%;
             justify-content: space-between;
             margin: 0 10px;
 
-            > th {
+            >th {
               width: 25%;
 
-              > p {
+              >p {
                 min-width: 78px;
                 text-align: left;
               }
 
-              > input {
+              >input {
                 // width: 134px;
                 width: auto;
                 height: 30px;
@@ -249,7 +228,7 @@ onMounted(() => {
           }
         }
 
-        > .content-tab {
+        >.content-tab {
           position: absolute;
           width: 100%;
           top: 52px;
@@ -259,27 +238,40 @@ onMounted(() => {
           flex-direction: column;
 
           tr {
-            display: flex;
             padding: 5px 0;
+            display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 2px #717171 solid;
-            > td {
+            position: relative;
+
+            &::after {
+              content: '';
+              display: block;
+              position: absolute;
+              bottom: 0;
+              width: 98%;
+              height: 1px;
+              background: #ddd;
+              left: 50%;
+              transform: translateX(-50%);
+            }
+
+            >td {
               display: flex;
               width: 25%;
 
-              > img {
+              >img {
                 padding: 0 10px;
               }
 
-              > button {
+              >button {
                 height: 100%;
                 background-color: transparent;
                 border: none;
                 padding: 0 0 0 0;
                 margin: 0 2px;
 
-                > img {
+                >img {
                   cursor: pointer;
                   width: 40px;
                   height: 40px;
@@ -287,8 +279,8 @@ onMounted(() => {
                 }
               }
 
-              > div {
-                > p {
+              >div {
+                >p {
                   cursor: pointer;
                   margin: 0 0;
                 }

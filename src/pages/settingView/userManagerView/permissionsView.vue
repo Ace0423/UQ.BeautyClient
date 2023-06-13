@@ -108,18 +108,13 @@ onMounted(() => {
         <table>
             <thead class="header-tab">
                 <tr>
-                    <!-- <th :style="{ '--width': width }">功能</th>
-                                                            <th :style="{ '--width': width }">權限描述</th>
-                                                            <th :style="{ '--width': width }" v-for="item in roleNameList" :key="item.roleId">{{ item.memo }} </th> -->
                     <th>功能</th>
                     <th>權限描述</th>
                     <th v-for="item in roleNameList" :key="item.roleId">{{ item.memo }} </th>
                 </tr>
             </thead>
             <tbody class="content-tab">
-                <tr class="permissionsList" v-for="items, index in permissionsList.data" :key="index">
-                    <!-- <td :style="{ '--width': width }" class="a">{{ items.controllerText }}</td>
-                                                        <td :style="{ '--width': width }" class="a"> -->
+                <tr class="permissionsList" v-for="items, index in permissionsList.data" :key="index">                  
                     <td :style="{ '--width': width }" class="a">{{ items.controllerText }}</td>
                     <td :style="{ '--width': width }" class="a">
                         <p v-for="item in items.optionRoleLists" :key="item.olId">{{ item.actionText }}</p>

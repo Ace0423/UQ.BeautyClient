@@ -82,24 +82,14 @@ onMounted(() => {
 
 <template>
   <div class="container">
-    <Header
-      :Icon="Icon"
-      :moduleType="'顧客管理'"
-      :memuState="props.memuState"
-      :handmemuStateBtn="props.handmemuStateBtn"
-    ></Header>
+    <Header :Icon="Icon" :moduleType="'顧客管理'" :memuState="props.memuState" :handmemuStateBtn="props.handmemuStateBtn">
+    </Header>
     <div class="customer-tab">
       <div class="item-tab">
-        <button
-          :class="currentIndex == 0 ? 'active' : ''"
-          v-on:click="changeTab(0)"
-        >
+        <button :class="currentIndex == 0 ? 'active' : ''" v-on:click="changeTab(0)">
           所有顧客
         </button>
-        <button
-          :class="currentIndex == 1 ? 'active' : ''"
-          v-on:click="changeTab(1)"
-        >
+        <button :class="currentIndex == 1 ? 'active' : ''" v-on:click="changeTab(1)">
           標籤設定
         </button>
       </div>
@@ -138,21 +128,14 @@ onMounted(() => {
                 </div>
               </td>
               <td>
-                <div
-                  class="group-frame"
-                  v-for="gItem in item.groupList"
-                  :key="gItem.groupId"
-                >
+                <div class="group-frame" v-for="gItem in item.groupList" :key="gItem.groupId">
                   {{ gItem.label }}
                 </div>
               </td>
               <td>{{ item.tradingTime }}</td>
               <td></td>
               <td class="td-btn">
-                <button
-                  class="header-btn"
-                  v-on:click="handMemberInfoView(item)"
-                >
+                <button class="header-btn" v-on:click="handMemberInfoView(item)">
                   <img :src="InfoIcon" />
                 </button>
               </td>
@@ -171,7 +154,9 @@ onMounted(() => {
               <th>
                 <p>顧客標籤(全部{{ filterGroupListData.length }}個)</p>
               </th>
-              <th><p>已加入顧客數量</p></th>
+              <th>
+                <p>已加入顧客數量</p>
+              </th>
               <th>
                 <input placeholder="🔍搜尋顧客標籤" v-model="keyWord" />
               </th>
@@ -205,27 +190,11 @@ onMounted(() => {
       </div>
     </div>
   </div>
-  <AddMember
-    v-if="addMemberView"
-    :hand-add-member-view="handAddMemberView"
-    :select-member-item="selectMemberItem"
-  />
-  <MemberInfo
-    v-if="memberInfoView"
-    :hand-member-info-view="handMemberInfoView"
-    :select-member-item="selectMemberItem"
-    :hand-add-member-view="handAddMemberView"
-  />
-  <AddGroup
-    v-if="addGroupView"
-    :hand-add-group-view="handAddGroupView"
-    :select-group-item="selectGroupItem"
-  />
-  <GroupInfo
-    v-if="groupInfoView"
-    :group-info-item="groupInfoItem"
-    :hand-group-info-view="handGroupInfoView"
-  />
+  <AddMember v-if="addMemberView" :hand-add-member-view="handAddMemberView" :select-member-item="selectMemberItem" />
+  <MemberInfo v-if="memberInfoView" :hand-member-info-view="handMemberInfoView" :select-member-item="selectMemberItem"
+    :hand-add-member-view="handAddMemberView" />
+  <AddGroup v-if="addGroupView" :hand-add-group-view="handAddGroupView" :select-group-item="selectGroupItem" />
+  <GroupInfo v-if="groupInfoView" :group-info-item="groupInfoItem" :hand-group-info-view="handGroupInfoView" />
 </template>
 
 <style scoped lang="scss">
@@ -234,7 +203,7 @@ onMounted(() => {
   height: calc(var(--vh, 1vh) * 100);
   position: relative;
 
-  > .customer-tab {
+  >.customer-tab {
     position: absolute;
     top: 80px;
     bottom: 0px;
@@ -242,7 +211,7 @@ onMounted(() => {
     right: 0px;
     margin: 2px 40px;
 
-    > .item-tab {
+    >.item-tab {
       position: absolute;
       top: 0px;
       bottom: 0px;
@@ -250,7 +219,7 @@ onMounted(() => {
       right: 0px;
       display: flex;
 
-      > button {
+      >button {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -265,26 +234,27 @@ onMounted(() => {
         color: #717171;
       }
 
-      > button.active {
+      >button.active {
         background-color: #e6e2de;
       }
     }
 
-    > div {
+    >div {
       position: absolute;
       top: 45px;
       bottom: 10px;
       left: 0px;
       right: 0px;
 
-      > table {
+      >table {
         width: 100%;
         height: 100%;
         background-color: #faf9f8;
         border: solid 0.5px #ddd;
         font-family: STXihei;
         color: #717171;
-        > .header-tab {
+
+        >.header-tab {
           display: block;
           height: 50px;
           color: #717171;
@@ -292,22 +262,22 @@ onMounted(() => {
           background-color: #e6e2de;
           box-sizing: border-box;
 
-          > tr {
+          >tr {
             display: flex;
             align-items: center;
             height: 100%;
             justify-content: space-between;
             // margin: 0 10px;
 
-            > th {
+            >th {
               width: 25%;
 
-              > p {
+              >p {
                 min-width: 108px;
                 text-align: left;
               }
 
-              > input {
+              >input {
                 width: auto;
                 height: 30px;
                 border-radius: 6px;
@@ -316,7 +286,8 @@ onMounted(() => {
                 margin-right: 10px;
                 text-align: center;
               }
-              > button {
+
+              >button {
                 border-radius: 6px;
                 height: 30px;
                 min-width: 78px;
@@ -324,14 +295,15 @@ onMounted(() => {
                 background-color: #84715c;
                 color: #fff;
               }
-              > .nameview {
+
+              >.nameview {
                 padding-left: 10px;
               }
             }
           }
         }
 
-        > .content-tab {
+        >.content-tab {
           position: absolute;
           width: 100%;
           top: 52px;
@@ -341,29 +313,44 @@ onMounted(() => {
           flex-direction: column;
 
           tr {
-            display: flex;
             padding: 5px 0;
+            display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 2px #717171 solid;
-            > td {
+            position: relative;
+
+            &::after {
+              content: '';
+              display: block;
+              position: absolute;
+              bottom: 0;
+              width: 98%;
+              height: 1px;
+              background: #ddd;
+              left: 50%;
+              transform: translateX(-50%);
+            }
+
+            >td {
               display: flex;
               width: 25%;
-              > p {
+
+              >p {
                 padding: 0 5px 0 5px;
               }
-              > img {
+
+              >img {
                 padding: 0 10px;
               }
 
-              > button {
+              >button {
                 height: 100%;
                 background-color: transparent;
                 border: none;
                 padding: 0 0 0 0;
                 margin: 0 2px;
 
-                > img {
+                >img {
                   cursor: pointer;
                   width: 40px;
                   height: 40px;
@@ -371,13 +358,14 @@ onMounted(() => {
                 }
               }
 
-              > div {
-                > p {
+              >div {
+                >p {
                   cursor: pointer;
                   margin: 0 0;
                 }
               }
-              > .roup-frame {
+
+              >.roup-frame {
                 background-color: #84715c;
               }
             }

@@ -179,7 +179,7 @@ td {
 .submitBtn {
     position: absolute;
     right: 0px;
-    bottom: 10px;
+    bottom: 0px;
     height: 50px;
     width: 100%;
     display: flex;

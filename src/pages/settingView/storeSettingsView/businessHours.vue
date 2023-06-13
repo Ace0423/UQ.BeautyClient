@@ -1,6 +1,15 @@
 
 <script setup lang="ts">
-
+import { useCounterStore } from "@/stores/counter";
+import { useCompanyStore } from "@/stores/company";
+import { storeToRefs } from "pinia";
+import Alert from "@/components/alertCmpt";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
+const companyStore = useCompanyStore();
+const { getBusinessHoursList } = companyStore;
+const { businessHoursList } = storeToRefs(companyStore);
 let weeks = ["週日", "週一", "週二", "週三", "週四", "週五", "週六", "休息時間"];
 const testdata = reactive([
     {
@@ -129,11 +138,27 @@ const handAaddRestTime = (data: any) => {
         dayOff: "",
     }
     data.restTime.push(restVal);
-    console.log(data.restTime);
 }
 const handDelRestTime = (data: any, index: any) => {
     data.restTime.splice(index, 1);
 }
+const getBusinessHours = () => {
+    getBusinessHoursList()
+        .then(() => {
+
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        })
+}
+onMounted(() => {
+    getBusinessHours();
+})
 </script>
 <template>
     <div class="hours-content">
@@ -150,7 +175,7 @@ const handDelRestTime = (data: any, index: any) => {
             </div>
             <table>
                 <tbody>
-                    <div class="time-tab" v-for="item in testdata" :key="item.week">
+                    <div class="time-tab" v-for="item in businessHoursList.data.timeTableList" :key="item.week">
                         <tr>
                             <td>
                                 <div>
@@ -338,7 +363,6 @@ const handDelRestTime = (data: any, index: any) => {
                         }
                     }
                 }
-
             }
         }
     }

@@ -61,3 +61,13 @@ export const getWorkingHoursRequest = (data: any) => {
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return managerRequest.get("/manager/WorkingHours", { params: data });
 }
+export const getWorkingDefaultRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.get("/manager/WorkingDefault", { params: data });
+}
+export const getBusinessHoursRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.get("/manager/RestTime", { params: data });
+}

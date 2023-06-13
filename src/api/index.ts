@@ -1,8 +1,9 @@
 import { postLoginRequest, getUserNameRequest } from "./authRequest";
 import { getMemberListRequest, postMemberDataRequest, postUpdateMemberDataRequest, getGroupDataRequest, putGroupDataRequest, postGroupDataRequest, getGroupInfoRequest, postGroupInfoRequest, deleteGroupInfoRequest, } from "./memberRequest";
 import { getMemberBankListRequest, postMemberBankRequest, getMemberBankInfoListRequest, getMemberBankDetailRequest, putMemberBankInfoRequest } from "./memberBankRequest";
-import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest,getWorkingHoursRequest } from "./managerRequest";
+import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest, getWorkingHoursRequest,getWorkingDefaultRequest } from "./managerRequest";
 import { getPermissionsListRequest, putOptionRoleRequest } from "./settingRequest";
+import { getBusinessHoursRequest } from "./companyRequest";
 
 export const apiPostLoginRequest = postLoginRequest;
 export const apiGetUserNameRequest = getUserNameRequest;
@@ -35,7 +36,10 @@ export const apiGetRoleListRequest = getRoleListRequest;
 export const apiPostRoleDataRequest = postRoleDataRequest;
 export const apiPutRoleDataRequest = putRoleDataRequest;
 export const apiGetWorkingHoursRequest = getWorkingHoursRequest;
+export const apiGetWorkingDefaultRequest = getWorkingDefaultRequest;
 
 export const apiGetRoleInfoRequest = getRoleInfoRequest;
 export const apiPostRoleManagerDataRequest = postRoleManagerDataRequest;
 export const apiDeleteRoleManagerRequest = deleteRoleManagerRequest;
+
+export const apiGetBusinessHoursRequest = getBusinessHoursRequest;

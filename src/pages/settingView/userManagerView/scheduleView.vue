@@ -6,7 +6,7 @@ import { useManagerStore } from "@/stores/manager";
 const managerStore = useManagerStore();
 const { getWorkingHoursList } = managerStore;
 const { workingHoursList } = storeToRefs(managerStore);
-const width = ref(100 / 8 + "%");
+const quicklyScheduleView = ref(false);
 let weeks = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
 const currentSundayTime = ref();
 const currentSaturdayTime = ref();
@@ -79,17 +79,20 @@ const WorkingHoursList = (data: any) => {
             }
         })
 }
-const timeDifference = computed((onTime: any, offTime: any) => {
-    return ''
+const timeDifference = ((data: any) => {
+    return data.times / 60;
 })
 const scheduleList = computed(() => {
     for (let index = 0; index < workingHoursList.value.data.length; index++) {
         let onDay = new Date(workingHoursList.value.data[index].data + workingHoursList.value.data[index].dayOn);
-        console.log(workingHoursList.value.data[index]);
+        // console.log(workingHoursList.value.data[index]);
     }
     const filter = workingHoursList.value.data;
     return filter;
 })
+const handQuicklyscheduleView = () => {
+    quicklyScheduleView.value = !quicklyScheduleView.value;
+};
 onMounted(() => {
     currentSundayTime.value = format.value(sunday.value);
     currentSaturdayTime.value = format.value(saturday.value);
@@ -115,7 +118,7 @@ onMounted(() => {
             <button @click="handNextWeek()">
                 >
             </button>
-            <button class="header-btn">
+            <button class="header-btn" @click="handQuicklyscheduleView">
                 快速排班
             </button>
         </div>
@@ -135,14 +138,13 @@ onMounted(() => {
                         <div>
                             <p>{{ item.nameView }}</p>
                         </div>
-
                     </td>
                     <td class="time-td" v-for="i, index in item.workinglists" :key="index">
                         <div class="off-day" v-if="!i.dayOn">
                             <p>+</p>
                         </div>
                         <div class="on-day" v-if="i.dayOn">
-                            <p>{{ timeDifference }} </p>
+                            <p>{{ timeDifference(i) }}時 </p>
                             <p>{{ i.dayOn }}~{{ i.dayOff }}</p>
                         </div>
                     </td>
@@ -150,6 +152,7 @@ onMounted(() => {
             </tbody>
         </table>
     </div>
+    <QuicklySchedule v-if="quicklyScheduleView" :hand-quicklyschedule-view="handQuicklyscheduleView"></Quicklyschedule>
 </template>
 
 <style lang="scss" scoped>
@@ -302,9 +305,10 @@ onMounted(() => {
                         bottom: 0px;
                         left: 0px;
                         right: 0px;
-                        // display: flex;
-                        // justify-content: center;
-                        // align-items: center;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
                         // margin-top: 50%;
                         // transform: translateY(-50%);
 

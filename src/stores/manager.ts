@@ -1,10 +1,12 @@
 import { defineStore } from "pinia";
-import { apiGetAdminListRequest, apiPostAdminDataRequest, apiPutAdminDataRequest, apiGetRoleListRequest, apiPostRoleDataRequest, apiPutRoleDataRequest, apiGetRoleInfoRequest, apiDeleteRoleManagerRequest, apiPostRoleManagerDataRequest, apiGetWorkingHoursRequest } from "@/api/index";
+import { apiGetAdminListRequest, apiPostAdminDataRequest, apiPutAdminDataRequest, apiGetRoleListRequest, apiPostRoleDataRequest, apiPutRoleDataRequest, apiGetRoleInfoRequest, apiDeleteRoleManagerRequest, apiPostRoleManagerDataRequest, apiGetWorkingHoursRequest, apiGetWorkingDefaultRequest } from "@/api/index";
 export const useManagerStore = defineStore("manager", () => {
     const managerList: any = reactive({ data: [] });
     const roleList: any = reactive({ data: [] });
     const roleInfoList: any = reactive({ data: [] });
     const workingHoursList: any = reactive({ data: [] });
+  
+
     const getManagerList = async (data: any) => {
         try {
             const res = await apiGetAdminListRequest(data);
@@ -120,12 +122,24 @@ export const useManagerStore = defineStore("manager", () => {
             console.log(error);
         }
     };
+
     const getWorkingHoursList = async (data: any) => {
         try {
             const res = await apiGetWorkingHoursRequest(data);
             if (res.data.data.table) {
                 workingHoursList.data = res.data.data.table;
             }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    const getWorkingDefault = async (data: any) => {
+        try {
+            const res = await apiGetWorkingDefaultRequest(data);
+            // if (res.data.data.table) {
+            //     workingDefaultList.data = res.data.data.table;
+            // }
+            return res.data
         } catch (error) {
             console.log(error);
         }
@@ -144,6 +158,8 @@ export const useManagerStore = defineStore("manager", () => {
         addRoleManagerData,
         deleteRoleManagerData,
         getWorkingHoursList,
-        workingHoursList
+        workingHoursList,
+        getWorkingDefault
+
     }
 })

@@ -9,6 +9,12 @@ import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import i18n from "./i18n/i18n";
 
+// import $ form 'jquery';
+
+// import('jquery').then(res => {
+//   window.$ = res
+// })
+
 const routes = setupLayouts(generatedRoutes);
 const router = createRouter({
   history: createWebHistory(),

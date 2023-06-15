@@ -1,6 +1,37 @@
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+import Alert from "@/components/alertCmpt";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
+import { useCounterStore } from "@/stores/counter";
+import { useCompanyStore } from "@/stores/company";
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
+const companyStore = useCompanyStore();
+const { getCheckOutTypeList } = companyStore;
+
 const keyWord = ref("");
+
+
+const checkOutType = () => {
+    getCheckOutTypeList()
+        .then((res) => {
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        })
+}
+onMounted(() => {
+    checkOutType();
+})
 </script>
 <template>
     <div>
@@ -113,6 +144,7 @@ div {
                     >p {
                         min-width: 108px;
                         text-align: left;
+                        margin: 0 15px;
                     }
 
                     >.nameview {
@@ -151,6 +183,12 @@ div {
                 >td {
                     display: flex;
                     width: calc(100%/4);
+
+                    >p {
+                        min-width: 108px;
+                        text-align: left;
+                        margin-left: 15px;
+                    }
 
                     >button {
                         height: 100%;

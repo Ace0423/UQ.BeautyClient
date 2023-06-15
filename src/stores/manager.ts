@@ -1,18 +1,23 @@
 import { defineStore } from "pinia";
-import { apiGetAdminListRequest, apiPostAdminDataRequest, apiPutAdminDataRequest, apiGetRoleListRequest, apiPostRoleDataRequest, apiPutRoleDataRequest, apiGetRoleInfoRequest, apiDeleteRoleManagerRequest, apiPostRoleManagerDataRequest, apiGetWorkingHoursRequest, apiGetWorkingDefaultRequest } from "@/api/index";
+import { apiGetAdminListRequest, apiPostAdminDataRequest, apiPutAdminDataRequest, apiGetRoleListRequest, apiPostRoleDataRequest, apiPutRoleDataRequest, apiGetRoleInfoRequest, apiDeleteRoleManagerRequest, apiPostRoleManagerDataRequest, apiGetWorkingHoursRequest, apiPostWorkingHoursRequest, apiGetWorkingDefaultRequest, apiPostWorkingDefaultRequest, apiPutWorkingDefaultRequest } from "@/api/index";
 export const useManagerStore = defineStore("manager", () => {
     const managerList: any = reactive({ data: [] });
     const roleList: any = reactive({ data: [] });
     const roleInfoList: any = reactive({ data: [] });
     const workingHoursList: any = reactive({ data: [] });
-  
+
 
     const getManagerList = async (data: any) => {
         try {
             const res = await apiGetAdminListRequest(data);
-            managerList.data = res.data.data.table;
+            if (res.data.state == 1) {
+                managerList.data = res.data.data.table;
+            }
+            return res.data;
+
         } catch (error) {
             console.log(error);
+            return Promise.reject(error);
         }
     };
 
@@ -25,6 +30,7 @@ export const useManagerStore = defineStore("manager", () => {
             return res.data;
         } catch (error) {
             console.log(error);
+            return Promise.reject(error);
         }
     };
     const editManagerData = async (data: any) => {
@@ -34,6 +40,7 @@ export const useManagerStore = defineStore("manager", () => {
             return res.data;
         } catch (error) {
             console.log(error);
+            return Promise.reject(error);
         }
     };
     const updataManagerList = (data: any) => {
@@ -49,6 +56,7 @@ export const useManagerStore = defineStore("manager", () => {
                     item.userLock = data.userLock;
                     item.lineUserID = data.lineUserID;
                     item.googleUserID = data.googleUserID;
+                    item.roleList = data.roleList;
                 }
             })
         } else {
@@ -123,12 +131,28 @@ export const useManagerStore = defineStore("manager", () => {
         }
     };
 
-    const getWorkingHoursList = async (data: any) => {
+    const getWorkingHours = async (data: any) => {
         try {
             const res = await apiGetWorkingHoursRequest(data);
             if (res.data.data.table) {
                 workingHoursList.data = res.data.data.table;
             }
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const postWorkingHours = async (data: any) => {
+        try {
+            // if (data.mwNo == "") {
+            //     const res = await apiPostWorkingDefaultRequest(data);
+            //     return res.data
+            // } else {
+            //     const res = await apiPutWorkingDefaultRequest(data);
+            //     return res.data
+            // }
+            const res = await apiPostWorkingHoursRequest(data);
+            return res.data
         } catch (error) {
             console.log(error);
         }
@@ -140,6 +164,21 @@ export const useManagerStore = defineStore("manager", () => {
             //     workingDefaultList.data = res.data.data.table;
             // }
             return res.data
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const submitWorkingDefault = async (data: any) => {
+        try {
+            if (data.timeTableList[0].workingHoursId == 0) {
+                const res = await apiPostWorkingDefaultRequest(data);
+                return res.data
+            } else {
+                const res = await apiPutWorkingDefaultRequest(data);
+                return res.data
+            }
+
         } catch (error) {
             console.log(error);
         }
@@ -157,9 +196,12 @@ export const useManagerStore = defineStore("manager", () => {
         getRoleInfoData,
         addRoleManagerData,
         deleteRoleManagerData,
-        getWorkingHoursList,
+        getWorkingHours,
         workingHoursList,
-        getWorkingDefault
+        postWorkingHours,
+        getWorkingDefault,
+        submitWorkingDefault,
+
 
     }
 })

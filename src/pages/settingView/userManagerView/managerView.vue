@@ -2,8 +2,13 @@
 <script setup lang="ts">
 import Icon from "@/assets/Icon zocial-guest.svg";
 import editIcon from "@/assets/Icon awesome-edit.svg";
-import { useManagerStore } from "@/stores/manager";
 import { storeToRefs } from "pinia";
+import Alert from "@/components/alertCmpt";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
+import { useManagerStore } from "@/stores/manager";
+import { useCounterStore } from "@/stores/counter";
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
 const managerstore = useManagerStore();
 const { managerList } = storeToRefs(managerstore);
 const { getManagerList } = managerstore;
@@ -41,7 +46,20 @@ onMounted(() => {
         pageindex: 0,
         count: 0,
     };
-    getManagerList(allManager);
+    getManagerList(allManager)
+        .then((res) => {
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        });
 })
 </script>
 <template>
@@ -188,6 +206,7 @@ div {
                 align-items: center;
                 justify-content: space-between;
                 position: relative;
+
                 &::after {
                     content: '';
                     display: block;
@@ -199,6 +218,7 @@ div {
                     left: 50%;
                     transform: translateX(-50%);
                 }
+
                 >td {
                     display: flex;
                     width: calc(100%/4);

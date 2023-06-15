@@ -11,3 +11,8 @@ export const getBusinessHoursRequest = (data: any) => {
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return managerRequest.get("/Company/TimeTables", { params: data });
 }
+export const getCheckOutTypeRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.get("/Company/CheckOutType", { params: data });
+}

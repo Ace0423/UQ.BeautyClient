@@ -6,13 +6,38 @@ const managerRequest = axios.create({
 
 });
 
-export const getBusinessHoursRequest = (data: any) => {
+export const getTimeTablesRequest = (data: any) => {
     let token: any = getToken('token');
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return managerRequest.get("/Company/TimeTables", { params: data });
+}
+export const postTimeTablesRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.post("/Company/TimeTables?cId=" + data.cId, data.timeTableList);
 }
 export const getCheckOutTypeRequest = (data: any) => {
     let token: any = getToken('token');
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return managerRequest.get("/Company/CheckOutType", { params: data });
+}
+export const getCompanyInfoRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.get("/Company/CompanyInfo", { params: data });
+}
+export const putCompanyInfoRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.put("/Company/CompanyInfo?cId=" + data.cId, data);
+}
+export const postCheckOutTypeRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.post("/Company/CheckOutType", data);
+}
+export const putCheckOutTypeRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.put("/Company/CheckOutType?cotid=" + data.cotId, data);
 }

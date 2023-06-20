@@ -1,9 +1,9 @@
 import { postLoginRequest, getUserNameRequest } from "./authRequest";
 import { getMemberListRequest, postMemberDataRequest, postUpdateMemberDataRequest, getGroupDataRequest, putGroupDataRequest, postGroupDataRequest, getGroupInfoRequest, postGroupInfoRequest, deleteGroupInfoRequest, } from "./memberRequest";
 import { getMemberBankListRequest, postMemberBankRequest, getMemberBankInfoListRequest, getMemberBankDetailRequest, putMemberBankInfoRequest } from "./memberBankRequest";
-import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest, getWorkingHoursRequest,postWorkingHoursRequest, getWorkingDefaultRequest, postWorkingDefaultRequest, putWorkingDefaultRequest } from "./managerRequest";
+import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest, getWorkingHoursRequest, postWorkingHoursRequest, getWorkingDefaultRequest, postWorkingDefaultRequest, putWorkingDefaultRequest } from "./managerRequest";
 import { getPermissionsListRequest, putOptionRoleRequest } from "./settingRequest";
-import { getBusinessHoursRequest, getCheckOutTypeRequest } from "./companyRequest";
+import { getTimeTablesRequest,postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest,getCompanyInfoRequest,putCompanyInfoRequest } from "./companyRequest";
 
 export const apiPostLoginRequest = postLoginRequest;
 export const apiGetUserNameRequest = getUserNameRequest;
@@ -45,5 +45,11 @@ export const apiGetRoleInfoRequest = getRoleInfoRequest;
 export const apiPostRoleManagerDataRequest = postRoleManagerDataRequest;
 export const apiDeleteRoleManagerRequest = deleteRoleManagerRequest;
 
-export const apiGetBusinessHoursRequest = getBusinessHoursRequest;
+export const apiGetTimeTablesRequest = getTimeTablesRequest;
+export const apiPostTimeTablesRequest = postTimeTablesRequest;
+export const apiGetCompanyInfoRequest = getCompanyInfoRequest;
+export const apiPutCompanyInfoRequest = putCompanyInfoRequest;
+
 export const apiGetCheckOutTypeRequest = getCheckOutTypeRequest;
+export const apiPostCheckOutTypeRequest = postCheckOutTypeRequest;
+export const apiPutCheckOutTypeRequest = putCheckOutTypeRequest;

@@ -7,145 +7,50 @@ import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
+const { userInfo } = storeToRefs(counterStore);
 const companyStore = useCompanyStore();
-const { getBusinessHoursList } = companyStore;
+
+const { getTimeTablesRequest, postTimeTablesRequest } = companyStore;
 const { businessHoursList } = storeToRefs(companyStore);
 let weeks = ["週日", "週一", "週二", "週三", "週四", "週五", "週六", "休息時間"];
-const testdata = reactive([
-    {
-        "mwNo": "MW-230605000005",
-        "date": "2023-06-9",
-        "week": 0,
-        "dayOn": "09:00",
-        "dayOff": "18:00",
-        "restTime": [
-            {
-                "mwrNo": "MWR-230605000005",
-                "dayOn": "12:00",
-                "dayOff": "13:00"
-            }
-        ]
-    },
-    {
-        "mwNo": "MW-230605000001",
-        "date": "2023-06-05",
-        "week": 1,
-        "dayOn": "",
-        "dayOff": "18:00",
-        "restTime": [
-            {
-                "mwrNo": "MWR-230605000001",
-                "dayOn": "12:00",
-                "dayOff": "13:00"
-            }
-        ]
-    },
-    {
-        "mwNo": "MW-230605000002",
-        "date": "2023-06-6",
-        "week": 2,
-        "dayOn": "09:00",
-        "dayOff": "18:00",
-        "restTime": [
-            {
-                "mwrNo": "MWR-230605000002",
-                "dayOn": "12:00",
-                "dayOff": "13:00"
-            }
-        ]
-    },
-    {
-        "mwNo": "MW-230605000003",
-        "date": "2023-06-7",
-        "week": 3,
-        "dayOn": "09:00",
-        "dayOff": "18:00",
-        "restTime": [
-            {
-                "mwrNo": "MWR-230605000003",
-                "dayOn": "12:00",
-                "dayOff": "13:00"
-            }
-        ]
-    },
-    {
-        "mwNo": "MW-230605000004",
-        "date": "2023-06-8",
-        "week": 4,
-        "dayOn": "09:00",
-        "dayOff": "18:00",
-        "restTime": [
-            {
-                "mwrNo": "MWR-230605000004",
-                "dayOn": "12:00",
-                "dayOff": "13:00"
-            }
-        ]
-    },
-    {
-        "mwNo": "MW-230605000005",
-        "date": "2023-06-9",
-        "week": 5,
-        "dayOn": "09:00",
-        "dayOff": "18:00",
-        "restTime": [
-            {
-                "mwrNo": "MWR-230605000005",
-                "dayOn": "12:00",
-                "dayOff": "13:00"
-            }
-        ]
-    },
-    {
-        "mwNo": "MW-230605000005",
-        "date": "2023-06-9",
-        "week": 6,
-        "dayOn": "09:00",
-        "dayOff": "18:00",
-        "restTime": [
-            {
-                "mwrNo": "MWR-230605000005",
-                "dayOn": "12:00",
-                "dayOff": "13:00"
-            }
-        ]
-    }
-
-])
+const businessHoursData: any = reactive({ data: [] });
 const handCheckBox = (item: any) => {
     if (item.dayOn == "") {
         item.dayOn = "09:00";
     } else {
         item.dayOn = "";
     }
-    console.log(item)
 }
 const businessHours = computed(() => {
-    let filter = testdata.filter(() => {
-
-    })
+    businessHoursData.data = businessHoursList.value.data;
+    return businessHoursData.data
 })
-const filterRestTime = ((data: any) => {
-    let filter = data.dayOn == "" ? [] : data.restTime;
+const filterRestList = ((data: any) => {
+    let filter = data.dayOn == "" ? [] : data.restList;
     return filter;
 })
 
 const handAaddRestTime = (data: any) => {
-    console.log(data);
+    console.log(data)
     let restVal = {
-        mwrNo: data.mwNo,
+        mwrNo: data.mwNo == undefined ? 0 : data.mwrNo,
         dayOn: "",
         dayOff: "",
     }
-    data.restTime.push(restVal);
+    data.restList.push(restVal);
 }
 const handDelRestTime = (data: any, index: any) => {
-    data.restTime.splice(index, 1);
+    data.restList.splice(index, 1);
 }
 const getBusinessHours = () => {
-    getBusinessHoursList()
-        .then(() => {
-
+    let data = {
+        cId: userInfo.value.company
+    }
+    getTimeTablesRequest(data)
+        .then((res) => {
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
         })
         .catch((e: any) => {
             Alert.warning(showHttpsStatus(e.response.status), 2000);
@@ -159,6 +64,22 @@ const getBusinessHours = () => {
 onMounted(() => {
     getBusinessHours();
 })
+const handSubmit = () => {
+    postTimeTablesRequest(businessHoursData.data)
+        .then((res) => {
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        })
+};
 </script>
 <template>
     <div class="hours-content">
@@ -175,7 +96,7 @@ onMounted(() => {
             </div>
             <table>
                 <tbody>
-                    <div class="time-tab" v-for="item in businessHoursList.data.timeTableList" :key="item.week">
+                    <div class="time-tab" v-for="item in  businessHours.timeTableList" :key="item.week">
                         <tr>
                             <td>
                                 <div>
@@ -185,27 +106,27 @@ onMounted(() => {
                                 </div>
                             </td>
                             <td class="td-bg" v-if="item.dayOn.length > 0">
-                                <input type="time" :value="item.dayOn">
+                                <input type="time" v-model="item.dayOn">
                             </td>
                             <td class="td-bg" v-if="item.dayOn.length > 0">
-                                <input type="time" :value="item.dayOff">
+                                <input type="time" v-model="item.dayOff">
                             </td>
                             <td class="td-bg" v-if="item.dayOn.length > 0">
                                 <button @click="handAaddRestTime(item)">加入休息時間</button>
                             </td>
                             <td class="td-bg-rest" v-if="item.dayOn.length == 0">店休</td>
                         </tr>
-                        <tr v-for="i, index in filterRestTime(item)" :key="index">
+                        <tr v-for="i, index in filterRestList(item)" :key="index">
                             <td>
                                 <div>
                                     <span>休息時間</span>
                                 </div>
                             </td>
                             <td class="td-bg">
-                                <input type="time" :value="i.dayOn">
+                                <input type="time" v-model="i.dayOn">
                             </td>
                             <td class="td-bg">
-                                <input type="time" :value="i.dayOff">
+                                <input type="time" v-model="i.dayOff">
                             </td>
                             <td class="td-bg">
                                 <button @click="handDelRestTime(item, index)">X</button>
@@ -219,7 +140,7 @@ onMounted(() => {
     </div>
     <div class="submitBtn">
         <button>取消變更</button>
-        <button>確認儲存</button>
+        <button v-on:click="handSubmit()">確認儲存</button>
     </div>
 </template>
 

@@ -27,6 +27,7 @@ export const useCounterStore = defineStore("counter", () => {
         userInfo.phone = res.data.data.userData.phone;
         userInfo.roleMgrMappings = res.data.data.userData.roleMgrMappings;
         userInfo.email = res.data.data.userData.email;
+        userInfo.company = res.data.data.userData.company;
         setIsLogin(true);
       }
       return res.data;
@@ -48,6 +49,7 @@ export const useCounterStore = defineStore("counter", () => {
     userInfo.phone = userData.phone;
     userInfo.roleMgrMappings = userData.roleMgrMappings;
     userInfo.email = userData.email;
+    userInfo.company = userData.company;
   };
 
   const setIsLogin = (bool: boolean) => {

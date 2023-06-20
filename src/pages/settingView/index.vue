@@ -9,7 +9,7 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
         <div class="nav">
           <h1>我的商店</h1>
           <div class="nav-content">
-            <router-link to="/settingView/storeSettingsView/storeInformation">
+            <router-link to="/settingView/storeSettingsView/storeInformationView">
               <div>
                 <h1>商店設定</h1>
                 <p>管理商店資訊、營業時間與顧客付款方式</p>
@@ -45,7 +45,7 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
             </router-link>
           </div>
           <div class="nav-content">
-            <router-link to="">
+            <router-link to="/settingView/messageManagerView">
               <div>
                 <h1>訊息管理</h1>
                 <p>管理與新增商店的訊息發送相關設定</p>

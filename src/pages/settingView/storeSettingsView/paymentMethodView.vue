@@ -8,13 +8,16 @@ import { useCompanyStore } from "@/stores/company";
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
 const companyStore = useCompanyStore();
-const { getCheckOutTypeList } = companyStore;
-
+const { getCheckOutType } = companyStore;
+const { checkOutTypeList } = storeToRefs(companyStore);
 const keyWord = ref("");
-
-
+const addPayMethodView = ref(false);
+const selectPayMethodItem = ref();
+const handAddManagerView = () => {
+    addPayMethodView.value = !addPayMethodView.value;
+};
 const checkOutType = () => {
-    getCheckOutTypeList()
+    getCheckOutType()
         .then((res) => {
             if (res.state == 2) {
                 Alert.warning(showErrorMsg(res.msg), 2000);
@@ -29,6 +32,20 @@ const checkOutType = () => {
             }
         })
 }
+const selectItem = (data: any) => {
+    selectPayMethodItem.value = data;
+    handAddManagerView();
+}
+const filterCheckOutTypeListData = computed(() => {
+    const filter = checkOutTypeList.value.data.filter(getCheckOutTypeListFn);
+    return filter;
+});
+const getCheckOutTypeListFn = (data: any) => {
+    return (
+        !keyWord.value ||
+        data.cotTitle.toLowerCase().includes(keyWord.value.toLowerCase())
+    );
+};
 onMounted(() => {
     checkOutType();
 })
@@ -37,7 +54,7 @@ onMounted(() => {
     <div>
         <div class="function-area">
             <input placeholder="🔍搜尋付款名稱" v-model="keyWord" />
-            <button class="header-btn">
+            <button class="header-btn" @click="selectItem('')">
                 新增收款方式
             </button>
         </div>
@@ -45,7 +62,7 @@ onMounted(() => {
             <thead class="header-tab">
                 <tr>
                     <th>
-                        <p>付款方式(所有 {{ 0 }} 種付款)</p>
+                        <p>付款方式(所有 {{ filterCheckOutTypeListData.length }} 種付款)</p>
                     </th>
                     <th>
                         <p>狀態</p>
@@ -53,25 +70,20 @@ onMounted(() => {
                 </tr>
             </thead>
             <tbody class="content-tab">
-                <tr>
+                <tr v-for="item in filterCheckOutTypeListData" :key="item.cotId" @click="selectItem(item)">
                     <td class="content-name">
-                        <p>現金收款</p>
+                        <p>{{ item.cotTitle }}</p>
                     </td>
                     <td>
-                        <p>{{ }}</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="content-name">
-                        <p>手輸現金</p>
-                    </td>
-                    <td>
-                        <p>{{ }}</p>
+                        <p v-if="!item.enabled">未啟用 ></p>
+                        <p v-if="item.enabled">已啟用 ></p>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
+    <AddPayMethod v-if="addPayMethodView" :hand-add-manager-view="handAddManagerView"
+        :select-pay-method-item="selectPayMethodItem"></AddpayMethod>
 </template>
 
 <style lang="scss" scoped>

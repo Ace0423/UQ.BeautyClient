@@ -217,10 +217,10 @@ onMounted(() => {
                   </div>
                 </td>
                 <td class="td-bg">
-                  <input type="time" :value="j.dayOn">
+                  <input type="time" v-model="j.dayOn">
                 </td>
                 <td class="td-bg">
-                  <input type="time" :value="j.dayOff">
+                  <input type="time" v-model="j.dayOff">
                 </td>
                 <td class="td-bg">
                   <button @click="handDelRestTime(i, index)">X</button>

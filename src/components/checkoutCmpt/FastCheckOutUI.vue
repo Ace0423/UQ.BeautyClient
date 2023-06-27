@@ -7,13 +7,17 @@
       </div>
       <div class="main-content">
         <div class="left-main">
-          <p>結帳項目</p>
+          <div>
+            <span>結帳項目</span>
+          </div>
+          <div class="link-bottom"></div>
           <div class="item-add"></div>
-          <div class="bill-add">
+          <div class="bill-add" v-on:click="showItemMenuUIFn(true)">
             <span
-              >&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;結帳項目</span
+              >&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新增結帳項目</span
             >
           </div>
+          <div class="link-bottom"></div>
           <div class="msg-add">
             <el-input
               v-model="formInputRef.memo"
@@ -23,11 +27,21 @@
               type="text"
             />
           </div>
+          <div class="link-bottom"></div>
           <div class="other-add">
-            <span>全單折扣</span>
-            <span>優惠券</span>
-            <span>儲值卡</span>
-            <span>計次券</span>
+            <span>其他項目</span>
+            <div>
+              <span>全單折扣</span>
+            </div>
+            <div>
+              <span>優惠券</span>
+            </div>
+            <div>
+              <span>儲值卡</span>
+            </div>
+            <div>
+              <span>計次券</span>
+            </div>
           </div>
         </div>
         <div class="right-main">
@@ -48,6 +62,7 @@
             >
             <span v-on:click="countCoustomerFn(+1)">+</span>
           </div>
+          <div class="link-bottom"></div>
           <div class="customer-msg">
             <div>
               <span>總計</span>
@@ -55,7 +70,7 @@
             </div>
           </div>
           <div class="customer-submit">
-            <button class="other-btn">其他收款方式</button>
+            <button class="otherpay-btn">其他收款方式</button>
             <button class="cash-btn" @click="submitBtn()">現金收款</button>
           </div>
         </div>
@@ -69,12 +84,18 @@
     :showUIFn="showMemberUIFn"
     :getDataFn="getMembersFn"
   />
-  <AddServicesUI
+  <AddItemMenuUI
+    v-if="showAddItemMenuUIRef"
+    :selData="formInputRef.memberInfo"
+    :showUIFn="showItemMenuUIFn"
+    :getDataFn="getMembersFn"
+  />
+  <!-- <AddServicesUI
     v-if="showAddServicesUIRef"
     :selData="formInputRef.memberInfo"
     :showUIFn="showMemberUIFn"
     :getDataFn="getMembersFn"
-  />
+  /> -->
 </template>
 
 <script setup lang="ts">
@@ -95,6 +116,7 @@ const props = defineProps<{
   //   addDetailTypeID?: any;
 }>();
 let showMemberUIRef = ref(false);
+let showAddItemMenuUIRef = ref(false);
 let showAddServicesUIRef = ref(false);
 
 onMounted(() => {
@@ -108,6 +130,12 @@ let formInputRef: any = ref({
 
 function showMemberUIFn(state: boolean) {
   showMemberUIRef.value = state;
+}
+function showServicesUIFn(state: boolean) {
+  showAddServicesUIRef.value = state;
+}
+function showItemMenuUIFn(state: boolean) {
+  showAddItemMenuUIRef.value = state;
 }
 function getMembersFn(data: any) {
   formInputRef.value.memberInfo = data;
@@ -178,7 +206,7 @@ function submitBtn() {
         > div {
           width: 90%;
           margin-left: 5%;
-          margin-top: 5%;
+          margin-top: 3%;
         }
         .item-add {
         }
@@ -191,13 +219,21 @@ function submitBtn() {
         .msg-add {
           height: 40px;
           // background-color: #faf9f8;
-          :deep(.el-input__inner)  {
+          :deep(.el-input__inner) {
             background-color: #ffffff;
             font-size: 18px;
           }
         }
         .other-add {
           display: grid;
+          > div {
+            display: flex;
+            align-items: center;
+            margin-left: 5%;
+            height: 60px;
+            border-bottom: solid 0.5px #ddd;
+            box-sizing: border-box;
+          }
         }
       }
       .right-main {
@@ -271,7 +307,7 @@ function submitBtn() {
 
         .customer-msg {
           flex-grow: 1;
-          border-top: solid 0.5px #ddd;
+          // border-top: solid 0.5px #ddd;
           box-sizing: border-box;
           > div {
             display: block;
@@ -286,7 +322,7 @@ function submitBtn() {
           justify-content: center;
           border-top: solid 0.5px #ddd;
           box-sizing: border-box;
-          .other-btn {
+          .otherpay-btn {
             position: relative;
             width: 200px;
             height: 50px;
@@ -315,5 +351,13 @@ function submitBtn() {
       display: flex;
     }
   }
+}
+.link-bottom {
+  padding: 0 5px;
+  opacity: 0.5;
+  margin: auto;
+  width: 80%;
+  height: 2px;
+  background-color: #707070;
 }
 </style>

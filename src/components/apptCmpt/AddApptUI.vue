@@ -18,7 +18,7 @@
             placeholder=" "
           >
             <el-option
-              v-for="item in memberList.data"
+              v-for="item in memberList"
               :key="item.nameView"
               :value="item.userId"
               :label="item.nameView"
@@ -35,7 +35,7 @@
           <p>選擇時段</p>
           <div class="news-filter">
             <el-select
-              v-model="newApptDataRef.timer"
+              v-model="newApptDataRef.timeBooking"
               allow-create
               default-first-option
               :reserve-keyword="false"
@@ -48,8 +48,8 @@
                 :value="item"
               />
             </el-select>
-            <span class="p_error" v-if="ruleItem.timeClock.is_error">
-              {{ ruleItem.timeClock.warn }}
+            <span class="p_error" v-if="ruleItem.timeBooking.is_error">
+              {{ ruleItem.timeBooking.warn }}
             </span>
           </div>
         </div>
@@ -98,9 +98,12 @@
                 :value="item"
                 v-model="newApptDataRef.courses"
               />
-              <span value="{{item}}" name="{{item.nameTw}}">{{
-                item.nameTw + "(" + item.servicesTime + ")"
-              }}</span>
+              <span
+                class="lesson-span"
+                value="{{item}}"
+                name="{{item.nameTw}}"
+                >{{ item.nameTw + "(" + item.servicesTime + ")" }}</span
+              >
             </label>
           </template>
         </div>
@@ -114,7 +117,9 @@
                 v-model="newApptDataRef.courses"
               />
               <span
-                :class="{ checkLesson: newApptDataRef.courses == index }"
+                :class="{
+                  checkLesson: newApptDataRef.courses == index,
+                }"
                 value="{{item}}"
                 name="{{item.nameTw}}"
                 >{{ item.nameTw + "(" + item.servicesTime + ")" }}</span
@@ -186,21 +191,14 @@ const props = defineProps<{
   curApptDataRef: any;
   oldSelList: any;
 }>();
+
 let newApptDataRef: any = ref({
   memberId: null,
-  timer: null,
+  timeBooking: "",
   beauticianId: 0,
   courses: [],
   selDate: "",
 });
-
-let newCourseDetailRef: any = ref({
-  name: "",
-  timer: "",
-  price: "",
-  state: false,
-});
-
 //-------------------------------------form驗證
 const ruleLists: any = reactive({
   ruleItem: {
@@ -219,7 +217,7 @@ const ruleLists: any = reactive({
       warn: "",
       is_show: true,
     },
-    timeClock: {
+    timeBooking: {
       label: "時程",
       component: "input",
       type: "number",
@@ -273,14 +271,9 @@ let { memberList, timeGroup, beauticianList, courseDataList } =
   storeToRefs(store);
 /**true:新增 false:修改 */
 let showAddForm: any = ref(true);
-onMounted(() => {
-  newCourseDetailRef.value.name = "";
-  newCourseDetailRef.value.timer = "";
-  newCourseDetailRef.value.price = "";
-  newCourseDetailRef.value.state = false;
-  newApptDataRef.value = props.curApptDataRef;
-  console.log(props.curApptDataRef.memberId);
 
+onMounted(() => {
+  newApptDataRef.value = props.curApptDataRef;
   showAddForm.value = props.curApptDataRef.memberId ? false : true;
 });
 
@@ -294,7 +287,7 @@ function getNowDay() {
 //預約--確認
 let confirmReserveForm = (btn: string) => {
   ruleLists.ruleItem.name.value = newApptDataRef.value.memberId;
-  ruleLists.ruleItem.timeClock.value = newApptDataRef.value.timer;
+  ruleLists.ruleItem.timeBooking.value = newApptDataRef.value.timeBooking;
 
   if (!showAddForm.value) {
     ruleLists.ruleItem.lessonItem.value = newApptDataRef.value.courses
@@ -331,19 +324,20 @@ let confirmReserveForm = (btn: string) => {
         discount: element.discount,
       });
     }
+    
     let addApptData = {
       userId: newApptDataRef.value.memberId,
       lessonlist: courseListData,
       serverId: newApptDataRef.value.beauticianId,
       dateBooking:
-        newApptDataRef.value.selDate + "  " + newApptDataRef.value.timer, //"2023-04-20T07:25:10.372Z",
+        newApptDataRef.value.selDate + "  " + newApptDataRef.value.timeBooking, //"2023-04-20T07:25:10.372Z",
       tradeDone: true,
       state: 0,
       bookingMemo: "string",
     };
     //新增預約
     postAddApptDataApi(addApptData).then((res: any) => {
-      let resData = res.data;
+      let resData = res;
       if (resData.state == 1) {
         //新增厚查詢
         getApptDataApi(
@@ -368,12 +362,12 @@ let confirmReserveForm = (btn: string) => {
     });
   } else if ((btn = "edit" && props.oldSelList)) {
     let editApptDate = {
-      bookingNo: props.oldSelList.id,
+      bookingNo: props.oldSelList.bookingNo,
       userId: newApptDataRef.value.memberId,
       lessonId: newApptDataRef.value.courses.lessonId,
-      serverId: props.oldSelList.serverId,
+      serverId: newApptDataRef.value.beauticianId,
       dateBooking:
-        newApptDataRef.value.selDate + "T" + newApptDataRef.value.timer,
+        newApptDataRef.value.selDate + "T" + newApptDataRef.value.timeBooking,
       timer: newApptDataRef.value.courses.servicesTime,
       tradeDone: props.oldSelList.tradeDone,
       state: props.oldSelList.state == 99 ? 0 : props.oldSelList.state,
@@ -384,7 +378,7 @@ let confirmReserveForm = (btn: string) => {
     };
     //修改預約
     postEditApptDataApi(editApptDate).then((res: any) => {
-      let resData = res.data;
+      let resData = res;
       if (resData.state == 1) {
         //新增成功查詢資料
         props.getApptInfpApi(
@@ -401,7 +395,7 @@ let confirmReserveForm = (btn: string) => {
 function resetAddReserveForm() {
   newApptDataRef.value.courses = [];
   newApptDataRef.value.memberId = null;
-  newApptDataRef.value.timer = null;
+  newApptDataRef.value.timeBooking = null;
   newApptDataRef.value.beauticianId = 0;
   newApptDataRef.value.selDate = newApptDataRef.value.selDate;
 }
@@ -423,8 +417,8 @@ function resetAddReserveForm() {
     left: 50%;
     transform: translate(-50%, -50%);
     // width: 54%;
-    width: 560px;
-    min-width: 560px;
+    width: 600px;
+    // min-width: 560px;
 
     background-color: #faf9f8;
     border-radius: 10px;
@@ -573,6 +567,9 @@ function resetAddReserveForm() {
     .edit-reserve-div {
       max-height: 200px;
       overflow-y: scroll;
+      span {
+        font-weight: 500;
+      }
     }
 
     > div {
@@ -611,7 +608,6 @@ function resetAddReserveForm() {
       border-radius: 10px;
 
       font-size: 20px;
-      // font-weight: bold;
       background-color: #fff;
       color: #d8cac8;
 
@@ -654,6 +650,9 @@ function resetAddReserveForm() {
 
     .add-reserve-btn2 + .checkLesson {
       background-color: #906e6c;
+    }
+    .lesson-span {
+      font-weight: 500;
     }
 
     .add-reserve-btn2:checked + span {

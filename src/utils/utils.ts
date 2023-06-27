@@ -84,6 +84,62 @@ export const verify_methods: any = {
   },
 };
 
+// 计算时间（基准时间yyyy-MM-dd HH:mm:ss，增加或减少(add|minus)，天，小时，分钟，秒）
+export function computeDate(
+  times: any,
+  type: any,
+  days: any = 0,
+  hours: any = 0,
+  minutes: any = 0,
+  seconds: any = 0
+) {
+  // 全部需要减掉的时间戳
+  // console.log(times);
+
+  let all_time = new Date(times).getTime();
+  // console.log(all_time);
+  switch (type) {
+    case "add":
+      all_time +=
+        days * 24 * 60 * 60 * 1000 +
+        hours * 60 * 60 * 1000 +
+        minutes * 60 * 1000 +
+        seconds * 1000;
+      break;
+    case "minus":
+      all_time -=
+        days * 24 * 60 * 60 * 1000 +
+        hours * 60 * 60 * 1000 +
+        minutes * 60 * 1000 +
+        seconds * 1000;
+      break;
+  }
+  // 转换时间戳格式
+  return formatDateTime(all_time);
+}
+
+//时间戳转换方法yyyy-MM-dd HH:mm:ss(时间戳)
+function formatDateTime(time: any) {
+  let date = new Date(time);
+
+  let YY = date.getFullYear();
+  let MM =
+    date.getMonth() + 1 < 10
+      ? "0" + (date.getMonth() + 1)
+      : date.getMonth() + 1;
+  let DD = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+  let hh = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+  let mm = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+  let ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+  // 这里可以修改返回的日期格式
+  return YY + "-" + MM + "-" + DD + " " + hh + ":" + mm + ":" + ss;
+}
+
+export function formatZeroDate(data: any) {
+  return data < 10 ? "0" + data : data;
+}
+
 function GetRandomNum(Min: number, Max: number): Number {
   var Range = Max - Min;
   var Rand = Math.random();

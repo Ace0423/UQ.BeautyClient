@@ -284,7 +284,7 @@ let updataStutusFn = (index: number, item: any) => {
         height: calc(100% - 80px);
         .search-bar {
           height: 47px;
-          width: calc(100% );
+          width: calc(100%);
           font-weight: bold;
           display: flex;
           align-items: center;

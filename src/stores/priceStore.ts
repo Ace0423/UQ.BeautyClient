@@ -9,6 +9,10 @@ import {
   deleteSingleDiscountReq,
   postUpdateAllDiscountReq,
   postUpdateSingleDiscountReq,
+  getCouponReq,
+  updateCouponReq,
+  deleteCouponReq,
+  addCouponReq,
 } from "@/api/priceRequest";
 import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
@@ -142,6 +146,71 @@ export const useApptStore = defineStore("priceStore", () => {
       console.log(error);
     }
   };
+  //--------------------------------優惠券
+
+  //獲取
+  let couponListRef: any = ref([]);
+  const getCouponApi = async (
+    id: any = 0,
+    select: any = 0,
+    type: any = -1,
+    page: any = 0,
+    count: any = 0
+  ) => {
+    try {
+      couponListRef.value = [];
+      let res: any = await getCouponReq(id, select, type, page, count).then(
+        (res: any) => {
+          if (res.data.data.table) {
+            couponListRef.value = res.data.data.table;
+          }
+          return res;
+        }
+      );
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //新增
+  const addCouponApi = async (data: any) => {
+    try {
+      let res = await addCouponReq(data).then((res: any) => {
+        alertStateFn(res, "新增取單品折扣資料分類");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //更新
+  const updateCouponApi = async (data: any) => {
+    try {
+      let res = await updateCouponReq(data).then((res: any) => {
+        alertStateFn(res, "更新單品折扣分類");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //刪除全單折扣資料
+  const delCouponApi = async (data: any) => {
+    try {
+      let res = await deleteCouponReq(data).then((res: any) => {
+        alertStateFn(res, "刪除全單折扣資料");
+        getAllDiscountApi();
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return {
     getAllDiscountApi,
     allDiscountList,
@@ -154,5 +223,11 @@ export const useApptStore = defineStore("priceStore", () => {
     addSingleDiscountApi,
     delSingleDiscountApi,
     updateSingleDiscountApi,
+    //--------------------------------優惠券
+    getCouponApi,
+    couponListRef,
+    addCouponApi,
+    updateCouponApi,
+    delCouponApi,
   };
 });

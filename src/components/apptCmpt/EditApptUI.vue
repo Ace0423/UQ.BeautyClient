@@ -400,7 +400,7 @@ let confirmReserveForm = (btn: string) => {
     //修改預約
     postEditApptDataApi(editApptDate)
       .then((res: any) => {
-        let resData = res.data;
+        let resData = res;
         if (resData.state == 1) {
           setTimeout(() => {
             props.showAddReserveForm(false);

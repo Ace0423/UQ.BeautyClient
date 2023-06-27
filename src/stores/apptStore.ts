@@ -240,6 +240,7 @@ export const useApptStore = defineStore("apptStore", () => {
     "18:30",
   ]);
   let bookingList: any = ref([]);
+  let tuiBookingListRef: any = ref([]);
   const memberList: any = ref([]);
   /**獲取會員資料 */
   const getMemberData = async () => {
@@ -278,6 +279,14 @@ export const useApptStore = defineStore("apptStore", () => {
       let res: any = await getApptDataRequest(data).then((res: any) => {
         //插入預約
         if (res.data.data) {
+          tuiBookingListRef.value = res.data.data.table.filter(function (
+            value: any,
+            index: any,
+            arr: any
+          ) {
+            return value.state != 3;
+          });
+          
           for (let i = 0; i < res.data.data.table.length; i++) {
             const bookingListEmt = res.data.data.table[i];
             if (bookingListEmt.state == 3) {
@@ -568,6 +577,7 @@ export const useApptStore = defineStore("apptStore", () => {
     postEditApptDataApi,
     getBeauticianApi,
     bookingList,
+    tuiBookingListRef,
     beauticianList,
     memberList,
     timeGroup,

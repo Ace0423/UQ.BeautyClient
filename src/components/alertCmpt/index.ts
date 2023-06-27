@@ -46,9 +46,11 @@ Alert.error = (message: string, duration?: number) => {
 Alert.warning = (message: string, duration?: number) => {
   Alert({ type: 2, message, duration });
 };
+//可用是否選擇 2按鈕
 Alert.check = (message: string, duration?: number, onAlertBtn?: Function) => {
   Alert({ type: 0, message, duration, onAlertBtn });
 };
+//提示  1按鈕
 Alert.tip = (message: string, duration?: number, onAlertBtn?: Function) => {
   Alert({ type: 1, message, duration, onAlertBtn });
 };

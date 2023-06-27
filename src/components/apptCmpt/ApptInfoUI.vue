@@ -18,16 +18,30 @@
             </div>
           </div>
           <div class="list_btn">
-            <div class="btn_add" @click="infoBtnState(2)">修改預約</div>
-            <div class="btn_add" @click="infoBtnState(3)">刪除預約</div>
+            <button
+              :class="selItemData.state == 1 ? 'finish' : ''"
+              @click="infoBtnState(2)"
+            >
+              修改預約
+            </button>
+            <button
+              :class="selItemData.state == 1 ? 'finish' : ''"
+              @click="infoBtnState(3)"
+            >
+              刪除預約
+            </button>
           </div>
           <div class="link-bottom"></div>
           <div>
             <div class="grey-box">
               <span>人數1位</span>
             </div>
-            <button @click="infoBtnState(1)">預約完成</button>
-            <!-- <button v-on:click="handAddMemberView()">修改顧客</button> -->
+            <button
+              :class="selItemData.state == 1 ? 'finish' : ''"
+              @click="infoBtnState(1)"
+            >
+              預約完成
+            </button>
           </div>
           <div class="link-bottom"></div>
           <div class="content-box">
@@ -80,24 +94,20 @@ const props = defineProps<{
   selItemData: any;
   showUIHdr: Function;
   infoBtnState: Function;
-  // handMemberInfoView: Function;
-  // handAddMemberView: Function;
 }>();
-
-console.log(props.selItemData);
 
 let dateCpt: any = computed(() => {
   return (
-    props.selItemData.date.split("-")[1] +
+    props.selItemData.dateBooking.split("T")[0].split("-")[1] +
     "月" +
-    props.selItemData.date.split("-")[2] +
+    props.selItemData.dateBooking.split("T")[0].split("-")[2] +
     "日"
   );
 });
 let customerDataCpt: any = computed(() => {
   let customerData = [];
-  for (let i = 0; i < memberList.value.data.length; i++) {
-    const element = memberList.value.data[i];
+  for (let i = 0; i < memberList.value.length; i++) {
+    const element = memberList.value[i];
     if (element.userId == props.selItemData.userId) {
       customerData = element;
     }
@@ -107,8 +117,6 @@ let customerDataCpt: any = computed(() => {
 
 let beauticianCpt: any = computed(() => {
   let beauticianData = [];
-  console.log(beauticianList.value);
-
   for (let i = 0; i < beauticianList.value.length; i++) {
     const element = beauticianList.value[i];
     if (element.userId == props.selItemData.serverId) {
@@ -128,7 +136,7 @@ let weekDayCpt: any = computed(() => {
     "星期五",
     "星期六"
   );
-  var week = weekArray[new Date(props.selItemData.date).getDay()];
+  var week = weekArray[new Date(props.selItemData.dateBooking).getDay()];
   return week;
 });
 
@@ -147,7 +155,7 @@ onMounted(() => {
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 1;
+  z-index: 1002;
   background: rgba(137, 137, 137, 0.5);
 
   display: flex;
@@ -246,6 +254,13 @@ onMounted(() => {
             color: #906e6c;
             background-color: #ffffff;
             border: solid 1px #707070;
+            font-size: 18px;
+          }
+          .finish {
+            opacity: 0.5;
+            /*設定蒙版效果*/
+            pointer-events: none;
+            /*禁止滑鼠事件*/
           }
           .grey-box {
             align-items: center;
@@ -258,12 +273,16 @@ onMounted(() => {
             border-radius: 10px;
             color: #717171;
             font-weight: bold;
+            span {
+              font-size: 18px;
+            }
           }
         }
 
         .content-box {
           margin: 5px 30px 18px;
           color: #877059;
+          min-height: 200px;
           P {
             text-align: left;
             font-weight: bold;
@@ -322,22 +341,24 @@ onMounted(() => {
           height: 35px;
           display: flex;
           justify-content: center;
-
-          .btn_add {
-            margin-right: 5px;
-            position: relative;
-            width: 130px;
-            height: 35px;
-            margin-bottom: 5%;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            display: flex;
-            border-radius: 8px;
+          > button {
+            height: 45px;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
             border: solid 1px #707070;
-            background-color: #ffffff;
+            margin: 5px;
+            font-weight: bold;
+
             color: #906e6c;
-            cursor: pointer;
+            background-color: #ffffff;
+            border: solid 1px #707070;
+            font-size: 18px;
+          }
+          .finish {
+            opacity: 0.5;
+            /*設定蒙版效果*/
+            pointer-events: none;
+            /*禁止滑鼠事件*/
           }
         }
       }
@@ -360,6 +381,7 @@ onMounted(() => {
           color: #906e6c;
           background-color: #ffffff;
           border: solid 1px #707070;
+          font-size: 18px;
         }
       }
     }

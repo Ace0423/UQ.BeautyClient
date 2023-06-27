@@ -155,7 +155,7 @@ let submitTypeHdr = () => {
     console.log(curdata);
 
     addGoodsTypeApi(curdata).then((res: any) => {
-      let resData = res.data;
+      let resData = res;
       if (res.state == 1) {
         setTimeout(() => {
           props.showAddUIFn(false);

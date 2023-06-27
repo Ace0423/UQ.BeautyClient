@@ -50,3 +50,11 @@ npm install --save @fullcalendar/interaction
 npm install jquery --save
 npm install vue-i18n@9
 ```
+
+### 層級紀錄
+日曆-測欄資訊
+ z-index: 1002;
+TUI日曆-月曆重疊資訊(無法修改)
+ z-index: 1001;
+ALERT
+ z-index: 2000;

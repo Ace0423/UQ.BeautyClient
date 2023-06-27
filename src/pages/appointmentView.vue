@@ -46,27 +46,43 @@
           <div class="weektoday_div" v-show="mainTabIndexRef == 0">
             <div
               class="weektoday_btn"
-              @click="changeWeekToday(false)"
-              :class="{ noSelbtn: showWeekBoxRef, selbtn: !showWeekBoxRef }"
+              @click="changeWeekToday(0)"
+              :class="{
+                noSelbtn: showWeekBoxRef != 0,
+                selbtn: showWeekBoxRef == 0,
+              }"
             >
-              日曆
+              月曆
             </div>
             <div
               class="weektoday_btn"
-              @click="changeWeekToday(true)"
-              :class="{ selbtn: showWeekBoxRef, noSelbtn: !showWeekBoxRef }"
+              @click="changeWeekToday(1)"
+              :class="{
+                noSelbtn: showWeekBoxRef != 1,
+                selbtn: showWeekBoxRef == 1,
+              }"
             >
               週曆
+            </div>
+            <div
+              class="weektoday_btn"
+              @click="changeWeekToday(2)"
+              :class="{
+                noSelbtn: showWeekBoxRef != 2,
+                selbtn: showWeekBoxRef == 2,
+              }"
+            >
+              日曆
             </div>
           </div>
         </div>
         <div class="appt_main">
           <div
             class="week_main"
-            v-show="showWeekBoxRef && mainTabIndexRef != 1"
+            v-show="showWeekBoxRef != 2 && mainTabIndexRef == 0"
           >
             <div>
-              <div class="appointment_schedule" v-show="mainTabIndexRef == 0">
+              <div class="appointment_schedule" v-show="false">
                 <div class="appointment_week">
                   <div class="week-top">
                     <div class="btn_wrap">
@@ -189,23 +205,13 @@
                 </div>
               </div>
             </div>
-            <!-- <div
-              class="weekEdit_btn"
-              v-show="showWeekBoxRef && mainTabIndexRef != 1"
-            >
-              <div class="list_btn">
-                <div class="btn_add" @click="addAddReserveBtn()">新增預約</div>
-                <div class="btn_add" @click="editAddReserveBtn()">修改預約</div>
-                <div class="btn_add" @click="delReserveId()">刪除預約</div>
-              </div>
-            </div> -->
           </div>
           <div
             class="date_main"
-            v-show="!showWeekBoxRef && mainTabIndexRef != 1"
+            v-show="showWeekBoxRef == 2 && mainTabIndexRef == 0"
           >
-            <div class="date_schedule" v-show="mainTabIndexRef == 0">
-              <div class="appointment_date">
+            <div class="date_schedule">
+              <div class="appointment_date" v-show="false">
                 <div class="date_top">
                   <span @click="goTodayHdr()">TODAY</span>
                   <span class="todayDate">{{ weeekTodayTitle + "月" }} </span>
@@ -281,10 +287,10 @@
                     />
                   </div>
                   <div class="dateBox_content">
-                    <div class="row title">
+                    <div class="row_title">
                       <span v-for="item in title" :key="item">{{ item }}</span>
                     </div>
-                    <div class="row content">
+                    <div class="row_content">
                       <span
                         class="prevDay"
                         v-for="item in prevDays"
@@ -309,10 +315,10 @@
                   <div class="btn_add" @click="addAddReserveBtn()">
                     新增預約
                   </div>
-                  <div class="btn_add" @click="editAddReserveBtn()">
+                  <!-- <div class="btn_add" @click="editAddReserveBtn()">
                     修改預約
                   </div>
-                  <div class="btn_add" @click="delReserveId()">刪除預約</div>
+                  <div class="btn_add" @click="delReserveId()">刪除預約</div> -->
                 </div>
               </div>
             </div>
@@ -337,11 +343,15 @@
                   <tr v-for="(item, index) in filterAptData" :key="item.id">
                     <td class="td_time">
                       <div class="dateBox">
-                        <p class="p_month">
+                        <span class="p_month">
                           {{ item.date.split("-")[1] + "月" }}
-                        </p>
-                        <p class="p_date">{{ item.date.split("-")[2] }}</p>
-                        <p class="p_year">{{ item.date.split("-")[0] }}</p>
+                        </span>
+                        <span class="p_date">{{
+                          item.date.split("-")[2]
+                        }}</span>
+                        <span class="p_year">{{
+                          item.date.split("-")[0]
+                        }}</span>
                       </div>
                       <p>{{ item.timePeriod }}</p>
                     </td>
@@ -386,7 +396,6 @@
         </div>
       </div>
     </div>
-
   </div>
   <AddApptUI
     v-if="showAddReserveFormRef"
@@ -403,24 +412,31 @@
     :selDate="selDate"
     :selLittleDateFn="selLittleDateFn"
   />
-  <!-- <Tui_calendar
-  ></Tui_calendar> -->
   <ApptInfoUI
     v-if="showApptInfoRef"
     :showUIHdr="updataShowApptInfoRef"
     :selItemData="oldSelList"
     :infoBtnState="infoBtnState"
   />
-  <Alert
-    v-if="alertInformation.showAlert"
-    :alert-information="alertInformation"
-    :hand-alert-view="handAlertView"
-    @callbackBtn="btnSumitHdr"
-  ></Alert>
   <FastCheckOutUI
     v-if="showFastCheckOutRef"
     :showUIFn="showFastCheckOutUIHdr"
   />
+  <div
+    :class="
+      tuiOptions.tuiType == 2 ? ' Tui_calendar_date' : 'Tui_calendar_main'
+    "
+    class="Tui_calendar_main"
+    v-if="mainTabIndexRef == 0"
+  >
+    <Tui_calendar
+      :tuiList="tuiList"
+      :tuiOptions="tuiOptions"
+      :selectDate="selectDate"
+      :selTuiListFn="selTuiListFn"
+      :tuiSetDate="tuiSetDate"
+    ></Tui_calendar>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -435,8 +451,9 @@ import { storeToRefs } from "pinia";
 import { getApptDataRequest } from "@/api/apptRequest";
 import type { IBackStatus } from "@/types/IData";
 import { useApptStore } from "@/stores/apptStore";
-// import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
+import { computeDate } from "@/utils/utils";
+import Alert from "@/components/alertCmpt";
 
 // let alertBtnState: any = ref(false);
 // const onAlertBtn = (data: any) => {
@@ -451,7 +468,7 @@ const props = defineProps<{
   handmemuStateBtn: Function;
 }>();
 let searchList = ref("");
-let showWeekBoxRef = ref(true);
+let showWeekBoxRef = ref(1);
 let showFastCheckOutRef = ref(false);
 let mainTabIndexRef = ref(0);
 let aptTitle = reactive(["預約時間", "預約項目", "顧客", "已完成"]);
@@ -487,7 +504,82 @@ let mainTypeDataRef = ref([
     title: "預約列表",
   },
 ]);
+//--------------------------------------------------tui套件設置
+let tuiList: any = reactive([
+  // {
+  //   id: "1",
+  //   calendarId: "9",
+  //   title: "<br>" + "會員名稱" + "<br>" + "課程 - " + "1",
+  //   titleMonth: "" + "會員名稱" + "" + "課程 - " + "1",
+  //   category: "time",
+  //   dueDateClass: "",
+  //   start: "2023-06-20T08:30:00+09:00",
+  //   end: "2023-06-20T10:30:00+09:00",
+  //   listData: {
+  //     beautyTherapist: "",
+  //     bookingMemo: "string",
+  //     bookingNo: "230619-0001",
+  //     customer: "會員名稱",
+  //     dateBooking: "2023-06-20T10:00:00",
+  //     dateCreate: "2023-06-19T09:59:04.96",
+  //     dateUpdate: "2023-06-19T09:59:04.9588135",
+  //     discount: 0,
+  //     lesson: "課程-手",
+  //     lessonId: 77,
+  //     price: 2000,
+  //     serverId: 0,
+  //     state: 0,
+  //     timer: 120,
+  //     tradeDone: false,
+  //     updater: "testadmin@gamil.com",
+  //     userId: 76,
+  //   },
+  // },
+  // {
+  //   id: "2",
+  //   calendarId: "9",
+  //   title: "<br>" + "會員名稱" + "<br>" + "課程 - " + "2",
+  //   titleMonth: "" + "會員名稱" + "" + "課程 - " + "2",
+  //   category: "time",
+  //   dueDateClass: "",
+  //   start: "2023-06-21T12:30:00+09:00",
+  //   end: "2023-06-21T15:30:00+09:00",
+  //   listData: {
+  //     beautyTherapist: "",
+  //     bookingMemo: "string",
+  //     bookingNo: "230619-0001",
+  //     customer: "會員名稱",
+  //     dateBooking: "2023-06-21T10:00:00",
+  //     dateCreate: "2023-06-19T09:59:04.96",
+  //     dateUpdate: "2023-06-19T09:59:04.9588135",
+  //     discount: 0,
+  //     lesson: "課程-腳",
+  //     lessonId: 77,
+  //     price: 2000,
+  //     serverId: 0,
+  //     state: 0,
+  //     timer: 180,
+  //     tradeDone: false,
+  //     updater: "testadmin@gamil.com",
+  //     userId: 76,
+  //   },
+  // },
+]);
 
+let tuiOptions = reactive({
+  leftArea: false,
+  menuArea: true,
+  tuiType: 1,
+});
+//日曆連動外層日曆
+const tuiSetDate = (date: any) => {
+  let curDate = date.split("-");
+  currentYear.value = parseInt(curDate[0]);
+  currentMonth.value = parseInt(curDate[1]) - 1;
+  currentDay.value = parseInt(curDate[2]);
+  onCheckToday();
+};
+//--------------------------------------------------tui套件設置
 //選擇那天 xxxx-xx-xx
 function curDateFn() {
   return (
@@ -498,6 +590,24 @@ function curDateFn() {
     addZeroDateFn(currentDay.value)
   );
 }
+const curDateFn2 = () => {
+  return (
+    currentYear.value +
+    "-" +
+    addZeroDateFn(currentMonth.value, 1) +
+    "-" +
+    addZeroDateFn(currentDay.value)
+  );
+};
+let selectDate = computed(() => {
+  return (
+    currentYear.value +
+    "-" +
+    addZeroDateFn(currentMonth.value, 1) +
+    "-" +
+    addZeroDateFn(currentDay.value)
+  );
+});
 
 let newApptDataRef: any = ref({
   memberId: null,
@@ -508,7 +618,8 @@ let newApptDataRef: any = ref({
 });
 
 let store = useApptStore();
-let { bookingList, courseDataList, timeGroup } = storeToRefs(store);
+let { bookingList, courseDataList, timeGroup, tuiBookingListRef } =
+  storeToRefs(store);
 let {
   getApptDataApi,
   getMemberData,
@@ -517,26 +628,11 @@ let {
   getBeauticianApi,
 } = store;
 
-const handAlertView = (msg: string, btnState: number, timer: number) => {
-  alertInformation.messageText = msg;
-  alertInformation.buttonState = btnState;
-  alertInformation.timerVal = timer;
-  alertInformation.showAlert = !alertInformation.showAlert;
-};
-
-const alertInformation = reactive({
-  selfData: {},
-  selfType: "",
-  messageText: "是否刪除", // 提示內容
-  buttonState: 0, //按鈕顯示狀態 0:全部 1:只顯示確定按鈕 2:不顯示按鈕
-  timerVal: 0, //時間計時器
-  showAlert: false, //時間計時器
-});
-
 const handleCommand = (command: string | number | object) => {
-  console.log(command);
   switch (command) {
     case "addAppt":
+      oldSelList = null;
+      resetAddReserveForm();
       addAddReserveBtn();
       break;
     case "addRest":
@@ -555,44 +651,6 @@ let showFastCheckOutUIHdr = (state: boolean) => {
   // getGoodsTypeApi(0);
 };
 
-const btnSumitHdr = (val: IBackStatus) => {
-  switch (alertInformation.selfType) {
-    case "delReserveData":
-      if (val.btnStatus) {
-        oldSelList.state = 3;
-        let editApptDate = {
-          bookingNo: oldSelList.id,
-          userId: oldSelList.userId,
-          lessonId: oldSelList.lessonId,
-          serverId: oldSelList.serverId,
-          dateBooking: oldSelList.dateBooking,
-          timer: oldSelList.timer,
-          tradeDone: oldSelList.tradeDone,
-          state: oldSelList.state,
-          price: oldSelList.price,
-          discount: oldSelList.discount,
-          dateCreate: oldSelList.dateCreate,
-          bookingMemo: oldSelList.bookingMemo,
-        };
-
-        console.log("刪除成功");
-        //修改預約
-        postEditApptDataApi(editApptDate).then((res: any) => {
-          let resData = res.data;
-          if (resData.state == 1) {
-          } else {
-          }
-        });
-        getApptInfpApi(currentYear.value, currentMonth.value + 1);
-      } else {
-        console.log(val.btnStatus, "取消");
-      }
-      break;
-    default:
-      break;
-  }
-  alertInformation.showAlert = false;
-};
 /**抓取預約紀錄 */
 function getApptInfpApi(
   year: number,
@@ -605,6 +663,27 @@ function getApptInfpApi(
     //預先呼叫api獲取數據
     getApptDataApi(year, month).then((res: any) => {
       resetApptTable(year, month, date);
+      tuiList = [];
+      for (let i = 0; i < tuiBookingListRef.value.length; i++) {
+        const element = tuiBookingListRef.value[i];
+        tuiList.push({
+          id: element.bookingNo,
+          calendarId: "9", // (element.lessonId / 2).toString(),
+          title:
+            "" +
+            element.customer +
+            "<br>" +
+            element.lesson +
+            "<br>" +
+            (element.state == 1 ? "(完成)" : "" + element.state), // 0:未點選 1:完成 99:點選
+          titleMonth: "" + element.customer + "" + element.lesson,
+          category: "time",
+          dueDateClass: "",
+          start: element.dateBooking,
+          end: computeDate(element.dateBooking, "add", 0, 0, element.timer),
+          raw: element,
+        });
+      }
     });
   });
 }
@@ -636,36 +715,35 @@ let filterAptData: any = computed(() => {
 
 let changeMainTab = (index: number) => {
   mainTabIndexRef.value = index;
+  changeWeekToday(1);
 };
 onMounted(() => {
   // resetApptTable();
 });
 //刪除課程
 let delCourseListHdr = (index: number, itemId: string) => {
-  if (itemId)
-    for (let i = 0; i < bookingList.value.length; i++) {
-      let element = bookingList.value[i];
-      for (let j = 0; j < element.things.length; j++) {
-        let element2 = element.things[j];
-        if (itemId.toString() === element2.id.toString()) {
-          if (element2.state == 0) {
-            oldSelList = element2;
-            alertInformation.selfType = "delReserveData";
-            alertInformation.selfData = element2;
-            handAlertView("是否刪除", 0, 0);
-          } else {
-          }
-          // bookingList.value[i].things.splice(j, 1);
-        }
-      }
-    }
-  // resetApptTable(currentYear.value, currentMonth.value, currentDay.value);
+  // if (itemId)
+  //   for (let i = 0; i < bookingList.value.length; i++) {
+  //     let element = bookingList.value[i];
+  //     for (let j = 0; j < element.things.length; j++) {
+  //       let element2 = element.things[j];
+  //       if (itemId.toString() === element2.id.toString()) {
+  //         if (element2.state == 0) {
+  //           oldSelList = element2;
+  //           alertInformation.selfType = "delReserveData";
+  //           alertInformation.selfData = element2;
+  //           handAlertView("是否刪除", 0, 0);
+  //         } else {
+  //         }
+  //       }
+  //     }
+  //   }
 };
 //改變課程狀態
 let changeStutusFn = (index: number, item: any) => {
   item.state = item.state == 0 ? 1 : 0;
   let editApptDate = {
-    bookingNo: item.id,
+    bookingNo: item.id ? item.id : item.bookingNo,
     userId: item.userId,
     lessonId: item.lessonId,
     serverId: item.serverId,
@@ -941,8 +1019,10 @@ function handleDetail(row: any) {
       oldSelList = row;
     }
     updataShowApptInfoRef(true);
+  } else {
+    oldSelList = row;
+    updataShowApptInfoRef(true);
   }
-
   onWeekSeldate(row.dateBooking.split("T")[0]);
 }
 const updataShowApptInfoRef = (state: boolean) => {
@@ -1014,7 +1094,7 @@ function lastMonth() {
   } else {
     currentMonth.value--;
   }
-  onCheckYM();
+  // onCheckYM();
   onCheckToday();
 }
 function nextMonth() {
@@ -1024,7 +1104,7 @@ function nextMonth() {
   } else {
     currentMonth.value++;
   }
-  onCheckYM();
+  // onCheckYM();
   onCheckToday();
 }
 
@@ -1083,7 +1163,7 @@ let showAddReserveForm = (state: boolean) => {
 function resetAddReserveForm() {
   newApptDataRef.value.courses = [];
   newApptDataRef.value.memberId = null;
-  newApptDataRef.value.timer = null;
+  newApptDataRef.value.timeBooking = null;
   newApptDataRef.value.beauticianId = 0;
   newApptDataRef.value.selDate = selDate;
 }
@@ -1094,8 +1174,33 @@ function addAddReserveBtn() {
   showAddReserveForm(true);
 }
 
-function changeWeekToday(state: boolean) {
-  showWeekBoxRef.value = state;
+function changeWeekToday(data: number) {
+  showWeekBoxRef.value = data;
+  tuiOptions.tuiType = data;
+  // tuiList.push({
+  //   id: "3",
+  //   calendarId: "9",
+  //   title: "<br>" + "會員名稱" + "<br>" + "課程 - " + "2",
+  //   titleMonth: "會員名稱課程 2",
+  //   category: "time",
+  //   dueDateClass: "",
+  //   start: "2023-06-16T15:30:00+09:00",
+  //   end: "2023-06-16T18:30:00+09:00",
+  //   listData: null,
+  // });
+}
+
+function selTuiListFn(data: any) {
+  if (!data.raw) {
+    for (let i = 0; i < tuiList.length; i++) {
+      const element = tuiList[i];
+      if (element.id == data.id) {
+        data.raw = element.raw;
+        break;
+      }
+    }
+  }
+  if (data.raw) handleDetail(data.raw);
 }
 function editAddReserveBtn() {
   if (oldSelList) {
@@ -1108,15 +1213,18 @@ function editAddReserveBtn() {
       }
     }
 
-    for (let i = 0; i < timeGroup.value.length; i++) {
-      let element = timeGroup.value[i];
-      if (element == oldSelList.timePeriod) {
-        newApptDataRef.value.timer = element;
-      }
-    }
+    // for (let i = 0; i < timeGroup.value.length; i++) {
+    //   let element = timeGroup.value[i];
+    //   if (element == oldSelList.timePeriod) {
+    //     newApptDataRef.value.timeBooking = element;
+    //   }
+    // }
     newApptDataRef.value.beauticianId = oldSelList.serverId;
-    newApptDataRef.value.selDate = oldSelList.date;
-
+    newApptDataRef.value.selDate = oldSelList.dateBooking.split("T")[0];
+    newApptDataRef.value.timeBooking =
+      oldSelList.dateBooking.split("T")[1].split(":")[0] +
+      ":" +
+      oldSelList.dateBooking.split("T")[1].split(":")[1];
     showOkBtnRef.value = true;
     showAddReserveForm(true);
   }
@@ -1124,11 +1232,33 @@ function editAddReserveBtn() {
 
 //刪除預約
 let delReserveId = () => {
-  if (oldSelList) {
-    alertInformation.selfType = "delReserveData";
-    alertInformation.selfData = oldSelList;
-    handAlertView("是否刪除", 0, 0);
-  }
+  Alert.check("是否刪除", 0, (data: any) => {
+    if (data) {
+      oldSelList.state = 3;
+      let delApptDate = {
+        bookingNo: oldSelList.bookingNo,
+        userId: oldSelList.userId,
+        lessonId: oldSelList.lessonId,
+        serverId: oldSelList.serverId,
+        dateBooking: oldSelList.dateBooking,
+        timer: oldSelList.timer,
+        tradeDone: oldSelList.tradeDone,
+        state: oldSelList.state,
+        price: oldSelList.price,
+        discount: oldSelList.discount,
+        dateCreate: oldSelList.dateCreate,
+        bookingMemo: oldSelList.bookingMemo,
+      };
+      //修改預約
+      postEditApptDataApi(delApptDate).then((res: any) => {
+        let resData = res;
+        if (resData.state == 1) {
+        } else {
+        }
+      });
+      getApptInfpApi(currentYear.value, currentMonth.value + 1);
+    }
+  });
 };
 
 //-------------------------------------------新增預約FORM
@@ -1189,7 +1319,7 @@ $borderCoder: #eaedf2;
         left: 3%;
         > div {
           display: flex;
-          width: calc(100% - 106px);
+          width: calc(100% - 240px);
           height: 100%;
 
           > button {
@@ -1220,7 +1350,7 @@ $borderCoder: #eaedf2;
         .weektoday_div {
           position: relative;
           display: flex;
-          width: 160px;
+          width: 240px;
           // min-width: 105px;
           justify-content: right;
           align-items: center;
@@ -1691,16 +1821,10 @@ $borderCoder: #eaedf2;
                 width: 100%;
                 height: 35px;
                 margin-bottom: 5%;
-                // margin-top: 12px;
-                // margin-bottom: 10%;
-                // width: 80px;
-                // height: 20px;
-                // margin: 0;
                 align-items: center;
                 justify-content: center;
                 font-weight: bold;
                 display: flex;
-                // padding: 7px 11px 6px;
                 border-radius: 8px;
                 border: solid 1px #707070;
                 background-color: #ffffff;
@@ -1727,9 +1851,10 @@ $borderCoder: #eaedf2;
             width: 98%;
             height: 98%;
             border-radius: 15px;
-            background: #e6e2de;
+            // background: #e6e2de;
             margin: 0 auto;
             border: 1px solid #707070;
+            justify-content: right;
 
             .appointment_date {
               width: 70%;
@@ -1872,6 +1997,7 @@ $borderCoder: #eaedf2;
               height: 86%;
               width: 28%;
               border: 1px solid #707070;
+              z-index: 1;
 
               .dateBox {
                 width: 100%;
@@ -1915,6 +2041,84 @@ $borderCoder: #eaedf2;
                 .dateBox_content {
                   width: 100%;
                   height: 250px;
+
+                  .row_title {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    height: 40px;
+                    line-height: 40px;
+                    color: #b89087;
+                    span {
+                      width: calc(14.285714285714286%);
+                      text-align: center;
+                    }
+                  }
+                  .row_content {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+
+                    -webkit-box-pack: start;
+                    -ms-flex-pack: start;
+                    justify-content: flex-start;
+                    -ms-flex-wrap: wrap;
+                    flex-wrap: wrap;
+
+                    span {
+                      width: calc(14.285714285714286%);
+                      height: 30px;
+                      line-height: 30px;
+                      text-align: center;
+                    }
+
+                    .prevDay {
+                      color: #fff;
+                      background-color: #fff;
+                      // background-color: #eee;
+                    }
+
+                    .thisDay {
+                      width: calc(14.285714285714286%);
+                      height: 30px;
+                      line-height: 30px;
+                      text-align: center;
+                      border-radius: 5px;
+                      color: #b89087;
+
+                      &:active {
+                        // transition: all 0.2s;
+                        background: #b89087;
+                        color: #fff;
+                      }
+
+                      &:hover {
+                        transition: all 0.2s;
+                        cursor: pointer;
+                        background: #b89087;
+                        color: #fff;
+                      }
+
+                      &.current {
+                        transition: all 0.2s;
+                        background: #b89087;
+                        color: #fff;
+                      }
+
+                      &.grey {
+                        color: #999;
+                      }
+                    }
+
+                    .todayEff {
+                      color: #ff0000;
+                    }
+
+                    .thisDay.active {
+                      background-color: #b89087;
+                      color: #fff;
+                    }
+                  }
 
                   .row {
                     width: 100%;
@@ -2000,27 +2204,26 @@ $borderCoder: #eaedf2;
               .list_btn {
                 position: relative;
                 width: 100%;
-                // left: 50%;
                 margin: 0px;
-                // margin-top: 12px;
                 display: grid;
                 justify-content: center;
 
                 .btn_add {
-                  width: 80px;
-                  height: 20px;
+                  width: 120px;
+                  height: 40px;
                   margin: 0;
                   align-items: center;
                   justify-content: center;
                   font-weight: bold;
                   display: flex;
-                  padding: 7px 11px 6px;
+                  // padding: 5px ;
                   border-radius: 8px;
                   border: solid 1px #707070;
                   background-color: #ffffff;
                   color: #906e6c;
                   cursor: pointer;
-                  margin-top: 2px;
+                  margin-top: 5px;
+                  font-size: 18px;
                 }
               }
             }
@@ -2036,7 +2239,7 @@ $borderCoder: #eaedf2;
           height: 100%;
           background: #ffffff;
           margin: 0 auto;
-          // border: 1px solid #707070;
+          border: 1px solid #ddd;
 
           .table_title {
             height: 100%;
@@ -2070,8 +2273,10 @@ $borderCoder: #eaedf2;
                   > th:nth-child(1) {
                     width: 20%;
                     > p {
+                      margin: 3px 5px;
                       display: flex;
                       justify-content: center;
+                      // align-content: center;
                     }
                   }
 
@@ -2101,6 +2306,7 @@ $borderCoder: #eaedf2;
                     flex-wrap: nowrap;
                     padding: 2px 0px 2px 0px;
                     // width: 100%;
+                    font-size: 18px;
 
                     > img {
                       width: 40px;
@@ -2117,13 +2323,14 @@ $borderCoder: #eaedf2;
                   > input {
                     display: flex;
                     float: right;
-                    margin-top: 12px;
+                    margin-top: 9px;
                     width: 150px;
                     height: 30px;
                     border-radius: 6px;
                     border: solid 1px #707070;
                     background-color: #fff;
                     margin-right: 10px;
+                    font-size: 18px;
 
                     background: url("@/assets/images/icon_search.png") no-repeat;
                     background-color: #fff;
@@ -2167,23 +2374,27 @@ $borderCoder: #eaedf2;
 
                       .p_month {
                         font-size: 10px;
-                        line-height: 1px;
+                        height: 20px;
                         display: flex;
                         justify-content: center;
+                        height: 30%;
                       }
 
                       .p_date {
                         font-size: 20px;
-                        line-height: 1px;
+                        height: 20px;
                         display: flex;
                         justify-content: center;
+                        height: 40%;
                       }
 
                       .p_year {
                         font-size: 10px;
-                        line-height: 1px;
+                        // line-height: 1px;
+                        height: 20px;
                         display: flex;
                         justify-content: center;
+                        height: 30%;
                       }
                     }
                   }
@@ -2222,6 +2433,7 @@ $borderCoder: #eaedf2;
                     padding: 2px;
                     position: relative;
                     table-layout: fixed;
+                    font-size: 18px;
 
                     > img {
                       width: 20px;
@@ -2243,6 +2455,8 @@ $borderCoder: #eaedf2;
                     }
 
                     .checked_state {
+                      display: flex;
+                      align-items: center;
                       input {
                         display: none;
                       }
@@ -2320,5 +2534,25 @@ li {
   border: 1px solid rgba(156, 173, 173, 0.3);
   color: #9cadadb7;
   box-sizing: border-box;
+}
+.Tui_calendar_main {
+  border-radius: 15px; // 99em;
+  // background-color: #ff1100;
+  border: 1px solid #707070;
+  position: absolute;
+  top: 133px;
+  bottom: 18px;
+  left: 47px;
+  right: 47px;
+}
+.Tui_calendar_date {
+  border-radius: 15px; // 99em;
+  // background-color: #ff1100;
+  border: 0px solid #000000;
+  position: absolute;
+  top: 133px;
+  bottom: 18px;
+  left: 47px;
+  right: 350px;
 }
 </style>

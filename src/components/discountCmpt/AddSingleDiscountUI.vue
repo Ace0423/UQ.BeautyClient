@@ -247,7 +247,7 @@ let submitBtn = () => {
 
   /**新增明細 */
   addSingleDiscountApi(curdata).then((res: any) => {
-    let resData = res.data;
+    let resData = res;
     if (resData.state == 1) {
       handAlertView("新增成功", 2, 1);
       setTimeout(() => {

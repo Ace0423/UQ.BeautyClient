@@ -219,7 +219,7 @@ const editConfirmHdr = () => {
     isEditAccounting: formInputRef.value.isEditAccounting,
   };
   updateCourseDetailApi(apiEditCourseData).then((res: any) => {
-    let resData = res.data;
+    let resData = res;
     if (resData.state == 1) {
       setTimeout(() => {
         props.showEditForm(false);

@@ -100,10 +100,7 @@
       </table>
     </div>
   </div>
-  <AddcouponUI
-    v-if="showAddUI"
-    :showUIFn="showAddUIFn"
-  ></AddcouponUI>
+  <AddcouponUI v-if="showAddUI" :showUIFn="showAddUIFn"></AddcouponUI>
   <EditAllDiscountUI
     v-if="showEditUI"
     :showEditUIFn="showEditUIFn"
@@ -198,6 +195,17 @@ let deleteHdr = (index: number, item: any) => {
   left: 0px;
   right: 0px;
   width: 100%;
+  .top-content {
+    .news-filter {
+      .el-select {
+        width: 150px;
+        margin-right: 10px;
+        :deep(.el-input__wrapper) {
+          height: 35px;
+        }
+      }
+    }
+  }
 
   .main-content {
     width: 100%;

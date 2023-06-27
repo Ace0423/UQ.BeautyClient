@@ -868,13 +868,10 @@ export default {
         default:
           return;
       }
-
-      setRenderRangeText();
-      setSchedules();
-      // selectDate = propSelectDate = moment(cal.getDate().getTime()).format(
-      //   "YYYY-MM-DD"
-      // );
       this_.tuiSetDate(moment(cal.getDate().getTime()).format("YYYY-MM-DD"));
+      setRenderRangeText();
+      // setSchedules();
+      this_.loadTuiList();
     }
 
     function onNewSchedule() {
@@ -1106,7 +1103,6 @@ export default {
       );
       cal.createSchedules(ScheduleList);
       refreshScheduleVisibility();
-      // this.loadTuiList();
     }
 
     function setEventListener() {

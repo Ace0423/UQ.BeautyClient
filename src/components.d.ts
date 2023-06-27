@@ -25,6 +25,7 @@ declare module '@vue/runtime-core' {
     AddManager: typeof import('./components/AddManager.vue')['default']
     AddMember: typeof import('./components/AddMember.vue')['default']
     AddMemberBank: typeof import('./components/AddMemberBank.vue')['default']
+    AddMessage: typeof import('./components/AddMessage.vue')['default']
     AddpayMethod: typeof import('./components/AddpayMethod.vue')['default']
     AddRoleManager: typeof import('./components/AddRoleManager.vue')['default']
     AddServicesUI: typeof import('./components/checkoutCmpt/AddServicesUI.vue')['default']

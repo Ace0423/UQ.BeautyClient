@@ -1,46 +1,118 @@
 
 <script setup lang="ts">
+import Icon from "@/assets/Icon zocial-guest.svg";
+import editIcon from "@/assets/Icon awesome-edit.svg";
+import { storeToRefs } from "pinia";
+import Alert from "@/components/alertCmpt";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
+import { useManagerStore } from "@/stores/manager";
+import { useCounterStore } from "@/stores/counter";
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
+const managerstore = useManagerStore();
+const { managerList } = storeToRefs(managerstore);
+const { getManagerList } = managerstore;
+const addStoredValueCardView = ref(false);
+const selectStoredValueCardItem = ref();
 const keyWord = ref("");
+const handAddStoredValueCardView = (item: any) => {
+    selectStoredValueCardItem.value = item;
+    addStoredValueCardView.value = !addStoredValueCardView.value;
+};
+const filterManagerListData = computed(() => {
+    const filter = managerList.value.data.filter(getManagerListFn);
+    return filter;
+});
+const getManagerListFn = (data: any) => {
+    if (
+        keyWord.value.substring(0, 1) == "0" ||
+        keyWord.value.substring(0, 2) == "09"
+    ) {
+        return (
+            !keyWord.value ||
+            data.phone.toLowerCase().includes(keyWord.value.toLowerCase())
+        );
+    } else {
+        return (
+            !keyWord.value ||
+            data.nameView.toLowerCase().includes(keyWord.value.toLowerCase())
+        );
+    }
+};
+
+onMounted(() => {
+    let allManager = {
+        id: 0,
+        pageindex: 0,
+        count: 0,
+    };
+    getManagerList(allManager)
+        .then((res) => {
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        });
+})
 </script>
 <template>
     <div>
         <div class="function-area">
-            <input placeholder="🔍搜尋付款名稱" v-model="keyWord" />
-            <button class="header-btn">
-                新增收款方式
+            <input placeholder="🔍搜尋" v-model="keyWord" />
+            <button class="header-btn" @click="handAddStoredValueCardView('')">
+                新增儲值卡
             </button>
         </div>
         <table>
             <thead class="header-tab">
                 <tr>
                     <th>
-                        <p>付款方式(所有 {{ 0 }} 種付款)</p>
+                        <p class="nameview">
+                            儲存卡(全部{{ 0 }}個)
+                        </p>
                     </th>
                     <th>
-                        <p>狀態</p>
+                        <!-- <p>電話</p> -->
+                    </th>
+                    <th>
+                        <!-- <p>加入時間</p> -->
+                    </th>
+                    <th>
+
                     </th>
                 </tr>
             </thead>
             <tbody class="content-tab">
-                <tr>
-                    <td class="content-name">
-                        <p>現金收款</p>
-                    </td>
-                    <td>
-                        <p>{{ }}</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="content-name">
-                        <p>手輸現金</p>
-                    </td>
-                    <td>
-                        <p>{{ }}</p>
-                    </td>
-                </tr>
+                <!-- <tr v-for="item in filterManagerListData" :key="item.managerId">
+                            <td class="content-name">
+                                <img :src="Icon" />
+                                <p>{{ item.nameView }}</p>
+                            </td>
+                            <td>
+                                <p>{{ item.phone }}</p>
+                            </td>
+                            <td>
+                                <p>{{ item.dateCreate }}</p>
+                            </td>
+                            <td>
+                                <button class="header-btn" v-on:click="handAddManagerView(item)">
+                                    <img :src="editIcon" />
+                                </button>
+                            </td>
+                        </tr> -->
             </tbody>
         </table>
     </div>
+    <AddStoredValueCard v-if="addStoredValueCardView" :select-stored-value-card-item="selectStoredValueCardItem"
+        :hand-add-stored-value-card-view="handAddStoredValueCardView">
+    </AddStoredValueCard>
 </template>
 
 <style lang="scss" scoped>
@@ -74,8 +146,7 @@ div {
             border-radius: 6px;
             border: solid 1px #707070;
             background-color: #fff;
-            margin-right: 10px;
-            text-align: center;
+
         }
 
         >button {
@@ -85,7 +156,7 @@ div {
             border: solid 1px #707070;
             background-color: #84715c;
             color: #fff;
-            margin: 0 20px;
+            margin: 0 10px;
         }
     }
 

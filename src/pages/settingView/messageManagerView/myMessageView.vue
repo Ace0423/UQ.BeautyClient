@@ -41,72 +41,58 @@ const getManagerListFn = (data: any) => {
 };
 
 onMounted(() => {
-    let allManager = {
-        id: 0,
-        pageindex: 0,
-        count: 0,
-    };
-    getManagerList(allManager)
-        .then((res) => {
-            if (res.state == 2) {
-                Alert.warning(showErrorMsg(res.msg), 2000);
-            }
-        })
-        .catch((e: any) => {
-            Alert.warning(showHttpsStatus(e.response.status), 2000);
-            if (e.response.status == 401) {
-                setTimeout(() => {
-                    handLogOut();
-                }, 2000);
-            }
-        });
+
 })
 </script>
 <template>
     <div>
-        <div class="function-area">
-            <input placeholder="🔍搜尋名稱、暱稱或手機" v-model="keyWord" />
-            <button class="header-btn" @click="handAddManagerView('')">
-                新增使用者
+    <div class="function-area">
+            <input placeholder="🔍搜尋" v-model="keyWord" />
+            <button class="header-auto-btn" >
+                新增自動化訊息
+            </button>
+            <button class="header-btn">
+                新增訊息
             </button>
         </div>
         <table>
             <thead class="header-tab">
                 <tr>
-                    <th>
-                        <p class="nameview">
-                            使用者(全部{{ filterManagerListData.length }}個)
-                        </p>
+                    <th class="col-3-th">
+                        <p>主題 </p>
                     </th>
-                    <th>
-                        <p>電話</p>
+                    <th class="col-2-th">
+                        <p>發送頻道</p>
                     </th>
-                    <th>
-                        <p>加入時間</p>
+                    <th class="col-2-th">
+                        <p>自動發送</p>
                     </th>
-                    <th>
+                    <th class="col-2-th">
+                        <p>上次發送時間</p>
+                    </th>
+                    <th class="col-1-th">
 
                     </th>
                 </tr>
             </thead>
             <tbody class="content-tab">
-                <tr v-for="item in filterManagerListData" :key="item.managerId">
-                    <td class="content-name">
-                        <img :src="Icon" />
-                        <p>{{ item.nameView }}</p>
-                    </td>
-                    <td>
-                        <p>{{ item.phone }}</p>
-                    </td>
-                    <td>
-                        <p>{{ item.dateCreate }}</p>
-                    </td>
-                    <td>
-                        <button class="header-btn" v-on:click="handAddManagerView(item)">
-                            <img :src="editIcon" />
-                        </button>
-                    </td>
-                </tr>
+                <!-- <tr v-for="item in filterManagerListData" :key="item.managerId">
+                                        <td class="content-name">
+                                            <img :src="Icon" />
+                                            <p>{{ item.nameView }}</p>
+                                        </td>
+                                        <td>
+                                            <p>{{ item.phone }}</p>
+                                        </td>
+                                        <td>
+                                            <p>{{ item.dateCreate }}</p>
+                                        </td>
+                                        <td>
+                                            <button class="header-btn" v-on:click="handAddManagerView(item)">
+                                                <img :src="editIcon" />
+                                            </button>
+                                        </td>
+                                    </tr> -->
             </tbody>
         </table>
     </div>
@@ -127,6 +113,10 @@ div {
     font-family: STXihei;
     color: #717171;
 
+    p {
+        margin: 16px;
+    }
+
     >.function-area {
         height: 50px;
         position: absolute;
@@ -134,19 +124,19 @@ div {
         border: none;
         background-color: transparent;
         display: flex;
-        justify-content: end;
+        // justify-content: end;
         align-items: center;
         left: auto;
         width: auto;
 
         >input {
-            width: auto;
+            max-width: 150px;
             height: 60%;
             border-radius: 6px;
             border: solid 1px #707070;
             background-color: #fff;
-            margin-right: 10px;
-            text-align: center;
+            margin: 5px;
+            text-align: left;
         }
 
         >button {
@@ -156,7 +146,14 @@ div {
             border: solid 1px #707070;
             background-color: #84715c;
             color: #fff;
-            margin: 0 20px;
+            margin: 0 5px;
+        }
+
+        >.header-auto-btn {
+            border: solid 2px #84715c;
+            background-color: transparent;
+            color: #84715c;
+            font-weight: bold;
         }
     }
 
@@ -178,8 +175,20 @@ div {
                 height: 50px;
                 justify-content: space-between;
 
+                >.col-1-th {
+                    width: 10%;
+                }
+
+                >.col-2-th {
+                    width: 20%;
+                }
+
+                >.col-3-th {
+                    width: 30%;
+                }
+
                 >th {
-                    width: calc(100%/4);
+
 
                     >p {
                         min-width: 108px;
@@ -250,5 +259,4 @@ div {
             }
         }
     }
-}
-</style>
+}</style>

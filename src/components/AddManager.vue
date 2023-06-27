@@ -8,6 +8,7 @@ const managerStore = useManagerStore();
 const { createManagerData, editManagerData, getRoleList } = managerStore;
 const { roleList } = storeToRefs(managerStore);
 const title = ref("新增使用者");
+const roleActive = ref([]);
 const newManager: any = reactive({
     email: "",
     password: "",
@@ -19,7 +20,8 @@ const newManager: any = reactive({
     userLock: true,
     lineUserID: "",
     googleUserID: "",
-    roleList: []
+    roleList: [],
+
 });
 
 const props = defineProps<{
@@ -203,8 +205,7 @@ const verify_all = () => {
     let is_valid = true;
     for (let component in state.form_items) {
         let item = state.form_items[component];
-        console.log(item.value)
-        if (component == 'password' && item.value == undefined) {break;};
+        if (component == 'password' && item.value == undefined) { break; };
         for (let rule in item.rules) {
             if (!verify_methods[rule](item)) {
                 is_valid = false;
@@ -220,8 +221,10 @@ const handSubmit = () => {
     newManager.password = state.form_items.password.value;
     newManager.email = state.form_items.email.value;
     newManager.phone = state.form_items.cellphone.value;
+    newManager.roleList.push(roleActive.value);
     if (props.selectManagerItem) {
         newManager.managerId = props.selectManagerItem.managerId;
+        newManager.password = "";
         editManagerData(newManager)
             .then((res) => {
                 if (res.state == 1) {
@@ -277,8 +280,15 @@ onMounted(() => {
         newManager.userLock = props.selectManagerItem.userLock;
         newManager.lineUserID = props.selectManagerItem.lineUserID;
         newManager.googleUserID = props.selectManagerItem.googleUserID;
-        newManager.roleList = props.selectManagerItem.roleList;
+        roleActive.value = JSON.parse(JSON.stringify(props.selectManagerItem.roleList.length == 0 ? "" : props.selectManagerItem.roleList[0].roleId))
+        // for (let index = 0; index < props.selectManagerItem.roleList.length; index++) {
+        //     let val = props.selectManagerItem.roleList[index].roleId;
+        //     newManager.roleList.push(val)
+        // }
+        // newManager.roleList = props.selectManagerItem.roleList.length == 0 ? "" : props.selectManagerItem.roleList[0].roleId;
+        title.value = "修改使用者";
     }
+    console.log(newManager.password)
     getRoleName();
 });
 </script>
@@ -304,7 +314,9 @@ onMounted(() => {
             <div>
                 <span>密碼</span>
                 <div>
-                    <input type="password" v-model="form_items.password.value" />
+                    <form>
+                        <input type="password" placeholder="請輸入密碼" autocomplete="off" v-model="form_items.password.value" />
+                    </form>
                     <p v-if="form_items.password.is_error">{{ form_items.password.warn }}</p>
                 </div>
             </div>
@@ -333,7 +345,7 @@ onMounted(() => {
             </div>
             <div>
                 <span>權限</span>
-                <select v-model="newManager.roleList[0]">
+                <select v-model="roleActive">
                     <option disabled value="">請選擇權限職等</option>
                     <option v-for="item in roleList.data" :key="item.roleId" :value="item.roleId">{{ item.memo }}</option>
                 </select>
@@ -389,7 +401,7 @@ onMounted(() => {
             }
 
             >select {
-                max-width: 200px;
+                // max-width: 200px;
                 height: 30px;
                 text-align: center;
                 border-radius: 6px;
@@ -424,7 +436,7 @@ onMounted(() => {
                 position: relative;
                 flex: 1;
 
-                >input {
+                input {
                     max-width: 200px;
                     height: 30px;
                     text-align: center;

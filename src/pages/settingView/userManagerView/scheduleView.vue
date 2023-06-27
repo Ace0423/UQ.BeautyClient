@@ -3,10 +3,15 @@ import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
 import { storeToRefs } from "pinia";
 import { useManagerStore } from "@/stores/manager";
+import { useCounterStore } from "@/stores/counter";
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
 const managerStore = useManagerStore();
-const { getWorkingHoursList } = managerStore;
+const { getWorkingHours } = managerStore;
 const { workingHoursList } = storeToRefs(managerStore);
 const quicklyScheduleView = ref(false);
+const editScheduleView = ref(false);
+const selectItem = ref();
 let weeks = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
 const currentSundayTime = ref();
 const currentSaturdayTime = ref();
@@ -56,6 +61,7 @@ const handLastWeek = (() => {
     now.value = new Date(time);
     currentSundayTime.value = format.value(sunday.value);
     currentSaturdayTime.value = format.value(saturday.value);
+    requestWorkingHoursList();
 })
 const handNextWeek = (() => {
     let time = now.value.getTime();
@@ -63,18 +69,29 @@ const handNextWeek = (() => {
     now.value = new Date(time);
     currentSundayTime.value = format.value(sunday.value);
     currentSaturdayTime.value = format.value(saturday.value);
+    requestWorkingHoursList();
 })
-const WorkingHoursList = (data: any) => {
-
-    getWorkingHoursList(data)
+const requestWorkingHoursList = () => {
+    let arr = currentSundayTime.value.split("/");
+    let data = {
+        managerId: 0,
+        year: Number(arr[0]),
+        month: Number(arr[1]),
+        day: Number(arr[2]),
+        pageIndex: 0,
+        count: 0
+    }
+    getWorkingHours(data)
         .then(() => {
 
         })
         .catch((e: any) => {
+            console.log(111);
             Alert.warning(showHttpsStatus(e.response.status), 2000);
             if (e.response.status == 401) {
+               
                 setTimeout(() => {
-                    // handLogOut();
+                    handLogOut();
                 }, 2000);
             }
         })
@@ -83,29 +100,30 @@ const timeDifference = ((data: any) => {
     return data.times / 60;
 })
 const scheduleList = computed(() => {
-    for (let index = 0; index < workingHoursList.value.data.length; index++) {
-        let onDay = new Date(workingHoursList.value.data[index].data + workingHoursList.value.data[index].dayOn);
-        // console.log(workingHoursList.value.data[index]);
-    }
     const filter = workingHoursList.value.data;
     return filter;
+})
+const handEditWeek = ((data: any, index: any) => {
+    let arr = currentSundayTime.value.split("/");
+    let val: any = {
+        managerId: data.managerId,
+        nameView: data.nameView,
+        timeTableList: JSON.parse(JSON.stringify(data.timeTableList[index])),
+    }
+    val.timeTableList.date = arr[0] + "/" + weekDay.value[index];
+    selectItem.value = val;
+    handEditScheduleView();
 })
 const handQuicklyscheduleView = () => {
     quicklyScheduleView.value = !quicklyScheduleView.value;
 };
+const handEditScheduleView = () => {
+    editScheduleView.value = !editScheduleView.value;
+};
 onMounted(() => {
     currentSundayTime.value = format.value(sunday.value);
     currentSaturdayTime.value = format.value(saturday.value);
-    let data = {
-        managerId: 0,
-        year: 0,
-        month: 0,
-        day: 0,
-        pageIndex: 0,
-        count: 0
-    }
-    WorkingHoursList(data);
-
+    requestWorkingHoursList();
 })
 </script>
 <template>
@@ -139,7 +157,8 @@ onMounted(() => {
                             <p>{{ item.nameView }}</p>
                         </div>
                     </td>
-                    <td class="time-td" v-for="i, index in item.workinglists" :key="index">
+                    <td class="time-td" v-for="i, index in item.timeTableList" :key="index"
+                        @click="handEditWeek(item, index)">
                         <div class="off-day" v-if="!i.dayOn">
                             <p>+</p>
                         </div>
@@ -152,7 +171,12 @@ onMounted(() => {
             </tbody>
         </table>
     </div>
-    <QuicklySchedule v-if="quicklyScheduleView" :hand-quicklyschedule-view="handQuicklyscheduleView"></Quicklyschedule>
+    <QuicklySchedule v-if="quicklyScheduleView" :hand-quicklyschedule-view="handQuicklyscheduleView"
+        :requestWorkingHoursList="requestWorkingHoursList">
+    </Quicklyschedule>
+    <EditSchedule v-if="editScheduleView" :hand-edit-schedule-view="handEditScheduleView"
+        :request-working-hours-list="requestWorkingHoursList" :select-item="selectItem">
+    </EditSchedule>
 </template>
 
 <style lang="scss" scoped>

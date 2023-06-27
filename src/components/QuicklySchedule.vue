@@ -7,7 +7,7 @@ import { useCounterStore } from "@/stores/counter";
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
 const managerStore = useManagerStore();
-const { getWorkingDefault } = managerStore;
+const { getWorkingDefault, submitWorkingDefault } = managerStore;
 const { workingHoursList, } = storeToRefs(managerStore);
 const managerActive: any = ref("");
 const title = ref("人員快速排班");
@@ -83,6 +83,7 @@ const timeDefault = [
 ];
 const props = defineProps<{
   handQuicklyscheduleView: Function;
+  requestWorkingHoursList: Function;
 }>();
 const handCheckBox = (item: any) => {
   if (item.dayOn == "") {
@@ -90,18 +91,18 @@ const handCheckBox = (item: any) => {
   } else {
     item.dayOn = "";
   }
-  console.log(item)
 }
 const handAaddRestTime = (data: any) => {
-  console.log(data);
   let restVal = {
-    mwrNo: data.mwNo,
-    dayOn: "",
     dayOff: "",
+    dayOn: "",
+    times: 0,
+    ttrId: 0,
   }
   data.restTime.push(restVal);
 }
 const handDelRestTime = (data: any, index: any) => {
+  console.log(data)
   data.restTime.splice(index, 1);
 }
 const filterRestTime = ((data: any) => {
@@ -109,12 +110,29 @@ const filterRestTime = ((data: any) => {
   return filter;
 })
 const handSubmit = () => {
-
+  submitWorkingDefault(workingDefaultList.data)
+    .then((res) => {
+      if (res.state == 1) {
+        Alert.warning('修改成功', 2000);
+        setTimeout(() => {
+          props.requestWorkingHoursList();
+          props.handQuicklyscheduleView();
+        }, 2000);
+      } else {
+        Alert.warning(showErrorMsg(res.msg), 2000);
+      }
+    })
+    .catch((e: any) => {
+      Alert.warning(showHttpsStatus(e.response.status), 2000);
+      if (e.response.status == 401) {
+        setTimeout(() => {
+          handLogOut();
+        }, 2000);
+      }
+    })
 };
 
 const getWorkingDefaultList = () => {
-  console.log('before')
-  console.log(workingDefaultList.data);
   workingDefaultList.data = [];
   let data = {
     managerId: managerActive.value.managerId
@@ -130,11 +148,7 @@ const getWorkingDefaultList = () => {
             managerName: managerActive.value.nameView,
             timeTableList: []
           }
-          // for (let index = 0; index < timeDefault.length; index++) {
-            workingDefaultList.data.timeTableList = JSON.parse(JSON.stringify(timeDefault))
-          // }
-          console.log('after')
-          console.log(workingDefaultList.data);
+          workingDefaultList.data.timeTableList = JSON.parse(JSON.stringify(timeDefault));
         }
       }
     })
@@ -192,7 +206,7 @@ onMounted(() => {
                   <input type="time" :value="i.dayOff">
                 </td>
                 <td class="td-bg" v-if="i.dayOn.length > 0">
-                  <button @click="handAaddRestTime(i)">加入休息時間</button>
+                  <button @click="handAaddRestTime(i)">+休息時間</button>
                 </td>
                 <td class="td-bg-rest" v-if="i.dayOn.length == 0">店休</td>
               </tr>
@@ -203,13 +217,13 @@ onMounted(() => {
                   </div>
                 </td>
                 <td class="td-bg">
-                  <input type="time" :value="j.dayOn">
+                  <input type="time" v-model="j.dayOn">
                 </td>
                 <td class="td-bg">
-                  <input type="time" :value="j.dayOff">
+                  <input type="time" v-model="j.dayOff">
                 </td>
                 <td class="td-bg">
-                  <button @click="handDelRestTime(j, index)">X</button>
+                  <button @click="handDelRestTime(i, index)">X</button>
                 </td>
               </tr>
             </div>

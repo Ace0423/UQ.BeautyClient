@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import router from "@/router";
+onMounted(() => {
 
+})
 </script>
 <template>
     <div class="content">
         <div class="nav">
-            <router-link to="/settingView/storeSettingsView/storeInformationView">商店資訊</router-link>
-            <router-link to="/settingView/storeSettingsView/businessHoursView">店內營業時間</router-link>
-            <router-link to="/settingView/storeSettingsView/paymentMethodView">顧客付款方式</router-link>
+            <router-link to="/settingView/messageManagerView/myMessageView">我的訊息</router-link>
+            <router-link to="/settingView/messageManagerView/systemMessageView">系統訊息</router-link>
+            <router-link to="/settingView/messageManagerView/sendingRecordView">發送紀錄</router-link>
         </div>
         <router-view />
     </div>
@@ -23,11 +26,11 @@
 
     >.nav {
         display: flex;
+        // pointer-events: none;
 
         >a {
             border: none;
-            padding: 0px 10px;
-            min-width: 120px;
+            width: 120px;
             height: 45px;
             border-radius: 10px 10px 0 0;
             background-color: #faf9f8;
@@ -61,4 +64,5 @@
         }
 
     }
-}</style>
+}
+</style>

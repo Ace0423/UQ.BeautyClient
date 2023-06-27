@@ -1,52 +1,23 @@
 
 <script setup lang="ts">
-import Icon from "@/assets/Icon zocial-guest.svg";
-import editIcon from "@/assets/Icon awesome-edit.svg";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
-import { useManagerStore } from "@/stores/manager";
 import { useCounterStore } from "@/stores/counter";
+import { useCompanyStore } from "@/stores/company";
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
-const managerstore = useManagerStore();
-const { managerList } = storeToRefs(managerstore);
-const { getManagerList } = managerstore;
-const addManagerView = ref(false);
-const selectManagerItem = ref();
+const companyStore = useCompanyStore();
+const { getCheckOutType } = companyStore;
+const { checkOutTypeList } = storeToRefs(companyStore);
 const keyWord = ref("");
-const handAddManagerView = (item: any) => {
-    selectManagerItem.value = item;
-    addManagerView.value = !addManagerView.value;
+const addPayMethodView = ref(false);
+const selectPayMethodItem = ref();
+const handAddManagerView = () => {
+    addPayMethodView.value = !addPayMethodView.value;
 };
-const filterManagerListData = computed(() => {
-    const filter = managerList.value.data.filter(getManagerListFn);
-    return filter;
-});
-const getManagerListFn = (data: any) => {
-    if (
-        keyWord.value.substring(0, 1) == "0" ||
-        keyWord.value.substring(0, 2) == "09"
-    ) {
-        return (
-            !keyWord.value ||
-            data.phone.toLowerCase().includes(keyWord.value.toLowerCase())
-        );
-    } else {
-        return (
-            !keyWord.value ||
-            data.nameView.toLowerCase().includes(keyWord.value.toLowerCase())
-        );
-    }
-};
-
-onMounted(() => {
-    let allManager = {
-        id: 0,
-        pageindex: 0,
-        count: 0,
-    };
-    getManagerList(allManager)
+const checkOutType = () => {
+    getCheckOutType()
         .then((res) => {
             if (res.state == 2) {
                 Alert.warning(showErrorMsg(res.msg), 2000);
@@ -59,59 +30,60 @@ onMounted(() => {
                     handLogOut();
                 }, 2000);
             }
-        });
+        })
+}
+const selectItem = (data: any) => {
+    selectPayMethodItem.value = data;
+    handAddManagerView();
+}
+const filterCheckOutTypeListData = computed(() => {
+    const filter = checkOutTypeList.value.data.filter(getCheckOutTypeListFn);
+    return filter;
+});
+const getCheckOutTypeListFn = (data: any) => {
+    return (
+        !keyWord.value ||
+        data.cotTitle.toLowerCase().includes(keyWord.value.toLowerCase())
+    );
+};
+onMounted(() => {
+    checkOutType();
 })
 </script>
 <template>
     <div>
         <div class="function-area">
-            <input placeholder="🔍搜尋名稱、暱稱或手機" v-model="keyWord" />
-            <button class="header-btn" @click="handAddManagerView('')">
-                新增使用者
+            <input placeholder="🔍搜尋付款名稱" v-model="keyWord" />
+            <button class="header-btn" @click="selectItem('')">
+                新增收款方式
             </button>
         </div>
         <table>
             <thead class="header-tab">
                 <tr>
                     <th>
-                        <p class="nameview">
-                            使用者(全部{{ filterManagerListData.length }}個)
-                        </p>
+                        <p>付款方式(所有 {{ filterCheckOutTypeListData.length }} 種付款)</p>
                     </th>
                     <th>
-                        <p>電話</p>
-                    </th>
-                    <th>
-                        <p>加入時間</p>
-                    </th>
-                    <th>
-
+                        <p>狀態</p>
                     </th>
                 </tr>
             </thead>
             <tbody class="content-tab">
-                <tr v-for="item in filterManagerListData" :key="item.managerId">
+                <tr v-for="item in filterCheckOutTypeListData" :key="item.cotId" @click="selectItem(item)">
                     <td class="content-name">
-                        <img :src="Icon" />
-                        <p>{{ item.nameView }}</p>
+                        <p>{{ item.cotTitle }}</p>
                     </td>
                     <td>
-                        <p>{{ item.phone }}</p>
-                    </td>
-                    <td>
-                        <p>{{ item.dateCreate }}</p>
-                    </td>
-                    <td>
-                        <button class="header-btn" v-on:click="handAddManagerView(item)">
-                            <img :src="editIcon" />
-                        </button>
+                        <p v-if="!item.enabled">未啟用 ></p>
+                        <p v-if="item.enabled">已啟用 ></p>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <AddManager v-if="addManagerView" :hand-add-manager-view="handAddManagerView" :select-manager-item="selectManagerItem">
-    </AddManager>
+    <AddPayMethod v-if="addPayMethodView" :hand-add-manager-view="handAddManagerView"
+        :select-pay-method-item="selectPayMethodItem"></AddpayMethod>
 </template>
 
 <style lang="scss" scoped>
@@ -184,6 +156,7 @@ div {
                     >p {
                         min-width: 108px;
                         text-align: left;
+                        margin: 0 15px;
                     }
 
                     >.nameview {
@@ -222,6 +195,12 @@ div {
                 >td {
                     display: flex;
                     width: calc(100%/4);
+
+                    >p {
+                        min-width: 108px;
+                        text-align: left;
+                        margin-left: 15px;
+                    }
 
                     >button {
                         height: 100%;

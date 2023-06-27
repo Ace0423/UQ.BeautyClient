@@ -18,6 +18,7 @@ const componentKey = ref(0);
 const width = ref('0');
 const editRoleNameView = ref(false);
 const changeSelect: any = [];
+const permissionsData: any = reactive({ data: [] });
 const handEditRoleNameView = () => {
     editRoleNameView.value = !editRoleNameView.value;
 };
@@ -26,7 +27,10 @@ const roleNameList = computed(() => {
         return roleList.value.data;
     }
 });
-
+const permissions = computed(() => {
+    permissionsData.data = JSON.parse(JSON.stringify(permissionsList.value.data));
+    return permissionsData.data
+})
 const handSelect = ((item: any, olId: number) => {
     let data = {
         roleId: item.roleId,
@@ -36,9 +40,8 @@ const handSelect = ((item: any, olId: number) => {
     changeSelect.push(data);
 })
 
-const handReturn = (() => {
-    getPermissionsList()
-
+const handCancel = (() => {
+    permissionsData.data = JSON.parse(JSON.stringify(permissionsList.value.data));
 })
 const handSubmit = (() => {
     editOptionRole(changeSelect)
@@ -114,7 +117,7 @@ onMounted(() => {
                 </tr>
             </thead>
             <tbody class="content-tab">
-                <tr class="permissionsList" v-for="items, index in permissionsList.data" :key="index">                  
+                <tr class="permissionsList" v-for="items, index in permissions" :key="index">
                     <td :style="{ '--width': width }" class="a">{{ items.controllerText }}</td>
                     <td :style="{ '--width': width }" class="a">
                         <p v-for="item in items.optionRoleLists" :key="item.olId">{{ item.actionText }}</p>
@@ -128,7 +131,7 @@ onMounted(() => {
                 </tr>
             </tbody>
             <div class="submitBtn">
-                <button @click="handReturn()">取消變更</button>
+                <button @click="handCancel()">取消變更</button>
                 <button @click="handSubmit()">確認儲存</button>
             </div>
         </table>
@@ -289,8 +292,10 @@ onMounted(() => {
                             position: relative;
                             appearance: none;
                             border: 1px solid;
+
                             &:checked {
                                 background-color: #e6e2de;
+
                                 &::after {
                                     content: '✓';
                                     color: #717171;

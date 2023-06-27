@@ -45,7 +45,7 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
             </router-link>
           </div>
           <div class="nav-content">
-            <router-link to="/settingView/messageManagerView">
+            <router-link to="/settingView/messageManagerView/myMessageView">
               <div>
                 <h1>訊息管理</h1>
                 <p>管理與新增商店的訊息發送相關設定</p>
@@ -112,7 +112,7 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
             </router-link>
           </div>
           <div class="nav-content">
-            <router-link to="">
+            <router-link to="/settingView/storedValueCardView">
               <div>
                 <h1>儲值卡</h1>
                 <p>管理商店內所有儲值卡</p>

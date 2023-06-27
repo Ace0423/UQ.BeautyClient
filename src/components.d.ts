@@ -24,6 +24,7 @@ declare module '@vue/runtime-core' {
     AddRoleManager: typeof import('./components/AddRoleManager.vue')['default']
     AddServicesUI: typeof import('./components/checkoutCmpt/AddServicesUI.vue')['default']
     AddSingleDiscountUI: typeof import('./components/discountCmpt/AddSingleDiscountUI.vue')['default']
+    AddStoredValueCard: typeof import('./components/AddStoredValueCard.vue')['default']
     Alert: typeof import('./components/Alert.vue')['default']
     ApptInfoUI: typeof import('./components/apptCmpt/ApptInfoUI.vue')['default']
     BasicUI: typeof import('./components/shareCmpt/BasicUI.vue')['default']

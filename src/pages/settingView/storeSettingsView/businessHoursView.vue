@@ -14,15 +14,8 @@ const { getTimeTablesRequest, postTimeTablesRequest } = companyStore;
 const { businessHoursList } = storeToRefs(companyStore);
 let weeks = ["週日", "週一", "週二", "週三", "週四", "週五", "週六", "休息時間"];
 const businessHoursData: any = reactive({ data: [] });
-const handCheckBox = (item: any) => {
-    if (item.dayOn == "") {
-        item.dayOn = "09:00";
-    } else {
-        item.dayOn = "";
-    }
-}
 const businessHours = computed(() => {
-    businessHoursData.data = businessHoursList.value.data;
+    businessHoursData.data = JSON.parse(JSON.stringify(businessHoursList.value.data));
     return businessHoursData.data
 })
 const filterRestList = ((data: any) => {
@@ -30,18 +23,7 @@ const filterRestList = ((data: any) => {
     return filter;
 })
 
-const handAaddRestTime = (data: any) => {
-    console.log(data)
-    let restVal = {
-        mwrNo: data.mwNo == undefined ? 0 : data.mwrNo,
-        dayOn: "",
-        dayOff: "",
-    }
-    data.restList.push(restVal);
-}
-const handDelRestTime = (data: any, index: any) => {
-    data.restList.splice(index, 1);
-}
+
 const getBusinessHours = () => {
     let data = {
         cId: userInfo.value.company
@@ -64,9 +46,30 @@ const getBusinessHours = () => {
 onMounted(() => {
     getBusinessHours();
 })
+const handCheckBox = (item: any) => {
+    if (item.dayOn == "") {
+        item.dayOn = "09:00";
+    } else {
+        item.dayOn = "";
+    }
+}
+const handAaddRestTime = (data: any) => {
+    let restVal = {
+        mwrNo: data.mwNo == undefined ? 0 : data.mwrNo,
+        dayOn: "",
+        dayOff: "",
+    }
+    data.restList.push(restVal);
+}
+const handDelRestTime = (data: any, index: any) => {
+    data.restList.splice(index, 1);
+}
 const handSubmit = () => {
     postTimeTablesRequest(businessHoursData.data)
         .then((res) => {
+            if (res.state == 1) {
+                Alert.warning("修改成功", 2000);
+            }
             if (res.state == 2) {
                 Alert.warning(showErrorMsg(res.msg), 2000);
             }
@@ -80,6 +83,9 @@ const handSubmit = () => {
             }
         })
 };
+const handCancel = (() => {
+    businessHoursData.data = JSON.parse(JSON.stringify(businessHoursList.value.data));
+});
 </script>
 <template>
     <div class="hours-content">
@@ -139,7 +145,7 @@ const handSubmit = () => {
         </div>
     </div>
     <div class="submitBtn">
-        <button>取消變更</button>
+        <button v-on:click="handCancel()">取消變更</button>
         <button v-on:click="handSubmit()">確認儲存</button>
     </div>
 </template>

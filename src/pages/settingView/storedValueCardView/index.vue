@@ -12,12 +12,12 @@ const { handLogOut } = counterStore;
 const managerstore = useManagerStore();
 const { managerList } = storeToRefs(managerstore);
 const { getManagerList } = managerstore;
-const addManagerView = ref(false);
-const selectManagerItem = ref();
+const addStoredValueCardView = ref(false);
+const selectStoredValueCardItem = ref();
 const keyWord = ref("");
-const handAddManagerView = (item: any) => {
-    selectManagerItem.value = item;
-    addManagerView.value = !addManagerView.value;
+const handAddStoredValueCardView = (item: any) => {
+    selectStoredValueCardItem.value = item;
+    addStoredValueCardView.value = !addStoredValueCardView.value;
 };
 const filterManagerListData = computed(() => {
     const filter = managerList.value.data.filter(getManagerListFn);
@@ -41,60 +41,78 @@ const getManagerListFn = (data: any) => {
 };
 
 onMounted(() => {
-
+    let allManager = {
+        id: 0,
+        pageindex: 0,
+        count: 0,
+    };
+    getManagerList(allManager)
+        .then((res) => {
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        });
 })
 </script>
 <template>
     <div>
-        <!-- <div class="function-area">
-                    <input placeholder="🔍搜尋" v-model="keyWord" />
-                    <button class="header-auto-btn" @click="handAddManagerView('')">
-                        新增自動化訊息
-                    </button>
-                    <button class="header-btn" @click="handAddManagerView('')">
-                        新增訊息
-                    </button>
-                </div> -->
+        <div class="function-area">
+            <input placeholder="🔍搜尋" v-model="keyWord" />
+            <button class="header-btn" @click="handAddStoredValueCardView('')">
+                新增儲值卡
+            </button>
+        </div>
         <table>
             <thead class="header-tab">
                 <tr>
-                    <th class="col-5-th">
-                        <p>主題 </p>
+                    <th>
+                        <p class="nameview">
+                            儲存卡(全部{{ 0 }}個)
+                        </p>
                     </th>
-                    <th class="col-2-th">
-                        <p>LINE</p>
+                    <th>
+                        <!-- <p>電話</p> -->
                     </th>
-                    <th class="col-2-th">
-                        <p>簡訊</p>
+                    <th>
+                        <!-- <p>加入時間</p> -->
                     </th>
-                    <th class="col-1-th">
-                        <p></p>
+                    <th>
+
                     </th>
                 </tr>
             </thead>
             <tbody class="content-tab">
                 <!-- <tr v-for="item in filterManagerListData" :key="item.managerId">
-                                        <td class="content-name">
-                                            <img :src="Icon" />
-                                            <p>{{ item.nameView }}</p>
-                                        </td>
-                                        <td>
-                                            <p>{{ item.phone }}</p>
-                                        </td>
-                                        <td>
-                                            <p>{{ item.dateCreate }}</p>
-                                        </td>
-                                        <td>
-                                            <button class="header-btn" v-on:click="handAddManagerView(item)">
-                                                <img :src="editIcon" />
-                                            </button>
-                                        </td>
-                                    </tr> -->
+                            <td class="content-name">
+                                <img :src="Icon" />
+                                <p>{{ item.nameView }}</p>
+                            </td>
+                            <td>
+                                <p>{{ item.phone }}</p>
+                            </td>
+                            <td>
+                                <p>{{ item.dateCreate }}</p>
+                            </td>
+                            <td>
+                                <button class="header-btn" v-on:click="handAddManagerView(item)">
+                                    <img :src="editIcon" />
+                                </button>
+                            </td>
+                        </tr> -->
             </tbody>
         </table>
     </div>
-    <AddManager v-if="addManagerView" :hand-add-manager-view="handAddManagerView" :select-manager-item="selectManagerItem">
-    </AddManager>
+    <AddStoredValueCard v-if="addStoredValueCardView" :select-stored-value-card-item="selectStoredValueCardItem"
+        :hand-add-stored-value-card-view="handAddStoredValueCardView">
+    </AddStoredValueCard>
 </template>
 
 <style lang="scss" scoped>
@@ -110,10 +128,6 @@ div {
     font-family: STXihei;
     color: #717171;
 
-    p {
-        margin: 16px;
-    }
-
     >.function-area {
         height: 50px;
         position: absolute;
@@ -121,19 +135,18 @@ div {
         border: none;
         background-color: transparent;
         display: flex;
-        // justify-content: end;
+        justify-content: end;
         align-items: center;
         left: auto;
         width: auto;
 
         >input {
-            max-width: 150px;
+            width: auto;
             height: 60%;
             border-radius: 6px;
             border: solid 1px #707070;
             background-color: #fff;
-            margin: 5px;
-            text-align: left;
+
         }
 
         >button {
@@ -143,14 +156,7 @@ div {
             border: solid 1px #707070;
             background-color: #84715c;
             color: #fff;
-            margin: 0 5px;
-        }
-
-        >.header-auto-btn {
-            border: solid 2px #84715c;
-            background-color: transparent;
-            color: #84715c;
-            font-weight: bold;
+            margin: 0 10px;
         }
     }
 
@@ -172,20 +178,8 @@ div {
                 height: 50px;
                 justify-content: space-between;
 
-                >.col-1-th {
-                    width: 10%;
-                }
-
-                >.col-2-th {
-                    width: 25%;
-                }
-
-                >.col-4-th {
-                    width: 40%;
-                }
-
                 >th {
-
+                    width: calc(100%/4);
 
                     >p {
                         min-width: 108px;

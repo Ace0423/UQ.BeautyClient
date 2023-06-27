@@ -1199,4 +1199,14 @@ export default {
   align-items: center;
   display: inline-flex;
 }
+:deep(.tui-full-calendar-week-container) {
+  min-height: 100px !important;
+  height: calc(100%);
+}
+:deep(.tui-full-calendar-vlayout-container) {
+  height: calc(100% - 42px) !important;
+}
+:deep(.tui-full-calendar-timegrid-container) {
+  height: calc(100%);
+}
 </style>

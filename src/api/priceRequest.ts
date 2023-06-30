@@ -98,5 +98,5 @@ export const getCouponReq = (
     );
   /**刪除 */
   export const deleteCouponReq = (data: any) =>
-    deleteHttps(httpRequest, "/Discounts/CouponCard" + "?dcNo=" + data, data);
+    deleteHttps(httpRequest, "/Discounts/CouponCard" + "?CCId=" + data, data);
   

@@ -176,7 +176,7 @@ export const useApptStore = defineStore("priceStore", () => {
   const addCouponApi = async (data: any) => {
     try {
       let res = await addCouponReq(data).then((res: any) => {
-        alertStateFn(res, "新增取單品折扣資料分類");
+        alertStateFn(res, "新增取優惠券折扣資料分類");
         return res;
       });
       return res;
@@ -188,7 +188,7 @@ export const useApptStore = defineStore("priceStore", () => {
   const updateCouponApi = async (data: any) => {
     try {
       let res = await updateCouponReq(data).then((res: any) => {
-        alertStateFn(res, "更新單品折扣分類");
+        alertStateFn(res, "更新優惠券折扣分類");
         return res;
       });
       return res;
@@ -197,12 +197,12 @@ export const useApptStore = defineStore("priceStore", () => {
     }
   };
 
-  //刪除全單折扣資料
+  //刪除優惠券折扣資料
   const delCouponApi = async (data: any) => {
     try {
       let res = await deleteCouponReq(data).then((res: any) => {
         alertStateFn(res, "刪除全單折扣資料");
-        getAllDiscountApi();
+        getCouponApi();
         return res;
       });
       return res;

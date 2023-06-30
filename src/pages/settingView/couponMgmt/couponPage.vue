@@ -88,7 +88,7 @@
               <p>{{ item.ccDiscountType }}</p>
             </td>
             <td>
-              <button v-on:click="showEditFormFn(index, item)">
+              <button v-on:click="showInfoUIFn(true, item)">
                 <img class="edit_img" :src="Icon_edit" />
               </button>
               <button v-on:click="deleteHdr(index, item)">
@@ -100,12 +100,15 @@
       </table>
     </div>
   </div>
-  <AddcouponUI v-if="showAddUI" :showUIFn="showAddUIFn"></AddcouponUI>
-  <EditAllDiscountUI
-    v-if="showEditUI"
-    :showEditUIFn="showEditUIFn"
-    :formInfo="selData"
-  ></EditAllDiscountUI>
+  <CouponInfoUI
+    v-if="showInfoUI"
+    :showInfoUIHdr="showInfoUIFn"
+    :selItemData="selData"
+  />
+  <AddCouponUI
+    v-if="showAddUI"
+    :showUIFn="showAddUIFn"
+  ></AddCouponUI>
 </template>
 <script setup lang="ts">
 import search_ico from "@/assets/images/icon_search.png";
@@ -132,11 +135,12 @@ let couponTypeTabs: any = [
 ];
 let showAddUI = ref(false);
 let showEditUI = ref(false);
+let showInfoUI = ref(false);
 let search = ref("");
 let filterCouponDataCpt: any = computed(() =>
-  couponListRef.value.filter(getCouponFn)
+  couponListRef.value.filter(getFilterCouponFn)
 );
-function getCouponFn(data: any) {
+function getFilterCouponFn(data: any) {
   return (
     (!search.value ||
       data.ccTitle.toLowerCase().includes(search.value.toLowerCase())) &&
@@ -145,26 +149,31 @@ function getCouponFn(data: any) {
       data.ccDiscountType == couponTypeValue.value)
   );
 }
-getAllDiscountFn();
+getCouponFn();
 
 const showAddUIFn = (state: boolean) => {
   showAddUI.value = state;
-  getAllDiscountFn();
+  getCouponFn();
+};
+const showInfoUIFn = (state: boolean, item: any) => {
+  showInfoUI.value = state;
+  selData.value = item;
+  // getAllDiscountFn();
 };
 
 const showEditUIFn = (state: boolean) => {
   showEditUI.value = state;
-  getAllDiscountFn();
+  getCouponFn();
 };
 
-function getAllDiscountFn() {
+function getCouponFn() {
   getCouponApi();
 }
 let selData: any = [];
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     console.log("確認刪除");
-    delCouponApi(selData.discountNo);
+    delCouponApi(selData.ccId);
   } else {
     console.log("取消刪除");
   }
@@ -318,7 +327,7 @@ let deleteHdr = (index: number, item: any) => {
               background-color: transparent;
               border: none;
               .edit_img {
-                width: 27px;
+                width: 32px;
                 height: 27px;
               }
               .delete_img {

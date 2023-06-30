@@ -22,7 +22,7 @@
               />
             </div>
           </div>
-          <div class="input-item">
+          <div class="input-item" name="theme">
             <span class="title-content">優惠券內容</span>
             <span class="msg-content">填寫任何你想表達給顧客的優惠內容。</span>
             <div>
@@ -41,17 +41,18 @@
               >最大長寬 1200px x 1200px，檔案小於 1MB，支援JPG、JPEG，PNG</span
             >
           </div>
-          <div class="radio-item">
+          <div class="radio-item" name="radio_item">
             <span>指定項目</span>
             <div class="radio-main">
               <div>
                 <div class="radio-input">
                   <input
                     class="radio_type"
+                    v-model="formInputRef.groupItem"
                     type="radio"
+                    :value="0"
                     name="type"
                     id="radio1"
-                    checked="checked"
                   />
                 </div>
                 <div class="radio-label">
@@ -63,7 +64,9 @@
                 <div class="radio-input">
                   <input
                     class="radio_type"
+                    v-model="formInputRef.groupItem"
                     type="radio"
+                    :value="1"
                     name="type"
                     id="radio2"
                   />
@@ -78,6 +81,7 @@
                   <input
                     class="radio_type"
                     type="radio"
+                    :value="2"
                     name="type"
                     id="radio3"
                   />
@@ -89,7 +93,7 @@
               </div>
             </div>
           </div>
-          <div class="input-item">
+          <div class="input-item" name="date">
             <span class="title-content">使用期限</span>
             <div>
               <span>期限方式</span>
@@ -132,30 +136,21 @@
             </div>
             <div>
               <span>開始日期</span>
-              <input
-                type="date"
-                v-model="formInputRef.startDate"
-                :min="formInputRef.startDate"
-              />
+              <input type="date" v-model="formInputRef.startDate" />
             </div>
             <div>
               <span>結束日期</span>
-              <input
-                type="date"
-                v-model="formInputRef.endDate"
-                :min="formInputRef.startDate"
-              />
+              <input type="date" v-model="formInputRef.endDate" />
             </div>
           </div>
-          <div class="input-item">
+          <div class="input-item" name="amount">
             <span class="title-content">發送數量</span>
             <div>
               <span>數量方式</span>
               <div class="select-content">
                 <el-select
                   :popper-append-to-body="false"
-                  popper-class="select"
-                  v-model="formInputRef.amountTotal"
+                  v-model="formInputRef.amountType"
                   @change="changeValue()"
                 >
                   <el-option
@@ -171,25 +166,14 @@
             </div>
             <div>
               <span>限制發送數</span>
-              <div class="select-content">
-                <el-select
-                  :popper-append-to-body="false"
-                  popper-class="select"
-                  v-model="formInputRef.days"
-                  placeholder="請輸入限制數量"
-                >
-                  <el-option
-                    v-for="(item, index) in selDays"
-                    :key="index"
-                    :value="item.id"
-                    :label="item.name"
-                  >
-                  </el-option>
-                </el-select>
-              </div>
+              <input
+                v-model="formInputRef.amountTotal"
+                placeholder="請輸入限制數量"
+                type="text"
+              />
             </div>
           </div>
-          <div class="input-item">
+          <div class="input-item" name="useType">
             <span class="title-content">使用優惠</span>
             <div>
               <span>優惠方式</span>
@@ -221,17 +205,18 @@
               <input v-model="formInputRef.ccDiscount" type="text" />
             </div>
           </div>
-          <div class="radio-item">
+          <div class="radio-item" name="checkoutType">
             <span>折抵方式</span>
             <div class="radio-main">
               <div>
                 <div class="radio-input">
                   <input
                     class="radio_type"
+                    v-model="formInputRef.checkoutType"
                     type="radio"
+                    :value="0"
                     name="radioType1"
                     id="radioType1"
-                    checked="checked"
                   />
                 </div>
                 <div class="radio-label">
@@ -245,7 +230,9 @@
                 <div class="radio-input">
                   <input
                     class="radio_type"
+                    v-model="formInputRef.checkoutType"
                     type="radio"
+                    :value="1"
                     name="radioType1"
                     id="radioType2"
                   />
@@ -268,6 +255,7 @@
             </div>
             <div class="coupon-info">
               <span>優惠 {{ 0 }} 元</span>
+              <span class="coupon-date">{{ formInputRef.theme }}</span>
               <span class="coupon-date">{{ "不限期" }}</span>
             </div>
           </div>
@@ -277,24 +265,6 @@
       <div class="bottom-content"></div>
     </div>
   </div>
-  <MemberRadioUI
-    v-if="showMemberUIRef"
-    :selData="formInputRef.memberInfo"
-    :showUIFn="showMemberUIFn"
-    :getDataFn="getMembersFn"
-  />
-  <AddItemMenuUI
-    v-if="showAddItemMenuUIRef"
-    :selData="formInputRef.memberInfo"
-    :showUIFn="showItemMenuUIFn"
-    :getDataFn="getMembersFn"
-  />
-  <!-- <AddServicesUI
-      v-if="showAddServicesUIRef"
-      :selData="formInputRef.memberInfo"
-      :showUIFn="showMemberUIFn"
-      :getDataFn="getMembersFn"
-    /> -->
 </template>
 
 <script setup lang="ts">
@@ -305,10 +275,12 @@ import icon_ticket from "@/assets/images/icon_cancle.png";
 import icon_customer from "@/assets/images/icon_customer.png";
 import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
 import { formatZeroDate } from "@/utils/utils";
+import Alert from "../alertCmpt";
+import { showErrorMsg } from "@/types/IMessage";
 
 let store = useApptStore();
 let { allDiscountList } = storeToRefs(store);
-let { getAllDiscountApi } = store;
+let { addCouponApi } = store;
 
 const props = defineProps<{
   showUIFn: Function;
@@ -392,11 +364,15 @@ let formInputRef: any = ref({
   days: null,
   startDate: "",
   endDate: "",
-  amountTotal: -1,
+  amountTotal: null,
+  amountType: -1,
   ccOnDate: 0,
   ccDiscountType: null,
   ccDiscount: 0,
+  groupItem: 0,
+  checkoutType: 0,
 });
+
 var date = new Date();
 
 formInputRef.value.startDate =
@@ -412,6 +388,7 @@ formInputRef.value.endDate =
   "-" +
   formatZeroDate(date.getDate());
 
+  
 function showMemberUIFn(state: boolean) {
   showMemberUIRef.value = state;
 }
@@ -429,8 +406,40 @@ function countCoustomerFn(data: number) {
     formInputRef.value.customerTotal += data;
 }
 function submitBtn() {
-  console.log("現金收款");
-  props.showUIFn(false);
+  console.log("提交formInputRef", formInputRef.value);
+  let apiData = {
+    ccId: 0,
+    ccTitle: formInputRef.value.name,
+    ccTheme: formInputRef.value.theme,
+    ccType: 0,
+    ccImage: formInputRef.value.imgUrl,
+    ccItemType: formInputRef.value.groupItem,
+    ccOnDate: formInputRef.value.ccOnDate,
+    ccSdt: formInputRef.value.startDate,
+    ccEdt: formInputRef.value.endDate,
+    ccDateOfDay: formInputRef.value.days,
+    ccLimit:
+      formInputRef.value.amountType == -1 ? -1 : formInputRef.value.amountTotal,
+    ccDiscountType: formInputRef.value.ccDiscountType,
+    ccDiscount: formInputRef.value.ccDiscount,
+    ccAccountType: formInputRef.value.checkoutType,
+    serviceMaps: [],
+    productMaps: [],
+    groupMaps: [],
+  };
+  console.log("提交apiData", apiData);
+
+  /**新增 */
+  addCouponApi(apiData).then((res: any) => {
+    if (res.state == 1) {
+      Alert.sussess("成功", 1000);
+      setTimeout(() => {
+        props.showUIFn(false);
+      }, 1000);
+    } else {
+      Alert.warning(showErrorMsg(res.msg), 1000);
+    }
+  });
 }
 function updateImgUrl() {
   console.log("更新圖片");
@@ -697,12 +706,13 @@ function changeValue() {
             }
           }
           .coupon-info {
+            display: block;
             width: calc(70% - 50px);
             height: 100%;
+            align-items: center;
             > span {
               display: flex;
-              height: 50%;
-              // justify-content: center;
+              height: 25%;
               margin-left: 10%;
               align-items: center;
               font-size: 28px;
@@ -710,8 +720,6 @@ function changeValue() {
             .coupon-date {
               color: #c1bdb8;
               font-size: 18px;
-              font-size: 20px;
-              align-items: baseline;
             }
           }
         }

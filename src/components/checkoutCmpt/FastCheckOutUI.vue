@@ -84,13 +84,13 @@
     :showUIFn="showMemberUIFn"
     :getDataFn="getMembersFn"
   />
-  <AddItemMenuUI
+  <RadioItemMenuUI
     v-if="showAddItemMenuUIRef"
     :selData="formInputRef.memberInfo"
     :showUIFn="showItemMenuUIFn"
     :getDataFn="getMembersFn"
   />
-  <!-- <AddServicesUI
+  <!-- <RadioServicesUI
     v-if="showAddServicesUIRef"
     :selData="formInputRef.memberInfo"
     :showUIFn="showMemberUIFn"

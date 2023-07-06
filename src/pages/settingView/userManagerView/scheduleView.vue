@@ -39,8 +39,8 @@ const weekDay = computed(() => {
     for (let index = 0; index < weeks.length; index++) {
         let m = time.getMonth() + 1;
         let d = time.getDate() + index;
-        let date = add0(m) + '/' + add0(d)
-        weekDayArr.value.push(date)
+        let date = add0(m) + '/' + add0(d);
+        weekDayArr.value.push(date);
     }
     return weekDayArr.value;
 });
@@ -86,7 +86,6 @@ const requestWorkingHoursList = () => {
 
         })
         .catch((e: any) => {
-            console.log(111);
             Alert.warning(showHttpsStatus(e.response.status), 2000);
             if (e.response.status == 401) {
                

@@ -41,3 +41,18 @@ export const putCheckOutTypeRequest = (data: any) => {
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return managerRequest.put("/Company/CheckOutType?cotid=" + data.cotId, data);
 }
+export const getMessagesRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.get("/Company/Messages", { params: data });
+}
+export const insertMessagesRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.post("/Company/Messages", data);
+}
+export const updateMessagesRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.put("/Company/Messages", { params: data });
+}

@@ -3,7 +3,7 @@ import { getMemberListRequest, postMemberDataRequest, postUpdateMemberDataReques
 import { getMemberBankListRequest, postMemberBankRequest, getMemberBankInfoListRequest, getMemberBankDetailRequest, putMemberBankInfoRequest } from "./memberBankRequest";
 import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest, getWorkingHoursRequest, postWorkingHoursRequest, getWorkingDefaultRequest, postWorkingDefaultRequest, putWorkingDefaultRequest } from "./managerRequest";
 import { getPermissionsListRequest, putOptionRoleRequest } from "./settingRequest";
-import { getTimeTablesRequest,postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest,getCompanyInfoRequest,putCompanyInfoRequest } from "./companyRequest";
+import { getTimeTablesRequest,postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest,getCompanyInfoRequest,putCompanyInfoRequest,getMessagesRequest,insertMessagesRequest,updateMessagesRequest } from "./companyRequest";
 
 export const apiPostLoginRequest = postLoginRequest;
 export const apiGetUserNameRequest = getUserNameRequest;
@@ -49,6 +49,9 @@ export const apiGetTimeTablesRequest = getTimeTablesRequest;
 export const apiPostTimeTablesRequest = postTimeTablesRequest;
 export const apiGetCompanyInfoRequest = getCompanyInfoRequest;
 export const apiPutCompanyInfoRequest = putCompanyInfoRequest;
+export const apiGetMessagesRequest = getMessagesRequest;
+export const apiInsertMessagesRequest = insertMessagesRequest;
+export const apiUpdateMessagesRequest = updateMessagesRequest;
 
 export const apiGetCheckOutTypeRequest = getCheckOutTypeRequest;
 export const apiPostCheckOutTypeRequest = postCheckOutTypeRequest;

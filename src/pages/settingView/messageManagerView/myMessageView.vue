@@ -5,55 +5,99 @@ import editIcon from "@/assets/Icon awesome-edit.svg";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
-import { useManagerStore } from "@/stores/manager";
 import { useCounterStore } from "@/stores/counter";
+import { useCompanyStore } from "@/stores/company";
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
-const managerstore = useManagerStore();
-const { managerList } = storeToRefs(managerstore);
-const { getManagerList } = managerstore;
-const addManagerView = ref(false);
-const selectManagerItem = ref();
+const companyStore = useCompanyStore();
+const { getMessages } = companyStore;
+const { messagesList } = storeToRefs(companyStore)
+const addMessageView = ref(false);
+const selectMessageItem = ref();
 const keyWord = ref("");
-const handAddManagerView = (item: any) => {
-    selectManagerItem.value = item;
-    addManagerView.value = !addManagerView.value;
-};
-const filterManagerListData = computed(() => {
-    const filter = managerList.value.data.filter(getManagerListFn);
-    return filter;
-});
-const getManagerListFn = (data: any) => {
-    if (
-        keyWord.value.substring(0, 1) == "0" ||
-        keyWord.value.substring(0, 2) == "09"
-    ) {
-        return (
-            !keyWord.value ||
-            data.phone.toLowerCase().includes(keyWord.value.toLowerCase())
-        );
-    } else {
-        return (
-            !keyWord.value ||
-            data.nameView.toLowerCase().includes(keyWord.value.toLowerCase())
-        );
+
+const messages = (type: any) => {
+    let data = {
+        MId: 0,
+        type: type,
+        pageIndex: 0,
+        count: 0
     }
-};
-
+    getMessages(data)
+        .then((res) => {
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        })
+}
 onMounted(() => {
-
+    messages(0)
 })
+const handAddMessageView = (auto: any, type: any, item: any) => {
+    let data: any = {
+        auto: auto, //auto:0. 一般、1. 自動化     
+        type: type, //type: 0. LINE、1. 簡訊
+        item: item
+    }
+    selectMessageItem.value = data;
+    addMessageView.value = !addMessageView.value;
+};
+const handAutoAddMessageBtn = (command: any) => {
+    handAddMessageView(1, command, '');
+}
+const handMessageBtn = (command: any) => {
+    handAddMessageView(0, command, '');
+}
 </script>
 <template>
-    <div>
-    <div class="function-area">
+    <div class="group">
+        <div class="function-area">
             <input placeholder="🔍搜尋" v-model="keyWord" />
-            <button class="header-auto-btn" >
-                新增自動化訊息
-            </button>
-            <button class="header-btn">
+            <!-- <div>
+                <button class="header-auto-btn">
+                    新增自動化訊息
+                </button>
+            </div> -->
+            <div class="header-auto-btn">
+                <el-dropdown trigger="click" placement="bottom-end" @command="handAutoAddMessageBtn">
+                    <span>
+                        新增自動化訊息
+                    </span>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item command="0">LINE訊息</el-dropdown-item>
+                            <el-dropdown-item command="1">簡訊</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+            </div>
+
+
+            <!-- <button class="header-btn">
                 新增訊息
-            </button>
+            </button> -->
+            <div class="header-btn">
+                <el-dropdown trigger="click" placement="bottom-end" @command="handMessageBtn">
+                    <span>
+                        新增訊息
+                    </span>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item command="0">LINE訊息</el-dropdown-item>
+                            <el-dropdown-item command="1">簡訊</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+            </div>
+
         </div>
         <table>
             <thead class="header-tab">
@@ -76,32 +120,36 @@ onMounted(() => {
                 </tr>
             </thead>
             <tbody class="content-tab">
-                <!-- <tr v-for="item in filterManagerListData" :key="item.managerId">
-                                        <td class="content-name">
-                                            <img :src="Icon" />
-                                            <p>{{ item.nameView }}</p>
-                                        </td>
-                                        <td>
-                                            <p>{{ item.phone }}</p>
-                                        </td>
-                                        <td>
-                                            <p>{{ item.dateCreate }}</p>
-                                        </td>
-                                        <td>
-                                            <button class="header-btn" v-on:click="handAddManagerView(item)">
-                                                <img :src="editIcon" />
-                                            </button>
-                                        </td>
-                                    </tr> -->
+                <tr v-for="item in messagesList" :key="item.managerId">
+                    <td class="col-3-th">
+                        <p>{{ item.mTheme }}</p>
+                    </td>
+                    <td class="col-2-th">
+                        <p v-if="item.mType == 0">LINE</p>
+                        <p v-if="item.mType == 1">簡訊</p>
+                    </td>
+                    <td class="col-2-th">
+                        <input type="radio" disabled :checked="item.mAuto" />
+                        <!-- <p>{{ item.mAuto }}</p> -->
+                    </td>
+                    <td class="col-2-th">
+                        <p>{{ item.mSendDate }}</p>
+                    </td>
+                    <td class="col-1-th">
+                        <button class="header-btn">
+                            <img :src="editIcon" />
+                        </button>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
-    <AddManager v-if="addManagerView" :hand-add-manager-view="handAddManagerView" :select-manager-item="selectManagerItem">
-    </AddManager>
+    <AddMessage v-if="addMessageView" :handAddMessageView="handAddMessageView" :selectMessageItem="selectMessageItem">
+    </AddMessage>
 </template>
 
 <style lang="scss" scoped>
-div {
+div.group {
     position: absolute;
     top: 45px;
     bottom: 10px;
@@ -124,9 +172,9 @@ div {
         border: none;
         background-color: transparent;
         display: flex;
-        // justify-content: end;
+        justify-content: end;
         align-items: center;
-        left: auto;
+        right: 0px;
         width: auto;
 
         >input {
@@ -149,11 +197,41 @@ div {
             margin: 0 5px;
         }
 
-        >.header-auto-btn {
+        .header-auto-btn {
+            border-radius: 6px;
+            min-width: 100px;
+            height: 55%;
             border: solid 2px #84715c;
             background-color: transparent;
+
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 10px;
+
+            span {
+                color: #84715c;
+            }
+        }
+
+        .header-btn {
+            border-radius: 6px;
+            // min-width: 100px;
+            padding: 0 10px;
+            height: 60%;
             color: #84715c;
             font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: solid 1px #707070;
+            background-color: #84715c;
+            margin: 0 5px;
+
+            span {
+                color: #fff;
+            }
         }
     }
 
@@ -228,9 +306,21 @@ div {
                     transform: translateX(-50%);
                 }
 
+                >.col-1-th {
+                    width: 10%;
+                }
+
+                >.col-2-th {
+                    width: 20%;
+                }
+
+                >.col-3-th {
+                    width: 30%;
+                }
+
                 >td {
                     display: flex;
-                    width: calc(100%/4);
+                    // width: calc(100%/5);
 
                     >button {
                         height: 100%;
@@ -247,16 +337,8 @@ div {
                         }
                     }
                 }
-
-                .content-name {
-                    // padding-left: 10px;
-                    display: flex;
-
-                    img {
-                        margin: 0 15px;
-                    }
-                }
             }
         }
     }
-}</style>
+}
+</style>

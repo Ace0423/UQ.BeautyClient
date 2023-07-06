@@ -44,6 +44,12 @@ export const showErrorMsg = (status: string): string => {
     case "LM02":
       message = "該課程有預約紀錄存在";
       break;
+    case "MS01":
+      message = "輸入的日期與時段格式有誤";
+      break;
+    case "MS02":
+      message = "該筆已有發送紀錄，故無法刪除";
+      break;
     default:
       message = status;
   }

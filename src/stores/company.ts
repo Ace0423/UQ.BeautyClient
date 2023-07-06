@@ -1,11 +1,12 @@
 import { defineStore } from "pinia";
-import { apiGetTimeTablesRequest,apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest } from "@/api/index";
+import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest,apiInsertMessagesRequest,apiUpdateMessagesRequest } from "@/api/index";
 export const useCompanyStore = defineStore("company", () => {
     const businessHoursList: any = reactive({ data: [] });
     const checkOutTypeList: any = reactive({ data: [] });
     const companyInfoList: any = reactive({ data: [] });
-    const getTimeTablesRequest = async (data:any) => {
-       
+    const messagesList: any = reactive({ data: [] });
+    const getTimeTablesRequest = async (data: any) => {
+
         try {
             const res = await apiGetTimeTablesRequest(data);
             if (res.data.state == 1 && res.data.data.table) {
@@ -17,8 +18,8 @@ export const useCompanyStore = defineStore("company", () => {
             return Promise.reject(error);
         }
     };
-    const postTimeTablesRequest = async (data:any) => {
-       
+    const postTimeTablesRequest = async (data: any) => {
+
         try {
             const res = await apiPostTimeTablesRequest(data);
             if (res.data.state == 1 && res.data.data.table) {
@@ -126,6 +127,31 @@ export const useCompanyStore = defineStore("company", () => {
             companyInfoList.data.companyGroup = data.companyGroup
         }
     };
+    const getMessages = async (data: any) => {
+
+        try {
+            const res = await apiGetMessagesRequest(data);
+            if (res.data.state == 1) {
+                messagesList.data = res.data.data.table[0];
+            }
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const submitMessages = async (data: any) => {
+        try {
+            const res = data.mId == 0 ? await apiInsertMessagesRequest(data) : await apiUpdateMessagesRequest(data);
+            if (res.data.state == 1) {
+                messagesList.data = res.data.data.table[0];
+            }
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
     return {
         businessHoursList,
         getTimeTablesRequest,
@@ -137,5 +163,8 @@ export const useCompanyStore = defineStore("company", () => {
         getCompanyInfo,
         putCompanyInfo,
         companyInfoList,
+        messagesList,
+        getMessages,
+        submitMessages
     }
 })

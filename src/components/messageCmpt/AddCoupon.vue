@@ -2,32 +2,38 @@
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
-
-
-const title = ref("人員快速排班");
+import { Search } from '@element-plus/icons-vue';
+import { useApptStore } from "@/stores/priceStore";
+import { useCounterStore } from "@/stores/counter";
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
+const priceStore = useApptStore();
+const { getCouponApi } = priceStore;
+const title = ref("優惠劵");
 const props = defineProps<{
-    handQuicklyscheduleView: Function;
-    requestWorkingHoursList: Function;
+    handAddCouponView: Function
 }>();
-
-
 const handSubmit = () => {
-  
+
 };
 
-
 onMounted(() => {
-
+    getCouponApi(0, 0, 1, 0, 0)
 });
+
 </script>
 
 <template>
-    <div class="popup-mask" v-on:click.self="handQuicklyscheduleView()">
+    <div class="popup-mask" v-on:click.self="handAddCouponView()">
         <!-- 提示弹窗 -->
         <div class="popup-content">
             <h1>{{ title }}</h1>
-            <p>可安排未來人員未來每周排班工時。</p>
-        
+            <el-input
+      class="w-50 m-2"
+      size="large"
+      placeholder="搜尋"
+      :prefix-icon="Search"
+    />
             <div class="sub-btn">
                 <button class="btn" type="submit" v-on:click="handSubmit()">確認儲存</button>
             </div>
@@ -74,7 +80,6 @@ onMounted(() => {
             left: 0px;
             right: 0px;
             bottom: 0px;
-            border-top: solid 0.5px#707070;
 
             >.btn {
                 padding: 10px 10px;

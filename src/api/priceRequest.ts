@@ -62,7 +62,7 @@ export const postUpdateSingleDiscountReq = (data: any) =>
 export const deleteSingleDiscountReq = (data: any) =>
   deleteHttps(httpRequest, "/Discounts/Discount" + "?dcNo=" + data, data);
 
-//--------------------------------優惠券
+//--------------------------------計次券
 /**獲取優惠券 */
 export const getCouponReq = (
   id: any,
@@ -99,4 +99,41 @@ export const getCouponReq = (
   /**刪除 */
   export const deleteCouponReq = (data: any) =>
     deleteHttps(httpRequest, "/Discounts/CouponCard" + "?CCId=" + data, data);
+    //--------------------------------計次券
+    /**獲取 */
+    export const getCountTicketReq = (
+      id: any,
+      select: any,
+      type: any,
+      page: any,
+      count: any
+    ) =>
+      getHttps(
+        httpRequest,
+        "/Discounts/CouponCard" +
+          "?CCId=" +
+          id +
+          "&select=" +
+          select +
+          "&type=" +
+          type +
+          "&pageIndex=" +
+          page +
+          "&count=" +
+          count
+      );
+    
+      /**新增 */
+      export const addCountTicketReq = (data: any) =>
+        postHttps(httpRequest, "/Discounts/CouponCard", data);
+      /**編輯 */
+      export const updateCountTicketReq = (data: any) =>
+        putHttps(
+          httpRequest,
+          "/Discounts/CouponCard" + "?CCId=" + data.ccId,
+          data
+        );
+      /**刪除 */
+      export const deleteCountTicketReq = (data: any) =>
+        deleteHttps(httpRequest, "/Discounts/CouponCard" + "?CCId=" + data, data);
   

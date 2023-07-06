@@ -129,13 +129,7 @@ let search = ref("");
 let showAddType = ref(false);
 
 let showCourseFormRef = ref(false);
-let coursetitle = reactive([
-  "產品名稱",
-  "服務時長(Min)",
-  "售價(NT)",
-  "上架",
-  "操作",
-]);
+let coursetitle = ["產品名稱", "服務時長(Min)", "售價(NT)", "上架", "操作"];
 
 const handAlertView = (msg: string, btnState: number, timer: number) => {
   alertInformation.messageText = msg;

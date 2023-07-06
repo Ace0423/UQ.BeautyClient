@@ -34,8 +34,8 @@
             <button>寄送優惠</button>
             <p>適用項目</p>
             <span>{{ "所有服務與商品" }}</span>
-            <p>建立時間</p>
-            <span>{{ selItemData.value.dateCreate.replace("T"," ") }}</span>
+            <p>建立時間{{ selItemData.value.dateCreate }}</p>
+            <span>{{ selItemData.value.dateCreate.replace("T", " ") }}</span>
             <p>注意事項</p>
             <span>{{
               "僅於店內或線上預約消費時使用，店家將保留最終決議隨時可能撤銷‧"
@@ -99,11 +99,11 @@
       </div>
     </div>
   </div>
-  <EditCouponUI
+  <EditCountTicket
     v-if="showEditUI"
     :selItemData="selItemData"
     :showUIFn="showEditUIFn"
-  ></EditCouponUI>
+  ></EditCountTicket>
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
@@ -114,8 +114,8 @@ import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 
 let store = useApptStore();
-let { selectCouponRef } = storeToRefs(store);
-let { updateCouponApi, getCouponApi } = store;
+let { selectCountTicketRef } = storeToRefs(store);
+let { updateCountTicketApi, getCountTicketApi } = store;
 
 const simpleView = ref(true);
 let showEditUI = ref(false);
@@ -130,8 +130,9 @@ const props = defineProps<{
   selItemData: any;
   showInfoUIHdr: Function;
 }>();
-getCouponApi(props.selItemData.value.ccId, 0).then((res: any) => {
-  props.selItemData.value.dateCreate = selectCouponRef.value[0].dateCreate;
+props.selItemData.value.dateCreate = "";
+getCountTicketApi(props.selItemData.value.ccId, 0).then((res: any) => {
+  props.selItemData.value.dateCreate = selectCountTicketRef.value[0].dateCreate;
 });
 onMounted(() => {
   // getmemberInfoApi();
@@ -141,7 +142,7 @@ const changeTabs = (index: number) => {
 };
 const showEditUIFn = (state: boolean) => {
   showEditUI.value = state;
-  getCouponApi();
+  getCountTicketApi();
   if (!state) props.showInfoUIHdr(false);
 };
 function updateCoupon() {
@@ -149,7 +150,7 @@ function updateCoupon() {
   apiData.ccType = apiData.ccType == 0 ? 1 : 0;
 
   /**更新 */
-  updateCouponApi(apiData).then((res: any) => {
+  updateCountTicketApi(apiData).then((res: any) => {
     if (res.state == 1) {
       Alert.sussess("成功", 1000);
       setTimeout(() => {

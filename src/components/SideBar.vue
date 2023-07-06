@@ -17,39 +17,65 @@ const props = defineProps<{
   handmemuStateBtn: Function;
 }>();
 const userMenuState = ref(false);
+const showTestUI = ref(false);
 const handUserMenuView = () => {
   userMenuState.value = !userMenuState.value;
 };
+var url = window.location.href;
+if (url.indexOf("127.0.0.1") > -1) {
+  showTestUI.value = true;
+} else {
+  showTestUI.value = false;
+}
 onMounted(() => {
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty("--vh", `${vh}px`);
 });
 </script>
 
-<template >
+<template>
   <div class="popup-mask" v-on:click.self="handmemuStateBtn()">
     <div class="sideBar">
       <img :src="logoImg" />
       <div class="nav">
         <ul @click="handmemuStateBtn()">
           <li>
-            <img :src="appointmentImg" /><router-link to="/appointmentView">預約紀錄</router-link>
+            <img :src="appointmentImg" /><router-link to="/appointmentView"
+              >預約紀錄</router-link
+            >
           </li>
           <li>
-            <img :src="customerImg" /><router-link to="/memberView">顧客管理</router-link>
+            <img :src="customerImg" /><router-link to="/memberView"
+              >顧客管理</router-link
+            >
           </li>
           <li>
-            <img :src="courseImg" /><router-link to="/courseView">課程管理</router-link>
+            <img :src="courseImg" /><router-link to="/courseView"
+              >課程管理</router-link
+            >
           </li>
           <li>
-            <img :src="bankImg" /><router-link to="/memberBankView">儲值金</router-link>
+            <img :src="bankImg" /><router-link to="/memberBankView"
+              >儲值金</router-link
+            >
           </li>
           <li>
-            <img :src="settingImg" /><router-link to="/settingView">設定</router-link>
+            <img :src="settingImg" /><router-link to="/settingView"
+              >設定</router-link
+            >
           </li>
-          <li><img :src="settingImg" /><router-link to="/systemSettingView">系統設定</router-link></li>
+          <li>
+            <img :src="settingImg" /><router-link to="/systemSettingView"
+              >系統設定</router-link
+            >
+          </li>
+          <li v-show="showTestUI">
+            <img :src="settingImg" /><router-link to="/testView"
+              >Api測試</router-link
+            >
+          </li>
         </ul>
-      </diV>
+      </div>
       <div class="user-info">
         <div class="user-name" @click="handUserMenuView()">
           <div>
@@ -64,9 +90,9 @@ onMounted(() => {
       </div>
     </div>
   </div>
-</template> 
+</template>
 
-<style scoped lang='scss'>
+<style scoped lang="scss">
 .popup-mask {
   position: absolute;
   top: 0;
@@ -87,24 +113,24 @@ onMounted(() => {
     box-sizing: border-box;
     position: relative;
 
-    >img {
+    > img {
       width: 100%;
     }
 
-    >.nav {
+    > .nav {
       // padding-left: 15px;
       display: flex;
       flex-direction: column;
       align-items: center;
 
-      >ul {
+      > ul {
         padding: 0 0;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         width: 100%;
 
-        >li {
+        > li {
           font-family: STXihei;
           font-size: 20px;
           color: #707070;
@@ -112,32 +138,32 @@ onMounted(() => {
           align-items: center;
           padding-left: 15px;
 
-          >img {
+          > img {
             padding: 15px;
             width: 30px;
             height: 30px;
           }
 
-          >a {
+          > a {
             text-decoration: none;
             color: #707070;
           }
 
-          >.router-link-active {
+          > .router-link-active {
             font-weight: bold;
           }
         }
       }
     }
 
-    >.user-info {
+    > .user-info {
       position: absolute;
       bottom: 0px;
       left: 0px;
       width: 100%;
       border-top: solid 2px #707070;
 
-      >.user-name {
+      > .user-name {
         width: 100%;
         display: flex;
         font-family: STXihei;
@@ -147,14 +173,14 @@ onMounted(() => {
         border: none;
         justify-content: center;
 
-        >button {
+        > button {
           background-color: transparent;
           border: none;
           margin: 0 0px 0 20px;
         }
       }
 
-      >.user-menu {
+      > .user-menu {
         display: flex;
         flex-direction: column;
         z-index: 10;
@@ -167,7 +193,7 @@ onMounted(() => {
         border: solid 1px #707070;
         background-color: rgb(255, 255, 255);
 
-        >button {
+        > button {
           margin: 5px 2px;
           background-color: transparent;
           border: none;

@@ -306,28 +306,28 @@ let content = [
 ];
 let selDays = [
   {
-    id: 1,
-    name: "1週",
+    id: 7,
+    name: "7天",
   },
   {
-    id: 2,
-    name: "2週",
+    id: 14,
+    name: "14天",
   },
   {
-    id: 3,
-    name: "3週",
+    id: 21,
+    name: "21天",
   },
   {
-    id: 4,
-    name: "1個月",
+    id: 30,
+    name: "30天",
   },
   {
-    id: 5,
-    name: "3個月",
+    id: 90,
+    name: "90天",
   },
   {
-    id: 6,
-    name: "6個月",
+    id: 180,
+    name: "180天",
   },
 ];
 let amountType = [
@@ -388,7 +388,6 @@ formInputRef.value.endDate =
   "-" +
   formatZeroDate(date.getDate());
 
-  
 function showMemberUIFn(state: boolean) {
   showMemberUIRef.value = state;
 }
@@ -415,8 +414,8 @@ function submitBtn() {
     ccImage: formInputRef.value.imgUrl,
     ccItemType: formInputRef.value.groupItem,
     ccOnDate: formInputRef.value.ccOnDate,
-    ccSdt: formInputRef.value.startDate,
-    ccEdt: formInputRef.value.endDate,
+    ccSdt: formInputRef.value.startDate + " 00:00:00",
+    ccEdt: formInputRef.value.endDate + " 23:59:59",
     ccDateOfDay: formInputRef.value.days,
     ccLimit:
       formInputRef.value.amountType == -1 ? -1 : formInputRef.value.amountTotal,

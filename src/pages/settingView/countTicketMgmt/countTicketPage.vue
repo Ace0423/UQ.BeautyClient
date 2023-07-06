@@ -3,7 +3,7 @@
     <div class="table-topBar">
       <p class="bar-title">計次券(全部{{ 0 }}個)</p>
       <div>
-        <input class="search-control" placeholder="搜尋折扣名稱、商品" />
+        <input class="search-control" placeholder="搜尋名稱" />
         <button class="header-btn" @click="showAddFormFn()">新增</button>
       </div>
     </div>
@@ -31,24 +31,24 @@
         </tr>
       </thead>
       <tbody class="content-tbody">
-        <tr v-for="(item, index) in allDiscountList" :key="item.discountNo">
+        <tr v-for="(item, index) in countTicketListRef" :key="item.discountNo">
           <td>
-            <p>{{ item.title }}</p>
+            <p>{{ item.ccTitle }}</p>
           </td>
           <td>
-            <p>{{ item.discount }}</p>
+            <p>{{ item.ccSdt }}</p>
           </td>
           <td>
-            <p>{{ item.discount }}</p>
+            <p>{{ item.ccLimit }}</p>
           </td>
           <td>
-            <p>{{ item.discount }}</p>
+            <p>{{ item.ccItemType }}</p>
           </td>
           <td>
-            <p>{{ item.discount }}</p>
+            <p>{{ item.ccDiscount }}</p>
           </td>
           <td>
-            <button v-on:click="showEditFormFn(index, item)">
+            <button v-on:click="showInfoUIFn(true, item)">
               <img class="edit_img" :src="Icon_edit" />
             </button>
             <button v-on:click="deleteHdr(index, item)">
@@ -59,34 +59,35 @@
       </tbody>
     </table>
   </div>
-  <AddAllDiscountUI
-    v-if="showAddUI"
-    :showAddUIFn="showAddUIFn"
-    :formInfo="selData"
-  ></AddAllDiscountUI>
-  <EditAllDiscountUI
-    v-if="showEditUI"
-    :showEditUIFn="showEditUIFn"
-    :formInfo="selData"
-  ></EditAllDiscountUI>
+  <CountTicketInfo
+    v-if="showInfoUI"
+    :showInfoUIHdr="showInfoUIFn"
+    :selItemData="selData"
+  />
+  <AddCountTicket v-if="showAddUI" :showUIFn="showAddUIFn"></AddCountTicket>
 </template>
 <script setup lang="ts">
-import search_ico from "@/assets/images/icon_search.png";
 import Icon_edit from "@/assets/images/icon_edit.png";
 import Icon_delete from "@/assets/images/icon_delete.png";
 import { useApptStore } from "@/stores/priceStore";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
 let store = useApptStore();
-let { allDiscountList } = storeToRefs(store);
-let { getAllDiscountApi, delAllDiscountApi } = store;
+let { countTicketListRef } = storeToRefs(store);
+let { getCountTicketApi, delCountTicketApi } = store;
 const showAddUI = ref(false);
 const showEditUI = ref(false);
+let showInfoUI = ref(false);
 getAllDiscountFn();
 
 const showAddUIFn = (state: boolean) => {
   showAddUI.value = state;
   getAllDiscountFn();
+};
+const showInfoUIFn = (state: boolean, item: any) => {
+  showInfoUI.value = state;
+  selData.value = item;
+  // getAllDiscountFn();
 };
 
 const showEditUIFn = (state: boolean) => {
@@ -95,13 +96,16 @@ const showEditUIFn = (state: boolean) => {
 };
 
 function getAllDiscountFn() {
-  getAllDiscountApi();
+  getCountTicketApi().then((res: any) => {
+    console.log(countTicketListRef.value);
+    
+      });;
 }
 let selData: any = [];
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     console.log("確認刪除");
-    delAllDiscountApi(selData.discountNo);
+    delCountTicketApi(selData.discountNo);
   } else {
     console.log("取消刪除");
   }
@@ -236,15 +240,16 @@ let deleteHdr = (index: number, item: any) => {
         align-items: center;
         > td {
           > button {
-            background-color: transparent;
-            .edit_img {
-              width: 27px;
-              height: 27px;
-            }
-            .delete_img {
-              width: 21px;
-              height: 27px;
-            }
+              background-color: transparent;
+              border: none;
+              .edit_img {
+                width: 32px;
+                height: 27px;
+              }
+              .delete_img {
+                width: 21px;
+                height: 27px;
+              }
           }
         }
       }

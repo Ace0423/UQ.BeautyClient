@@ -3,30 +3,42 @@
     <div class="popup-content">
       <div class="top-content">
         <img :src="icon_closeX" v-on:click="showUIFn(false)" />
-        <span>新增優惠券</span>
-        <button class="otherpay-btn" v-on:click="submitBtn()">確認儲存</button>
+        <span>新增計次券</span>
+        <button class="otherpay-btn" v-on:click="submitBtn()">確認新增</button>
       </div>
       <div class="main-content">
         <div class="left-main">
           <div class="input-item">
-            <span class="title-content">優惠券名稱</span>
-            <span class="msg-content"
-              >幫助你更好任別你的優惠券，名稱將不會呈現給顧客。</span
-            >
+            <span class="title-content">基本資訊</span>
+            <span class="msg-content">填寫你的計次券基本資訊。</span>
             <div>
-              <span>券別名稱</span>
+              <span>名稱</span>
               <input
                 v-model="formInputRef.name"
-                placeholder="請輸入券別名稱"
+                placeholder="請輸入名稱"
+                type="text"
+              />
+            </div>
+            <div>
+              <span>說明</span>
+              <input
+                v-model="formInputRef.msg"
+                placeholder="請輸入說明或注意事項"
                 type="text"
               />
             </div>
           </div>
           <div class="input-item" name="theme">
-            <span class="title-content">優惠券內容</span>
-            <span class="msg-content">填寫任何你想表達給顧客的優惠內容。</span>
+            <span class="title-content">計次券項目與價格</span>
+            <span class="msg-content"
+              >選擇你的計次券對象項目與填寫販售價格。</span
+            >
             <div>
-              <span>優惠主題</span>
+              <span>附加圖片</span>
+              <p v-on:click="updateImgUrl()">上傳圖片</p>
+            </div>
+            <div>
+              <span>可兌換價格</span>
               <input
                 v-model="formInputRef.theme"
                 placeholder="請輸入優惠主題"
@@ -34,64 +46,29 @@
               />
             </div>
             <div>
-              <span>附加圖片</span>
-              <p v-on:click="updateImgUrl()">上傳圖片</p>
+              <span>原始價格</span>
+              <input
+                v-model="formInputRef.theme"
+                placeholder="請輸入優惠主題"
+                type="text"
+              />
             </div>
-            <span class="msg-content"
-              >最大長寬 1200px x 1200px，檔案小於 1MB，支援JPG、JPEG，PNG</span
-            >
           </div>
-          <div class="radio-item" name="radio_item">
-            <span>指定項目</span>
-            <div class="radio-main">
-              <div>
-                <div class="radio-input">
-                  <input
-                    class="radio_type"
-                    v-model="formInputRef.groupItem"
-                    type="radio"
-                    :value="0"
-                    name="type"
-                    id="radio1"
-                  />
-                </div>
-                <div class="radio-label">
-                  <label for="radio1">所有項目</label>
-                  <label for="radio1">所有服務與商品皆可使用此優惠券</label>
-                </div>
-              </div>
-              <div>
-                <div class="radio-input">
-                  <input
-                    class="radio_type"
-                    v-model="formInputRef.groupItem"
-                    type="radio"
-                    :value="1"
-                    name="type"
-                    id="radio2"
-                  />
-                </div>
-                <div class="radio-label">
-                  <label for="radio2">指定群組</label>
-                  <label for="radio2">群組內所有項目皆可使用此優惠券</label>
-                </div>
-              </div>
-              <div>
-                <div class="radio-input">
-                  <input
-                    class="radio_type"
-                    type="radio"
-                    :value="2"
-                    name="type"
-                    id="radio3"
-                  />
-                </div>
-                <div class="radio-label">
-                  <label for="radio3">指定項目</label>
-                  <label for="radio3">僅有指定項目可使用此優惠券</label>
-                </div>
-              </div>
+          <div class="input-item" name="theme">
+            <div>
+              <span>販售價格</span>
+              <input
+                v-model="formInputRef.theme"
+                placeholder="請輸入優惠主題"
+                type="text"
+              />
             </div>
+          </div>
+          <div class="check-item" name="check_item">
+            <span class="title-content">贈送服務項目</span>
+            <p v-on:click="updateImgUrl()">加入贈送服務</p>
+            <span class="title-content">贈送商品項目</span>
+            <p v-on:click="updateImgUrl()">加入贈送商品</p>
           </div>
           <div class="input-item" name="date">
             <span class="title-content">使用期限</span>
@@ -142,109 +119,9 @@
               <span>結束日期</span>
               <input type="date" v-model="formInputRef.endDate" />
             </div>
-          </div>
-          <div class="input-item" name="amount">
-            <span class="title-content">發送數量</span>
-            <div>
-              <span>數量方式</span>
-              <div class="select-content">
-                <el-select
-                  :popper-append-to-body="false"
-                  v-model="formInputRef.amountType"
-                  @change="changeValue()"
-                >
-                  <el-option
-                    v-for="(item, index) in amountType"
-                    :key="index"
-                    :value="item.id"
-                    :label="item.name"
-                  >
-                    {{ item.name }}
-                  </el-option>
-                </el-select>
-              </div>
-            </div>
-            <div>
-              <span>限制發送數</span>
-              <input
-                v-model="formInputRef.amountTotal"
-                placeholder="請輸入限制數量"
-                type="text"
-              />
-            </div>
-          </div>
-          <div class="input-item" name="useType">
-            <span class="title-content">使用優惠</span>
-            <div>
-              <span>優惠方式</span>
-              <div class="select-content">
-                <el-select
-                  :popper-append-to-body="false"
-                  popper-class="select"
-                  placeholder="請選擇優惠方式"
-                  v-model="formInputRef.ccDiscountType"
-                  @change="changeValue()"
-                >
-                  <el-option
-                    v-for="(item, index) in discountType"
-                    :key="index"
-                    :value="item.id"
-                    :label="item.name"
-                  >
-                    {{ item.name }}
-                  </el-option>
-                </el-select>
-              </div>
-            </div>
-            <div>
-              <span>折扣比</span>
-              <input v-model="formInputRef.ccDiscount" type="text" />
-            </div>
-            <div>
-              <span>折讓金額</span>
-              <input v-model="formInputRef.ccDiscount" type="text" />
-            </div>
-          </div>
-          <div class="radio-item" name="checkoutType">
-            <span>折抵方式</span>
-            <div class="radio-main">
-              <div>
-                <div class="radio-input">
-                  <input
-                    class="radio_type"
-                    v-model="formInputRef.checkoutType"
-                    type="radio"
-                    :value="0"
-                    name="radioType1"
-                    id="radioType1"
-                  />
-                </div>
-                <div class="radio-label">
-                  <label for="radioType1">訂單內所有符合項目皆享有優惠</label>
-                  <label for="radioType1"
-                    >所有包含於訂單內的每一項產品與服務皆享有優惠‧</label
-                  >
-                </div>
-              </div>
-              <div>
-                <div class="radio-input">
-                  <input
-                    class="radio_type"
-                    v-model="formInputRef.checkoutType"
-                    type="radio"
-                    :value="1"
-                    name="radioType1"
-                    id="radioType2"
-                  />
-                </div>
-                <div class="radio-label">
-                  <label for="radioType2">訂單內僅唯一項目使用優惠</label>
-                  <label for="radioType2"
-                    >此優惠券僅能只用指定的唯一服務或產品做為優惠‧</label
-                  >
-                </div>
-              </div>
-            </div>
+            <span class="msg-content"
+              >開始和結束時間，預設為 0:00 和 23:59</span
+            >
           </div>
         </div>
         <div class="right-main">
@@ -280,11 +157,11 @@ import { showErrorMsg } from "@/types/IMessage";
 
 let store = useApptStore();
 let { allDiscountList } = storeToRefs(store);
-let { updateCouponApi } = store;
+let { addCountTicketApi } = store;
 
 const props = defineProps<{
   showUIFn: Function;
-  selItemData: any;
+  //   formInfo: any;
   //   addDetailTypeID?: any;
 }>();
 let showMemberUIRef = ref(false);
@@ -357,9 +234,10 @@ let discountType = [
 onMounted(() => {
   // console.log('onMounted');
 });
-
 let formInputRef: any = ref({
   name: "",
+  msg: "",
+
   theme: "",
   imgUrl: "",
   days: null,
@@ -373,40 +251,22 @@ let formInputRef: any = ref({
   groupItem: 0,
   checkoutType: 0,
 });
-// var date = new Date();
 
-// formInputRef.value.startDate =
-//   date.getFullYear() +
-//   "-" +
-//   formatZeroDate(date.getMonth() + 1) +
-//   "-" +
-//   formatZeroDate(date.getDate());
-// formInputRef.value.endDate =
-//   date.getFullYear() +
-//   "-" +
-//   formatZeroDate(date.getMonth() + 1) +
-//   "-" +
-//   formatZeroDate(date.getDate());
-setInputData();
-function setInputData() {
-  formInputRef.value.name = props.selItemData.value.ccTitle;
-  formInputRef.value.theme = props.selItemData.value.ccTheme;
-  formInputRef.value.imgUrl = props.selItemData.value.ccImage;
-  formInputRef.value.days = props.selItemData.value.ccDateOfDay;
-  formInputRef.value.startDate = props.selItemData.value.ccSdt;
-  formInputRef.value.endDate = props.selItemData.value.ccEdt;
-  formInputRef.value.amountTotal =
-    props.selItemData.value.ccLimit == -1
-      ? -1
-      : props.selItemData.value.ccLimit;
-  formInputRef.value.amountType =
-    props.selItemData.value.ccLimit == -1 ? -1 : 1;
-  formInputRef.value.ccOnDate = props.selItemData.value.ccOnDate;
-  formInputRef.value.ccDiscountType = props.selItemData.value.ccDiscountType;
-  formInputRef.value.ccDiscount = props.selItemData.value.ccDiscount;
-  formInputRef.value.groupItem = props.selItemData.value.ccItemType;
-  formInputRef.value.checkoutType = props.selItemData.value.ccAccountType;
-}
+var date = new Date();
+
+formInputRef.value.startDate =
+  date.getFullYear() +
+  "-" +
+  formatZeroDate(date.getMonth() + 1) +
+  "-" +
+  formatZeroDate(date.getDate());
+formInputRef.value.endDate =
+  date.getFullYear() +
+  "-" +
+  formatZeroDate(date.getMonth() + 1) +
+  "-" +
+  formatZeroDate(date.getDate());
+
 function showMemberUIFn(state: boolean) {
   showMemberUIRef.value = state;
 }
@@ -424,30 +284,31 @@ function countCoustomerFn(data: number) {
     formInputRef.value.customerTotal += data;
 }
 function submitBtn() {
+  console.log("提交formInputRef", formInputRef.value);
   let apiData = {
-    ccAccountType: formInputRef.value.checkoutType,
-    ccDateOfDay: formInputRef.value.days,
-    ccDatetime: props.selItemData.value.ccDatetime,
-    ccDiscount: formInputRef.value.ccDiscount,
-    ccDiscountType: formInputRef.value.ccDiscountType,
-    ccId: props.selItemData.value.ccId,
+    ccId: 0,
+    ccTitle: formInputRef.value.name,
+    ccTheme: formInputRef.value.theme,
+    ccType: 0,
     ccImage: formInputRef.value.imgUrl,
     ccItemType: formInputRef.value.groupItem,
-    ccLimit:
-      formInputRef.value.amountType == -1 ? -1 : formInputRef.value.amountTotal,
     ccOnDate: formInputRef.value.ccOnDate,
-    ccTheme: formInputRef.value.theme,
-    ccTitle: formInputRef.value.name,
-
-    ccType: props.selItemData.value.ccType,
     ccSdt: formInputRef.value.startDate + " 00:00:00",
     ccEdt: formInputRef.value.endDate + " 23:59:59",
+    ccDateOfDay: formInputRef.value.days,
+    ccLimit:
+      formInputRef.value.amountType == -1 ? -1 : formInputRef.value.amountTotal,
+    ccDiscountType: formInputRef.value.ccDiscountType,
+    ccDiscount: formInputRef.value.ccDiscount,
+    ccAccountType: formInputRef.value.checkoutType,
     serviceMaps: [],
     productMaps: [],
     groupMaps: [],
   };
-  /**更新 */
-  updateCouponApi(apiData).then((res: any) => {
+  console.log("提交apiData", apiData);
+
+  /**新增 */
+  addCountTicketApi(apiData).then((res: any) => {
     if (res.state == 1) {
       Alert.sussess("成功", 1000);
       setTimeout(() => {
@@ -601,6 +462,31 @@ function changeValue() {
             ::placeholder {
               color: #c1bdb8;
             }
+          }
+        }
+        .check-item {
+          display: grid;
+          width: 90%;
+          margin-left: 5%;
+          margin-top: 3%;
+          > span {
+            height: 100%;
+            width: 180px;
+            display: flex;
+            // justify-content: center;
+            align-items: center;
+            background-color: #faf9f8;
+            font-size: 24px;
+          }
+          .title-content {
+            font-size: 28px;
+            width: 100%;
+            // .el-select{
+          }
+
+          p {
+            color: #87ceeb;
+            // width: calc(100% - 180px);
           }
         }
 

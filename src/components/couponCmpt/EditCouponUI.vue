@@ -4,7 +4,7 @@
       <div class="top-content">
         <img :src="icon_closeX" v-on:click="showUIFn(false)" />
         <span>新增優惠券</span>
-        <button class="otherpay-btn" v-on:click="submitBtn()">確認新增</button>
+        <button class="otherpay-btn" v-on:click="submitBtn()">確認儲存</button>
       </div>
       <div class="main-content">
         <div class="left-main">
@@ -280,11 +280,11 @@ import { showErrorMsg } from "@/types/IMessage";
 
 let store = useApptStore();
 let { allDiscountList } = storeToRefs(store);
-let { addCouponApi } = store;
+let { updateCouponApi } = store;
 
 const props = defineProps<{
   showUIFn: Function;
-  //   formInfo: any;
+  selItemData: any;
   //   addDetailTypeID?: any;
 }>();
 let showMemberUIRef = ref(false);
@@ -357,6 +357,7 @@ let discountType = [
 onMounted(() => {
   // console.log('onMounted');
 });
+
 let formInputRef: any = ref({
   name: "",
   theme: "",
@@ -372,22 +373,40 @@ let formInputRef: any = ref({
   groupItem: 0,
   checkoutType: 0,
 });
+// var date = new Date();
 
-var date = new Date();
-
-formInputRef.value.startDate =
-  date.getFullYear() +
-  "-" +
-  formatZeroDate(date.getMonth() + 1) +
-  "-" +
-  formatZeroDate(date.getDate());
-formInputRef.value.endDate =
-  date.getFullYear() +
-  "-" +
-  formatZeroDate(date.getMonth() + 1) +
-  "-" +
-  formatZeroDate(date.getDate());
-
+// formInputRef.value.startDate =
+//   date.getFullYear() +
+//   "-" +
+//   formatZeroDate(date.getMonth() + 1) +
+//   "-" +
+//   formatZeroDate(date.getDate());
+// formInputRef.value.endDate =
+//   date.getFullYear() +
+//   "-" +
+//   formatZeroDate(date.getMonth() + 1) +
+//   "-" +
+//   formatZeroDate(date.getDate());
+setInputData();
+function setInputData() {
+  formInputRef.value.name = props.selItemData.value.ccTitle;
+  formInputRef.value.theme = props.selItemData.value.ccTheme;
+  formInputRef.value.imgUrl = props.selItemData.value.ccImage;
+  formInputRef.value.days = props.selItemData.value.ccDateOfDay;
+  formInputRef.value.startDate = props.selItemData.value.ccSdt;
+  formInputRef.value.endDate = props.selItemData.value.ccEdt;
+  formInputRef.value.amountTotal =
+    props.selItemData.value.ccLimit == -1
+      ? -1
+      : props.selItemData.value.ccLimit;
+  formInputRef.value.amountType =
+    props.selItemData.value.ccLimit == -1 ? -1 : 1;
+  formInputRef.value.ccOnDate = props.selItemData.value.ccOnDate;
+  formInputRef.value.ccDiscountType = props.selItemData.value.ccDiscountType;
+  formInputRef.value.ccDiscount = props.selItemData.value.ccDiscount;
+  formInputRef.value.groupItem = props.selItemData.value.ccItemType;
+  formInputRef.value.checkoutType = props.selItemData.value.ccAccountType;
+}
 function showMemberUIFn(state: boolean) {
   showMemberUIRef.value = state;
 }
@@ -405,31 +424,30 @@ function countCoustomerFn(data: number) {
     formInputRef.value.customerTotal += data;
 }
 function submitBtn() {
-  console.log("提交formInputRef", formInputRef.value);
   let apiData = {
-    ccId: 0,
-    ccTitle: formInputRef.value.name,
-    ccTheme: formInputRef.value.theme,
-    ccType: 0,
+    ccAccountType: formInputRef.value.checkoutType,
+    ccDateOfDay: formInputRef.value.days,
+    ccDatetime: props.selItemData.value.ccDatetime,
+    ccDiscount: formInputRef.value.ccDiscount,
+    ccDiscountType: formInputRef.value.ccDiscountType,
+    ccId: props.selItemData.value.ccId,
     ccImage: formInputRef.value.imgUrl,
     ccItemType: formInputRef.value.groupItem,
-    ccOnDate: formInputRef.value.ccOnDate,
-    ccSdt: formInputRef.value.startDate + " 00:00:00",
-    ccEdt: formInputRef.value.endDate + " 23:59:59",
-    ccDateOfDay: formInputRef.value.days,
     ccLimit:
       formInputRef.value.amountType == -1 ? -1 : formInputRef.value.amountTotal,
-    ccDiscountType: formInputRef.value.ccDiscountType,
-    ccDiscount: formInputRef.value.ccDiscount,
-    ccAccountType: formInputRef.value.checkoutType,
+    ccOnDate: formInputRef.value.ccOnDate,
+    ccTheme: formInputRef.value.theme,
+    ccTitle: formInputRef.value.name,
+
+    ccType: props.selItemData.value.ccType,
+    ccSdt: formInputRef.value.startDate + " 00:00:00",
+    ccEdt: formInputRef.value.endDate + " 23:59:59",
     serviceMaps: [],
     productMaps: [],
     groupMaps: [],
   };
-  console.log("提交apiData", apiData);
-
-  /**新增 */
-  addCouponApi(apiData).then((res: any) => {
+  /**更新 */
+  updateCouponApi(apiData).then((res: any) => {
     if (res.state == 1) {
       Alert.sussess("成功", 1000);
       setTimeout(() => {

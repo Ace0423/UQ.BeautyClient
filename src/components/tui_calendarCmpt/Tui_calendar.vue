@@ -868,13 +868,10 @@ export default {
         default:
           return;
       }
-
-      setRenderRangeText();
-      setSchedules();
-      // selectDate = propSelectDate = moment(cal.getDate().getTime()).format(
-      //   "YYYY-MM-DD"
-      // );
       this_.tuiSetDate(moment(cal.getDate().getTime()).format("YYYY-MM-DD"));
+      setRenderRangeText();
+      // setSchedules();
+      this_.loadTuiList();
     }
 
     function onNewSchedule() {
@@ -1106,7 +1103,6 @@ export default {
       );
       cal.createSchedules(ScheduleList);
       refreshScheduleVisibility();
-      // this.loadTuiList();
     }
 
     function setEventListener() {
@@ -1198,5 +1194,15 @@ export default {
 .move-span {
   align-items: center;
   display: inline-flex;
+}
+:deep(.tui-full-calendar-week-container) {
+  min-height: 100px !important;
+  height: calc(100%);
+}
+:deep(.tui-full-calendar-vlayout-container) {
+  height: calc(100% - 42px) !important;
+}
+:deep(.tui-full-calendar-timegrid-container) {
+  height: calc(100%);
 }
 </style>

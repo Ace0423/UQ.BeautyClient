@@ -39,7 +39,7 @@
           <input
             class="search-control"
             v-model="search"
-            placeholder="搜尋折扣名稱"
+            placeholder="搜尋名稱"
           />
           <button class="header-btn" @click="showAddFormFn()">新增</button>
         </div>
@@ -47,19 +47,19 @@
       <table>
         <thead class="table-thead">
           <tr>
-            <th>
+            <th @click="sortDataListFn(0)">
               <p class="nameview">名稱</p>
             </th>
-            <th>
+            <th @click="sortDataListFn(1)">
               <p>期限</p>
             </th>
-            <th>
-              <p>已使用</p>
+            <th @click="sortDataListFn(2)">
+              <p>數量</p>
             </th>
-            <th>
+            <th @click="sortDataListFn(3)">
               <p>狀態</p>
             </th>
-            <th>
+            <th @click="sortDataListFn(4)">
               <p>優惠方式</p>
             </th>
             <th>
@@ -76,19 +76,32 @@
               <p>{{ item.ccTitle }}</p>
             </td>
             <td>
-              <p>{{ item.ccOnDate }}</p>
+              <p v-if="item.ccOnDate == 2">{{ item.ccDateOfDay + "天" }}</p>
+              <p v-else>
+                {{ item.ccSdt.split(" ")[0] + " 啟用" }}<br />{{
+                  item.ccEdt.split(" ")[0] + " 到期"
+                }}
+              </p>
             </td>
             <td>
-              <p>{{ item.ccLimit }}</p>
+              <p v-if="item.ccLimit == -1">無限制</p>
+              <p v-else>{{ item.ccLimit }}</p>
             </td>
             <td>
-              <p>{{ item.ccType }}</p>
+              <p v-if="item.ccType">啟用中</p>
+              <p v-else>未啟用</p>
             </td>
             <td>
-              <p>{{ item.ccDiscountType }}</p>
+              <p v-if="item.ccDiscountType == 1">
+                優惠 {{ item.ccDiscount }} 折
+              </p>
+              <p v-if="item.ccDiscountType == 2">
+                優惠 {{ item.ccDiscount }} 元
+              </p>
+              <p v-if="item.ccDiscountType == 3">免費使用</p>
             </td>
             <td>
-              <button v-on:click="showEditFormFn(index, item)">
+              <button v-on:click="showInfoUIFn(true, item)">
                 <img class="edit_img" :src="Icon_edit" />
               </button>
               <button v-on:click="deleteHdr(index, item)">
@@ -100,15 +113,12 @@
       </table>
     </div>
   </div>
-  <AddcouponUI
-    v-if="showAddUI"
-    :showUIFn="showAddUIFn"
-  ></AddcouponUI>
-  <EditAllDiscountUI
-    v-if="showEditUI"
-    :showEditUIFn="showEditUIFn"
-    :formInfo="selData"
-  ></EditAllDiscountUI>
+  <CouponInfoUI
+    v-if="showInfoUI"
+    :showInfoUIHdr="showInfoUIFn"
+    :selItemData="selData"
+  />
+  <AddCouponUI v-if="showAddUI" :showUIFn="showAddUIFn"></AddCouponUI>
 </template>
 <script setup lang="ts">
 import search_ico from "@/assets/images/icon_search.png";
@@ -135,11 +145,12 @@ let couponTypeTabs: any = [
 ];
 let showAddUI = ref(false);
 let showEditUI = ref(false);
+let showInfoUI = ref(false);
 let search = ref("");
 let filterCouponDataCpt: any = computed(() =>
-  couponListRef.value.filter(getCouponFn)
+  couponListRef.value.filter(getFilterCouponFn)
 );
-function getCouponFn(data: any) {
+function getFilterCouponFn(data: any) {
   return (
     (!search.value ||
       data.ccTitle.toLowerCase().includes(search.value.toLowerCase())) &&
@@ -148,26 +159,31 @@ function getCouponFn(data: any) {
       data.ccDiscountType == couponTypeValue.value)
   );
 }
-getAllDiscountFn();
+getCouponFn();
 
 const showAddUIFn = (state: boolean) => {
   showAddUI.value = state;
-  getAllDiscountFn();
+  getCouponFn();
+};
+const showInfoUIFn = (state: boolean, item: any) => {
+  showInfoUI.value = state;
+  selData.value = item;
+  // getAllDiscountFn();
 };
 
 const showEditUIFn = (state: boolean) => {
   showEditUI.value = state;
-  getAllDiscountFn();
+  getCouponFn();
 };
 
-function getAllDiscountFn() {
+function getCouponFn() {
   getCouponApi();
 }
 let selData: any = [];
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     console.log("確認刪除");
-    delCouponApi(selData.discountNo);
+    delCouponApi(selData.ccId);
   } else {
     console.log("取消刪除");
   }
@@ -188,6 +204,25 @@ let deleteHdr = (index: number, item: any) => {
   selData = item;
   Alert.check("是否刪除", 1000, onDeleteAlertBtn);
 };
+let sortState: boolean = false;
+//排序明細
+function sortDataListFn(name: number) {
+  let nameGroup = ["ccTitle", "ccOnDate", "ccLimit", "ccType", "ccDiscount"];
+  let sortName = nameGroup[name];
+  if (sortName)
+    if (sortState) {
+      couponListRef.value.sort(function (a: any, b: any) {
+        return a[sortName] > b[sortName] ? 1 : -1;
+      });
+      sortState = !sortState;
+    } else {
+      couponListRef.value.sort(function (a: any, b: any) {
+        return a[sortName] > b[sortName] ? -1 : 1;
+      });
+      sortState = !sortState;
+    }
+  console.log(couponListRef.value);
+}
 </script>
 
 <style lang="scss" scoped>
@@ -198,6 +233,17 @@ let deleteHdr = (index: number, item: any) => {
   left: 0px;
   right: 0px;
   width: 100%;
+  .top-content {
+    .news-filter {
+      .el-select {
+        width: 150px;
+        margin-right: 10px;
+        :deep(.el-input__wrapper) {
+          height: 35px;
+        }
+      }
+    }
+  }
 
   .main-content {
     width: 100%;
@@ -310,7 +356,7 @@ let deleteHdr = (index: number, item: any) => {
               background-color: transparent;
               border: none;
               .edit_img {
-                width: 27px;
+                width: 32px;
                 height: 27px;
               }
               .delete_img {

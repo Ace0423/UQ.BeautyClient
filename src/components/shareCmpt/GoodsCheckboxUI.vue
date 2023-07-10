@@ -129,6 +129,7 @@ function submitBtn() {
     for (let j = 0; j < filterGoodsData.value.length; j++) {
       const element2 = filterGoodsData.value[j];
       if (element2.pId == element) {
+        element2.giftTotal = 1;
         curGoodsData.push(element2);
         break;
       }

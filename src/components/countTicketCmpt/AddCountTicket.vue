@@ -66,9 +66,70 @@
           </div>
           <div class="check-item" name="check_item">
             <span class="title-content">贈送服務項目</span>
-            <p v-on:click="updateImgUrl()">加入贈送服務</p>
+            <!-- <div v-if="selServiceGroupRef.length > 0"> -->
+            <div>
+              <table>
+                <tbody
+                  v-for="(item, index) in selServiceGroupRef"
+                  :key="item.lessonId"
+                >
+                  <tr>
+                    <td>
+                      <p>{{ item.nameTw }}</p>
+                    </td>
+                    <td>
+                      <img :src="icon_minus" @click="countTotalBtn(-1, item)" />
+                    </td>
+                    <td>
+                      <p>{{ item.giftTotal }}</p>
+                    </td>
+                    <td>
+                      <img :src="icon_plus" @click="countTotalBtn(+1, item)" />
+                    </td>
+                    <td>
+                      <img
+                        class="delete_img"
+                        :src="icon_cancleItem"
+                        @click="cancleServiceFn(item, index)"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p v-on:click="showServiceUIFn(true)">加入贈送服務</p>
             <span class="title-content">贈送商品項目</span>
-            <p v-on:click="updateImgUrl()">加入贈送商品</p>
+            <div v-if="selGoodsGroupRef.length > 0">
+              <table>
+                <tbody
+                  v-for="(item, index) in selGoodsGroupRef"
+                  :key="item.pId"
+                >
+                  <tr>
+                    <td>
+                      <p>{{ item.pName }}</p>
+                    </td>
+                    <td>
+                      <img :src="icon_minus" @click="countTotalBtn(-1, item)" />
+                    </td>
+                    <td>
+                      <p>{{ item.giftTotal }}</p>
+                    </td>
+                    <td>
+                      <img :src="icon_plus" @click="countTotalBtn(+1, item)" />
+                    </td>
+                    <td>
+                      <img
+                        class="delete_img"
+                        :src="icon_cancleItem"
+                        @click="cancleGoodsFn(item, index)"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p v-on:click="showGoodsUIFn(true)">加入贈送商品</p>
           </div>
           <div class="input-item" name="date">
             <span class="title-content">使用期限</span>
@@ -142,6 +203,18 @@
       <div class="bottom-content"></div>
     </div>
   </div>
+  <ServiceCheckboxUI
+    v-if="showServiceUIRef"
+    :selData="selServiceGroupRef"
+    :showUIFn="showServiceUIFn"
+    :getDataFn="getSelServiceFn"
+  ></ServiceCheckboxUI>
+  <GoodsCheckboxUI
+    v-if="showGoodsUIRef"
+    :selData="selGoodsGroupRef"
+    :showUIFn="showGoodsUIFn"
+    :getDataFn="getGoodsFn"
+  ></GoodsCheckboxUI>
 </template>
 
 <script setup lang="ts">
@@ -149,6 +222,9 @@ import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/priceStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
+import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
+import icon_plus from "@/assets/images/icon_plus.png";
+import icon_minus from "@/assets/images/icon_minus.png";
 import icon_customer from "@/assets/images/icon_customer.png";
 import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
 import { formatZeroDate } from "@/utils/utils";
@@ -164,9 +240,13 @@ const props = defineProps<{
   //   formInfo: any;
   //   addDetailTypeID?: any;
 }>();
-let showMemberUIRef = ref(false);
-let showAddItemMenuUIRef = ref(false);
-let showAddServicesUIRef = ref(false);
+let showMemberUIRef: any = ref(false);
+let showAddItemMenuUIRef: any = ref(false);
+let showAddServicesUIRef: any = ref(false);
+let showGoodsUIRef: any = ref(false);
+let showServiceUIRef: any = ref(false);
+let selGoodsGroupRef: any = ref([]);
+let selServiceGroupRef: any = ref([]);
 let content = [
   {
     id: 0,
@@ -250,6 +330,8 @@ let formInputRef: any = ref({
   ccDiscount: 0,
   groupItem: 0,
   checkoutType: 0,
+  giftServices: [],
+  giftGoods: [],
 });
 
 var date = new Date();
@@ -324,6 +406,31 @@ function updateImgUrl() {
 }
 function changeValue() {
   console.log(formInputRef.value);
+}
+function showGoodsUIFn(state: boolean) {
+  showGoodsUIRef.value = state;
+}
+function getGoodsFn(data: any) {
+  console.log(data, "獲取");
+  selGoodsGroupRef.value = data;
+  // props.showAddUIFn(false);
+}
+function showServiceUIFn(state: boolean) {
+  showServiceUIRef.value = state;
+}
+function getSelServiceFn(data: any) {
+  console.log(data, "獲取");
+  selServiceGroupRef.value = data;
+  // props.showAddUIFn(false);
+}
+function cancleServiceFn(item: any, index: number) {
+  selServiceGroupRef.value.splice(index, 1);
+}
+function cancleGoodsFn(item: any, index: number) {
+  selGoodsGroupRef.value.splice(index, 1);
+}
+function countTotalBtn(data: number, item: any) {
+  if (item.giftTotal + data > 0) item.giftTotal += data;
 }
 </script>
 
@@ -487,6 +594,41 @@ function changeValue() {
           p {
             color: #87ceeb;
             // width: calc(100% - 180px);
+          }
+          div {
+            width: 100%;
+            table {
+              width: 100%;
+
+              p {
+                color: #000000;
+              }
+              tbody {
+                tr {
+                  // display: flex;
+                  td {
+                    // display: flex;
+                    border-bottom: solid 0.5px #ddd;
+                    box-sizing: border-box;
+                  }
+                }
+                > tr > td:nth-child(1) {
+                  width: 60%;
+                }
+                > tr > td:nth-child(2) {
+                  text-align: center;
+                }
+                > tr > td:nth-child(3) {
+                  text-align: center;
+                }
+                > tr > td:nth-child(4) {
+                  text-align: center;
+                }
+                > tr > td:nth-child(5) {
+                  text-align: center;
+                }
+              }
+            }
           }
         }
 

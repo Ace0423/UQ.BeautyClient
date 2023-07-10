@@ -106,12 +106,13 @@ function getCourseFn(data: any) {
 
 function clickGroup() {
   let curCourse = formInputRef.value.service;
+  console.log(curCourse);
   if (curCourse.length > 0) {
     formInputRef.value.service = [];
   } else {
     for (let i = 0; i < filterCourseData.value.length; i++) {
       const element = filterCourseData.value[i];
-      formInputRef.value.service.push(element);
+      formInputRef.value.service.push(element.lessonId);
     }
   }
 }
@@ -129,7 +130,9 @@ function submitBtn() {
     const element = formInputRef.value.service[i];
     for (let j = 0; j < filterCourseData.value.length; j++) {
       const element2 = filterCourseData.value[j];
-      if (element2.pId == element) {
+      let Lid = element2.pId ? element2.pId : element2.lessonId;
+      if (Lid == element) {
+        element2.giftTotal = 1;
         curServiceData.push(element2);
         break;
       }

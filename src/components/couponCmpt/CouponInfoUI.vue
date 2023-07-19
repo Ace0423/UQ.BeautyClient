@@ -35,7 +35,7 @@
             <p>適用項目</p>
             <span>{{ "所有服務與商品" }}</span>
             <p>建立時間</p>
-            <span>{{ selItemData.value.dateCreate.replace("T"," ") }}</span>
+            <span v-if="addTime">{{ addTime }}</span>
             <p>注意事項</p>
             <span>{{
               "僅於店內或線上預約消費時使用，店家將保留最終決議隨時可能撤銷‧"
@@ -107,7 +107,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { usePriceStore} from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
 import Alert from "../alertCmpt";
@@ -130,8 +130,10 @@ const props = defineProps<{
   selItemData: any;
   showInfoUIHdr: Function;
 }>();
+let addTime = ref("");
 getCouponApi(props.selItemData.value.ccId, 0).then((res: any) => {
   props.selItemData.value.dateCreate = selectCouponRef.value[0].dateCreate;
+  addTime = props.selItemData.value.dateCreate.replace("T", " ");
 });
 onMounted(() => {
   // getmemberInfoApi();

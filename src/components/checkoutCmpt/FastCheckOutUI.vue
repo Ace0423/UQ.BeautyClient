@@ -92,13 +92,13 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useApptStore } from "@/stores/priceStore";
+import { usePriceStore} from "@/stores/priceStore";
 import search_ico from "@/assets/images/icon_search.png";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_customer from "@/assets/images/icon_customer.png";
 import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
 
-let store = useApptStore();
+let store = usePriceStore();
 let { allDiscountList } = storeToRefs(store);
 let { getAllDiscountApi } = store;
 

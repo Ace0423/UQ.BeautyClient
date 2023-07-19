@@ -167,7 +167,7 @@
   ></GoodsCheckboxUI>
 </template>
 <script setup lang="ts">
-import { useApptStore } from "@/stores/priceStore";
+import { usePriceStore} from "@/stores/priceStore";
 import type { IBackStatus } from "@/types/IData";
 import { showErrorMsg } from "@/types/IMessage";
 import { verify_methods } from "@/utils/utils";
@@ -175,7 +175,7 @@ import { storeToRefs } from "pinia";
 import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
 
 // import { tr } from "element-plus/es/locale";
-let store = useApptStore();
+let store = usePriceStore();
 let {} = storeToRefs(store);
 let { updateSingleDiscountApi } = store;
 

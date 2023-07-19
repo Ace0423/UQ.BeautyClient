@@ -72,14 +72,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useApptStore } from "@/stores/priceStore";
+import { usePriceStore} from "@/stores/priceStore";
 import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import type { IBackStatus } from "@/types/IData";
 import { showErrorMsg } from "@/types/IMessage";
 import { verify_methods } from "@/utils/utils";
 import { storeToRefs } from "pinia";
 import type { FormInstance, FormRules } from "element-plus";
-let store = useApptStore();
+let store = usePriceStore();
 let {} = storeToRefs(store);
 let { addAllDiscountApi } = store;
 

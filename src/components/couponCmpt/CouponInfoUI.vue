@@ -107,13 +107,13 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useApptStore } from "@/stores/priceStore";
+import { usePriceStore} from "@/stores/priceStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
 import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 
-let store = useApptStore();
+let store = usePriceStore();
 let { selectCouponRef } = storeToRefs(store);
 let { updateCouponApi, getCouponApi } = store;
 

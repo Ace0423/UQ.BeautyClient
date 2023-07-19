@@ -269,7 +269,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useApptStore } from "@/stores/priceStore";
+import { usePriceStore} from "@/stores/priceStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
 import icon_customer from "@/assets/images/icon_customer.png";
@@ -278,7 +278,7 @@ import { formatZeroDate } from "@/utils/utils";
 import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 
-let store = useApptStore();
+let store = usePriceStore();
 let { allDiscountList } = storeToRefs(store);
 let { addCouponApi } = store;
 

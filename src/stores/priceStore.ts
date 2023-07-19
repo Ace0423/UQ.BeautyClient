@@ -21,7 +21,7 @@ import {
 import { apiGetTopUpCardListRequest} from "@/api/index";
 import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
-export const useApptStore = defineStore("priceStore", () => {
+export const usePriceStore = defineStore("priceStore", () => {
   let allDiscountList: any = ref([]);
   let singleDiscountListRef: any = ref([]);
 

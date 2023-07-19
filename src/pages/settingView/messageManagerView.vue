@@ -9,7 +9,7 @@ onMounted(() => {
         <div class="nav">
             <router-link to="/settingView/messageManagerView/myMessageView">我的訊息</router-link>
             <router-link to="/settingView/messageManagerView/systemMessageView">系統訊息</router-link>
-            <router-link to="/settingView/messageManagerView/sendingRecordView">發送紀錄</router-link>
+            <!-- <router-link to="/settingView/messageManagerView/sendingRecordView">發送紀錄</router-link> -->
         </div>
         <router-view />
     </div>

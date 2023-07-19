@@ -124,10 +124,10 @@
 import search_ico from "@/assets/images/icon_search.png";
 import Icon_edit from "@/assets/images/icon_edit.png";
 import Icon_delete from "@/assets/images/icon_delete.png";
-import { useApptStore } from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
-let store = useApptStore();
+let store = usePriceStore();
 let { couponListRef } = storeToRefs(store);
 let { getCouponApi, delCouponApi } = store;
 let couponStateValue = ref(-1);

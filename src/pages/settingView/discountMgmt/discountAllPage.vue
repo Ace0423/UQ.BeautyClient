@@ -53,13 +53,13 @@
   ></EditAllDiscountUI>
 </template>
 <script setup lang="ts">
-import { useApptStore } from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import { storeToRefs } from "pinia";
 import search_ico from "@/assets/images/icon_search.png";
 import Icon_edit from "@/assets/images/icon_edit.png";
 import Icon_delete from "@/assets/images/icon_delete.png";
 import Alert from "@/components/alertCmpt";
-let store = useApptStore();
+let store = usePriceStore();
 let { allDiscountList } = storeToRefs(store);
 let { getAllDiscountApi, delAllDiscountApi } = store;
 const showAddUI = ref(false);

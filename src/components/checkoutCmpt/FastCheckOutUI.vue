@@ -86,16 +86,8 @@
   />
   <RadioItemMenuUI
     v-if="showAddItemMenuUIRef"
-    :selData="formInputRef.memberInfo"
     :showUIFn="showItemMenuUIFn"
-    :getDataFn="getMembersFn"
   />
-  <!-- <RadioServicesUI
-    v-if="showAddServicesUIRef"
-    :selData="formInputRef.memberInfo"
-    :showUIFn="showMemberUIFn"
-    :getDataFn="getMembersFn"
-  /> -->
 </template>
 
 <script setup lang="ts">

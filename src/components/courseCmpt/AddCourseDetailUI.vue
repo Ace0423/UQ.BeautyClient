@@ -161,7 +161,6 @@ let formInputRef: any = ref({
 });
 
 function clickType(val: any) {
-  console.log(filterTypesTabs.value[val]);
   addCourseTypesName.value = filterTypesTabs.value[val].nameTw;
 }
 let store = useApptStore();
@@ -190,8 +189,6 @@ const props = defineProps<{
 }>();
 //新增課程-確認
 let confirmAddCourseDataForm = () => {
-  console.log(formInputRef.value);
-
   ruleLists.ruleItem.lessonTypeId.value = formInputRef.value.lessonTypeId;
   ruleLists.ruleItem.timer.value = formInputRef.value.timer;
   ruleLists.ruleItem.price.value = formInputRef.value.price;

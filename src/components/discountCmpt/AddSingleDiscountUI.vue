@@ -243,7 +243,6 @@ let submitBtn = () => {
     serviceMaps: curServiceMaps,
     productMaps: curGoodsMaps,
   };
-  console.log(curdata);
 
   /**新增明細 */
   addSingleDiscountApi(curdata).then((res: any) => {

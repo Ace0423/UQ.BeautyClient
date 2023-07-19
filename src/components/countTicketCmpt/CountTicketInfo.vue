@@ -3,16 +3,24 @@
     <div>
       <div class="topbar-form">
         <img :src="icon_closeX" v-on:click="showInfoUIHdr(false)" />
-        <span>新增優惠券</span>
+        <span>{{ selItemData.value.ffTitle }}</span>
       </div>
       <div class="content-form">
-        <div class="coupon-skin">
-          <div class="coupon-icon">
-            <img :src="icon_ticket" />
-          </div>
-          <div class="coupon-info">
-            <span>優惠 {{ 0 }} 元</span>
-            <span class="coupon-date">{{ "不限期" }}</span>
+        <div class="ticket-skin">
+          <div class="ticket">
+            <div class="left-total">
+              <span>{{ selItemData.value.ffTitle }}</span>
+              <span>共{{ selItemData.value.ffLimit }}次</span>
+              <span v-if="selItemData.value.ffDateType == 0">
+                {{ "不限期" }}</span
+              >
+              <span v-else> {{ selItemData.value.ffDateType }}</span>
+            </div>
+            <div class="line-ticket"></div>
+            <div class="right-total">
+              <span>{{ selItemData.value.ffUsed }}</span>
+              <span>{{ "剩餘數" }}</span>
+            </div>
           </div>
         </div>
         <div class="content">
@@ -21,43 +29,66 @@
               :class="infoListRef == 1 ? 'active' : ''"
               v-on:click="changeTabs(1)"
             >
-              優惠內容
+              計次券內容
             </button>
             <button
               :class="infoListRef == 2 ? 'active' : ''"
               v-on:click="changeTabs(2)"
             >
-              使用紀錄
+              銷售紀錄
             </button>
           </div>
           <div class="main-content" v-if="infoListRef == 1">
-            <button>寄送優惠</button>
-            <p>適用項目</p>
-            <span>{{ "所有服務與商品" }}</span>
-            <p>建立時間{{ selItemData.value.dateCreate }}</p>
-            <span>{{ selItemData.value.dateCreate.replace("T", " ") }}</span>
-            <p>注意事項</p>
-            <span>{{
-              "僅於店內或線上預約消費時使用，店家將保留最終決議隨時可能撤銷‧"
+            <p>建立時間</p>
+            <!-- <span>{{ selItemData.value.dateCreate.replace("T", " , ") }}</span> -->
+            <span v-if="addTime">{{ addTime[0]+":"+addTime[1] }}</span>
+
+            <p>使用期限</p>
+            <!-- <span>{{ selItemData.value.ffDateOfUsedDay }}</span> -->
+            <span v-if="selItemData.value.ffDateType == 0">{{
+              " 不限期"
             }}</span>
+            <span v-if="selItemData.value.ffDateType == 2">
+              {{ selItemData.value.ffDateOfUsedDay + "天" }}
+            </span>
+            <span v-if="selItemData.value.ffDateType == 1">
+              {{ selItemData.value.ffSdt.split(" ")[0] + " 啟用" }}<br />{{
+                selItemData.value.ffEdt.split(" ")[0] + " 到期"
+              }}
+            </span>
+
+            <p>適用項目</p>
+            <!-- <span>{{ selItemData.value.ffServiceId }}</span> -->
+            <span>{{ serviceItem.nameTw }}</span>
+
+            <p>贈送項目</p>
+            <span>{{ filteItemData }}</span>
+
+            <p>說明</p>
+            <span>{{ selItemData.value.ffContext }}</span>
           </div>
           <div class="main-content" v-else>
             <div>
               <div>
                 <span class="amount-content">{{ 0 }}</span>
-                <span>有效瀏覽數</span>
+                <span>銷售數量</span>
               </div>
               <div>
-                <span class="amount-content">{{ 0 }}</span>
-                <span>實際領取數</span>
+                <span class="amount-content">{{
+                  selItemData.value.ffUsed + "/" + selItemData.value.ffLimit
+                }}</span>
+                <span>已兌換/總量</span>
               </div>
               <div>
-                <span class="amount-content">{{ 0 }}</span>
-                <span>使用數</span>
+                <span class="amount-content">{{
+                  (selItemData.value.ffUsed / selItemData.value.ffLimit) * 100 +
+                  "%"
+                }}</span>
+                <span>兌換率</span>
               </div>
             </div>
             <div class="uselist-content">
-              <span>使用紀錄</span>
+              <span>銷售紀錄</span>
               <table>
                 <thead class="table-thead">
                   <tr>
@@ -65,7 +96,7 @@
                       <p class="nameview">顧客</p>
                     </th>
                     <th>
-                      <p class="nameview">使用時間</p>
+                      <p class="nameview">購買時間</p>
                     </th>
                   </tr>
                 </thead>
@@ -86,14 +117,14 @@
       </div>
       <div class="footer-form">
         <button
-          v-if="selItemData.value.ccType == 0"
+          v-if="selItemData.value.ffType == 0"
           class="otherpay-btn"
           v-on:click="updateCoupon()"
         >
-          啟用優惠券
+          啟用此券
         </button>
         <button v-else class="otherpay-btn" v-on:click="updateCoupon()">
-          停用優惠券
+          停用此券
         </button>
         <button v-on:click="showEditUIFn(true)" class="cash-btn">編輯</button>
       </div>
@@ -107,15 +138,20 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useApptStore } from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
 import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
+import { useApptStore } from "@/stores/apptStore";
 
-let store = useApptStore();
+let store = usePriceStore();
 let { selectCountTicketRef } = storeToRefs(store);
 let { updateCountTicketApi, getCountTicketApi } = store;
+
+let storeAppt = useApptStore();
+let { courseDataList, goodsDetailListRef } = storeToRefs(storeAppt);
+let { getCourseDetailApi, getGoodsDetailApi } = storeAppt;
 
 const simpleView = ref(true);
 let showEditUI = ref(false);
@@ -130,13 +166,46 @@ const props = defineProps<{
   selItemData: any;
   showInfoUIHdr: Function;
 }>();
+let addTime = ref("");
 props.selItemData.value.dateCreate = "";
-getCountTicketApi(props.selItemData.value.ccId, 0).then((res: any) => {
+getCountTicketApi(props.selItemData.value.ffId, 0).then((res: any) => {
   props.selItemData.value.dateCreate = selectCountTicketRef.value[0].dateCreate;
+  addTime.value = selectCountTicketRef.value[0].dateCreate
+    .replace("T", ",  ")
+    .split(":");
 });
 onMounted(() => {
   // getmemberInfoApi();
 });
+
+let filteItemData: any = computed(() => {
+  let curData: any = "";
+  let curGiftServices = props.selItemData.value.forFreeCardMapServices;
+  for (let i = 0; i < curGiftServices.length; i++) {
+    const element = curGiftServices[i];
+    curData = curData + element.lTitle + "x" + element.lCount + "、";
+  }
+  let curGiftGoods = props.selItemData.value.forFreeCardMapProducts;
+  for (let i = 0; i < curGiftGoods.length; i++) {
+    const element = curGiftGoods[i];
+    curData = curData + element.pTitle + "x" + element.pCount + "、";
+  }
+
+  return curData.substring(0, curData.length - 1);
+});
+
+//取服務資料
+let serviceItem: any = ref({});
+getCourseDetailApi().then((res: any) => {
+  //計次項目
+  for (let i = 0; i < courseDataList.value.length; i++) {
+    const element = courseDataList.value[i];
+    if (element.lessonId == props.selItemData.value.ffServiceId) {
+      serviceItem.value = element;
+    }
+  }
+});
+
 const changeTabs = (index: number) => {
   infoListRef.value = index;
 };
@@ -147,7 +216,19 @@ const showEditUIFn = (state: boolean) => {
 };
 function updateCoupon() {
   let apiData = props.selItemData.value;
-  apiData.ccType = apiData.ccType == 0 ? 1 : 0;
+  apiData.ffType = apiData.ffType == 0 ? 1 : 0;
+  apiData.serviceMaps = apiData.forFreeCardMapServices;
+  apiData.productMaps = apiData.forFreeCardMapProducts;
+  // for (let i = 0; i < apiData.forFreeCardMapServices.length; i++) {
+  //   const element = apiData.forFreeCardMapServices[i];
+  //   apiData.serviceMaps.push({ lid: element.lid, lCount: element.lCount });
+  // }
+  // for (let i = 0; i < apiData.forFreeCardMapProducts.length; i++) {
+  //   const element = apiData.forFreeCardMapProducts[i];
+  //   apiData.productMaps.push({ pid: element.pid, pCount: element.pCount });
+  // }
+  // delete apiData.forFreeCardMapServices;
+  // delete apiData.forFreeCardMapProducts;
 
   /**更新 */
   updateCountTicketApi(apiData).then((res: any) => {
@@ -221,51 +302,62 @@ function updateCoupon() {
       width: 100%;
       justify-content: center;
       height: calc(100% - 70px - 70px);
-      .coupon-skin {
-        display: flex;
-        width: 90%;
-        height: 150px;
-        align-items: center;
-        border-radius: 10px;
-        box-shadow: 0 0 5px;
-        box-sizing: border-box;
-        // margin-top: 20px;
-        // margin-left: 5%;
-        // margin-bottom: 5%;
-        margin: 20px 5% 5% 5%;
-        .coupon-icon {
+      .ticket-skin {
+        margin: 15px;
+        height: 120px;
+        .ticket {
           display: flex;
-          width: calc(30%);
-          height: 100%;
-          align-items: center;
-          background-color: #faf9f8;
+          width: 300px;
+          height: 120px;
+          position: relative;
+          background: rgb(0, 180, 81);
+          margin: 0 auto;
           justify-content: center;
-          border-radius: 10px 0px 0px 10px;
-          > img {
-            width: 30px;
-            height: 20px;
+          align-items: center;
+          .left-total {
+            display: grid;
+            width: 30%;
+            align-items: center;
+          }
+          .right-total {
+            display: grid;
+            width: 30%;
+            height: 50%;
+            justify-content: center;
+            align-items: center;
+            text-align: end;
+            border-left: dashed 3px #ffffff;
+            box-sizing: border-box;
+          }
+          .line-ticket {
+            display: grid;
+            width: 30%;
+          }
+          span {
+            color: #ffffff;
           }
         }
-        .coupon-info {
-          width: calc(70%);
+        .ticket:before,
+        .ticket:after {
+          content: "";
+          display: block;
+          width: 24px;
           height: 100%;
-          > span {
-            display: flex;
-            height: 50%;
-            // justify-content: center;
-            margin-left: 10%;
-            align-items: center;
-            font-size: 28px;
-          }
-          .coupon-date {
-            color: #c1bdb8;
-            font-size: 18px;
-            font-size: 20px;
-            align-items: baseline;
-          }
+          background-size: 24px 24px; /* 一个repeat的大小 */
+          background-repeat: repeat-y;
+          background-image: radial-gradient(#fff 7px, transparent 8px);
+          position: absolute;
+          top: 0;
+        }
+        .ticket:before {
+          left: -12px; /* 半圆，只显示一个repeat的一半 */
+        }
+        .ticket:after {
+          right: -12px;
         }
       }
       .content {
+        height: calc(100% - 120px - 15px - 15px);
         .tabs-content {
           display: flex;
           justify-content: center;
@@ -295,6 +387,7 @@ function updateCoupon() {
           height: calc(100% - 45px);
           width: 90%;
           margin-left: 5%;
+          overflow-y: auto;
           > button {
             width: 100%;
             height: 45px;

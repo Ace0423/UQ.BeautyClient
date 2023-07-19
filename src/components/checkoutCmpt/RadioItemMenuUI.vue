@@ -31,15 +31,20 @@
         </div>
       </div>
       <div class="service-content" v-show="itemTypeRef == 1">
-        <AddServicesUI :showServiceUIFn="showItemTypeFn"> </AddServicesUI>
+        <RadioServicesUI
+          :selData="formInputRef.ServiceId"
+          :getDataFn="getRadioServiceFn"
+          :showServiceUIFn="showItemTypeFn"
+        >
+        </RadioServicesUI>
       </div>
       <div class="service-content" v-show="itemTypeRef == 2">
-        <AddGoodsUI :showGoodsUIFn="showItemTypeFn"> </AddGoodsUI>
+        <RadioGoodsUI :showGoodsUIFn="showItemTypeFn"> </RadioGoodsUI>
       </div>
-      <div class="service-content" v-show="itemTypeRef == 3">
-      </div>
+      <div class="service-content" v-show="itemTypeRef == 3"></div>
       <div class="service-content" v-show="itemTypeRef == 4">
-        <AddCountTicketUI :showCountTicketUIFn="showItemTypeFn"> </AddCountTicketUI>
+        <RadioCountTicketUI :showCountTicketUIFn="showItemTypeFn">
+        </RadioCountTicketUI>
       </div>
     </div>
   </div>
@@ -66,7 +71,9 @@ onMounted(() => {
 });
 let formInputRef: any = ref({
   name: "",
+  ServiceId:0,
 });
+//1:服務，2:商品，
 let itemTypeRef: any = ref(0);
 
 function submitBtn() {
@@ -74,6 +81,10 @@ function submitBtn() {
 }
 function showItemTypeFn(type: number) {
   itemTypeRef.value = type;
+}
+function getRadioServiceFn(data: any) {
+  console.log(data, "獲取");
+  formInputRef.value.ffServiceId = data;
 }
 </script>
 

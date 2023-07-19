@@ -3,7 +3,7 @@
     <div class="table-topBar">
       <p class="bar-title">計次券(全部{{ 0 }}個)</p>
       <div>
-        <input class="search-control" placeholder="搜尋名稱" />
+        <input class="search-control" v-model="search" placeholder="搜尋名稱" />
         <button class="header-btn" @click="showAddFormFn()">新增</button>
       </div>
     </div>
@@ -31,21 +31,31 @@
         </tr>
       </thead>
       <tbody class="content-tbody">
-        <tr v-for="(item, index) in countTicketListRef" :key="item.discountNo">
+        <tr
+          v-for="(item, index) in filterCTicketListCpt"
+          :key="item.discountNo"
+        >
           <td>
-            <p>{{ item.ccTitle }}</p>
+            <p>{{ item.ffTitle }}</p>
           </td>
           <td>
-            <p>{{ item.ccSdt }}</p>
+            <p v-if="item.ffDateType == 0">{{ " 不限期" }}</p>
+            <p v-if="item.ffDateType == 2">{{ item.ffDateOfUsedDay + "天" }}</p>
+            <p v-if="item.ffDateType == 1">
+              {{ item.ffSdt.split(" ")[0] + " 啟用" }}<br />{{
+                item.ffEdt.split(" ")[0] + " 到期"
+              }}
+            </p>
           </td>
           <td>
-            <p>{{ item.ccLimit }}</p>
+            <p>{{ item.ffLimit }}</p>
           </td>
           <td>
-            <p>{{ item.ccItemType }}</p>
+            <p v-if="item.ffType == 0">已停用</p>
+            <p v-else>啟用中</p>
           </td>
           <td>
-            <p>{{ item.ccDiscount }}</p>
+            <p>${{ item.ffPrice }}</p>
           </td>
           <td>
             <button v-on:click="showInfoUIFn(true, item)">
@@ -69,16 +79,27 @@
 <script setup lang="ts">
 import Icon_edit from "@/assets/images/icon_edit.png";
 import Icon_delete from "@/assets/images/icon_delete.png";
-import { useApptStore } from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
-let store = useApptStore();
+let store = usePriceStore();
 let { countTicketListRef } = storeToRefs(store);
 let { getCountTicketApi, delCountTicketApi } = store;
 const showAddUI = ref(false);
 const showEditUI = ref(false);
 let showInfoUI = ref(false);
 getAllDiscountFn();
+
+let filterCTicketListCpt: any = computed(() =>
+  countTicketListRef.value.filter(getCTicketListFn)
+);
+let search = ref("");
+function getCTicketListFn(data: any) {
+  return (
+    !search.value ||
+    data.ffTitle.toLowerCase().includes(search.value.toLowerCase())
+  );
+}
 
 const showAddUIFn = (state: boolean) => {
   showAddUI.value = state;
@@ -98,14 +119,13 @@ const showEditUIFn = (state: boolean) => {
 function getAllDiscountFn() {
   getCountTicketApi().then((res: any) => {
     console.log(countTicketListRef.value);
-    
-      });;
+  });
 }
 let selData: any = [];
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     console.log("確認刪除");
-    delCountTicketApi(selData.discountNo);
+    delCountTicketApi(selData.ffId);
   } else {
     console.log("取消刪除");
   }
@@ -190,7 +210,7 @@ let deleteHdr = (index: number, item: any) => {
 
   > table {
     width: 100%;
-    height: 100%;
+    height: calc(100% - 50px);
 
     > .table-thead {
       display: block;
@@ -199,7 +219,7 @@ let deleteHdr = (index: number, item: any) => {
         display: flex;
         align-items: center;
         height: 50px;
-        justify-content: space-between;
+        // justify-content: space-between;
 
         > th {
           > p {
@@ -240,16 +260,16 @@ let deleteHdr = (index: number, item: any) => {
         align-items: center;
         > td {
           > button {
-              background-color: transparent;
-              border: none;
-              .edit_img {
-                width: 32px;
-                height: 27px;
-              }
-              .delete_img {
-                width: 21px;
-                height: 27px;
-              }
+            background-color: transparent;
+            border: none;
+            .edit_img {
+              width: 32px;
+              height: 27px;
+            }
+            .delete_img {
+              width: 21px;
+              height: 27px;
+            }
           }
         }
       }

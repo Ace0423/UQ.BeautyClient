@@ -116,8 +116,6 @@ const onDelReturn = (data: any) => {
 
 let submitTypeHdr = () => {
   let changeNameList = [];
-  console.log(goodsTypesListRef.value);
-
   for (let i = 0; i < goodsTypesListRef.value.length; i++) {
     const element = goodsTypesListRef.value[i];
     if (element.pgId != 0) {

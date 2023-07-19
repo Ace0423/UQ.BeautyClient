@@ -282,7 +282,6 @@ onMounted(() => {
 });
 
 function countTotalBtn(data: number) {
-  console.log(formInputRef.value.total);
   if (!formInputRef.value.total) formInputRef.value.total = 0;
   formInputRef.value.total += data;
   if (formInputRef.value.total < 0) formInputRef.value.total = 0;
@@ -324,7 +323,6 @@ let submitBtn = () => {
     productDiscount: [],
     productProvider: [],
   };
-  console.log(curdata);
 
   /**新增明細 */
   addGoodsDetailApi(curdata).then((res: any) => {

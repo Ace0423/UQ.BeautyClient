@@ -19,47 +19,60 @@
                 type="text"
               />
             </div>
-            <div>
+            <div class="directions-content">
               <span>說明</span>
-              <input
+              <!-- <input
                 v-model="formInputRef.msg"
                 placeholder="請輸入說明或注意事項"
                 type="text"
-              />
+              /> -->
+              <textarea
+                v-model="formInputRef.msg"
+                placeholder="請輸入說明或注意事項"
+              ></textarea>
             </div>
           </div>
-          <div class="input-item" name="theme">
+          <div class="input-item">
             <span class="title-content">計次券項目與價格</span>
             <span class="msg-content"
               >選擇你的計次券對象項目與填寫販售價格。</span
             >
             <div>
-              <span>附加圖片</span>
-              <p v-on:click="updateImgUrl()">上傳圖片</p>
+              <span>計次項目</span>
+              <div v-on:click="showItemTypeFn(1)">
+                <p v-if="formInputRef.ffServiceId == 0">請選擇計次項目</p>
+                <p v-else>{{ formInputRef.ffServiceItem.nameTw }}</p>
+              </div>
             </div>
-            <div>
-              <span>可兌換價格</span>
-              <input
-                v-model="formInputRef.theme"
+            <div class="limit-content" v-if="formInputRef.ffServiceId != 0">
+              <span>可兌換數量</span>
+              <!-- <input
+                v-model="formInputRef.amountTotal"
                 placeholder="請輸入優惠主題"
                 type="text"
-              />
+              /> -->
+              <div class="total-content">
+                <img :src="icon_minus" @click="countLimitTotalBtn(-1)" />
+                <span>{{ formInputRef.limitTotal }}</span>
+                <img :src="icon_plus" @click="countLimitTotalBtn(+1)" />
+              </div>
             </div>
-            <div>
+            <div v-if="formInputRef.ffServiceId != 0">
               <span>原始價格</span>
+              <!-- <span>{{ formInputRef.oldPrice }}</span> -->
               <input
-                v-model="formInputRef.theme"
-                placeholder="請輸入優惠主題"
+                v-model="formInputRef.oldPrice"
                 type="text"
+                disabled="false"
               />
             </div>
           </div>
-          <div class="input-item" name="theme">
+          <div class="input-item" v-if="formInputRef.ffServiceId != 0">
             <div>
               <span>販售價格</span>
               <input
-                v-model="formInputRef.theme"
-                placeholder="請輸入優惠主題"
+                v-model="formInputRef.ffPrice"
+                placeholder="請輸入計次券銷售金額"
                 type="text"
               />
             </div>
@@ -70,7 +83,7 @@
             <div>
               <table>
                 <tbody
-                  v-for="(item, index) in selServiceGroupRef"
+                  v-for="(item, index) in formInputRef.giftServices"
                   :key="item.lessonId"
                 >
                   <tr>
@@ -99,10 +112,10 @@
             </div>
             <p v-on:click="showServiceUIFn(true)">加入贈送服務</p>
             <span class="title-content">贈送商品項目</span>
-            <div v-if="selGoodsGroupRef.length > 0">
+            <div v-if="formInputRef.giftGoods.length > 0">
               <table>
                 <tbody
-                  v-for="(item, index) in selGoodsGroupRef"
+                  v-for="(item, index) in formInputRef.giftGoods"
                   :key="item.pId"
                 >
                   <tr>
@@ -137,9 +150,10 @@
               <span>期限方式</span>
               <div class="select-content">
                 <el-select
+                  style="width: 100%"
                   :popper-append-to-body="false"
                   popper-class="select"
-                  v-model="formInputRef.ccOnDate"
+                  v-model="formInputRef.ffDateType"
                   @change="changeValue()"
                 >
                   <el-option
@@ -153,10 +167,11 @@
                 </el-select>
               </div>
             </div>
-            <div>
+            <div v-if="formInputRef.ffDateType == 2">
               <span>可使用天數</span>
               <div class="select-content">
                 <el-select
+                  style="width: 100%"
                   :popper-append-to-body="false"
                   popper-class="select"
                   v-model="formInputRef.days"
@@ -172,11 +187,11 @@
                 </el-select>
               </div>
             </div>
-            <div>
+            <div v-if="formInputRef.ffDateType == 1">
               <span>開始日期</span>
               <input type="date" v-model="formInputRef.startDate" />
             </div>
-            <div>
+            <div v-if="formInputRef.ffDateType == 1">
               <span>結束日期</span>
               <input type="date" v-model="formInputRef.endDate" />
             </div>
@@ -187,14 +202,25 @@
         </div>
         <div class="right-main">
           <p>優惠券結果參考</p>
-          <div class="coupon-skin">
-            <div class="coupon-icon">
-              <img :src="icon_ticket" />
-            </div>
-            <div class="coupon-info">
-              <span>優惠 {{ 0 }} 元</span>
-              <span class="coupon-date">{{ formInputRef.theme }}</span>
-              <span class="coupon-date">{{ "不限期" }}</span>
+          <div class="ticket-skin">
+            <div class="ticket">
+              <div class="left-total">
+                <span>{{ formInputRef.name }}</span>
+                <span>共{{ formInputRef.limitTotal }}次</span>
+                <span v-if="formInputRef.ffDateType == 0"> {{ "不限期" }}</span>
+                <span v-if="formInputRef.ffDateType == 1">
+                  {{ "日期起迄" }}
+                </span>
+                <span v-if="formInputRef.ffDateType == 2">
+                  {{ formInputRef.days }} 天</span
+                >
+              </div>
+              <div class="right-total">
+                <span
+                  >{{ 1 }} <br />
+                  {{ "剩餘數" }}</span
+                >
+              </div>
             </div>
           </div>
           <p>用優惠券將取代其他折扣方式</p>
@@ -205,21 +231,28 @@
   </div>
   <ServiceCheckboxUI
     v-if="showServiceUIRef"
-    :selData="selServiceGroupRef"
+    :selData="formInputRef.giftServices"
     :showUIFn="showServiceUIFn"
     :getDataFn="getSelServiceFn"
   ></ServiceCheckboxUI>
   <GoodsCheckboxUI
     v-if="showGoodsUIRef"
-    :selData="selGoodsGroupRef"
+    :selData="formInputRef.giftGoods"
     :showUIFn="showGoodsUIFn"
     :getDataFn="getGoodsFn"
   ></GoodsCheckboxUI>
+  <RadioServicesUI
+    v-if="itemTypeRef"
+    :selData="formInputRef.ffServiceId"
+    :getDataFn="getRadioServiceFn"
+    :showServiceUIFn="showItemTypeFn"
+  >
+  </RadioServicesUI>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useApptStore } from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
 import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
@@ -231,8 +264,8 @@ import { formatZeroDate } from "@/utils/utils";
 import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 
-let store = useApptStore();
-let { allDiscountList } = storeToRefs(store);
+let store = usePriceStore();
+let {  } = storeToRefs(store);
 let { addCountTicketApi } = store;
 
 const props = defineProps<{
@@ -287,16 +320,6 @@ let selDays = [
     name: "180天",
   },
 ];
-let amountType = [
-  {
-    id: -1,
-    name: "無限制",
-  },
-  {
-    id: 1,
-    name: "限制數量",
-  },
-];
 let discountType = [
   {
     id: 1,
@@ -317,19 +340,16 @@ onMounted(() => {
 let formInputRef: any = ref({
   name: "",
   msg: "",
-
-  theme: "",
   imgUrl: "",
-  days: null,
+  ffServiceId: 0,
+  ffServiceItem: 0,
+  limitTotal: 1,
+  ffPrice: 0,
+  ffDateType: 0,
+  days: 0,
   startDate: "",
   endDate: "",
-  amountTotal: null,
-  amountType: -1,
-  ccOnDate: 0,
-  ccDiscountType: null,
-  ccDiscount: 0,
-  groupItem: 0,
-  checkoutType: 0,
+  oldPrice: 0,
   giftServices: [],
   giftGoods: [],
 });
@@ -367,25 +387,42 @@ function countCoustomerFn(data: number) {
 }
 function submitBtn() {
   console.log("提交formInputRef", formInputRef.value);
+
+  //整理贈送服務資料
+  let giftServicesVo = [];
+  for (let i = 0; i < formInputRef.value.giftServices.length; i++) {
+    const element = formInputRef.value.giftServices[i];
+    giftServicesVo.push({
+      lid: element.lessonId,
+      lCount: element.giftTotal,
+    });
+  }
+  //整理贈送商品資料
+  let giftGoodsVo = [];
+  for (let i = 0; i < formInputRef.value.giftGoods.length; i++) {
+    const element = formInputRef.value.giftGoods[i];
+    giftGoodsVo.push({
+      pid: element.pId,
+      pCount: element.giftTotal,
+    });
+  }
+
   let apiData = {
-    ccId: 0,
-    ccTitle: formInputRef.value.name,
-    ccTheme: formInputRef.value.theme,
-    ccType: 0,
-    ccImage: formInputRef.value.imgUrl,
-    ccItemType: formInputRef.value.groupItem,
-    ccOnDate: formInputRef.value.ccOnDate,
-    ccSdt: formInputRef.value.startDate + " 00:00:00",
-    ccEdt: formInputRef.value.endDate + " 23:59:59",
-    ccDateOfDay: formInputRef.value.days,
-    ccLimit:
-      formInputRef.value.amountType == -1 ? -1 : formInputRef.value.amountTotal,
-    ccDiscountType: formInputRef.value.ccDiscountType,
-    ccDiscount: formInputRef.value.ccDiscount,
-    ccAccountType: formInputRef.value.checkoutType,
-    serviceMaps: [],
-    productMaps: [],
-    groupMaps: [],
+    ffId: 0,
+    ffTitle: formInputRef.value.name,
+    ffContext: formInputRef.value.msg,
+    ffType: "0",
+    ffImage: formInputRef.value.imgUrl,
+    ffServiceId: formInputRef.value.ffServiceId,
+    ffLimit: formInputRef.value.limitTotal,
+    ffUsed: 0,
+    ffPrice: formInputRef.value.ffPrice,
+    ffDateType: formInputRef.value.ffDateType,
+    ffSdt: formInputRef.value.startDate,
+    ffEdt: formInputRef.value.endDate,
+    ffDateOfUsedDay: formInputRef.value.days,
+    serviceMaps: giftServicesVo,
+    productMaps: giftGoodsVo,
   };
   console.log("提交apiData", apiData);
 
@@ -412,7 +449,8 @@ function showGoodsUIFn(state: boolean) {
 }
 function getGoodsFn(data: any) {
   console.log(data, "獲取");
-  selGoodsGroupRef.value = data;
+  formInputRef.value.giftGoods = data;
+  // selGoodsGroupRef.value = data;
   // props.showAddUIFn(false);
 }
 function showServiceUIFn(state: boolean) {
@@ -420,17 +458,34 @@ function showServiceUIFn(state: boolean) {
 }
 function getSelServiceFn(data: any) {
   console.log(data, "獲取");
-  selServiceGroupRef.value = data;
-  // props.showAddUIFn(false);
+  // selServiceGroupRef.value = data;
+  formInputRef.value.giftServices = data;
+}
+function getRadioServiceFn(data: any) {
+  console.log(data, "獲取");
+  formInputRef.value.ffServiceItem = data;
+  formInputRef.value.ffServiceId = data.lessonId;
+  formInputRef.value.oldPrice = "$" + data.price;
 }
 function cancleServiceFn(item: any, index: number) {
-  selServiceGroupRef.value.splice(index, 1);
+  // selServiceGroupRef.value.splice(index, 1);
+  formInputRef.value.giftServices.value.splice(index, 1);
 }
 function cancleGoodsFn(item: any, index: number) {
-  selGoodsGroupRef.value.splice(index, 1);
+  // selGoodsGroupRef.value.splice(index, 1);
+  formInputRef.value.giftGoods.value.splice(index, 1);
 }
 function countTotalBtn(data: number, item: any) {
   if (item.giftTotal + data > 0) item.giftTotal += data;
+}
+function countLimitTotalBtn(data: number) {
+  if (formInputRef.value.limitTotal + data > 0)
+    formInputRef.value.limitTotal += data;
+}
+//1:服務，2:商品，
+let itemTypeRef: any = ref(0);
+function showItemTypeFn(type: number) {
+  itemTypeRef.value = type;
 }
 </script>
 
@@ -512,14 +567,13 @@ function countTotalBtn(data: number, item: any) {
           .title-content {
             font-size: 28px;
             width: 100%;
-            // .el-select{
           }
           .select-content {
             width: calc(100% - 180px);
             .el-select {
               width: 100%;
               :deep(.el-input__wrapper) {
-                width: 100%;
+                width: 370.5px;
                 height: 77px;
                 font-size: 24px;
                 :deep(.el-select-dropdown) {
@@ -562,12 +616,61 @@ function countTotalBtn(data: number, item: any) {
               width: calc(100% - 180px);
               font-size: 22px;
             }
-            > p {
-              color: #87ceeb;
+            div {
+              display: flex;
               width: calc(100% - 180px);
+              height: 100%;
+              > p {
+                display: flex;
+                color: #87ceeb;
+                width: calc(100% - 180px);
+              }
             }
             ::placeholder {
               color: #c1bdb8;
+            }
+
+            textarea {
+              width: calc(100% - 180px);
+              height: 160px;
+              border: solid 0px #ddd;
+              box-sizing: border-box;
+            }
+          }
+          .directions-content {
+            display: flex;
+            height: 160px;
+            width: 100%;
+            border: solid 0.5px #ddd;
+            box-sizing: border-box;
+            textarea {
+              width: calc(100% - 180px);
+              height: 99%;
+              border: solid 0px #ddd;
+              box-sizing: border-box;
+            }
+          }
+
+          .limit-content {
+            display: flex;
+            width: calc(100%);
+            align-items: center;
+            .total-content {
+              display: flex;
+              width: calc(100% - 180px);
+              align-items: center;
+              img {
+                width: 30px;
+                height: 30px;
+                margin: 10px;
+              }
+              span {
+                display: flex;
+                flex: 1;
+                justify-content: center;
+                align-items: center;
+                font-size: 24px;
+              }
             }
           }
         }
@@ -728,44 +831,57 @@ function countTotalBtn(data: number, item: any) {
           justify-content: center;
           color: #c1bdb8;
         }
-        .coupon-skin {
-          display: flex;
-          width: 90%;
-          height: 150px;
-          align-items: center;
-          border-radius: 5px;
-          box-shadow: 0 0 5px;
-          box-sizing: border-box;
-          .coupon-icon {
-            width: calc(30%);
-            height: 100%;
+        .ticket-skin {
+          .ticket {
             display: flex;
-            align-items: center;
-            background-color: #faf9f8;
+            width: 300px;
+            height: 120px;
+            position: relative;
+            background: rgb(0, 180, 81);
+            margin: 0 auto;
             justify-content: center;
-            // border-radius: 10px;
-            border-radius: 10px 0px 0px 10px;
-            > img {
-              width: 30px;
-              height: 20px;
+            align-items: center;
+
+            .left-total {
+              display: grid;
+              width: 50%;
+              align-items: center;
+            }
+            .right-total {
+              display: grid;
+              width: 30%;
+              height: 50%;
+              justify-content: center;
+              align-items: center;
+              text-align: end;
+              border-left: dashed 3px #ffffff;
+              box-sizing: border-box;
+            }
+            .line-ticket {
+              display: grid;
+              width: 30%;
+            }
+            span {
+              color: #ffffff;
             }
           }
-          .coupon-info {
+          .ticket:before,
+          .ticket:after {
+            content: "";
             display: block;
-            width: calc(70% - 50px);
+            width: 24px;
             height: 100%;
-            align-items: center;
-            > span {
-              display: flex;
-              height: 25%;
-              margin-left: 10%;
-              align-items: center;
-              font-size: 28px;
-            }
-            .coupon-date {
-              color: #c1bdb8;
-              font-size: 18px;
-            }
+            background-size: 24px 24px; /* 一个repeat的大小 */
+            background-repeat: repeat-y;
+            background-image: radial-gradient(#fff 7px, transparent 8px);
+            position: absolute;
+            top: 0;
+          }
+          .ticket:before {
+            left: -12px; /* 半圆，只显示一个repeat的一半 */
+          }
+          .ticket:after {
+            right: -12px;
           }
         }
       }

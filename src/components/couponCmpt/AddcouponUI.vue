@@ -405,7 +405,6 @@ function countCoustomerFn(data: number) {
     formInputRef.value.customerTotal += data;
 }
 function submitBtn() {
-  console.log("提交formInputRef", formInputRef.value);
   let apiData = {
     ccId: 0,
     ccTitle: formInputRef.value.name,
@@ -426,7 +425,6 @@ function submitBtn() {
     productMaps: [],
     groupMaps: [],
   };
-  console.log("提交apiData", apiData);
 
   /**新增 */
   addCouponApi(apiData).then((res: any) => {

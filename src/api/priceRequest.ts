@@ -110,8 +110,8 @@ export const getCouponReq = (
     ) =>
       getHttps(
         httpRequest,
-        "/Discounts/CouponCard" +
-          "?CCId=" +
+        "/Discounts/ForFreeCard" +
+          "?FFId=" +
           id +
           "&select=" +
           select +
@@ -125,15 +125,15 @@ export const getCouponReq = (
     
       /**新增 */
       export const addCountTicketReq = (data: any) =>
-        postHttps(httpRequest, "/Discounts/CouponCard", data);
+        postHttps(httpRequest, "/Discounts/ForFreeCard", data);
       /**編輯 */
       export const updateCountTicketReq = (data: any) =>
         putHttps(
           httpRequest,
-          "/Discounts/CouponCard" + "?CCId=" + data.ccId,
+          "/Discounts/ForFreeCard" + "?FFId=" + data.ffId,
           data
         );
       /**刪除 */
       export const deleteCountTicketReq = (data: any) =>
-        deleteHttps(httpRequest, "/Discounts/CouponCard" + "?CCId=" + data, data);
+        deleteHttps(httpRequest, "/Discounts/ForFreeCard" + "?FFId=" + data, data);
   

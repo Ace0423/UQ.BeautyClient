@@ -193,7 +193,6 @@ if (props.editCourseInfo) {
   formInputRef.value.state = props.editCourseInfo.display;
   formInputRef.value.isBonusOpen = props.editCourseInfo.isBonusOpen;
   formInputRef.value.isEditAccounting = props.editCourseInfo.isEditAccounting;
-  console.log(props.editCourseInfo);
 }
 
 onMounted(() => {});

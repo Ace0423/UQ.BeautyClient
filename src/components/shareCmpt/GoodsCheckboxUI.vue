@@ -124,17 +124,25 @@ function clickItem(item: any, id: number) {
 
 function submitBtn() {
   let curGoodsData = [];
+  // for (let i = 0; i < formInputRef.value.goods.length; i++) {
+  //   const element = formInputRef.value.goods[i];
+  //   element.giftTotal = 1;
+  //   curGoodsData.push(element);
+  // }
+
   for (let i = 0; i < formInputRef.value.goods.length; i++) {
     const element = formInputRef.value.goods[i];
     for (let j = 0; j < filterGoodsData.value.length; j++) {
       const element2 = filterGoodsData.value[j];
-      if (element2.pId == element) {
+      let Lid = element2.pId;
+      if (Lid == element) {
         element2.giftTotal = 1;
         curGoodsData.push(element2);
         break;
       }
     }
   }
+
   props.getDataFn(curGoodsData);
   props.showUIFn(false);
 }

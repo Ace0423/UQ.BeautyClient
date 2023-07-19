@@ -85,16 +85,11 @@ let formInputRef: any = ref({
   goods: [],
 });
 
-setUI();
-function setUI() {
+setData();
+function setData() {
   getGoodsDetailApi(0, 0);
-  // for (let i = 0; i < props.selData.length; i++) {
-  //   const element = props.selData[i];
-  //   element.pId = element.pId ? element.pId : element.pid;
-  //   formInputRef.value.goods.push(element.pId);
-  // }
-  // formInputRef.value.goods = goodsDetailListRef.value;
 }
+
 let filterGoodsData: any = computed(() =>
   goodsDetailListRef.value.filter(getGoodsFn)
 );
@@ -108,8 +103,8 @@ function getGoodsFn(data: any) {
   );
 }
 function clickGroup() {
-  let curGoods = formInputRef.value.goods;
-  if (curGoods.length > 0) {
+  let curDatas = formInputRef.value.goods;
+  if (curDatas.length > 0) {
     formInputRef.value.goods = [];
   } else {
     for (let i = 0; i < filterGoodsData.value.length; i++) {

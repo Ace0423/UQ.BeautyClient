@@ -3,7 +3,7 @@
     <div>
       <div class="topbar-form">
         <img :src="icon_closeX" v-on:click="showInfoUIHdr(false)" />
-        <span>新增優惠券</span>
+        <span>優惠券</span>
       </div>
       <div class="content-form">
         <div class="coupon-skin">

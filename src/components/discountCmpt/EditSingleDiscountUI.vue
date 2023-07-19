@@ -239,14 +239,11 @@ let submitBtn = () => {
     curServiceMaps.push(element.lessonId);
   }
   let curGoodsMaps = [];
-  console.log(formInputRef.value.goodsGroup);
-
   for (let i = 0; i < formInputRef.value.goodsGroup.length; i++) {
     const element = formInputRef.value.goodsGroup[i];
     element.pId = element.pId ? element.pId : element.pid;
     curGoodsMaps.push(element.pId);
   }
-  console.log(curGoodsMaps);
 
   let curdata: any = {
     discountNo: formInputRef.value.discountNo,

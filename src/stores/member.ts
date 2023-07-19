@@ -15,6 +15,7 @@ export const useMemberStore = defineStore("member", () => {
             if (res.data.data.table) {
                 memberList.data = res.data.data.table;
             }
+            return res.data;
         } catch (error) {
             console.log(error);
         }

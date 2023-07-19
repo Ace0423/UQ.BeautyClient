@@ -11,7 +11,7 @@ const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
 const companyStore = useCompanyStore();
 const { getMessages } = companyStore;
-const { messagesList } = storeToRefs(companyStore)
+const { messagesList } = storeToRefs(companyStore);
 const addMessageView = ref(false);
 const selectMessageItem = ref();
 const keyWord = ref("");
@@ -30,6 +30,7 @@ const messages = (type: any) => {
             }
         })
         .catch((e: any) => {
+            console.log(e)
             Alert.warning(showHttpsStatus(e.response.status), 2000);
             if (e.response.status == 401) {
                 setTimeout(() => {
@@ -39,7 +40,7 @@ const messages = (type: any) => {
         })
 }
 onMounted(() => {
-    messages(0)
+    messages(0);
 })
 const handAddMessageView = (auto: any, type: any, item: any) => {
     let data: any = {
@@ -61,11 +62,6 @@ const handMessageBtn = (command: any) => {
     <div class="group">
         <div class="function-area">
             <input placeholder="🔍搜尋" v-model="keyWord" />
-            <!-- <div>
-                <button class="header-auto-btn">
-                    新增自動化訊息
-                </button>
-            </div> -->
             <div class="header-auto-btn">
                 <el-dropdown trigger="click" placement="bottom-end" @command="handAutoAddMessageBtn">
                     <span>
@@ -79,11 +75,6 @@ const handMessageBtn = (command: any) => {
                     </template>
                 </el-dropdown>
             </div>
-
-
-            <!-- <button class="header-btn">
-                新增訊息
-            </button> -->
             <div class="header-btn">
                 <el-dropdown trigger="click" placement="bottom-end" @command="handMessageBtn">
                     <span>
@@ -115,12 +106,11 @@ const handMessageBtn = (command: any) => {
                         <p>上次發送時間</p>
                     </th>
                     <th class="col-1-th">
-
                     </th>
                 </tr>
             </thead>
             <tbody class="content-tab">
-                <tr v-for="item in messagesList" :key="item.managerId">
+                <tr v-for="item in messagesList.data" :key="item.managerId">
                     <td class="col-3-th">
                         <p>{{ item.mTheme }}</p>
                     </td>
@@ -137,7 +127,7 @@ const handMessageBtn = (command: any) => {
                     </td>
                     <td class="col-1-th">
                         <button class="header-btn">
-                            <img :src="editIcon" />
+                            <img :src="editIcon" @click="handAddMessageView(item.mAuto, item.mType, item)" />
                         </button>
                     </td>
                 </tr>
@@ -266,8 +256,6 @@ div.group {
                 }
 
                 >th {
-
-
                     >p {
                         min-width: 108px;
                         text-align: left;
@@ -277,6 +265,8 @@ div.group {
                         padding-left: 10px;
                     }
                 }
+
+
             }
         }
 
@@ -320,7 +310,10 @@ div.group {
 
                 >td {
                     display: flex;
-                    // width: calc(100%/5);
+
+                    >input {
+                        margin: 0 40px;
+                    }
 
                     >button {
                         height: 100%;

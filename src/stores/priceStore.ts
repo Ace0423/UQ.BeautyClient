@@ -18,6 +18,7 @@ import {
   updateCountTicketReq,
   deleteCountTicketReq,
 } from "@/api/priceRequest";
+import { apiGetTopUpCardListRequest} from "@/api/index";
 import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 export const useApptStore = defineStore("priceStore", () => {
@@ -173,7 +174,7 @@ export const useApptStore = defineStore("priceStore", () => {
               selectCouponRef.value = [];
               selectCouponRef.value = res.data.data.table;
               console.log(selectCouponRef.value);
-              
+
             }
           }
           return res;
@@ -245,7 +246,7 @@ export const useApptStore = defineStore("priceStore", () => {
               selectCountTicketRef.value = [];
               selectCountTicketRef.value = res.data.data.table;
               console.log(selectCountTicketRef.value);
-              
+
             }
           }
           return res;
@@ -294,7 +295,21 @@ export const useApptStore = defineStore("priceStore", () => {
       console.log(error);
     }
   };
-
+  //--------------------------------儲值卡
+  const topUpCardList: any = reactive({ data: [] });
+  const getTopUpCardList = async (data:any) => {
+    try {
+      const res = await apiGetTopUpCardListRequest(data);
+      if (res.data.state == 1) {
+        console.log(res.data.state)
+        topUpCardList.data = res.data.data.table;
+      }
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return Promise.reject(error);
+    }
+  };
   return {
     getAllDiscountApi,
     allDiscountList,
@@ -321,5 +336,8 @@ export const useApptStore = defineStore("priceStore", () => {
     addCountTicketApi,
     updateCountTicketApi,
     delCountTicketApi,
+    //--------------------------------儲值卡
+    topUpCardList,
+    getTopUpCardList,
   };
 });

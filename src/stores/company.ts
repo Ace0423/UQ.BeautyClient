@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest,apiInsertMessagesRequest,apiUpdateMessagesRequest } from "@/api/index";
+import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest } from "@/api/index";
 export const useCompanyStore = defineStore("company", () => {
     const businessHoursList: any = reactive({ data: [] });
     const checkOutTypeList: any = reactive({ data: [] });
@@ -132,7 +132,7 @@ export const useCompanyStore = defineStore("company", () => {
         try {
             const res = await apiGetMessagesRequest(data);
             if (res.data.state == 1) {
-                messagesList.data = res.data.data.table[0];
+                messagesList.data = res.data.data.table;
             }
             return res.data;
         } catch (error) {
@@ -144,12 +144,41 @@ export const useCompanyStore = defineStore("company", () => {
         try {
             const res = data.mId == 0 ? await apiInsertMessagesRequest(data) : await apiUpdateMessagesRequest(data);
             if (res.data.state == 1) {
-                messagesList.data = res.data.data.table[0];
+                updataMessagesList(res.data.data.table[0]);
             }
             return res.data;
         } catch (error) {
             console.log(error);
             return Promise.reject(error);
+        }
+    };
+    const updataMessagesList = (data: any) => {
+        if (messagesList.data.filter((item: any) => item.mId == data.mId).length > 0) {
+            messagesList.data.findIndex((item: any) => {
+                if (item.mId == data.mId) {
+                    item.mTheme = data.mTheme;
+                    item.mTitle = data.mTitle;
+                    item.mContext = data.mContext;
+                    item.mImage = data.mImage;
+                    item.mButtonText = data.mButtonText;
+                    item.mUrl = data.mUrl;
+                    item.mTarget = data.mTarget;
+                    item.mSendTimer = data.mSendTimer;
+                    item.mSendTimeing = data.mSendTimeing;
+                    item.mSendDate = data.mSendDateD + data.mSendDateT;
+                    item.mSendDateD = data.mSendDateD;
+                    item.mSendDateT = data.mSendDateT;
+                    item.mapCouponCards = data.mapCouponCards;
+                    item.mapMembers = data.mapMembers;
+                    item.mEnabled = data.mEnabled;
+                    item.mEnabledLine = data.mEnabledLine;
+                    item.mEnabledMessage = data.mEnabledMessage;
+                    item.mFilter = data.mFilter;
+                }
+            })
+        } else {
+            data.mSendDate = data.mSendDateD + data.mSendDateT;
+            messagesList.data.push(data);
         }
     };
     return {

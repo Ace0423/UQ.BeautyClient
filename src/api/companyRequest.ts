@@ -54,5 +54,5 @@ export const insertMessagesRequest = (data: any) => {
 export const updateMessagesRequest = (data: any) => {
     let token: any = getToken('token');
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
-    return managerRequest.put("/Company/Messages", { params: data });
+    return managerRequest.put("/Company/Messages?mId=" + data.mId, data);
 }

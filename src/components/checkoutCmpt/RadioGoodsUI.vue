@@ -8,25 +8,11 @@
       <div class="main-content">
         <input placeholder="搜尋" v-model="formInputRef.search" />
         <div class="group-content">
-          <div>
-            <label class="label-group">
-              <input
-                class="input-group"
-                type="checkbox"
-                id="pId"
-                value="item"
-                v-model="clickGroupRef"
-                @click="clickGroup"
-              />
-              <label for="pId"></label>
-              <span> 全選 </span>
-            </label>
-          </div>
           <div v-for="item in filterGoodsData" :key="item">
             <label class="label-item" :value="item">
               <input
                 class="input-item"
-                type="checkbox"
+                type="radio"
                 :key="item"
                 :id="item.pId"
                 :value="item.pId"
@@ -75,7 +61,6 @@ const props = defineProps<{
   //   addDetailTypeID?: any;
 }>();
 
-let clickGroupRef = ref(false);
 onMounted(() => {
   // console.log('onMounted');
 });
@@ -102,20 +87,6 @@ function getGoodsFn(data: any) {
         .includes(formInputRef.value.search.toLowerCase()))
   );
 }
-function clickGroup() {
-  let curDatas = formInputRef.value.goods;
-  if (curDatas.length > 0) {
-    formInputRef.value.goods = [];
-  } else {
-    for (let i = 0; i < filterGoodsData.value.length; i++) {
-      const element = filterGoodsData.value[i];
-      formInputRef.value.goods.push(element.pId);
-    }
-  }
-}
-watchEffect(() => {
-  clickGroupRef.value = formInputRef.value.goods.length > 0;
-});
 
 function clickItem(item: any, id: number) {
   // console.log(formInputRef.value.goods);

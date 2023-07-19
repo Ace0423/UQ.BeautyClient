@@ -246,7 +246,7 @@ export const useApptStore = defineStore("priceStore", () => {
               selectCountTicketRef.value = [];
               selectCountTicketRef.value = res.data.data.table;
               console.log(selectCountTicketRef.value);
-
+              
             }
           }
           return res;
@@ -287,7 +287,7 @@ export const useApptStore = defineStore("priceStore", () => {
     try {
       let res = await deleteCountTicketReq(data).then((res: any) => {
         alertStateFn(res, "刪除計次券");
-        getCouponApi();
+        getCountTicketApi();
         return res;
       });
       return res;

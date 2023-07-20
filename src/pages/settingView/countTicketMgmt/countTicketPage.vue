@@ -1,7 +1,7 @@
 <template>
   <div class="countTicket_div">
     <div class="table-topBar">
-      <p class="bar-title">計次券(全部{{ 0 }}個)</p>
+      <p class="bar-title">計次券(全部{{ filterCTicketListCpt.length }}個)</p>
       <div>
         <input class="search-control" v-model="search" placeholder="搜尋名稱" />
         <button class="header-btn" @click="showAddFormFn()">新增</button>

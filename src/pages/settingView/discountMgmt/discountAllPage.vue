@@ -1,9 +1,13 @@
 <template>
   <div class="discountAll_div">
     <div class="table-topBar">
-      <p class="bar-title">全單折扣(所有{{ allDiscountList.length }}種折扣)</p>
+      <p class="bar-title">全單折扣(所有{{ filterListCpt.length }}種折扣)</p>
       <div>
-        <input class="search-control" placeholder="搜尋折扣名稱、商品" />
+        <input
+          class="search-control"
+          v-model="search"
+          placeholder="搜尋折扣名稱"
+        />
         <button class="header-btn" @click="showAddFormFn()">新增折扣</button>
       </div>
     </div>
@@ -22,7 +26,7 @@
         </tr>
       </thead>
       <tbody class="content-tbody">
-        <tr v-for="(item, index) in allDiscountList" :key="item.discountNo">
+        <tr v-for="(item, index) in filterListCpt" :key="item.discountNo">
           <td>
             <p>{{ item.title }}</p>
           </td>
@@ -64,7 +68,18 @@ let { allDiscountList } = storeToRefs(store);
 let { getAllDiscountApi, delAllDiscountApi } = store;
 const showAddUI = ref(false);
 const showEditUI = ref(false);
+let search = ref("");
 getAllDiscountFn();
+
+let filterListCpt: any = computed(() =>
+  allDiscountList.value.filter(getFilterListFn)
+);
+function getFilterListFn(data: any) {
+  return (
+    !search.value ||
+    data.title.toLowerCase().includes(search.value.toLowerCase())
+  );
+}
 
 const showAddUIFn = (state: boolean) => {
   showAddUI.value = state;

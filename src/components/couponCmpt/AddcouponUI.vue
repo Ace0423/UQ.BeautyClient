@@ -71,7 +71,7 @@
                     id="radio2"
                   />
                 </div>
-                <div class="radio-label">
+                <div class="radio-label" @click="showCGroupsUIFn(true)">
                   <label for="radio2">指定群組</label>
                   <label for="radio2">群組內所有項目皆可使用此優惠券</label>
                 </div>
@@ -86,7 +86,7 @@
                     id="radio3"
                   />
                 </div>
-                <div class="radio-label">
+                <div class="radio-label" @click="showSelItemUIFn(true)">
                   <label for="radio3">指定項目</label>
                   <label for="radio3">僅有指定項目可使用此優惠券</label>
                 </div>
@@ -115,7 +115,7 @@
                 </el-select>
               </div>
             </div>
-            <div>
+            <div v-if="formInputRef.ccOnDate == 2">
               <span>可使用天數</span>
               <div class="select-content">
                 <el-select
@@ -134,11 +134,11 @@
                 </el-select>
               </div>
             </div>
-            <div>
+            <div v-if="formInputRef.ccOnDate == 1">
               <span>開始日期</span>
               <input type="date" v-model="formInputRef.startDate" />
             </div>
-            <div>
+            <div v-if="formInputRef.ccOnDate == 1">
               <span>結束日期</span>
               <input type="date" v-model="formInputRef.endDate" />
             </div>
@@ -164,7 +164,7 @@
                 </el-select>
               </div>
             </div>
-            <div>
+            <div v-if="formInputRef.amountType==1">
               <span>限制發送數</span>
               <input
                 v-model="formInputRef.amountTotal"
@@ -196,11 +196,11 @@
                 </el-select>
               </div>
             </div>
-            <div>
+            <div v-if="formInputRef.ccDiscountType==1">
               <span>折扣比</span>
               <input v-model="formInputRef.ccDiscount" type="text" />
             </div>
-            <div>
+            <div v-if="formInputRef.ccDiscountType==2">
               <span>折讓金額</span>
               <input v-model="formInputRef.ccDiscount" type="text" />
             </div>
@@ -265,11 +265,20 @@
       <div class="bottom-content"></div>
     </div>
   </div>
+  <SelectItemUI v-if="showSelItemUIRef" :showUIFn="showSelItemUIFn">
+  </SelectItemUI>
+  <CheckboxGroupsUI
+    v-if="showSelGroupsUIRef"
+    :selData="formInputRef.groups"
+    :getDataFn="getCGroupsFn"
+    :showCGroupsUIFn="showCGroupsUIFn"
+  >
+  </CheckboxGroupsUI>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { usePriceStore} from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
 import icon_customer from "@/assets/images/icon_customer.png";
@@ -289,7 +298,9 @@ const props = defineProps<{
 }>();
 let showMemberUIRef = ref(false);
 let showAddItemMenuUIRef = ref(false);
-let showAddServicesUIRef = ref(false);
+let showSelItemUIRef = ref(false);
+let showSelGroupsUIRef = ref(false);
+
 let content = [
   {
     id: 0,
@@ -371,6 +382,7 @@ let formInputRef: any = ref({
   ccDiscount: 0,
   groupItem: 0,
   checkoutType: 0,
+  groups: [],
 });
 
 var date = new Date();
@@ -391,8 +403,8 @@ formInputRef.value.endDate =
 function showMemberUIFn(state: boolean) {
   showMemberUIRef.value = state;
 }
-function showServicesUIFn(state: boolean) {
-  showAddServicesUIRef.value = state;
+function showSelItemUIFn(state: boolean) {
+  showSelItemUIRef.value = state;
 }
 function showItemMenuUIFn(state: boolean) {
   showAddItemMenuUIRef.value = state;
@@ -405,6 +417,11 @@ function countCoustomerFn(data: number) {
     formInputRef.value.customerTotal += data;
 }
 function submitBtn() {
+  let curGroupMaps = [];
+  for (let i = 0; i < formInputRef.value.groups.length; i++) {
+    const element = formInputRef.value.groups[i];
+    curGroupMaps.push(element.pgId);
+  }
   let apiData = {
     ccId: 0,
     ccTitle: formInputRef.value.name,
@@ -423,9 +440,8 @@ function submitBtn() {
     ccAccountType: formInputRef.value.checkoutType,
     serviceMaps: [],
     productMaps: [],
-    groupMaps: [],
+    groupMaps: curGroupMaps,
   };
-
   /**新增 */
   addCouponApi(apiData).then((res: any) => {
     if (res.state == 1) {
@@ -439,10 +455,17 @@ function submitBtn() {
   });
 }
 function updateImgUrl() {
-  console.log("更新圖片");
+  // console.log("更新圖片");
 }
 function changeValue() {
-  console.log(formInputRef.value);
+  // console.log(formInputRef.value);
+}
+function getCGroupsFn(data: any) {
+  // console.log(data, "獲取");
+  formInputRef.value.groups = data;
+}
+function showCGroupsUIFn(data: boolean) {
+  showSelGroupsUIRef.value = data;
 }
 </script>
 

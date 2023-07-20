@@ -221,7 +221,7 @@ function clickItem(item: any, id: number) {
           .label-item {
             display: flex;
             align-items: center;
-            // width: 100%;
+            width: calc(100% - 15px - 15px);
             margin-left: 15px;
             border-bottom: solid 1px #8b6f6d;
             box-sizing: border-box;

@@ -134,10 +134,12 @@ let addTime = ref("");
 getCouponApi(props.selItemData.value.ccId, 0).then((res: any) => {
   props.selItemData.value.dateCreate = selectCouponRef.value[0].dateCreate;
   addTime = props.selItemData.value.dateCreate.replace("T", " ");
+  
 });
 onMounted(() => {
   // getmemberInfoApi();
 });
+
 const changeTabs = (index: number) => {
   infoListRef.value = index;
 };

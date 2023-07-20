@@ -154,13 +154,13 @@
   <CheckboxServiceUI
     v-if="showServiceUIRef"
     :selData="selServiceGroupRef"
-    :showUIFn="showServiceUIFn"
+    :showCServiceUIFn="showServiceUIFn"
     :getDataFn="getSelServiceFn"
   ></CheckboxServiceUI>
   <CheckboxGoodsUI
     v-if="showGoodsUIRef"
     :selData="selGoodsGroupRef"
-    :showUIFn="showGoodsUIFn"
+    :showCGoodsUIFn="showGoodsUIFn"
     :getDataFn="getGoodsFn"
   ></CheckboxGoodsUI>
 </template>

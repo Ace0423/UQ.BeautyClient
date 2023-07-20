@@ -68,7 +68,7 @@ export const useApptStore = defineStore("apptStore", () => {
     },
   ]);
   /**獲取服務類型 */
-  const getCourseTypeApi = async (data: any) => {
+  const getCourseTypeApi = async (data: any = 0) => {
     try {
       courseDataList.value = [];
       courseTypesTabs.value = [
@@ -286,7 +286,7 @@ export const useApptStore = defineStore("apptStore", () => {
           ) {
             return value.state != 3;
           });
-          
+
           for (let i = 0; i < res.data.data.table.length; i++) {
             const bookingListEmt = res.data.data.table[i];
             if (bookingListEmt.state == 3) {

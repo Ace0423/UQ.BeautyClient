@@ -18,7 +18,7 @@ import {
   updateCountTicketReq,
   deleteCountTicketReq,
 } from "@/api/priceRequest";
-import { apiGetTopUpCardListRequest} from "@/api/index";
+import { apiGetTopUpCardListRequest } from "@/api/index";
 import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 export const usePriceStore = defineStore("priceStore", () => {
@@ -173,11 +173,19 @@ export const usePriceStore = defineStore("priceStore", () => {
             } else {
               selectCouponRef.value = [];
               selectCouponRef.value = res.data.data.table;
-              console.log(selectCouponRef.value);
+            }
+            if (select == 1) {
+              for (let i = 0; i < couponListRef.value.length; i++) {
+                const element = couponListRef.value[i];
+                element.groupMaps = element.groupList;
+                element.productMaps = element.productList;
+                element.serviceMaps = element.servicesList;
+              }
+            }else{
 
             }
           }
-          return res;
+          return res.data.data;
         }
       );
       return res;
@@ -236,22 +244,25 @@ export const usePriceStore = defineStore("priceStore", () => {
     count: any = 0
   ) => {
     try {
-      let res: any = await getCountTicketReq(id, select, type, page, count).then(
-        (res: any) => {
-          if (res.data.data.table) {
-            if (id == 0) {
-              countTicketListRef.value = [];
-              countTicketListRef.value = res.data.data.table;
-            } else {
-              selectCountTicketRef.value = [];
-              selectCountTicketRef.value = res.data.data.table;
-              console.log(selectCountTicketRef.value);
-              
-            }
+      let res: any = await getCountTicketReq(
+        id,
+        select,
+        type,
+        page,
+        count
+      ).then((res: any) => {
+        if (res.data.data.table) {
+          if (id == 0) {
+            countTicketListRef.value = [];
+            countTicketListRef.value = res.data.data.table;
+          } else {
+            selectCountTicketRef.value = [];
+            selectCountTicketRef.value = res.data.data.table;
+            console.log(selectCountTicketRef.value);
           }
-          return res;
         }
-      );
+        return res;
+      });
       return res;
     } catch (error) {
       console.log(error);
@@ -297,11 +308,11 @@ export const usePriceStore = defineStore("priceStore", () => {
   };
   //--------------------------------儲值卡
   const topUpCardList: any = reactive({ data: [] });
-  const getTopUpCardList = async (data:any) => {
+  const getTopUpCardList = async (data: any) => {
     try {
       const res = await apiGetTopUpCardListRequest(data);
       if (res.data.state == 1) {
-        console.log(res.data.state)
+        console.log(res.data.state);
         topUpCardList.data = res.data.data.table;
       }
       return res.data;

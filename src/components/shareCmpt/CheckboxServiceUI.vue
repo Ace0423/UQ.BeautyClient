@@ -1,5 +1,5 @@
 <template>
-  <div class="popup-mask" v-on:click.self="showUIFn(false)">
+  <div class="popup-mask" v-on:click.self="showCServiceUIFn(false)">
     <div class="popup-content">
       <div class="top-content">
         <p>加入服務</p>
@@ -51,7 +51,9 @@
       </div>
       <div class="bottom-content">
         <button class="submit-btn" @click="submitBtn()">確認</button>
-        <button class="cancle-btn" @click="showUIFn(false)">取消</button>
+        <button class="cancle-btn" @click="showCServiceUIFn(false)">
+          取消
+        </button>
       </div>
     </div>
   </div>
@@ -67,7 +69,7 @@ let { courseDataList } = storeToRefs(store);
 let { getCourseDetailApi } = store;
 
 const props = defineProps<{
-  showUIFn: Function;
+  showCServiceUIFn: Function;
   getDataFn: Function;
   selData: any;
   //   addDetailTypeID?: any;
@@ -139,7 +141,7 @@ function submitBtn() {
     }
   }
   props.getDataFn(curServiceData);
-  props.showUIFn(false);
+  props.showCServiceUIFn(false);
 }
 </script>
 
@@ -158,7 +160,7 @@ function submitBtn() {
   justify-content: space-around;
 
   .popup-content {
-    width: 250px;
+    width: 325px;
     height: 450px;
     background-color: #e6e2de;
     padding: 15px 50px;
@@ -178,6 +180,9 @@ function submitBtn() {
       > p {
         display: flex;
         justify-content: center;
+      }
+      > input {
+        width: 97%;
       }
       .div-item {
         width: 100%;
@@ -248,6 +253,7 @@ function submitBtn() {
             margin-left: 5px;
             input {
               display: none;
+              width: 100%;
             }
             label {
               display: inline-block;
@@ -290,6 +296,7 @@ function submitBtn() {
     }
     .bottom-content {
       display: flex;
+      justify-content: center;
       > button {
         position: relative;
         width: 100px;

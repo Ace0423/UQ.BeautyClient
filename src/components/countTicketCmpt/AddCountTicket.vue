@@ -232,13 +232,13 @@
   <CheckboxServiceUI
     v-if="showServiceUIRef"
     :selData="formInputRef.giftServices"
-    :showUIFn="showServiceUIFn"
+    :showCServiceUIFn="showServiceUIFn"
     :getDataFn="getSelServiceFn"
   ></CheckboxServiceUI>
   <CheckboxGoodsUI
     v-if="showGoodsUIRef"
     :selData="formInputRef.giftGoods"
-    :showUIFn="showGoodsUIFn"
+    :showCGoodsUIFn="showGoodsUIFn"
     :getDataFn="getGoodsFn"
   ></CheckboxGoodsUI>
   <RadioServicesUI

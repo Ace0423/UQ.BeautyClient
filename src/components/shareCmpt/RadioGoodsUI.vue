@@ -36,7 +36,7 @@
           </div>
         </div>
       </div>
-      <div class="bottom-content" v-show="false">
+      <div class="bottom-content">
         <button class="submit-btn" @click="submitBtn()">確認</button>
         <button class="cancle-btn" @click="showGoodsUIFn(0)">取消</button>
       </div>
@@ -212,8 +212,9 @@ function submitBtn() {
           .label-item {
             display: flex;
             align-items: center;
-            width: 100%;
+            width: calc(100% - 15px - 15px);
             margin-left: 15px;
+            border-bottom: solid 1px #8b6f6d;
 
             input {
               display: none;
@@ -267,8 +268,8 @@ function submitBtn() {
       display: flex;
       align-items: end;
       justify-content: center;
-      height: calc(65px);
-      width: 100px;
+      // height: calc(65px);
+      // width: 100px;
       > button {
         position: relative;
         width: 100px;
@@ -282,9 +283,11 @@ function submitBtn() {
       }
       .submit-btn {
         display: block;
+        width: 100px;
       }
       .cancle-btn {
         display: block;
+        width: 100px;
       }
     }
   }

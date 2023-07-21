@@ -118,7 +118,7 @@ const showEditUIFn = (state: boolean) => {
 
 function getAllDiscountFn() {
   getCountTicketApi().then((res: any) => {
-    console.log(countTicketListRef.value);
+    // console.log(countTicketListRef.value);
   });
 }
 let selData: any = [];

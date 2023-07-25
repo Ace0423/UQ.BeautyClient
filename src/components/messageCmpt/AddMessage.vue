@@ -1257,34 +1257,6 @@ const handCancelTicketBtn = () => {
         }
 
 
-        >.item-tab {
-            // position: absolute;
-            // top: 0px;
-            // bottom: 0px;
-            // left: 0px;
-            // right: 0px;
-            display: flex;
-            width: 100%;
-
-            >button {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border: solid 0.5px #a19f9f;
-                width: 50%;
-                height: 45px;
-                border-radius: 10px 10px 0 0;
-                background-color: #f5f5f5;
-                font-size: 20px;
-                font-weight: bold;
-                font-family: HeitiTC;
-                color: #717171;
-            }
-
-            >button.active {
-                background-color: #e6e2de;
-            }
-        }
 
         >.news-wrap {
             height: calc(100% - 70px);

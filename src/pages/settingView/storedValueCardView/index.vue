@@ -9,35 +9,39 @@ import { useCounterStore } from "@/stores/counter";
 import { usePriceStore } from "@/stores/priceStore";
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
-const appStore = usePriceStore();
-const { getTopUpCardList } = appStore;
-const { topUpCardList } = storeToRefs(appStore);
+const priceStore = usePriceStore();
+const { getTopUpCardList } = priceStore;
+const { topUpCardList } = storeToRefs(priceStore);
 const keyWord = ref("");
+const selectTUType = ref(-1);
 const topUpCardInfoView = ref(false);
-const selectInfoItem = ref();
-const handTopUpCardInfoView = (item: any = "") => {
-    selectInfoItem.value = item;
+const AddTopUpCardView = ref(false);
+const selectItem = ref();
+let tuStateTabs: any = [
+    { label: "所有狀態", value: -1 },
+    { label: "啟用中", value: 1 },
+    { label: "已失效", value: 0 },
+];
+const handTopUpCardInfoView = (item: any) => {
+    selectItem.value = item;
     topUpCardInfoView.value = !topUpCardInfoView.value;
 };
+const handAddTopUpCardView = (item: any) => {
+    selectItem.value = item;
+    AddTopUpCardView.value = !AddTopUpCardView.value;
+};
 const filterTopUpCardListFnData = computed(() => {
-    const filter = topUpCardList.value.data.filter(getTopUpCardListFn);
+    let dataList = selectTUType.value == -1 ? topUpCardList.value.data : topUpCardList.value.data.filter((item: any) => {
+        return item.tuType == selectTUType.value;
+    })
+    const filter = dataList.filter(getTopUpCardListFn);
     return filter;
 });
 const getTopUpCardListFn = (data: any) => {
-    if (
-        keyWord.value.substring(0, 1) == "0" ||
-        keyWord.value.substring(0, 2) == "09"
-    ) {
-        return (
-            !keyWord.value ||
-            data.phone.toLowerCase().includes(keyWord.value.toLowerCase())
-        );
-    } else {
-        return (
-            !keyWord.value ||
-            data.nameView.toLowerCase().includes(keyWord.value.toLowerCase())
-        );
-    }
+    return (
+        !keyWord.value ||
+        data.tuTitle.toLowerCase().includes(keyWord.value.toLowerCase())
+    );
 };
 
 onMounted(() => {
@@ -67,8 +71,11 @@ onMounted(() => {
 <template>
     <div class="group">
         <div class="function-area">
+            <select v-model="selectTUType">
+                <option v-for="item in tuStateTabs" :key="item.value" :value="item.value">{{ item.label }}</option>
+            </select>
             <input placeholder="🔍搜尋" v-model="keyWord" />
-            <button class="header-btn">
+            <button class="header-btn" @click="handAddTopUpCardView('')">
                 新增儲值卡
             </button>
         </div>
@@ -113,7 +120,8 @@ onMounted(() => {
                         <label>{{ item.tuSellCount }}</label>
                     </td>
                     <td class="col-2-th">
-                        <label>{{ item.tuType }}</label>
+                        <label v-if="item.tuType == 0">停用</label>
+                        <label v-if="item.tuType == 1">啟用</label>
                     </td>
                     <td class="col-2-th">
                         <label>{{ item.tuSellPrice }}</label>
@@ -127,8 +135,10 @@ onMounted(() => {
             </tbody>
         </table>
     </div>
-    <TopUpCardInfo v-if="topUpCardInfoView" :handTopUpCardInfoView="handTopUpCardInfoView" :selectItem="selectInfoItem">
+    <TopUpCardInfo v-if="topUpCardInfoView" :selectItem="selectItem" :handTopUpCardInfoView="handTopUpCardInfoView">
     </TopUpCardInfo>
+    <AddTopUpCard v-if="AddTopUpCardView" :selectTopUpCardItem="selectItem" :handAddTopUpCardView="handAddTopUpCardView">
+    </AddTopUpCard>
 </template>
 
 <style lang="scss" scoped>
@@ -145,16 +155,25 @@ div.group {
     color: #717171;
 
     >.function-area {
+        width: 100%;
         height: 50px;
         position: absolute;
         top: -50px;
         border: none;
         background-color: transparent;
         display: flex;
-        justify-content: end;
+        justify-items: space-between;
         align-items: center;
         right: 0px;
-        width: auto;
+
+        >select {
+            width: auto;
+            height: 70%;
+            border-radius: 6px;
+            border: solid 1px #707070;
+            background-color: #fff;
+            margin: 0 10px 0 0;
+        }
 
         >input {
             width: auto;
@@ -206,6 +225,8 @@ div.group {
 
                 >.col-3-th {
                     width: 30%;
+                    text-align: start;
+                    margin: 0 18px;
                 }
 
                 >.col-4-th {
@@ -269,6 +290,9 @@ div.group {
 
                 >.col-3-th {
                     width: 30%;
+                    display: flex;
+                    justify-content: flex-start;
+                    margin: 5px 10px;
                 }
 
                 >.col-4-th {

@@ -18,7 +18,7 @@ import {
   updateCountTicketReq,
   deleteCountTicketReq,
 } from "@/api/priceRequest";
-import { apiGetTopUpCardListRequest} from "@/api/index";
+import { apiGetTopUpCardListRequest, apiEditTopUpCardInfoRequest } from "@/api/index";
 import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 export const usePriceStore = defineStore("priceStore", () => {
@@ -246,7 +246,7 @@ export const usePriceStore = defineStore("priceStore", () => {
               selectCountTicketRef.value = [];
               selectCountTicketRef.value = res.data.data.table;
               console.log(selectCountTicketRef.value);
-              
+
             }
           }
           return res;
@@ -297,12 +297,27 @@ export const usePriceStore = defineStore("priceStore", () => {
   };
   //--------------------------------儲值卡
   const topUpCardList: any = reactive({ data: [] });
-  const getTopUpCardList = async (data:any) => {
+  const getTopUpCardList = async (data: any) => {
     try {
       const res = await apiGetTopUpCardListRequest(data);
       if (res.data.state == 1) {
-        console.log(res.data.state)
-        topUpCardList.data = res.data.data.table;
+        if (data.select == 0) {
+          topUpCardList.data = res.data.data.table;
+          return res.data;
+        } else if (data.select == 1 || data.select == 2) {
+          return res.data.data;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      return Promise.reject(error);
+    }
+  };
+  const editTopUpCardInfo = async (data: any) => {
+    try {
+      const res = await apiEditTopUpCardInfoRequest(data);
+      if (res.data.state == 1) {
+        console.log(res.data)
       }
       return res.data;
     } catch (error) {
@@ -339,5 +354,6 @@ export const usePriceStore = defineStore("priceStore", () => {
     //--------------------------------儲值卡
     topUpCardList,
     getTopUpCardList,
+    editTopUpCardInfo
   };
 });

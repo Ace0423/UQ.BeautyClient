@@ -50,6 +50,12 @@ export const showErrorMsg = (status: string): string => {
     case "MS02":
       message = "該筆已有發送紀錄，故無法刪除";
       break;
+    case "FF01":
+      message = "該計次卡已被領取，故無法動作";
+      break;
+    case "TU01":
+      message = "該儲值卡已被領取，故無法動作";
+      break;
     default:
       message = status;
   }

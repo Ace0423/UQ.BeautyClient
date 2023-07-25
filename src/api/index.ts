@@ -4,7 +4,7 @@ import { getMemberBankListRequest, postMemberBankRequest, getMemberBankInfoListR
 import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest, getWorkingHoursRequest, postWorkingHoursRequest, getWorkingDefaultRequest, postWorkingDefaultRequest, putWorkingDefaultRequest } from "./managerRequest";
 import { getPermissionsListRequest, putOptionRoleRequest } from "./settingRequest";
 import { getTimeTablesRequest,postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest,getCompanyInfoRequest,putCompanyInfoRequest,getMessagesRequest,insertMessagesRequest,updateMessagesRequest } from "./companyRequest";
-import { getTopUpCardListRequest } from "./topUpCardRequest";
+import { getTopUpCardListRequest,editTopUpCardInfoRequest } from "./topUpCardRequest";
 
 export const apiPostLoginRequest = postLoginRequest;
 export const apiGetUserNameRequest = getUserNameRequest;
@@ -59,3 +59,4 @@ export const apiPostCheckOutTypeRequest = postCheckOutTypeRequest;
 export const apiPutCheckOutTypeRequest = putCheckOutTypeRequest;
 
 export const apiGetTopUpCardListRequest = getTopUpCardListRequest;
+export const apiEditTopUpCardInfoRequest = editTopUpCardInfoRequest;

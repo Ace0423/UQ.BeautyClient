@@ -76,8 +76,9 @@
               <p>{{ item.ccTitle }}</p>
             </td>
             <td>
+              <p v-if="item.ccOnDate == 0">{{ "不限期" }}</p>
               <p v-if="item.ccOnDate == 2">{{ item.ccDateOfDay + "天" }}</p>
-              <p v-else>
+              <p v-if="item.ccOnDate == 1">
                 {{ item.ccSdt.split(" ")[0] + " 啟用" }}<br />{{
                   item.ccEdt.split(" ")[0] + " 到期"
                 }}
@@ -139,9 +140,9 @@ let couponStateTabs: any = [
 ];
 let couponTypeTabs: any = [
   { label: "所有優惠方式", value: -1 },
-  { label: "折扣佔比(%)", value: 0 },
-  { label: "折讓現金($)", value: 1 },
-  { label: "免費", value: 2 },
+  { label: "折扣佔比(%)", value: 1 },
+  { label: "折讓現金($)", value: 2 },
+  { label: "免費", value:  3},
 ];
 let showAddUI = ref(false);
 let showEditUI = ref(false);

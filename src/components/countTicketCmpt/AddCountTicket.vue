@@ -229,18 +229,18 @@
       <div class="bottom-content"></div>
     </div>
   </div>
-  <ServiceCheckboxUI
+  <CheckboxServiceUI
     v-if="showServiceUIRef"
     :selData="formInputRef.giftServices"
-    :showUIFn="showServiceUIFn"
+    :showCServiceUIFn="showServiceUIFn"
     :getDataFn="getSelServiceFn"
-  ></ServiceCheckboxUI>
-  <GoodsCheckboxUI
+  ></CheckboxServiceUI>
+  <CheckboxGoodsUI
     v-if="showGoodsUIRef"
     :selData="formInputRef.giftGoods"
-    :showUIFn="showGoodsUIFn"
+    :showCGoodsUIFn="showGoodsUIFn"
     :getDataFn="getGoodsFn"
-  ></GoodsCheckboxUI>
+  ></CheckboxGoodsUI>
   <RadioServicesUI
     v-if="itemTypeRef"
     :selData="formInputRef.ffServiceId"

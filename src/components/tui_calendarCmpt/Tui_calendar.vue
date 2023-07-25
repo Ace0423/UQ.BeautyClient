@@ -1205,4 +1205,8 @@ export default {
 :deep(.tui-full-calendar-timegrid-container) {
   height: calc(100%);
 }
+:deep(.tui-full-calendar-layout div:nth-child(1)) {
+  /* height: calc(50px) !important; */
+}
+
 </style>

@@ -1,48 +1,75 @@
 <template>
-  <div class="popup-mask" v-on:click.self="showUIFn(false)">
+  <div class="popup-mask" v-on:click.self="showCGroupsUIFn(false)">
     <div class="popup-content">
       <div class="top-content">
         <p>加入服務</p>
       </div>
       <div class="main-content">
-        <p>已選擇({{ formInputRef.service.length }})項服務</p>
+        <p>已選擇({{ formInputRef.groups.length }})項服務</p>
         <input v-model="formInputRef.search" />
         <div class="div-item">
+          <!-- <div>
+            <label class="label-group">
+              <input
+                class="input-group"
+                type="checkbox"
+                id="lessonTypeId"
+                value="item"
+                v-model="clickServicesGroupRef"
+                @click="clickServicesGroup"
+              />
+              <label for="lessonTypeId"></label>
+              <span> 全選(課程) </span>
+            </label>
+          </div>
+          <div v-for="item in filterCourseTypesData" :key="item">
+            <label class="label-item" :value="item">
+              <input
+                class="input-item"
+                type="checkbox"
+                :id="item.lessonTypeId"
+                :value="item.lessonTypeId"
+                v-model="formInputRef.service"
+                @click="clickItem"
+              />
+              <label :for="item.lessonTypeId"></label>
+              <div>
+                <span value="{{item}}" name="{{item.nameTw}}">{{
+                  item.nameTw
+                }}</span>
+              </div>
+            </label>
+          </div> -->
           <div>
             <label class="label-group">
               <input
                 class="input-group"
                 type="checkbox"
-                id="lessonId"
+                id="pgId"
                 value="item"
-                v-model="clickGroupRef"
-                @click="clickGroup"
+                v-model="clickGoodssGroupRef"
+                @click="clickGoodssGroup"
               />
-              <label for="lessonId"></label>
-              <span> 全選 </span>
+              <label for="pgId"></label>
+              <span> 全選(商品) </span>
             </label>
           </div>
-          <div v-for="item in filterCourseData" :key="item">
+          <div v-for="item in filterGoodsTypesData" :key="item">
             <label class="label-item" :value="item">
               <input
                 class="input-item"
                 type="checkbox"
-                :id="item.lessonId"
-                :value="item.lessonId"
-                v-model="formInputRef.service"
+                :key="item.pgId"
+                :id="item.pgId"
+                :value="item"
+                v-model="formInputRef.groups"
                 @click="clickItem"
               />
-              <label :for="item.lessonId"></label>
+              <label :for="item.pgId"></label>
               <div>
-                <span value="{{item}}" name="{{item.nameTw}}">{{
-                  item.nameTw
+                <span value="{{item}}" name="{{item.pgTitle}}">{{
+                  item.pgTitle
                 }}</span>
-                <span
-                  class="timer-msg"
-                  value="{{item}}"
-                  name="{{item.nameTw}}"
-                  >{{ item.servicesTime + " Min" }}</span
-                >
               </div>
             </label>
             <!-- <input type="checkbox" name="item_001" value="1" />1 -->
@@ -51,7 +78,7 @@
       </div>
       <div class="bottom-content">
         <button class="submit-btn" @click="submitBtn()">確認</button>
-        <button class="cancle-btn" @click="showUIFn(false)">取消</button>
+        <button class="cancle-btn" @click="showCGroupsUIFn(false)">取消</button>
       </div>
     </div>
   </div>
@@ -63,61 +90,82 @@ import { useApptStore } from "@/stores/apptStore";
 import search_ico from "@/assets/images/icon_search.png";
 
 let store = useApptStore();
-let { courseDataList } = storeToRefs(store);
-let { getCourseDetailApi } = store;
+let { courseTypesTabs, goodsTypesListRef } = storeToRefs(store);
+let { getCourseTypeApi, getGoodsTypeApi } = store;
 
 const props = defineProps<{
-  showUIFn: Function;
+  showCGroupsUIFn: Function;
   getDataFn: Function;
   selData: any;
   //   addDetailTypeID?: any;
 }>();
-let clickGroupRef = ref(false);
+let clickServicesGroupRef = ref(false);
+let clickGoodssGroupRef = ref(false);
 
 let formInputRef: any = ref({
   name: "",
   search: "",
   service: [],
+  groups: [],
 });
 setUI();
 function setUI() {
-  getCourseDetailApi();
-  for (let i = 0; i < props.selData.length; i++) {
-    const element = props.selData[i];
-    // element.lid = element.lid ? element.lid : element.lessonId;
-    element.lessonId = element.lessonId ? element.lessonId : element.lid;
-    formInputRef.value.service.push(element.lessonId);
-  }
+  // getCourseTypeApi();
+  formInputRef.value.groups = [];
+  getGoodsTypeApi().then((res: any) => {
+    for (let i = 0; i < props.selData.length; i++) {
+      const eleSelData = props.selData[i];
+      //pgId原本  pGid編輯數據名稱不同
+      eleSelData.pgId = eleSelData.pgId ? eleSelData.pgId : eleSelData.pGid;
+      for (let j = 0; j < goodsTypesListRef.value.length; j++) {
+        const eleData = goodsTypesListRef.value[j];
+        if (eleSelData.pgId == eleData.pgId) {
+          formInputRef.value.groups.push(eleData);
+        }
+      }
+    }
+  });
 }
 
-let filterCourseData: any = computed(() =>
-  courseDataList.value.filter(getCourseFn)
-);
+let filterCourseTypesData: any = computed(() => {
+  let mixData: any = courseTypesTabs.value;
+  return mixData.filter(function (item: any) {
+    return item.lessonTypeId != 0; // 取得陣列中雙數的物件
+  });
+});
+let filterGoodsTypesData: any = computed(() => {
+  let mixData: any = goodsTypesListRef.value;
+  return mixData.filter(function (item: any) {
+    return item.pgId != 0; // 取得陣列中雙數的物件
+  });
+});
 
-function getCourseFn(data: any) {
-  return (
-    data.display &&
-    (!formInputRef.value.search ||
-      data.nameTw
-        .toLowerCase()
-        .includes(formInputRef.value.search.toLowerCase()))
-  );
-}
-
-function clickGroup() {
+function clickServicesGroup() {
   let curCourse = formInputRef.value.service;
-  console.log(curCourse);
   if (curCourse.length > 0) {
     formInputRef.value.service = [];
   } else {
-    for (let i = 0; i < filterCourseData.value.length; i++) {
-      const element = filterCourseData.value[i];
-      formInputRef.value.service.push(element.lessonId);
+    for (let i = 0; i < filterCourseTypesData.value.length; i++) {
+      const element = filterCourseTypesData.value[i];
+      formInputRef.value.service.push(element.lessonTypeId);
     }
   }
 }
+function clickGoodssGroup() {
+  let curGoods = formInputRef.value.groups;
+  if (curGoods.length > 0) {
+    formInputRef.value.groups = [];
+  } else {
+    for (let i = 0; i < filterGoodsTypesData.value.length; i++) {
+      const element = filterGoodsTypesData.value[i];
+      formInputRef.value.groups.push(element.pgId);
+    }
+  }
+}
+
 watchEffect(() => {
-  clickGroupRef.value = formInputRef.value.service.length > 0;
+  clickServicesGroupRef.value = formInputRef.value.service.length > 0;
+  clickGoodssGroupRef.value = formInputRef.value.groups.length > 0;
 });
 
 function clickItem() {
@@ -125,21 +173,23 @@ function clickItem() {
 }
 
 function submitBtn() {
-  let curServiceData = [];
-  for (let i = 0; i < formInputRef.value.service.length; i++) {
-    const element = formInputRef.value.service[i];
-    for (let j = 0; j < filterCourseData.value.length; j++) {
-      const element2 = filterCourseData.value[j];
-      let Lid = element2.pId ? element2.pId : element2.lessonId;
-      if (Lid == element) {
-        element2.giftTotal = 1;
-        curServiceData.push(element2);
-        break;
-      }
-    }
-  }
-  props.getDataFn(curServiceData);
-  props.showUIFn(false);
+  // let curServiceData = [];
+  // for (let i = 0; i < formInputRef.value.service.length; i++) {
+  //   const element = formInputRef.value.service[i];
+  //   for (let j = 0; j < filterCourseTypesData.value.length; j++) {
+  //     const element2 = filterCourseTypesData.value[j];
+  //     let Lid = element2.pId ? element2.pId : element2.lessonId;
+  //     if (Lid == element) {
+  //       element2.giftTotal = 1;
+  //       curServiceData.push(element2);
+  //       break;
+  //     }
+  //   }
+  // }
+  let curGoodsData = formInputRef.value.groups;
+
+  props.getDataFn(curGoodsData);
+  props.showCGroupsUIFn(false);
 }
 </script>
 
@@ -158,7 +208,7 @@ function submitBtn() {
   justify-content: space-around;
 
   .popup-content {
-    width: 250px;
+    width: 325px;
     height: 450px;
     background-color: #e6e2de;
     padding: 15px 50px;
@@ -178,6 +228,9 @@ function submitBtn() {
       > p {
         display: flex;
         justify-content: center;
+      }
+      > input {
+        width: 97%;
       }
       .div-item {
         width: 100%;
@@ -248,6 +301,7 @@ function submitBtn() {
             margin-left: 5px;
             input {
               display: none;
+              width: 100%;
             }
             label {
               display: inline-block;
@@ -290,6 +344,7 @@ function submitBtn() {
     }
     .bottom-content {
       display: flex;
+      justify-content: center;
       > button {
         position: relative;
         width: 100px;

@@ -151,18 +151,18 @@
       </div>
     </div>
   </div>
-  <ServiceCheckboxUI
+  <CheckboxServiceUI
     v-if="showServiceUIRef"
     :selData="selServiceGroupRef"
-    :showUIFn="showServiceUIFn"
+    :showCServiceUIFn="showServiceUIFn"
     :getDataFn="getSelServiceFn"
-  ></ServiceCheckboxUI>
-  <GoodsCheckboxUI
+  ></CheckboxServiceUI>
+  <CheckboxGoodsUI
     v-if="showGoodsUIRef"
     :selData="selGoodsGroupRef"
-    :showUIFn="showGoodsUIFn"
+    :showCGoodsUIFn="showGoodsUIFn"
     :getDataFn="getGoodsFn"
-  ></GoodsCheckboxUI>
+  ></CheckboxGoodsUI>
 </template>
 <script setup lang="ts">
 import { usePriceStore} from "@/stores/priceStore";

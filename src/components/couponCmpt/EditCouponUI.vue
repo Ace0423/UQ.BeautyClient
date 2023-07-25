@@ -71,7 +71,7 @@
                     id="radio2"
                   />
                 </div>
-                <div class="radio-label">
+                <div class="radio-label" @click="showCGroupsUIFn(true)">
                   <label for="radio2">指定群組</label>
                   <label for="radio2">群組內所有項目皆可使用此優惠券</label>
                 </div>
@@ -86,7 +86,7 @@
                     id="radio3"
                   />
                 </div>
-                <div class="radio-label">
+                <div class="radio-label" @click="showSelItemUIFn(true)">
                   <label for="radio3">指定項目</label>
                   <label for="radio3">僅有指定項目可使用此優惠券</label>
                 </div>
@@ -115,7 +115,7 @@
                 </el-select>
               </div>
             </div>
-            <div>
+            <div v-if="formInputRef.ccOnDate == 2">
               <span>可使用天數</span>
               <div class="select-content">
                 <el-select
@@ -134,11 +134,11 @@
                 </el-select>
               </div>
             </div>
-            <div>
+            <div v-if="formInputRef.ccOnDate == 1">
               <span>開始日期</span>
               <input type="date" v-model="formInputRef.startDate" />
             </div>
-            <div>
+            <div v-if="formInputRef.ccOnDate == 1">
               <span>結束日期</span>
               <input type="date" v-model="formInputRef.endDate" />
             </div>
@@ -164,7 +164,7 @@
                 </el-select>
               </div>
             </div>
-            <div>
+            <div v-if="formInputRef.amountType == 1">
               <span>限制發送數</span>
               <input
                 v-model="formInputRef.amountTotal"
@@ -196,11 +196,18 @@
                 </el-select>
               </div>
             </div>
-            <div>
+            <div v-if="formInputRef.ccDiscountType == 1">
               <span>折扣比</span>
-              <input v-model="formInputRef.ccDiscount" type="text" />
+              <input
+                class="percent-input"
+                v-model="formInputRef.ccDiscount"
+                type="text"
+              />
+              <span v-if="formInputRef.ccDiscount != 0">{{
+                100 - formInputRef.ccDiscount + "折"
+              }}</span>
             </div>
-            <div>
+            <div v-if="formInputRef.ccDiscountType == 2">
               <span>折讓金額</span>
               <input v-model="formInputRef.ccDiscount" type="text" />
             </div>
@@ -254,7 +261,13 @@
               <img :src="icon_ticket" />
             </div>
             <div class="coupon-info">
-              <span>優惠 {{ 0 }} 元</span>
+              <span v-if="formInputRef.ccDiscountType == 2"
+                >優惠 {{ formInputRef.ccDiscount }} 元</span
+              >
+              <span v-if="formInputRef.ccDiscountType == 1"
+                >優惠 {{ 100 - formInputRef.ccDiscount + "折" }}
+              </span>
+              <span v-if="formInputRef.ccDiscountType == 3"> 免費</span>
               <span class="coupon-date">{{ formInputRef.theme }}</span>
               <span class="coupon-date">{{ "不限期" }}</span>
             </div>
@@ -265,11 +278,19 @@
       <div class="bottom-content"></div>
     </div>
   </div>
+
+  <CheckboxGroupsUI
+    v-if="showSelGroupsUIRef"
+    :selData="formInputRef.groups"
+    :getDataFn="getCGroupsFn"
+    :showCGroupsUIFn="showCGroupsUIFn"
+  >
+  </CheckboxGroupsUI>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { usePriceStore} from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
 import icon_customer from "@/assets/images/icon_customer.png";
@@ -279,8 +300,8 @@ import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 
 let store = usePriceStore();
-let { allDiscountList } = storeToRefs(store);
-let { updateCouponApi } = store;
+let { selectCouponRef } = storeToRefs(store);
+let { updateCouponApi, getCouponApi } = store;
 
 const props = defineProps<{
   showUIFn: Function;
@@ -290,6 +311,7 @@ const props = defineProps<{
 let showMemberUIRef = ref(false);
 let showAddItemMenuUIRef = ref(false);
 let showAddServicesUIRef = ref(false);
+let showSelGroupsUIRef = ref(false);
 let content = [
   {
     id: 0,
@@ -354,10 +376,10 @@ let discountType = [
     name: "免費",
   },
 ];
+
 onMounted(() => {
   // console.log('onMounted');
 });
-
 let formInputRef: any = ref({
   name: "",
   theme: "",
@@ -372,6 +394,7 @@ let formInputRef: any = ref({
   ccDiscount: 0,
   groupItem: 0,
   checkoutType: 0,
+  groups: [],
 });
 // var date = new Date();
 
@@ -389,23 +412,40 @@ let formInputRef: any = ref({
 //   formatZeroDate(date.getDate());
 setInputData();
 function setInputData() {
-  formInputRef.value.name = props.selItemData.value.ccTitle;
-  formInputRef.value.theme = props.selItemData.value.ccTheme;
-  formInputRef.value.imgUrl = props.selItemData.value.ccImage;
-  formInputRef.value.days = props.selItemData.value.ccDateOfDay;
-  formInputRef.value.startDate = props.selItemData.value.ccSdt;
-  formInputRef.value.endDate = props.selItemData.value.ccEdt;
-  formInputRef.value.amountTotal =
-    props.selItemData.value.ccLimit == -1
-      ? -1
-      : props.selItemData.value.ccLimit;
-  formInputRef.value.amountType =
-    props.selItemData.value.ccLimit == -1 ? -1 : 1;
-  formInputRef.value.ccOnDate = props.selItemData.value.ccOnDate;
-  formInputRef.value.ccDiscountType = props.selItemData.value.ccDiscountType;
-  formInputRef.value.ccDiscount = props.selItemData.value.ccDiscount;
-  formInputRef.value.groupItem = props.selItemData.value.ccItemType;
-  formInputRef.value.checkoutType = props.selItemData.value.ccAccountType;
+  // formInputRef.value.name = props.selItemData.value.ccTitle;
+  // formInputRef.value.theme = props.selItemData.value.ccTheme;
+  // formInputRef.value.imgUrl = props.selItemData.value.ccImage;
+  // formInputRef.value.days = props.selItemData.value.ccDateOfDay;
+  // formInputRef.value.startDate = props.selItemData.value.ccSdt;
+  // formInputRef.value.endDate = props.selItemData.value.ccEdt;
+  // formInputRef.value.amountTotal =
+  //   props.selItemData.value.ccLimit == -1
+  //     ? -1
+  //     : props.selItemData.value.ccLimit;
+  // formInputRef.value.amountType =
+  //   props.selItemData.value.ccLimit == -1 ? -1 : 1;
+  // formInputRef.value.ccOnDate = props.selItemData.value.ccOnDate;
+  // formInputRef.value.ccDiscountType = props.selItemData.value.ccDiscountType;
+  // formInputRef.value.ccDiscount = props.selItemData.value.ccDiscount;
+  // formInputRef.value.groupItem = props.selItemData.value.ccItemType;
+  // formInputRef.value.checkoutType = props.selItemData.value.ccAccountType;
+  getCouponApi(props.selItemData.value.ccId, 1).then((res: any) => {
+    let dataVo = res.table[0];
+    formInputRef.value.groups = dataVo.groupList;
+    formInputRef.value.name = dataVo.ccTitle;
+    formInputRef.value.theme = dataVo.ccTheme;
+    formInputRef.value.imgUrl = dataVo.ccImage;
+    formInputRef.value.days = dataVo.ccDateOfDay;
+    formInputRef.value.startDate = dataVo.ccSdt.split(" ")[0];
+    formInputRef.value.endDate = dataVo.ccEdt.split(" ")[0];
+    formInputRef.value.amountTotal = dataVo.ccLimit == -1 ? -1 : dataVo.ccLimit;
+    formInputRef.value.amountType = dataVo.ccLimit == -1 ? -1 : 1;
+    formInputRef.value.ccOnDate = dataVo.ccOnDate;
+    formInputRef.value.ccDiscountType = dataVo.ccDiscountType;
+    formInputRef.value.ccDiscount = dataVo.ccDiscount;
+    formInputRef.value.groupItem = dataVo.ccItemType;
+    formInputRef.value.checkoutType = dataVo.ccAccountType;
+  });
 }
 function showMemberUIFn(state: boolean) {
   showMemberUIRef.value = state;
@@ -464,6 +504,16 @@ function updateImgUrl() {
 function changeValue() {
   console.log(formInputRef.value);
 }
+function getCGroupsFn(data: any) {
+  console.log(data, "獲取");
+  formInputRef.value.groups = data;
+}
+function showCGroupsUIFn(data: boolean) {
+  showSelGroupsUIRef.value = data;
+}
+function showSelItemUIFn(state: boolean) {
+  // showSelItemUIRef.value = state;
+}
 </script>
 
 <style lang="scss">
@@ -478,7 +528,7 @@ function changeValue() {
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 3;
+  z-index: 1003;
   background: rgba(255, 255, 255, 0.5);
 
   display: flex;
@@ -566,6 +616,9 @@ function changeValue() {
                 font-weight: bold;
               }
             }
+          }
+          .percent-input {
+            width: calc(100% - 180px - 180px);
           }
           .msg-content {
             font-size: 20px;

@@ -1,26 +1,21 @@
 <template>
-  <div id="add_form" class="form_bg" @click.self="showAddReserveForm(false)">
+  <div id="add_form" class="form_bg" @click.self="showAddRestUIFn(false)">
     <div class="add-reserve-form">
       <div class="basic_info_main">
         <div class="basic_info_item name">
-          <p>姓名(電話)</p>
-          <!-- <select v-model="newApptDataRef.memberId">
-            <option v-for="item in memberList.data" :key="item" :value="item">
-              {{ item.nameView + "(" + item.phone + ")" }}
-            </option>
-          </select> -->
+          <span>姓名(電話)</span>
           <el-select
-            v-model="newApptDataRef.memberId"
+            v-model="newApptDataRef.managerId"
             filterable
             allow-create
             default-first-option
             :reserve-keyword="false"
-            placeholder=" "
+            placeholder=""
           >
             <el-option
-              v-for="item in memberList"
+              v-for="item in filterManagerCpt"
               :key="item.nameView"
-              :value="item.userId"
+              :value="item.managerId"
               :label="item.nameView"
             >
               {{ item.nameView + "(" + item.phone + ")" }}
@@ -32,10 +27,16 @@
           <!-- <SelectSearchUI :dataList="memberList.data" /> -->
         </div>
         <div class="basic_info_item time">
-          <p>選擇時段</p>
+          <span>日期</span>
+          <div class="add_seldate">
+            <input type="date" v-model="newApptDataRef.date" />
+          </div>
+        </div>
+        <div class="basic_info_item time">
+          <span>開始時段</span>
           <div class="news-filter">
             <el-select
-              v-model="newApptDataRef.timeBooking"
+              v-model="newApptDataRef.dayOn"
               allow-create
               default-first-option
               :reserve-keyword="false"
@@ -53,89 +54,34 @@
             </span>
           </div>
         </div>
-        <div class="basic_info_item beautician">
-          <p>美容師</p>
+        <div class="basic_info_item time">
+          <span>結束時段</span>
           <div class="news-filter">
-            <!-- <select v-model="newApptDataRef.beautician">
-              <option
-                v-for="(item, index) in beauticianList"
-                :key="item"
-                :value="index"
-              >
-                <span class="form_name"> {{ item.nameView }}</span>
-              </option>
-            </select> -->
             <el-select
-              v-model="newApptDataRef.beauticianId"
+              v-model="newApptDataRef.dayOff"
               allow-create
               default-first-option
               :reserve-keyword="false"
               placeholder=" "
             >
               <el-option
-                v-for="item in beauticianList"
-                :key="item.userId"
-                :label="item.nameView"
-                :value="item.userId"
-              >
-                <span class="form_name"> {{ item.nameView }}</span>
-              </el-option>
+                v-for="(item, index) in timeGroup"
+                :key="index"
+                :label="item"
+                :value="item"
+              />
             </el-select>
+            <span class="p_error" v-if="ruleItem.timeBooking.is_error">
+              {{ ruleItem.timeBooking.warn }}
+            </span>
           </div>
         </div>
-      </div>
-      <div class="add_seldate">
-        <input type="date" v-model="newApptDataRef.selDate" />
-      </div>
-      <p>選擇課程</p>
-      <div>
-        <div v-if="true" class="add-reserve-div">
-          <template v-for="item in courseDataList" :key="item">
-            <label v-if="item.display" :value="item">
-              <input
-                class="add-reserve-btn2"
-                type="checkbox"
-                :value="item"
-                v-model="newApptDataRef.courses"
-              />
-              <span
-                class="lesson-span"
-                value="{{item}}"
-                name="{{item.nameTw}}"
-                >{{ item.nameTw + "(" + item.servicesTime + ")" }}</span
-              >
-            </label>
-          </template>
-        </div>
-        <div v-else class="edit-reserve-div">
-          <template v-for="(item, index) in courseDataList" :key="item">
-            <label v-if="item.display" :value="item">
-              <input
-                class="add-reserve-btn2"
-                type="radio"
-                :value="item"
-                v-model="newApptDataRef.courses"
-              />
-              <span
-                :class="{
-                  checkLesson: newApptDataRef.courses == index,
-                }"
-                value="{{item}}"
-                name="{{item.nameTw}}"
-                >{{ item.nameTw + "(" + item.servicesTime + ")" }}</span
-              >
-            </label>
-          </template>
-        </div>
-        <span class="p_error" v-if="ruleItem.lessonItem.is_error">
-          {{ ruleItem.lessonItem.warn }}
-        </span>
       </div>
       <div class="row">
         <button class="confirm-reserve-btn" @click="confirmReserveForm()">
           新增
         </button>
-        <button class="confirm-reserve-btn" @click="showAddReserveForm(false)">
+        <button class="confirm-reserve-btn" @click="showAddRestUIFn(false)">
           取消
         </button>
       </div>
@@ -146,23 +92,25 @@
 import { useApptStore } from "@/stores/apptStore";
 import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import { storeToRefs } from "pinia";
-import { showErrorMsg } from "@/types/IMessage";
+import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
 import { formatZeroDate, verify_methods } from "@/utils/utils";
+import { useManagerStore } from "@/stores/manager";
+import Alert from "../alertCmpt";
+import { useCounterStore } from "@/stores/counter";
 let addCourseTypesName = ref("");
 
 let aptTitle = reactive(["預約時間", "預約項目", "顧客", "已完成"]);
 
 const props = defineProps<{
-  showAddReserveForm: Function;
+  showAddRestUIFn: Function;
 }>();
 console.log("ADD");
 
 let newApptDataRef: any = ref({
-  memberId: null,
-  timeBooking: "",
-  beauticianId: 0,
-  courses: [],
-  selDate: "",
+  managerId: null,
+  date: "",
+  dayOn: "",
+  dayOff: "",
 });
 //-------------------------------------form驗證
 const ruleLists: any = reactive({
@@ -232,12 +180,36 @@ const verify_all = () => {
 
 let store = useApptStore();
 const { postAddApptDataApi } = store;
-let { memberList, timeGroup, beauticianList, courseDataList } =
-  storeToRefs(store);
+let { memberList, timeGroup } = storeToRefs(store);
+const managerstore = useManagerStore();
+const { managerList } = storeToRefs(managerstore);
+const { getManagerList } = managerstore;
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
 /**true:新增 false:修改 */
 
 onMounted(() => {
-  newApptDataRef.value.selDate = getNowDay();
+  newApptDataRef.value.date = getNowDay();
+});
+
+getManagerList({ id: 0, pageindex: 0, count: 0 })
+  .then((res) => {
+    if (res.state == 2) {
+      Alert.warning(showErrorMsg(res.msg), 2000);
+    }
+    console.log(managerList);
+  })
+  .catch((e: any) => {
+    Alert.warning(showHttpsStatus(e.response.status), 2000);
+    if (e.response.status == 401) {
+      setTimeout(() => {
+        handLogOut();
+      }, 2000);
+    }
+  });
+
+let filterManagerCpt: any = computed(() => {
+  return managerList.value.data;
 });
 
 function getNowDay() {
@@ -285,7 +257,7 @@ let confirmReserveForm = () => {
   postAddApptDataApi(addApptData).then((res: any) => {
     let resData = res;
     if (resData.state == 1) {
-      props.showAddReserveForm(false);
+      props.showAddRestUIFn(false);
     }
   });
 };
@@ -313,9 +285,7 @@ function resetAddReserveForm() {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    // width: 54%;
-    width: 600px;
-    // min-width: 560px;
+    width: 500px;
 
     background-color: #faf9f8;
     border-radius: 10px;
@@ -323,15 +293,19 @@ function resetAddReserveForm() {
     border: solid 1px #000000;
 
     .basic_info_main {
-      display: flex;
+      // display: flex;
       align-items: baseline;
       .basic_info_item {
-        padding: 8px 8px 8px 8px;
-        display: grid;
-        p {
+        // padding: 8px 8px 8px 8px;
+        display: flex;
+        width: 100%;
+        margin: 15px;
+        span {
           text-align: left;
-          font-size: 20px;
+          font-size: 22px;
           font-weight: bold;
+          width: 150px;
+          // width: 1000px;
           // color: #875959;
         }
 
@@ -391,14 +365,14 @@ function resetAddReserveForm() {
           }
         }
         span {
-          display: block;
-          height: 30px;
-          width: 95%;
-          text-align: left;
-          font-size: 15px;
-          text-align: left;
-          color: #877059;
-          font-weight: bold;
+          // display: block;
+          // height: 30px;
+          // width: 95%;
+          // text-align: left;
+          // font-size: 15px;
+          // text-align: left;
+          // color: #877059;
+          // font-weight: bold;
         }
         .p_error {
           color: #fc0505;
@@ -411,13 +385,13 @@ function resetAddReserveForm() {
         }
       }
       .name {
-        width: 60%;
+        // width: 60%;
       }
       .time {
-        width: 20%;
+        // width: 20%;
       }
       .beautician {
-        width: 20%;
+        // width: 20%;
       }
 
       .news-filter select {
@@ -442,8 +416,8 @@ function resetAddReserveForm() {
 
     .add_seldate {
       display: flex;
-      width: 99%;
-      justify-content: right;
+      // width: 99%;
+      // justify-content: right;
       font-size: 20px;
       font-family: HeitiTC;
       color: #84715c;
@@ -454,26 +428,6 @@ function resetAddReserveForm() {
         text-align: center;
         border-radius: 6px;
         border: solid 1px #707070;
-      }
-    }
-
-    .add-reserve-div {
-      max-height: 200px;
-      overflow-y: scroll;
-    }
-    .edit-reserve-div {
-      max-height: 200px;
-      overflow-y: scroll;
-      span {
-        font-weight: 500;
-      }
-    }
-
-    > div {
-      .p_error {
-        color: #fc0505;
-        width: 100%;
-        font-weight: bold;
       }
     }
 
@@ -488,12 +442,6 @@ function resetAddReserveForm() {
       justify-content: space-between;
       flex-wrap: wrap;
     }
-
-    // .add-reserve-bg {
-    //     padding: 15px 15px 15px 15px;
-    //     justify-content: space-between;
-    //     display: flex;
-    //     flex-wrap: wrap;
 
     .add-reserve-btn {
       width: 262px;

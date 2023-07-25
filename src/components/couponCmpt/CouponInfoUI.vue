@@ -11,8 +11,28 @@
             <img :src="icon_ticket" />
           </div>
           <div class="coupon-info">
-            <span>優惠 {{ 0 }} 元</span>
-            <span class="coupon-date">{{ "不限期" }}</span>
+            <span v-if="selItemData.value.ccDiscountType == 2"
+              >優惠 {{ selItemData.value.ccDiscount }} 元</span
+            >
+            <span
+              v-if="
+                selItemData.value.ccDiscountType == 1 &&
+                selItemData.value.ccDiscount != 0
+              "
+              >優惠 {{ 100 - selItemData.value.ccDiscount + "折" }}
+            </span>
+            <span v-if="selItemData.value.ccDiscountType == 3"> 免費</span>
+            <span class="coupon-date" v-if="selItemData.value.ccOnDate == 2">{{
+              selItemData.value.ccDateOfDay + "天"
+            }}</span>
+            <span class="coupon-date" v-if="selItemData.value.ccOnDate == 0">{{
+              "不限期"
+            }}</span>
+            <span class="coupon-date" v-if="selItemData.value.ccOnDate == 1">
+              {{ selItemData.value.ccSdt.split(" ")[0] + " 啟用" }}<br />{{
+                selItemData.value.ccEdt.split(" ")[0] + " 到期"
+              }}</span
+            >
           </div>
         </div>
         <div class="content">
@@ -35,7 +55,7 @@
             <p>適用項目</p>
             <span>{{ "所有服務與商品" }}</span>
             <p>建立時間</p>
-            <span>{{ selItemData.value.dateCreate.replace("T"," ") }}</span>
+            <span v-if="addTime">{{ addTime[0] + ":" + addTime[1] }}</span>
             <p>注意事項</p>
             <span>{{
               "僅於店內或線上預約消費時使用，店家將保留最終決議隨時可能撤銷‧"
@@ -107,7 +127,7 @@
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { usePriceStore} from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
 import Alert from "../alertCmpt";
@@ -130,12 +150,18 @@ const props = defineProps<{
   selItemData: any;
   showInfoUIHdr: Function;
 }>();
+console.log(props.selItemData);
+let addTime = ref("");
 getCouponApi(props.selItemData.value.ccId, 0).then((res: any) => {
   props.selItemData.value.dateCreate = selectCouponRef.value[0].dateCreate;
+  addTime.value = props.selItemData.value.dateCreate
+    .replace("T", " ")
+    .split(":");
 });
 onMounted(() => {
   // getmemberInfoApi();
 });
+
 const changeTabs = (index: number) => {
   infoListRef.value = index;
 };

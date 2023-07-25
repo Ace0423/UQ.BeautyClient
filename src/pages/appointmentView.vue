@@ -400,12 +400,18 @@
   <AddApptUI
     v-if="showAddReserveFormRef"
     :showAddReserveForm="showAddReserveForm"
+  ></AddApptUI>
+  <EditApptUI
+    v-if="showEditReserveFormRef"
+    :showAddReserveForm="showEditReserveForm"
     :curApptDataRef="newApptDataRef"
     :showOkBtnRef="showOkBtnRef"
-    :getApptInfpApi="getApptInfpApi"
     :oldSelList="oldSelList"
-    :resetApptTable="resetApptTable"
-  ></AddApptUI>
+  ></EditApptUI>
+  <AddRestTimeUI
+    v-if="showAddRestUIRef"
+    :showAddRestUIFn="showAddRestUIFn"
+  ></AddRestTimeUI>
   <LittleDateUI
     v-if="showLittleDateRef"
     :showUIFn="updataShowLittleDate"
@@ -482,6 +488,8 @@ let monthsThingsRef: any = ref([]);
 let todayThingsRef: any = ref([]);
 
 let showAddReserveFormRef = ref(false);
+let showEditReserveFormRef = ref(false);
+let showAddRestUIRef = ref(false);
 let showApptInfoRef = ref(false);
 let showLittleDateRef = ref(false);
 let showOkBtnRef = ref(false);
@@ -636,6 +644,7 @@ const handleCommand = (command: string | number | object) => {
       addAddReserveBtn();
       break;
     case "addRest":
+      showAddRestUIFn(true);
       break;
     case "addCheckOut":
       showFastCheckOutUIHdr(true);
@@ -652,7 +661,7 @@ let showFastCheckOutUIHdr = (state: boolean) => {
 };
 
 /**抓取預約紀錄 */
-function getApptInfpApi(
+function getApptInfoFn(
   year: number,
   month: number,
   date: number = currentDay.value
@@ -687,7 +696,8 @@ function getApptInfpApi(
     });
   });
 }
-getApptInfpApi(new Date().getFullYear(), new Date().getMonth() + 1);
+
+getApptInfoFn(new Date().getFullYear(), new Date().getMonth() + 1);
 // 獲取美容師
 getBeauticianApi(0);
 
@@ -761,7 +771,7 @@ let changeStutusFn = (index: number, item: any) => {
     console.log();
   });
 
-  getApptInfpApi(currentYear.value, currentMonth.value + 1);
+  getApptInfoFn(currentYear.value, currentMonth.value + 1);
 };
 
 function goTodayHdr() {
@@ -771,7 +781,7 @@ function goTodayHdr() {
   selDate.value = curDateFn();
   getSelectWeek();
 
-  getApptInfpApi(currentYear.value, currentMonth.value + 1);
+  getApptInfoFn(currentYear.value, currentMonth.value + 1);
 }
 /**获取时间 */
 function getWeek(time: any) {
@@ -939,7 +949,7 @@ function getCurDay2() {
 /**显示当天日期状态 */
 function dealDate(date: any) {
   months.value = [""];
-  // getApptInfpApi(date.getFullYear, date.getMonth + 1);
+  // getApptInfoFn(date.getFullYear, date.getMonth + 1);
   getWeek(date);
   let newcurDate = getCurDay2();
   months.value.forEach((item: { isCurDate: boolean; date: string }) => {
@@ -951,7 +961,7 @@ let stopDown = ref(1);
 function getLastWeek() {
   stopDown.value = 0;
   dealDate(addDate(curDate.value, -7));
-  getApptInfpApi(
+  getApptInfoFn(
     curDate.value.getFullYear(),
     curDate.value.getMonth() + 1,
     curDate.value.getDate()
@@ -964,7 +974,7 @@ function getLastWeek() {
 function getNextWeek() {
   stopDown.value = 0;
   dealDate(addDate(curDate.value, 7));
-  getApptInfpApi(
+  getApptInfoFn(
     curDate.value.getFullYear(),
     curDate.value.getMonth() + 1,
     curDate.value.getDate()
@@ -1132,7 +1142,7 @@ let selLittleDateFn = (data: any) => {
   currentDay.value = parseInt(data.split("-")[2]);
   // selDate = data;
   getSelectWeek();
-  getApptInfpApi(currentYear.value, currentMonth.value + 1);
+  getApptInfoFn(currentYear.value, currentMonth.value + 1);
   onSelect(data.split("-")[2]);
 };
 
@@ -1140,7 +1150,7 @@ function onSelect(value: any) {
   currentDay.value = value;
   getSelectWeek();
   selDate.value = curDateFn();
-  getApptInfpApi(currentYear.value, currentMonth.value + 1);
+  getApptInfoFn(currentYear.value, currentMonth.value + 1);
 }
 //-----------------------------------------------------------------------------------------------
 function onWeekSeldate(data: any) {
@@ -1157,8 +1167,18 @@ function visibleChange(value: any) {}
 //新增預約表單-顯示
 let showAddReserveForm = (state: boolean) => {
   showAddReserveFormRef.value = state;
-  if (!state) resetAddReserveForm();
+  if (!state) getApptInfoFn(currentYear.value, currentMonth.value + 1);
 };
+//修改預約表單-顯示
+let showEditReserveForm = (state: boolean) => {
+  showEditReserveFormRef.value = state;
+  if (!state) getApptInfoFn(currentYear.value, currentMonth.value + 1);
+};
+//休息時間-顯示
+function showAddRestUIFn(state: boolean) {
+  showAddRestUIRef.value = state;
+  if (!state) getApptInfoFn(currentYear.value, currentMonth.value + 1);
+}
 
 function resetAddReserveForm() {
   newApptDataRef.value.courses = [];
@@ -1226,7 +1246,7 @@ function editAddReserveBtn() {
       ":" +
       oldSelList.dateBooking.split("T")[1].split(":")[1];
     showOkBtnRef.value = true;
-    showAddReserveForm(true);
+    showEditReserveForm(true);
   }
 }
 
@@ -1256,7 +1276,7 @@ let delReserveId = () => {
         } else {
         }
       });
-      getApptInfpApi(currentYear.value, currentMonth.value + 1);
+      getApptInfoFn(currentYear.value, currentMonth.value + 1);
     }
   });
 };

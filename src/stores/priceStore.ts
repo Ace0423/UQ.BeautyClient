@@ -18,9 +18,9 @@ import {
   updateCountTicketReq,
   deleteCountTicketReq,
 } from "@/api/priceRequest";
-import { apiGetTopUpCardListRequest, apiEditTopUpCardInfoRequest } from "@/api/index";
 import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
+import { apiGetTopUpCardListRequest,apiAddTopUpCardInfoRequest, apiEditTopUpCardInfoRequest } from "@/api/index";
 export const usePriceStore = defineStore("priceStore", () => {
   let allDiscountList: any = ref([]);
   let singleDiscountListRef: any = ref([]);
@@ -181,7 +181,7 @@ export const usePriceStore = defineStore("priceStore", () => {
                 element.productMaps = element.productList;
                 element.serviceMaps = element.servicesList;
               }
-            } else {
+            }else{
 
             }
           }
@@ -244,124 +244,140 @@ export const usePriceStore = defineStore("priceStore", () => {
     count: any = 0
   ) => {
     try {
-      let res: any = await getCountTicketReq(id, select, type, page, count).then(
-        (res: any) => {
-          if (res.data.data.table) {
-            if (id == 0) {
-              countTicketListRef.value = [];
-              countTicketListRef.value = res.data.data.table;
-            } else {
-              selectCountTicketRef.value = [];
-              selectCountTicketRef.value = res.data.data.table;
-              console.log(selectCountTicketRef.value);
-
-            }
+      let res: any = await getCountTicketReq(
+        id,
+        select,
+        type,
+        page,
+        count
+      ).then((res: any) => {
+        if (res.data.data.table) {
+          if (id == 0) {
+            countTicketListRef.value = [];
+            countTicketListRef.value = res.data.data.table;
+          } else {
+            selectCountTicketRef.value = [];
+            selectCountTicketRef.value = res.data.data.table;
+            console.log(selectCountTicketRef.value);
           }
         }
         return res;
-    });
-return res;
+      });
+      return res;
     } catch (error) {
-  console.log(error);
-}
+      console.log(error);
+    }
   };
-//新增
-const addCountTicketApi = async (data: any) => {
-  try {
-    let res = await addCountTicketReq(data).then((res: any) => {
-      alertStateFn(res, "新增計次券資料");
+  //新增
+  const addCountTicketApi = async (data: any) => {
+    try {
+      let res = await addCountTicketReq(data).then((res: any) => {
+        alertStateFn(res, "新增計次券資料");
+        return res;
+      });
       return res;
-    });
-    return res;
-  } catch (error) {
-    console.log(error);
-  }
-};
-//更新
-const updateCountTicketApi = async (data: any) => {
-  try {
-    let res = await updateCountTicketReq(data).then((res: any) => {
-      alertStateFn(res, "更新計次券");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //更新
+  const updateCountTicketApi = async (data: any) => {
+    try {
+      let res = await updateCountTicketReq(data).then((res: any) => {
+        alertStateFn(res, "更新計次券");
+        return res;
+      });
       return res;
-    });
-    return res;
-  } catch (error) {
-    console.log(error);
-  }
-};
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-//刪除
-const delCountTicketApi = async (data: any) => {
-  try {
-    let res = await deleteCountTicketReq(data).then((res: any) => {
-      alertStateFn(res, "刪除計次券");
-      getCountTicketApi();
+  //刪除
+  const delCountTicketApi = async (data: any) => {
+    try {
+      let res = await deleteCountTicketReq(data).then((res: any) => {
+        alertStateFn(res, "刪除計次券");
+        getCountTicketApi();
+        return res;
+      });
       return res;
-    });
-    return res;
-  } catch (error) {
-    console.log(error);
-  }
-};
-//--------------------------------儲值卡
-const topUpCardList: any = reactive({ data: [] });
-const getTopUpCardList = async (data: any) => {
-  try {
-    const res = await apiGetTopUpCardListRequest(data);
-    if (res.data.state == 1) {
-      if (data.select == 0) {
-        topUpCardList.data = res.data.data.table;
-        return res.data;
-      } else if (data.select == 1 || data.select == 2) {
-        return res.data.data;
-      }
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.log(error);
-    return Promise.reject(error);
-  }
-};
-const editTopUpCardInfo = async (data: any) => {
-  try {
-    const res = await apiEditTopUpCardInfoRequest(data);
-    if (res.data.state == 1) {
-      console.log(res.data)
-    }
-    return res.data;
-  } catch (error) {
-    console.log(error);
-    return Promise.reject(error);
-  }
-};
-return {
-  getAllDiscountApi,
-  allDiscountList,
-  addAllDiscountApi,
-  delAllDiscountApi,
-  updateAllDiscountApi,
-  //--------------------------------單品
-  getSingleDiscountApi,
-  singleDiscountListRef,
-  addSingleDiscountApi,
-  delSingleDiscountApi,
-  updateSingleDiscountApi,
-  //--------------------------------優惠券
-  getCouponApi,
-  couponListRef,
-  selectCouponRef,
-  addCouponApi,
-  updateCouponApi,
-  delCouponApi,
-  //--------------------------------計次券
-  getCountTicketApi,
-  countTicketListRef,
-  selectCountTicketRef,
-  addCountTicketApi,
-  updateCountTicketApi,
-  delCountTicketApi,
+  };
   //--------------------------------儲值卡
-  topUpCardList,
-  getTopUpCardList,
-  editTopUpCardInfo
-};
+  const topUpCardList: any = reactive({ data: [] });
+  const getTopUpCardList = async (data: any) => {
+    try {
+      const res = await apiGetTopUpCardListRequest(data);
+      if (res.data.state == 1) {
+        if (data.select == 0) {
+          topUpCardList.data = res.data.data.table;
+          return res.data;
+        } else if (data.select == 1 || data.select == 2) {
+          return res.data.data;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      return Promise.reject(error);
+    }
+  };
+  const addTopUpCardInfo = async (data: any) => {
+    try {
+      const res = await apiAddTopUpCardInfoRequest(data);
+      if (res.data.state == 1) {
+        console.log(res.data)
+      }
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return Promise.reject(error);
+    }
+  };
+  const editTopUpCardInfo = async (data: any) => {
+    try {
+      const res = await apiEditTopUpCardInfoRequest(data);
+      if (res.data.state == 1) {
+        console.log(res.data)
+      }
+      return res.data;
+    } catch (error) {
+      console.log(error);
+      return Promise.reject(error);
+    }
+  };
+  return {
+    getAllDiscountApi,
+    allDiscountList,
+    addAllDiscountApi,
+    delAllDiscountApi,
+    updateAllDiscountApi,
+    //--------------------------------單品
+    getSingleDiscountApi,
+    singleDiscountListRef,
+    addSingleDiscountApi,
+    delSingleDiscountApi,
+    updateSingleDiscountApi,
+    //--------------------------------優惠券
+    getCouponApi,
+    couponListRef,
+    selectCouponRef,
+    addCouponApi,
+    updateCouponApi,
+    delCouponApi,
+    //--------------------------------計次券
+    getCountTicketApi,
+    countTicketListRef,
+    selectCountTicketRef,
+    addCountTicketApi,
+    updateCountTicketApi,
+    delCountTicketApi,
+    //--------------------------------儲值卡
+    topUpCardList,
+    getTopUpCardList,
+    addTopUpCardInfo,
+    editTopUpCardInfo
+  };
 });

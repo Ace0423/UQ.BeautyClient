@@ -4,37 +4,43 @@
       <div class="basic_info_main">
         <div class="basic_info_item name">
           <span>姓名(電話)</span>
-          <el-select
-            v-model="newApptDataRef.managerId"
-            filterable
-            allow-create
-            default-first-option
-            :reserve-keyword="false"
-            placeholder=""
-          >
-            <el-option
-              v-for="item in filterManagerCpt"
-              :key="item.nameView"
-              :value="item.managerId"
-              :label="item.nameView"
+          <div class="error-msg">
+            <el-select
+              v-model="newApptDataRef.managerId"
+              filterable
+              allow-create
+              default-first-option
+              :reserve-keyword="false"
+              placeholder=""
             >
-              {{ item.nameView + "(" + item.phone + ")" }}
-            </el-option>
-          </el-select>
-          <span class="p_error" v-if="ruleItem.name.is_error">
-            {{ ruleItem.name.warn }}
-          </span>
+              <el-option
+                v-for="item in filterManagerCpt"
+                :key="item.nameView"
+                :value="item.managerId"
+                :label="item.nameView"
+              >
+                {{ item.nameView + "(" + item.phone + ")" }}
+              </el-option>
+            </el-select>
+
+            <span class="p_error" v-if="ruleItem.managerId.is_error">
+              {{ ruleItem.managerId.warn }}
+            </span>
+          </div>
           <!-- <SelectSearchUI :dataList="memberList.data" /> -->
         </div>
         <div class="basic_info_item time">
           <span>日期</span>
-          <div class="add_seldate">
+          <div class="add_seldate error-msg">
             <input type="date" v-model="newApptDataRef.date" />
+            <span class="p_error" v-if="ruleItem.dayOn.is_error">
+              {{ ruleItem.dayOn.warn }}
+            </span>
           </div>
         </div>
         <div class="basic_info_item time">
           <span>開始時段</span>
-          <div class="news-filter">
+          <div class="news-filter error-msg">
             <el-select
               v-model="newApptDataRef.dayOn"
               allow-create
@@ -49,14 +55,14 @@
                 :value="item"
               />
             </el-select>
-            <span class="p_error" v-if="ruleItem.timeBooking.is_error">
-              {{ ruleItem.timeBooking.warn }}
+            <span class="p_error" v-if="ruleItem.dayOn.is_error">
+              {{ ruleItem.dayOn.warn }}
             </span>
           </div>
         </div>
         <div class="basic_info_item time">
           <span>結束時段</span>
-          <div class="news-filter">
+          <div class="news-filter error-msg">
             <el-select
               v-model="newApptDataRef.dayOff"
               allow-create
@@ -71,8 +77,8 @@
                 :value="item"
               />
             </el-select>
-            <span class="p_error" v-if="ruleItem.timeBooking.is_error">
-              {{ ruleItem.timeBooking.warn }}
+            <span class="p_error" v-if="ruleItem.dayOff.is_error">
+              {{ ruleItem.dayOff.warn }}
             </span>
           </div>
         </div>
@@ -115,7 +121,7 @@ let newApptDataRef: any = ref({
 //-------------------------------------form驗證
 const ruleLists: any = reactive({
   ruleItem: {
-    name: {
+    managerId: {
       label: "名稱",
       component: "input",
       type: "number",
@@ -130,7 +136,7 @@ const ruleLists: any = reactive({
       warn: "",
       is_show: true,
     },
-    timeBooking: {
+    date: {
       label: "時程",
       component: "input",
       type: "number",
@@ -145,7 +151,22 @@ const ruleLists: any = reactive({
       warn: "",
       is_show: true,
     },
-    lessonItem: {
+    dayOn: {
+      label: "課程",
+      component: "input",
+      type: "number",
+      is_readonly: false,
+      value: "",
+      rules: {
+        required: {
+          warn: "此項為必填",
+        },
+      },
+      is_error: false,
+      warn: "",
+      is_show: true,
+    },
+    dayOff: {
       label: "課程",
       component: "input",
       type: "number",
@@ -183,7 +204,7 @@ const { postAddApptDataApi } = store;
 let { memberList, timeGroup } = storeToRefs(store);
 const managerstore = useManagerStore();
 const { managerList } = storeToRefs(managerstore);
-const { getManagerList } = managerstore;
+const { getManagerList, postWorkingHours } = managerstore;
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
 /**true:新增 false:修改 */
@@ -208,9 +229,16 @@ getManagerList({ id: 0, pageindex: 0, count: 0 })
     }
   });
 
-let filterManagerCpt: any = computed(() => {
-  return managerList.value.data;
-});
+// let filterManagerCpt: any = computed(() => {
+//   return managerList.value.data.roleList[0].roleId == 5;
+// });
+
+let filterManagerCpt: any = computed(() =>
+  managerList.value.data.filter(getDataFn)
+);
+function getDataFn(data: any) {
+  return data.roleList.length > 0 && data.roleList[0].roleId == 5;
+}
 
 function getNowDay() {
   let datetime = new Date();
@@ -221,53 +249,44 @@ function getNowDay() {
 }
 //預約--確認
 let confirmReserveForm = () => {
-  ruleLists.ruleItem.name.value = newApptDataRef.value.memberId;
-  ruleLists.ruleItem.timeBooking.value = newApptDataRef.value.timeBooking;
-
-  ruleLists.ruleItem.lessonItem.value =
-    newApptDataRef.value.courses.length > 0
-      ? newApptDataRef.value.courses[0].nameTw
-      : null;
+  ruleLists.ruleItem.managerId.value = newApptDataRef.value.managerId;
+  ruleLists.ruleItem.date.value = newApptDataRef.value.date;
+  ruleLists.ruleItem.dayOn.value = newApptDataRef.value.dayOn;
+  ruleLists.ruleItem.dayOff.value = newApptDataRef.value.dayOff;
 
   if (!verify_all()) return;
-  let courseListData = [];
-  for (let i = 0; i < newApptDataRef.value.courses.length; i++) {
-    const element = newApptDataRef.value.courses[i];
-    courseListData.push({
-      listNo: i + 1,
-      lid: element.lessonId,
-      time: element.servicesTime,
-      bookingNo: "",
-      price: element.price,
-      discount: element.discount,
-    });
-  }
 
-  let addApptData = {
-    userId: newApptDataRef.value.memberId,
-    lessonlist: courseListData,
-    serverId: newApptDataRef.value.beauticianId,
-    dateBooking:
-      newApptDataRef.value.selDate + "  " + newApptDataRef.value.timeBooking, //"2023-04-20T07:25:10.372Z",
-    tradeDone: true,
-    state: 0,
-    bookingMemo: "string",
+  let apiData = {
+    mwNo: "",
+    managerId: newApptDataRef.value.managerId,
+    date: newApptDataRef.value.date,
+    dayOn: "",
+    dayOff: "",
+    restList: [
+      {
+        dayOn: newApptDataRef.value.dayOn,
+        dayOff: newApptDataRef.value.dayOff,
+      },
+    ],
   };
-  //新增預約
-  postAddApptDataApi(addApptData).then((res: any) => {
-    let resData = res;
-    if (resData.state == 1) {
-      props.showAddRestUIFn(false);
-    }
-  });
+  postWorkingHours(apiData)
+    .then((res) => {
+      if (res.state == 1) {
+        Alert.warning("修改成功", 2000);
+        props.showAddRestUIFn(false);
+      } else {
+        Alert.warning(showErrorMsg(res.msg), 2000);
+      }
+    })
+    .catch((e: any) => {
+      Alert.warning(showHttpsStatus(e.response.status), 2000);
+      if (e.response.status == 401) {
+        setTimeout(() => {
+          handLogOut();
+        }, 2000);
+      }
+    });
 };
-function resetAddReserveForm() {
-  newApptDataRef.value.courses = [];
-  newApptDataRef.value.memberId = null;
-  newApptDataRef.value.timeBooking = null;
-  newApptDataRef.value.beauticianId = 0;
-  newApptDataRef.value.selDate = newApptDataRef.value.selDate;
-}
 </script>
 
 <style lang="scss" scoped>
@@ -300,6 +319,9 @@ function resetAddReserveForm() {
         display: flex;
         width: 100%;
         margin: 15px;
+        .error-msg {
+          display: grid;
+        }
         span {
           text-align: left;
           font-size: 22px;
@@ -415,7 +437,7 @@ function resetAddReserveForm() {
     }
 
     .add_seldate {
-      display: flex;
+      display: grid;
       // width: 99%;
       // justify-content: right;
       font-size: 20px;

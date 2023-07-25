@@ -457,9 +457,11 @@ import { storeToRefs } from "pinia";
 import { getApptDataRequest } from "@/api/apptRequest";
 import type { IBackStatus } from "@/types/IData";
 import { useApptStore } from "@/stores/apptStore";
-import { showErrorMsg } from "@/types/IMessage";
+import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
 import { computeDate } from "@/utils/utils";
 import Alert from "@/components/alertCmpt";
+import { useManagerStore } from "@/stores/manager";
+import { useCounterStore } from "@/stores/counter";
 
 // let alertBtnState: any = ref(false);
 // const onAlertBtn = (data: any) => {
@@ -675,16 +677,20 @@ function getApptInfoFn(
       tuiList = [];
       for (let i = 0; i < tuiBookingListRef.value.length; i++) {
         const element = tuiBookingListRef.value[i];
+        //顯示課程ITEM
         tuiList.push({
           id: element.bookingNo,
+          //顏色
           calendarId: "9", // (element.lessonId / 2).toString(),
+          //顯示內容
           title:
             "" +
             element.customer +
             "<br>" +
             element.lesson +
             "<br>" +
-            (element.state == 1 ? "(完成)" : "" + element.state), // 0:未點選 1:完成 99:點選
+            element.timer +
+            " Min",
           titleMonth: "" + element.customer + "" + element.lesson,
           category: "time",
           dueDateClass: "",
@@ -693,6 +699,8 @@ function getApptInfoFn(
           raw: element,
         });
       }
+      setRestTimeFn(workingHoursList.value.data);
+      // getRestList();
     });
   });
 }
@@ -1028,12 +1036,13 @@ function handleDetail(row: any) {
       // row.state = 99;
       oldSelList = row;
     }
-    updataShowApptInfoRef(true);
   } else {
     oldSelList = row;
+  }
+  if (row.lessonId) {
+    onWeekSeldate(row.dateBooking.split("T")[0]);
     updataShowApptInfoRef(true);
   }
-  onWeekSeldate(row.dateBooking.split("T")[0]);
 }
 const updataShowApptInfoRef = (state: boolean) => {
   showApptInfoRef.value = state;
@@ -1281,7 +1290,85 @@ let delReserveId = () => {
   });
 };
 
-//-------------------------------------------新增預約FORM
+//-------------------------------------------休息日
+
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
+const managerStore = useManagerStore();
+const { getWorkingHours } = managerStore;
+const { workingHoursList } = storeToRefs(managerStore);
+getRestList();
+function getRestList() {
+  let data = {
+    managerId: 0,
+    year: 0,
+    month: 0,
+    day: 0,
+    pageIndex: 0,
+    count: 0,
+  };
+
+  getWorkingHours(data)
+    .then(() => {
+      console.log(workingHoursList);
+      // setRestTimeFn(workingHoursList.value.data);
+    })
+    .catch((e: any) => {
+      Alert.warning(showHttpsStatus(e.response.status), 2000);
+      if (e.response.status == 401) {
+        setTimeout(() => {
+          handLogOut();
+        }, 2000);
+      }
+    });
+
+  console.log("tuiList", tuiList);
+}
+function setRestTimeFn(data: any) {
+  let tidyRestData = [];
+  console.log(data);
+  for (let i = 0; i < data.length; i++) {
+    const eleTable = data[i];
+    for (let j = 0; j < eleTable.timeTableList.length; j++) {
+      const eleTimeTableList = eleTable.timeTableList[j];
+      for (let k = 0; k < eleTimeTableList.restTime.length; k++) {
+        const eleRestTime = eleTimeTableList.restTime[k];
+        if (eleRestTime.mwrNo) {
+          tidyRestData.push({
+            mwrNo: eleRestTime.mwrNo,
+            managerId: eleTable.managerId,
+            nameView: eleTable.nameView,
+            date: eleTimeTableList.date,
+            dayOn: eleRestTime.dayOn,
+            dayOff: eleRestTime.dayOff,
+            times: eleRestTime.times,
+          });
+          // 顯示課程ITEM
+          tuiList.push({
+            id: eleRestTime.mwrNo,
+            //顏色
+            calendarId: "6", // (element.lessonId / 2).toString(),
+            //顯示內容
+            title:
+              "" +
+              eleTable.nameView +
+              "<br>" +
+              "休息時間" +
+              "<br>" +
+              eleRestTime.times +
+              " Min",
+            titleMonth: "222",
+            category: "time",
+            dueDateClass: "",
+            start: eleTimeTableList.date + "T" + eleRestTime.dayOn + ":00",
+            end: eleTimeTableList.date + " " + eleRestTime.dayOff + ":00",
+            raw: tidyRestData[tidyRestData.length - 1],
+          });
+        }
+      }
+    }
+  }
+}
 </script>
 
 // 套件css

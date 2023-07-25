@@ -3,12 +3,16 @@ import icon_closeX from "@/assets/images/icon_closeX.png";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
-
+import { usePriceStore } from "@/stores/priceStore";
+const priceStore = usePriceStore();
+const { getTopUpCardList, addTopUpCardInfo, editTopUpCardInfo } = priceStore;
 
 const title = ref("");
 const specifiedItem = ref(0);
-const submitNameBtn = ref('確認新增');
-const itemView = ref(false);
+const submitNameBtn = ref('確認');
+const promotionalItemsView = ref(false);
+const handselItemsView = ref(false);
+const handselType = ref(0)
 const promotionMethod: any = [
     {
         value: 0,
@@ -132,13 +136,74 @@ const props = defineProps<{
 }>();
 
 onMounted(() => {
-
+    if (props.selectTopUpCardItem != undefined) {
+        cardData.tuId = props.selectTopUpCardItem.tuId;
+        cardData.tuTitle = props.selectTopUpCardItem.tuTitle;
+        cardData.tuContext = props.selectTopUpCardItem.tuContext;
+        cardData.tuType = props.selectTopUpCardItem.tuType;
+        cardData.tuImage = props.selectTopUpCardItem.tuImage;
+        cardData.tuSellPrice = props.selectTopUpCardItem.tuSellPrice;
+        cardData.tuViewPrice = props.selectTopUpCardItem.tuViewPrice;
+        cardData.tudType = props.selectTopUpCardItem.tudType;
+        cardData.tuddType = props.selectTopUpCardItem.tuddType;
+        cardData.tuddPrice = props.selectTopUpCardItem.tuddPrice;
+        cardData.tuLimitType = props.selectTopUpCardItem.tuLimitType;
+        cardData.tuLimitDay = props.selectTopUpCardItem.tuLimitDay;
+        cardData.utShared = props.selectTopUpCardItem.utShared;
+        cardData.topUpCardMapProducts = props.selectTopUpCardItem.topUpCardMapProducts.filter((item: any) => {
+            let val: number = item.pid;
+            return val
+        });
+        cardData.topUpCardMapServices = props.selectTopUpCardItem.topUpCardMapProducts.filter((item: any) => {
+            let val: number = item.lid;
+            return val
+        });
+        cardData.topUpCardFreeProducts = props.selectTopUpCardItem.topUpCardFreeProducts.filter((item: any) => {
+            let val: number = item.pid;
+            return val
+        });
+        cardData.topUpCardFreeServices = props.selectTopUpCardItem.topUpCardFreeServices.filter((item: any) => {
+            let val: number = item.lid;
+            return val
+        });
+    }
+    console.log(cardData)
 });
-const handTopUpCardInfoView = (() => {
-    itemView.value = !itemView.value;
+const handPromotionalView = (() => {
+    promotionalItemsView.value = !promotionalItemsView.value;
+})
+const handHandselView = ((type: any) => {
+    handselType.value = type;
+    handselItemsView.value = !handselItemsView.value;
 })
 const handSubmit = () => {
+    if (cardData.tuId == 0) {
+        addTopUpCardInfo(cardData)
+            .then((res: any) => {
+                if (res.table) {
 
+                }
+                if (res.state == 2) {
+                    Alert.warning(showErrorMsg(res.msg), 2000);
+                }
+            })
+            .catch((e: any) => {
+                Alert.warning(showHttpsStatus(e.response.status), 2000);
+            });
+    } else if (cardData.tuId == 1) {
+        editTopUpCardInfo(cardData)
+            .then((res: any) => {
+                if (res.table) {
+
+                }
+                if (res.state == 2) {
+                    Alert.warning(showErrorMsg(res.msg), 2000);
+                }
+            })
+            .catch((e: any) => {
+                Alert.warning(showHttpsStatus(e.response.status), 2000);
+            });
+    }
 };
 const getErrorHint = computed(() => {
     if (cardData.tudType == 1 && cardData.tuddPrice != '') {
@@ -154,19 +219,26 @@ const getErrorHint = computed(() => {
                 break;
         }
     } else if (cardData.tudType == 1 && cardData.tuddType != 0 && cardData.tuddPrice == '') {
-        console.log(cardData.tuddPrice)
         return cardData.tuddPrice == "" ? '必填項目' : '';
     }
 
 })
+const handPromotionalSubmit = ((products: any, services: any) => {
+    cardData.topUpCardMapProducts = products;
+    cardData.topUpCardMapServices = services;
+})
+const handHandselSubmit = ((products: any, services: any) => {
+    cardData.topUpCardFreeProducts = products;
+    cardData.topUpCardFreeServices = services;
+})
 </script>
 
 <template>
-    <div class="popup-mask" v-on:click.self="handAddTopUpCardView()">
+    <div class="popup-mask" v-on:click.self="handAddTopUpCardView('')">
         <!-- 提示弹窗 -->
         <div class="popup-content">
             <div class="top-content">
-                <img :src="icon_closeX" v-on:click="handAddTopUpCardView()" />
+                <img :src="icon_closeX" v-on:click="handAddTopUpCardView('')" />
                 <span>{{ title }}</span>
                 <button class="otherpay-btn" v-on:click="handSubmit()">{{ submitNameBtn }}</button>
             </div>
@@ -235,7 +307,7 @@ const getErrorHint = computed(() => {
                                 </div>
                             </div>
                             <div v-if="specifiedItem == 1">
-                                <u @click="handTopUpCardInfoView">加入項目</u>
+                                <u @click="handPromotionalView">加入項目</u>
                             </div>
                             <p v-if="cardData.tudType == 0" class="right-p">可作為單純儲值金使用</p>
                         </div>
@@ -243,13 +315,13 @@ const getErrorHint = computed(() => {
                     <div class="products-content">
                         <h2>贈送商品項目</h2>
                         <div class="products-input">
-                            <u>加入贈送商品</u>
+                            <u @click="handHandselView(1)">加入贈送商品</u>
                         </div>
                     </div>
                     <div class="services-content">
                         <h2>贈送商品服務</h2>
                         <div class="services-input">
-                            <u>加入贈送商品</u>
+                            <u @click="handHandselView(0)">加入贈送服務</u>
                         </div>
                     </div>
                     <div class="usage-restrictions">
@@ -294,7 +366,10 @@ const getErrorHint = computed(() => {
             </div>
         </div>
     </div>
-    <PromotionalItems v-if="itemView" :handTopUpCardInfoView="handTopUpCardInfoView"></PromotionalItems>
+    <PromotionalItems v-if="promotionalItemsView" :handPromotionalView="handPromotionalView" :promotional="cardData"
+        @handSubmit="handPromotionalSubmit"></PromotionalItems>
+    <HandselItems v-if="handselItemsView" :handHandselView="handHandselView" :handselType="handselType"
+        :promotional="cardData" @handSubmit="handHandselSubmit"></HandselItems>
 </template>
 
 <style scoped lang="scss">

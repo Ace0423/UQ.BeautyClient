@@ -12,18 +12,20 @@ const { courseDataList, goodsDetailListRef } = storeToRefs(appStore);
 const { postCheckOutType, putCheckOutType } = companyStore;
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
-const title = ref("加入項目");
+const title = ref("贈送商品");
 const products = ref([]);
 const services = ref([]);
 const currentIndex = ref(0);
 const keyWord = ref("");
 const props = defineProps<{
+    handselType: any,
     promotional: any,
-    handPromotionalView: Function,
+    handHandselView: Function,
 }>();
 const emits = defineEmits<{
     (e: "handSubmit", services: any, products: any): void;
 }>();
+
 const getDataDetailApi = (() => {
     if (currentIndex.value == 0) {
         getCourseDetailApi(0, 0);
@@ -53,10 +55,9 @@ const filterProductsListFnData = computed(() => {
 });
 
 onMounted(() => {
-    services.value = props.promotional.topUpCardMapServices;
-    products.value = props.promotional.topUpCardMapProducts;
-    console.log("1---" + services.value)
-    console.log("2---" + products.value)
+    changeTab(props.handselType);
+    services.value = props.promotional.topUpCardFreeServices;
+    products.value = props.promotional.topUpCardFreeProducts;
     getDataDetailApi();
 });
 const changeTab = (index: number) => {
@@ -64,12 +65,12 @@ const changeTab = (index: number) => {
     getDataDetailApi();
 };
 const handSubmit = () => {
-    emits("handSubmit", products , services);
+    emits("handSubmit", products, services);
 };
 </script>
 
 <template>
-    <div class="popup-mask" v-on:click.self="handPromotionalView()">
+    <div class="popup-mask" v-on:click.self="handHandselView()">
         <!-- 提示弹窗 -->
         <div class="popup-content">
             <h1>{{ title }}</h1>

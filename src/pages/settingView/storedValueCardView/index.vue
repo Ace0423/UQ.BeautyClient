@@ -17,6 +17,7 @@ const selectTUType = ref(-1);
 const topUpCardInfoView = ref(false);
 const AddTopUpCardView = ref(false);
 const selectItem = ref();
+const selectTopUpCardItem = ref();
 let tuStateTabs: any = [
     { label: "所有狀態", value: -1 },
     { label: "啟用中", value: 1 },
@@ -27,7 +28,7 @@ const handTopUpCardInfoView = (item: any) => {
     topUpCardInfoView.value = !topUpCardInfoView.value;
 };
 const handAddTopUpCardView = (item: any) => {
-    selectItem.value = item;
+    selectTopUpCardItem.value = item.data;
     AddTopUpCardView.value = !AddTopUpCardView.value;
 };
 const filterTopUpCardListFnData = computed(() => {
@@ -110,7 +111,8 @@ onMounted(() => {
                         </div>
                         <div class="main-p">
                             <p>{{ item.tuTitle }}</p>
-                            <p>{{ item.tuLimitType }}</p>
+                            <p v-if="item.tuLimitType == 0">不限期</p>
+                            <p v-if="item.tuLimitType == 1">限期</p>
                         </div>
                     </td>
                     <td class="col-2-th">
@@ -135,9 +137,10 @@ onMounted(() => {
             </tbody>
         </table>
     </div>
-    <TopUpCardInfo v-if="topUpCardInfoView" :selectItem="selectItem" :handTopUpCardInfoView="handTopUpCardInfoView">
+    <TopUpCardInfo v-if="topUpCardInfoView" :selectItem="selectItem" :handTopUpCardInfoView="handTopUpCardInfoView"
+        @handEditSubmit="handAddTopUpCardView">
     </TopUpCardInfo>
-    <AddTopUpCard v-if="AddTopUpCardView" :selectTopUpCardItem="selectItem" :handAddTopUpCardView="handAddTopUpCardView">
+    <AddTopUpCard v-if="AddTopUpCardView" :selectTopUpCardItem="selectTopUpCardItem" :handAddTopUpCardView="handAddTopUpCardView">
     </AddTopUpCard>
 </template>
 

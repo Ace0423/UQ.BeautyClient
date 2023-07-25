@@ -15,6 +15,9 @@ const props = defineProps<{
     selectItem: any,
     handTopUpCardInfoView: Function,
 }>();
+const emits = defineEmits<{
+    (e: "handEditSubmit", data: any): void;
+}>();
 const getTopUpCardData = ((id: any) => {
     let allTopUpCard = {
         TUId: id,
@@ -95,6 +98,7 @@ const handStopCardBtn = (() => {
         });
 })
 const handEditCardBtn = (() => {
+    emits("handEditSubmit", infoDate);
     props.handTopUpCardInfoView();
 })
 </script>

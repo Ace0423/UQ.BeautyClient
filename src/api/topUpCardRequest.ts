@@ -10,6 +10,11 @@ export const getTopUpCardListRequest = (data: any) => {
     topUpCardRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return topUpCardRequest.get("/Discounts/TopUpCard", { params: data });
 }
+export const addTopUpCardInfoRequest = (data: any) => {
+    let token: any = getToken('token');
+    topUpCardRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return topUpCardRequest.post("/Discounts/TopUpCard", data);
+}
 export const editTopUpCardInfoRequest = (data: any) => {
     let token: any = getToken('token');
     topUpCardRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;

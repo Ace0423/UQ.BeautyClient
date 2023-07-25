@@ -164,7 +164,7 @@
                 </el-select>
               </div>
             </div>
-            <div v-if="formInputRef.amountType==1">
+            <div v-if="formInputRef.amountType == 1">
               <span>限制發送數</span>
               <input
                 v-model="formInputRef.amountTotal"
@@ -196,11 +196,18 @@
                 </el-select>
               </div>
             </div>
-            <div v-if="formInputRef.ccDiscountType==1">
+            <div v-if="formInputRef.ccDiscountType == 1">
               <span>折扣比</span>
-              <input v-model="formInputRef.ccDiscount" type="text" />
+              <input
+                class="percent-input"
+                v-model="formInputRef.ccDiscount"
+                type="text"
+              />
+              <span v-if="formInputRef.ccDiscount != 0">{{
+                100 - formInputRef.ccDiscount + "折"
+              }}</span>
             </div>
-            <div v-if="formInputRef.ccDiscountType==2">
+            <div v-if="formInputRef.ccDiscountType == 2">
               <span>折讓金額</span>
               <input v-model="formInputRef.ccDiscount" type="text" />
             </div>
@@ -254,7 +261,17 @@
               <img :src="icon_ticket" />
             </div>
             <div class="coupon-info">
-              <span>優惠 {{ 0 }} 元</span>
+              <span v-if="formInputRef.ccDiscountType == 2"
+                >優惠 {{ formInputRef.ccDiscount }} 元</span
+              >
+              <span
+                v-if="
+                  formInputRef.ccDiscountType == 1 &&
+                  formInputRef.ccDiscount != 0
+                "
+                >優惠 {{ 100 - formInputRef.ccDiscount + "折" }}
+              </span>
+              <span v-if="formInputRef.ccDiscountType == 3"> 免費</span>
               <span class="coupon-date">{{ formInputRef.theme }}</span>
               <span class="coupon-date">{{ "不限期" }}</span>
             </div>
@@ -569,6 +586,9 @@ function showCGroupsUIFn(data: boolean) {
                 font-weight: bold;
               }
             }
+          }
+          .percent-input {
+            width: calc(100% - 180px - 180px);
           }
           .msg-content {
             font-size: 20px;

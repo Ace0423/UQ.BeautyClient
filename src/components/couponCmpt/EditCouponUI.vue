@@ -115,7 +115,7 @@
                 </el-select>
               </div>
             </div>
-            <div v-if="formInputRef.ccOnDate==2">
+            <div v-if="formInputRef.ccOnDate == 2">
               <span>可使用天數</span>
               <div class="select-content">
                 <el-select
@@ -134,11 +134,11 @@
                 </el-select>
               </div>
             </div>
-            <div v-if="formInputRef.ccOnDate==1">
+            <div v-if="formInputRef.ccOnDate == 1">
               <span>開始日期</span>
               <input type="date" v-model="formInputRef.startDate" />
             </div>
-            <div v-if="formInputRef.ccOnDate==1">
+            <div v-if="formInputRef.ccOnDate == 1">
               <span>結束日期</span>
               <input type="date" v-model="formInputRef.endDate" />
             </div>
@@ -164,7 +164,7 @@
                 </el-select>
               </div>
             </div>
-            <div v-if="formInputRef.amountType==1">
+            <div v-if="formInputRef.amountType == 1">
               <span>限制發送數</span>
               <input
                 v-model="formInputRef.amountTotal"
@@ -196,11 +196,18 @@
                 </el-select>
               </div>
             </div>
-            <div v-if="formInputRef.ccDiscountType==1">
+            <div v-if="formInputRef.ccDiscountType == 1">
               <span>折扣比</span>
-              <input v-model="formInputRef.ccDiscount" type="text" />
+              <input
+                class="percent-input"
+                v-model="formInputRef.ccDiscount"
+                type="text"
+              />
+              <span v-if="formInputRef.ccDiscount != 0">{{
+                100 - formInputRef.ccDiscount + "折"
+              }}</span>
             </div>
-            <div v-if="formInputRef.ccDiscountType==2">
+            <div v-if="formInputRef.ccDiscountType == 2">
               <span>折讓金額</span>
               <input v-model="formInputRef.ccDiscount" type="text" />
             </div>
@@ -254,7 +261,13 @@
               <img :src="icon_ticket" />
             </div>
             <div class="coupon-info">
-              <span>優惠 {{ 0 }} 元</span>
+              <span v-if="formInputRef.ccDiscountType == 2"
+                >優惠 {{ formInputRef.ccDiscount }} 元</span
+              >
+              <span v-if="formInputRef.ccDiscountType == 1"
+                >優惠 {{ 100 - formInputRef.ccDiscount + "折" }}
+              </span>
+              <span v-if="formInputRef.ccDiscountType == 3"> 免費</span>
               <span class="coupon-date">{{ formInputRef.theme }}</span>
               <span class="coupon-date">{{ "不限期" }}</span>
             </div>
@@ -423,8 +436,8 @@ function setInputData() {
     formInputRef.value.theme = dataVo.ccTheme;
     formInputRef.value.imgUrl = dataVo.ccImage;
     formInputRef.value.days = dataVo.ccDateOfDay;
-    formInputRef.value.startDate = dataVo.ccSdt;
-    formInputRef.value.endDate = dataVo.ccEdt;
+    formInputRef.value.startDate = dataVo.ccSdt.split(" ")[0];
+    formInputRef.value.endDate = dataVo.ccEdt.split(" ")[0];
     formInputRef.value.amountTotal = dataVo.ccLimit == -1 ? -1 : dataVo.ccLimit;
     formInputRef.value.amountType = dataVo.ccLimit == -1 ? -1 : 1;
     formInputRef.value.ccOnDate = dataVo.ccOnDate;
@@ -603,6 +616,9 @@ function showSelItemUIFn(state: boolean) {
                 font-weight: bold;
               }
             }
+          }
+          .percent-input {
+            width: calc(100% - 180px - 180px);
           }
           .msg-content {
             font-size: 20px;

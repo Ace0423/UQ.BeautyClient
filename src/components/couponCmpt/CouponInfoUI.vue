@@ -19,9 +19,10 @@
                 selItemData.value.ccDiscountType == 1 &&
                 selItemData.value.ccDiscount != 0
               "
-              >優惠 {{ 100 - selItemData.value.ccDiscount + "折" }}
+              >優惠 {{( 100 - selItemData.value.ccDiscount)/10 + "折" }}
             </span>
             <span v-if="selItemData.value.ccDiscountType == 3"> 免費</span>
+            <span class="coupon-theme">{{ selItemData.value.ccTheme }}</span>
             <span class="coupon-date" v-if="selItemData.value.ccOnDate == 2">{{
               selItemData.value.ccDateOfDay + "天"
             }}</span>
@@ -276,17 +277,22 @@ function updateCoupon() {
           height: 100%;
           > span {
             display: flex;
-            height: 50%;
+            height: 30%;
             // justify-content: center;
             margin-left: 10%;
             align-items: center;
             font-size: 28px;
+            font-weight: bold;
           }
           .coupon-date {
             color: #c1bdb8;
             font-size: 18px;
             font-size: 20px;
             align-items: baseline;
+          }
+          .coupon-theme{
+            color: #84715c;
+            font-weight: bold;
           }
         }
       }

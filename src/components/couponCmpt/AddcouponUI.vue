@@ -204,7 +204,7 @@
                 type="text"
               />
               <span v-if="formInputRef.ccDiscount != 0">{{
-                100 - formInputRef.ccDiscount + "折"
+                (100 - formInputRef.ccDiscount) / 10 + "折"
               }}</span>
             </div>
             <div v-if="formInputRef.ccDiscountType == 2">
@@ -269,11 +269,21 @@
                   formInputRef.ccDiscountType == 1 &&
                   formInputRef.ccDiscount != 0
                 "
-                >優惠 {{ 100 - formInputRef.ccDiscount + "折" }}
+                >優惠 {{ (100 - formInputRef.ccDiscount) / 10 + "折" }}
               </span>
               <span v-if="formInputRef.ccDiscountType == 3"> 免費</span>
-              <span class="coupon-date">{{ formInputRef.theme }}</span>
-              <span class="coupon-date">{{ "不限期" }}</span>
+              <span class="coupon-theme">{{ formInputRef.theme }}</span>
+              <span class="coupon-date" v-if="formInputRef.ccOnDate == 2">{{
+                formInputRef.days ? formInputRef.days : 0 + "天"
+              }}</span>
+              <span class="coupon-date" v-if="formInputRef.ccOnDate == 0">{{
+                "不限期"
+              }}</span>
+              <span class="coupon-date" v-if="formInputRef.ccOnDate == 1">
+                {{ formInputRef.startDate.split(" ")[0] + " 啟用" }}<br />{{
+                  formInputRef.endDate.split(" ")[0] + " 到期"
+                }}</span
+              >
             </div>
           </div>
           <p>用優惠券將取代其他折扣方式</p>
@@ -752,7 +762,7 @@ function showCGroupsUIFn(data: boolean) {
             align-items: center;
             > span {
               display: flex;
-              height: 25%;
+              height: 30%;
               margin-left: 10%;
               align-items: center;
               font-size: 28px;
@@ -760,6 +770,11 @@ function showCGroupsUIFn(data: boolean) {
             .coupon-date {
               color: #c1bdb8;
               font-size: 18px;
+            }
+
+            .coupon-theme {
+              color: #84715c;
+              font-weight: bold;
             }
           }
         }

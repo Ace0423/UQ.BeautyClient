@@ -42,7 +42,6 @@ const props = defineProps<{
   selData: any;
 }>();
 
-console.log(memberList.value);
 // let filterMemberData: any = computed(() => memberList.value.filter(getMemberFn));
 
 let filterMemberData: any = computed(() =>

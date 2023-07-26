@@ -56,15 +56,6 @@
         <div class="basic_info_item beautician">
           <p>美容師</p>
           <div class="news-filter">
-            <!-- <select v-model="newApptDataRef.beautician">
-              <option
-                v-for="(item, index) in beauticianList"
-                :key="item"
-                :value="index"
-              >
-                <span class="form_name"> {{ item.nameView }}</span>
-              </option>
-            </select> -->
             <el-select
               v-model="newApptDataRef.beauticianId"
               allow-create
@@ -73,10 +64,10 @@
               placeholder=" "
             >
               <el-option
-                v-for="item in beauticianList"
-                :key="item.userId"
+                v-for="item in filterBeauticianCpt"
+                :key="item.managerId"
+                :value="item.managerId"
                 :label="item.nameView"
-                :value="item.userId"
               >
                 <span class="form_name"> {{ item.nameView }}</span>
               </el-option>
@@ -146,8 +137,11 @@
 import { useApptStore } from "@/stores/apptStore";
 import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import { storeToRefs } from "pinia";
-import { showErrorMsg } from "@/types/IMessage";
+import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
 import { verify_methods } from "@/utils/utils";
+import { useManagerStore } from "@/stores/manager";
+import { useCounterStore } from "@/stores/counter";
+import Alert from "../alertCmpt";
 let addCourseTypesName = ref("");
 
 let aptTitle = reactive(["預約時間", "預約項目", "顧客", "已完成"]);
@@ -235,10 +229,53 @@ let store = useApptStore();
 const { postEditApptDataApi } = store;
 let { memberList, timeGroup, beauticianList, courseDataList } =
   storeToRefs(store);
-/**true:新增 false:修改 */
+const managerstore = useManagerStore();
+const { managerList } = storeToRefs(managerstore);
+const { getManagerList } = managerstore;
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
 
+onBefore();
+function onBefore() {
+  getManagerList({ id: 0, pageindex: 0, count: 0 })
+    .then((res) => {
+      if (res.state == 2) {
+        Alert.warning(showErrorMsg(res.msg), 2000);
+      }
+    })
+    .catch((e: any) => {
+      Alert.warning(showHttpsStatus(e.response.status), 2000);
+      if (e.response.status == 401) {
+        setTimeout(() => {
+          handLogOut();
+        }, 2000);
+      }
+    });
+}
 onMounted(() => {
   newApptDataRef.value = props.curApptDataRef;
+});
+let filterBeauticianCpt: any = computed(() => {
+  let curBeautician = [];
+  curBeautician.push({
+    managerId: 0,
+    nameView: "不指定",
+    phone: "0000000000",
+    roleList: [
+      {
+        roleId: 5,
+        mgrId: 4,
+        label: "Expert",
+        nameView: "CCCAdmin",
+      },
+    ],
+  });
+  for (let i = 0; i < managerList.value.data.length; i++) {
+    const element = managerList.value.data[i];
+    if (element.roleList.length > 0 && element.roleList[0].roleId == 5)
+      curBeautician.push(element);
+  }
+  return curBeautician;
 });
 
 function getNowDay() {

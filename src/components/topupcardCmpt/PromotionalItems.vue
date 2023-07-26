@@ -55,8 +55,6 @@ const filterProductsListFnData = computed(() => {
 onMounted(() => {
     services.value = props.promotional.topUpCardMapServices;
     products.value = props.promotional.topUpCardMapProducts;
-    console.log("1---" + services.value)
-    console.log("2---" + products.value)
     getDataDetailApi();
 });
 const changeTab = (index: number) => {
@@ -65,6 +63,7 @@ const changeTab = (index: number) => {
 };
 const handSubmit = () => {
     emits("handSubmit", products , services);
+    props.handPromotionalView();
 };
 </script>
 

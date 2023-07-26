@@ -150,24 +150,19 @@ onMounted(() => {
         cardData.tuLimitType = props.selectTopUpCardItem.tuLimitType;
         cardData.tuLimitDay = props.selectTopUpCardItem.tuLimitDay;
         cardData.utShared = props.selectTopUpCardItem.utShared;
-        cardData.topUpCardMapProducts = props.selectTopUpCardItem.topUpCardMapProducts.filter((item: any) => {
-            let val: number = item.pid;
-            return val
-        });
-        cardData.topUpCardMapServices = props.selectTopUpCardItem.topUpCardMapProducts.filter((item: any) => {
-            let val: number = item.lid;
-            return val
-        });
-        cardData.topUpCardFreeProducts = props.selectTopUpCardItem.topUpCardFreeProducts.filter((item: any) => {
-            let val: number = item.pid;
-            return val
-        });
-        cardData.topUpCardFreeServices = props.selectTopUpCardItem.topUpCardFreeServices.filter((item: any) => {
-            let val: number = item.lid;
-            return val
-        });
+        for (let index = 0; index < props.selectTopUpCardItem.topUpCardFreeProducts.length; index++) {
+            cardData.topUpCardFreeProducts.push(props.selectTopUpCardItem.topUpCardFreeProducts[index].pid);
+        }
+        for (let index = 0; index < props.selectTopUpCardItem.topUpCardFreeServices.length; index++) {
+            cardData.topUpCardFreeServices.push(props.selectTopUpCardItem.topUpCardFreeServices[index].lid);
+        }
+        for (let index = 0; index < props.selectTopUpCardItem.topUpCardMapProducts.length; index++) {
+            cardData.topUpCardMapProducts.push(props.selectTopUpCardItem.topUpCardMapProducts[index].pid);
+        }
+        for (let index = 0; index < props.selectTopUpCardItem.topUpCardMapServices.length; index++) {
+            cardData.topUpCardMapServices.push(props.selectTopUpCardItem.topUpCardMapServices[index].lid);
+        }
     }
-    console.log(cardData)
 });
 const handPromotionalView = (() => {
     promotionalItemsView.value = !promotionalItemsView.value;
@@ -190,7 +185,7 @@ const handSubmit = () => {
             .catch((e: any) => {
                 Alert.warning(showHttpsStatus(e.response.status), 2000);
             });
-    } else if (cardData.tuId == 1) {
+    } else if (cardData.tuId != 0) {
         editTopUpCardInfo(cardData)
             .then((res: any) => {
                 if (res.table) {

@@ -50,6 +50,7 @@ const filterServicesListFnData = computed(() => {
     return filter;
 });
 const filterProductsListFnData = computed(() => {
+    console.log(goodsDetailListRef.value)
     const filter = goodsDetailListRef.value.filter(getProductsListFn);
     return filter;
 });
@@ -58,7 +59,6 @@ onMounted(() => {
     changeTab(props.handselType);
     services.value = props.promotional.topUpCardFreeServices;
     products.value = props.promotional.topUpCardFreeProducts;
-    getDataDetailApi();
 });
 const changeTab = (index: number) => {
     currentIndex.value = index;
@@ -66,6 +66,7 @@ const changeTab = (index: number) => {
 };
 const handSubmit = () => {
     emits("handSubmit", products, services);
+    props.handHandselView();
 };
 </script>
 

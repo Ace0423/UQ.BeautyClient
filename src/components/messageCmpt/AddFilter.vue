@@ -250,7 +250,6 @@ onMounted(() => {
         consumeCycleData.value[0] = props.mFilter.msfConCycleA;
         consumeCycleData.value[1] = props.mFilter.msfConCycleB;
     }
-    console.log(selectItem.msfSex)
 });
 const changeEvent = (type: any, data: any) => {
     if (type == 3) {

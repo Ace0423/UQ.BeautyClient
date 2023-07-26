@@ -95,7 +95,6 @@ function getCourseFn(data: any) {
 }
 
 function submitBtn() {
-  console.log("提交");
   props.getDataFn(formInputRef.value.courses);
   props.showServiceUIFn(0)
 }

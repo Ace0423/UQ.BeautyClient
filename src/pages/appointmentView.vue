@@ -1310,7 +1310,6 @@ function getRestList() {
 
   getWorkingHours(data)
     .then(() => {
-      console.log(workingHoursList);
       // setRestTimeFn(workingHoursList.value.data);
     })
     .catch((e: any) => {
@@ -1322,11 +1321,9 @@ function getRestList() {
       }
     });
 
-  console.log("tuiList", tuiList);
 }
 function setRestTimeFn(data: any) {
   let tidyRestData = [];
-  console.log(data);
   for (let i = 0; i < data.length; i++) {
     const eleTable = data[i];
     for (let j = 0; j < eleTable.timeTableList.length; j++) {

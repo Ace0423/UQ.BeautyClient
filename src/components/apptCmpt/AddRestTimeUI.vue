@@ -110,8 +110,6 @@ let aptTitle = reactive(["預約時間", "預約項目", "顧客", "已完成"])
 const props = defineProps<{
   showAddRestUIFn: Function;
 }>();
-console.log("ADD");
-
 let newApptDataRef: any = ref({
   managerId: null,
   date: "",
@@ -218,7 +216,6 @@ getManagerList({ id: 0, pageindex: 0, count: 0 })
     if (res.state == 2) {
       Alert.warning(showErrorMsg(res.msg), 2000);
     }
-    console.log(managerList);
   })
   .catch((e: any) => {
     Alert.warning(showHttpsStatus(e.response.status), 2000);

@@ -85,7 +85,6 @@ class Uictrl {
     // this.router.replace({ path: '/' + pageType });
 
     params = params || {};
-    // console.log(params)
     
     this.router.push({ path: '/' + pageType, params });
   }

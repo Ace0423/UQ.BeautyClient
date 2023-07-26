@@ -294,6 +294,14 @@ let confirmReserveForm = () => {
       : null;
 
   if (!verify_all()) return;
+
+  //判斷是否與休息時間重疊
+  for (let i = 0; i < workingHoursList.value.data.length; i++) {
+    const element = workingHoursList.value.data[i];
+    if (element.managerId == newApptDataRef.value.memberId) {
+    }
+  }
+
   let courseListData = [];
   for (let i = 0; i < newApptDataRef.value.courses.length; i++) {
     const element = newApptDataRef.value.courses[i];
@@ -325,12 +333,70 @@ let confirmReserveForm = () => {
     }
   });
 };
-function resetAddReserveForm() {
-  newApptDataRef.value.courses = [];
-  newApptDataRef.value.memberId = null;
-  newApptDataRef.value.timeBooking = null;
-  newApptDataRef.value.beauticianId = 0;
-  newApptDataRef.value.selDate = newApptDataRef.value.selDate;
+
+const managerStore = useManagerStore();
+const { getWorkingHours } = managerStore;
+const { workingHoursList } = storeToRefs(managerStore);
+getRestList();
+function getRestList() {
+  let data = {
+    managerId: 0,
+    year: 0,
+    month: 0,
+    day: 0,
+    pageIndex: 0,
+    count: 0,
+  };
+
+  getWorkingHours(data)
+    .then(() => {
+      // setRestTimeFn(workingHoursList.value.data);
+    })
+    .catch((e: any) => {
+      Alert.warning(showHttpsStatus(e.response.status), 2000);
+      if (e.response.status == 401) {
+        setTimeout(() => {
+          handLogOut();
+        }, 2000);
+      }
+    });
+}
+/**
+ * 判断两个时间段是否有重叠,时间 （20:30）
+ */
+function isTimeOverlap(
+  startTime: any,
+  endTime: any,
+  startTime2: any,
+  endTime2: any
+) {
+  startTime = startTime.split(":")[0] + startTime.split(":")[1];
+  endTime = endTime.split(":")[0] + endTime.split(":")[1];
+  startTime2 = startTime2.split(":")[0] + startTime2.split(":")[1];
+  endTime2 = endTime2.split(":")[0] + endTime2.split(":")[1];
+  if (endTime2 <= startTime) {
+    //如果跨天了
+    if (endTime < startTime) {
+      if (endTime > startTime2) {
+        // 重叠
+        return true;
+      }
+    }
+    console.log("isTimeOverlap: `` 不重叠");
+  } else if (endTime <= startTime2) {
+    //如果跨天了
+    if (endTime2 < startTime2) {
+      if (endTime2 > startTime) {
+        // 重叠
+        return true;
+      }
+    }
+    console.log("isTimeOverlap: `` 不重叠");
+  } else {
+    // 重叠
+    return true;
+  }
+  return false;
 }
 </script>
 

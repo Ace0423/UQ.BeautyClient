@@ -94,7 +94,7 @@
             </td>
             <td>
               <p v-if="item.ccDiscountType == 1">
-                優惠 {{ item.ccDiscount / 10 }} 折
+                優惠 {{( item.ccDiscount )/10}} 折
               </p>
               <p v-if="item.ccDiscountType == 2">
                 優惠 {{ item.ccDiscount }} 元
@@ -142,7 +142,7 @@ let couponTypeTabs: any = [
   { label: "所有優惠方式", value: -1 },
   { label: "折扣佔比(%)", value: 1 },
   { label: "折讓現金($)", value: 2 },
-  { label: "免費", value: 3 },
+  { label: "免費", value:  3},
 ];
 let showAddUI = ref(false);
 let showEditUI = ref(false);
@@ -391,3 +391,4 @@ function sortDataListFn(name: number) {
   }
 }
 </style>
+

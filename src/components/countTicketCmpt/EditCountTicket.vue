@@ -237,8 +237,8 @@
   ></CheckboxServiceUI>
   <CheckboxGoodsUI
     v-if="showGoodsUIRef"
-    :selData="formInputRef.giftGoods"
     :showCGoodsUIFn="showGoodsUIFn"
+    :selData="formInputRef.giftGoods"
     :getDataFn="getGoodsFn"
   ></CheckboxGoodsUI>
   <RadioServicesUI

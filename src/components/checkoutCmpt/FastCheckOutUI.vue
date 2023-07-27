@@ -11,7 +11,73 @@
             <span>結帳項目</span>
           </div>
           <div class="link-bottom"></div>
-          <div class="item-add"></div>
+          <div class="form-item">
+            <div v-if="formInputRef.buyServicesGroup.length > 0">
+              <table>
+                <thead>
+                  <tr>
+                    <th>服務({{ formInputRef.buyServicesGroup.length }})</th>
+                    <th>價格</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody
+                  v-for="(item, index) in formInputRef.buyServicesGroup"
+                  :key="item.pId"
+                >
+                  <tr>
+                    <td>
+                      <p>{{ item.nameTw + "(" + item.servicesTime + ")" }}</p>
+                    </td>
+                    <td>
+                      <p>{{ item.price }}</p>
+                    </td>
+                    <td>
+                      <img
+                        class="delete_img"
+                        :src="icon_cancleItem"
+                        @click="cancleServiceFn(item, index)"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="form-item">
+            <div v-if="formInputRef.buyGoodsGroup.length > 0">
+              <table>
+                <thead>
+                  <tr>
+                    <th>商品({{ formInputRef.buyGoodsGroup.length }})</th>
+                    <th>價格</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody
+                  v-for="(item, index) in formInputRef.buyGoodsGroup"
+                  :key="item.pId"
+                >
+                  <tr>
+                    <td>
+                      <p>{{ item.pName }}</p>
+                    </td>
+                    <td>
+                      <p>{{ item.price }}</p>
+                    </td>
+                    <td>
+                      <img
+                        class="delete_img"
+                        :src="icon_cancleItem"
+                        @click="cancleGoodsFn(item, index)"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
           <div class="bill-add" v-on:click="showItemMenuUIFn(true)">
             <span
               >&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新增結帳項目</span
@@ -84,19 +150,22 @@
     :showUIFn="showMemberUIFn"
     :getDataFn="getMembersFn"
   />
-  <RadioItemMenuUI
+  <SelItemMenuUI
     v-if="showAddItemMenuUIRef"
+    :selData="formInputRef"
     :showUIFn="showItemMenuUIFn"
+    :getDataFn="getItemInfoFn"
   />
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { usePriceStore} from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import search_ico from "@/assets/images/icon_search.png";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_customer from "@/assets/images/icon_customer.png";
 import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
+import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
 
 let store = usePriceStore();
 let { allDiscountList } = storeToRefs(store);
@@ -111,6 +180,7 @@ let showMemberUIRef = ref(false);
 let showAddItemMenuUIRef = ref(false);
 let showAddServicesUIRef = ref(false);
 
+let selectIItemRef = ref([]);
 onMounted(() => {
   // console.log('onMounted');
 });
@@ -118,6 +188,8 @@ let formInputRef: any = ref({
   memberInfo: { nameView: "顧客", phone: "請選擇顧客" },
   customerTotal: 1,
   memo: "",
+  buyServicesGroup: [],
+  buyGoodsGroup: [],
 });
 
 function showMemberUIFn(state: boolean) {
@@ -139,6 +211,23 @@ function countCoustomerFn(data: number) {
 function submitBtn() {
   console.log("現金收款");
   props.showUIFn(false);
+}
+
+function getItemInfoFn(data: any) {
+  console.log("獲取", data);
+  if (data.selectGood) {
+    formInputRef.value.buyGoodsGroup = data.selectGood;
+  }
+  if (data.selectService) {
+    formInputRef.value.buyServicesGroup = data.selectService;
+  }
+  console.log("選擇", formInputRef.value);
+}
+function cancleServiceFn(item: any, index: number) {
+  formInputRef.value.buyServicesGroup.splice(index, 1);
+}
+function cancleGoodsFn(item: any, index: number) {
+  formInputRef.value.buyGoodsGroup.splice(index, 1);
 }
 </script>
 
@@ -195,12 +284,59 @@ function submitBtn() {
         height: 100%;
         border-right: solid 0.5px #ddd;
         box-sizing: border-box;
+        overflow-y: auto;
         > div {
           width: 90%;
           margin-left: 5%;
-          margin-top: 3%;
+          margin-top: 15px;
         }
-        .item-add {
+        .form-item {
+          width: 90%;
+          > span {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+          }
+          > div {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            > table {
+              // display: flex;
+              width: 100%;
+              > thead {
+                background-color: #c1bdb8;
+                color: #877059;
+
+                > tr > th:nth-child(1) {
+                  width: 70%;
+                }
+                > tr > th:nth-child(2) {
+                  width: 20%;
+                }
+                > tr > th:nth-child(3) {
+                  width: 10%;
+                }
+              }
+              > tbody {
+                border-bottom: 1px solid #877059;
+                > tr > td:nth-child(1) {
+                  width: 70%;
+                }
+                > tr > td:nth-child(2) {
+                  width: 20%;
+                }
+                > tr > th:nth-child(3) {
+                  width: 10%;
+                }
+              }
+            }
+          }
+          .link-btn {
+            color: #b89087;
+          }
         }
         .bill-add {
           height: 60px;

@@ -31,16 +31,20 @@
         </div>
       </div>
       <div class="service-content" v-show="itemTypeRef == 1">
-        <RadioServicesUI
-          :selData="formInputRef.ServiceId"
+        <CheckboxServiceUI
+          :showCServiceUIFn="showItemTypeFn"
+          :selData="formInputRef.selectService"
           :getDataFn="getRadioServiceFn"
-          :showServiceUIFn="showItemTypeFn"
-        >
-        </RadioServicesUI>
+        ></CheckboxServiceUI>
       </div>
       <div class="service-content" v-show="itemTypeRef == 2">
-        <RadioGoodsUI :showGoodsUIFn="showItemTypeFn"> </RadioGoodsUI>
+        <CheckboxGoodsUI
+          :showCGoodsUIFn="showItemTypeFn"
+          :selData="formInputRef.selectGood"
+          :getDataFn="getGoodsFn"
+        ></CheckboxGoodsUI>
       </div>
+
       <div class="service-content" v-show="itemTypeRef == 3"></div>
       <div class="service-content" v-show="itemTypeRef == 4">
         <RadioCountTicketUI :showCountTicketUIFn="showItemTypeFn">
@@ -52,7 +56,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { usePriceStore} from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import search_ico from "@/assets/images/icon_search.png";
 import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
 
@@ -62,17 +66,22 @@ let { getAllDiscountApi } = store;
 
 const props = defineProps<{
   showUIFn: Function;
-  //   formInfo: any;
-  //   addDetailTypeID?: any;
+  getDataFn: Function;
+  selData: any;
 }>();
-
 onMounted(() => {
   // console.log('onMounted');
 });
 let formInputRef: any = ref({
   name: "",
-  ServiceId:0,
+  selectService: [],
+  selectGood: [],
 });
+onBrfore();
+function onBrfore() {
+  formInputRef.value.selectService = props.selData.buyServicesGroup;
+  formInputRef.value.selectGood = props.selData.buyGoodsGroup;
+}
 //1:服務，2:商品，
 let itemTypeRef: any = ref(0);
 
@@ -81,10 +90,17 @@ function submitBtn() {
 }
 function showItemTypeFn(type: number) {
   itemTypeRef.value = type;
+  if (!type) props.showUIFn(false);
 }
 function getRadioServiceFn(data: any) {
-  console.log(data, "獲取");
-  formInputRef.value.ffServiceId = data;
+  formInputRef.value.selectService = data;
+  props.getDataFn(formInputRef.value);
+  showItemTypeFn(0);
+}
+function getGoodsFn(data: any) {
+  formInputRef.value.selectGood = data;
+  props.getDataFn(formInputRef.value);
+  showItemTypeFn(0);
 }
 </script>
 

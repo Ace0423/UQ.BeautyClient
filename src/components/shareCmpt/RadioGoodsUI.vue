@@ -14,8 +14,8 @@
                 class="input-item"
                 type="radio"
                 :key="item"
-                :id="item.pId"
-                :value="item.pId"
+                :value="item"
+                :id="item"
                 v-model="formInputRef.goods"
                 @click="clickItem(item, item.pId)"
               />
@@ -57,6 +57,8 @@ let { getGoodsDetailApi } = store;
 
 const props = defineProps<{
   showGoodsUIFn: Function;
+  getDataFn: Function;
+  selData: any;
   //   formInfo: any;
   //   addDetailTypeID?: any;
 }>();
@@ -67,7 +69,7 @@ onMounted(() => {
 let formInputRef: any = ref({
   name: "",
   search: "",
-  goods: [],
+  goods: null,
 });
 
 setData();
@@ -92,7 +94,8 @@ function clickItem(item: any, id: number) {
   // console.log(formInputRef.value.goods);
 }
 function submitBtn() {
-  console.log("提交");
+  console.log("提交", formInputRef);
+  props.getDataFn(formInputRef.value.goods);
 }
 </script>
 
@@ -161,7 +164,7 @@ function submitBtn() {
       }
       .group-content {
         height: calc(100% - 35px);
-        border: solid 1px #ff0000;
+        // border: solid 1px #ff0000;
         box-sizing: border-box;
         > div {
           .label-group {

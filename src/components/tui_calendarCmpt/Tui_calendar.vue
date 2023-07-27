@@ -226,7 +226,7 @@ export default {
     };
   },
   methods: {
-    loadTuiList(num = 1) {
+    loadTuiList(num = this.proptuiOptions.tuiType) {
       // 用 propProduct 處理資料
       if (window.cal) {
         window.cal.clear();
@@ -1208,5 +1208,4 @@ export default {
 :deep(.tui-full-calendar-layout div:nth-child(1)) {
   /* height: calc(50px) !important; */
 }
-
 </style>

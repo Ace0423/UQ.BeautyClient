@@ -47,12 +47,12 @@
   </div>
   <AddAllDiscountUI
     v-if="showAddUI"
-    :showAddUIFn="showAddUIFn"
+    :showAddUIFn="showAddUIHdr"
     :formInfo="selData"
   ></AddAllDiscountUI>
   <EditAllDiscountUI
     v-if="showEditUI"
-    :showEditUIFn="showEditUIFn"
+    :showEditUIFn="showEditUIHdr"
     :formInfo="selData"
   ></EditAllDiscountUI>
 </template>
@@ -69,7 +69,12 @@ let { getAllDiscountApi, delAllDiscountApi } = store;
 const showAddUI = ref(false);
 const showEditUI = ref(false);
 let search = ref("");
-getAllDiscountFn();
+let selData: any = [];
+
+onBefore();
+function onBefore() {
+  getAllDiscountFn();
+}
 
 let filterListCpt: any = computed(() =>
   allDiscountList.value.filter(getFilterListFn)
@@ -81,12 +86,12 @@ function getFilterListFn(data: any) {
   );
 }
 
-const showAddUIFn = (state: boolean) => {
+const showAddUIHdr = (state: boolean) => {
   showAddUI.value = state;
   getAllDiscountFn();
 };
 
-const showEditUIFn = (state: boolean) => {
+const showEditUIHdr = (state: boolean) => {
   showEditUI.value = state;
   getAllDiscountFn();
 };
@@ -94,7 +99,6 @@ const showEditUIFn = (state: boolean) => {
 function getAllDiscountFn() {
   getAllDiscountApi();
 }
-let selData: any = [];
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     console.log("確認刪除");
@@ -107,12 +111,12 @@ const onDeleteAlertBtn = (data: any) => {
 //新增
 function showAddFormFn() {
   selData.value = [];
-  showAddUIFn(true);
+  showAddUIHdr(true);
 }
 //編輯
 function showEditFormFn(index: number, item: any) {
   selData.value = item;
-  showEditUIFn(true);
+  showEditUIHdr(true);
 }
 //刪除
 let deleteHdr = (index: number, item: any) => {

@@ -293,9 +293,6 @@ import { storeToRefs } from "pinia";
 import { usePriceStore } from "@/stores/priceStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
-import icon_customer from "@/assets/images/icon_customer.png";
-import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
-import { formatZeroDate } from "@/utils/utils";
 import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 
@@ -376,10 +373,6 @@ let discountType = [
     name: "免費",
   },
 ];
-
-onMounted(() => {
-  // console.log('onMounted');
-});
 let formInputRef: any = ref({
   name: "",
   theme: "",
@@ -396,39 +389,12 @@ let formInputRef: any = ref({
   checkoutType: 0,
   groups: [],
 });
-// var date = new Date();
 
-// formInputRef.value.startDate =
-//   date.getFullYear() +
-//   "-" +
-//   formatZeroDate(date.getMonth() + 1) +
-//   "-" +
-//   formatZeroDate(date.getDate());
-// formInputRef.value.endDate =
-//   date.getFullYear() +
-//   "-" +
-//   formatZeroDate(date.getMonth() + 1) +
-//   "-" +
-//   formatZeroDate(date.getDate());
-setInputData();
-function setInputData() {
-  // formInputRef.value.name = props.selItemData.value.ccTitle;
-  // formInputRef.value.theme = props.selItemData.value.ccTheme;
-  // formInputRef.value.imgUrl = props.selItemData.value.ccImage;
-  // formInputRef.value.days = props.selItemData.value.ccDateOfDay;
-  // formInputRef.value.startDate = props.selItemData.value.ccSdt;
-  // formInputRef.value.endDate = props.selItemData.value.ccEdt;
-  // formInputRef.value.amountTotal =
-  //   props.selItemData.value.ccLimit == -1
-  //     ? -1
-  //     : props.selItemData.value.ccLimit;
-  // formInputRef.value.amountType =
-  //   props.selItemData.value.ccLimit == -1 ? -1 : 1;
-  // formInputRef.value.ccOnDate = props.selItemData.value.ccOnDate;
-  // formInputRef.value.ccDiscountType = props.selItemData.value.ccDiscountType;
-  // formInputRef.value.ccDiscount = props.selItemData.value.ccDiscount;
-  // formInputRef.value.groupItem = props.selItemData.value.ccItemType;
-  // formInputRef.value.checkoutType = props.selItemData.value.ccAccountType;
+onMounted(() => {
+  // console.log('onMounted');
+});
+onBeforeFn();
+function onBeforeFn() {
   getCouponApi(props.selItemData.value.ccId, 1).then((res: any) => {
     let dataVo = res.table[0];
     formInputRef.value.groups = dataVo.groupList;
@@ -446,22 +412,6 @@ function setInputData() {
     formInputRef.value.groupItem = dataVo.ccItemType;
     formInputRef.value.checkoutType = dataVo.ccAccountType;
   });
-}
-function showMemberUIFn(state: boolean) {
-  showMemberUIRef.value = state;
-}
-function showServicesUIFn(state: boolean) {
-  showAddServicesUIRef.value = state;
-}
-function showItemMenuUIFn(state: boolean) {
-  showAddItemMenuUIRef.value = state;
-}
-function getMembersFn(data: any) {
-  formInputRef.value.memberInfo = data;
-}
-function countCoustomerFn(data: number) {
-  if (formInputRef.value.customerTotal + data > 0)
-    formInputRef.value.customerTotal += data;
 }
 function submitBtn() {
   let apiData = {

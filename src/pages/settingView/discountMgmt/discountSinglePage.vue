@@ -1,9 +1,7 @@
 <template>
   <div class="discountSingle_div">
     <div class="table-topBar">
-      <p class="bar-title">
-        單品折扣(所有{{ filterListCpt.length }}種折扣)
-      </p>
+      <p class="bar-title">單品折扣(所有{{ filterListCpt.length }}種折扣)</p>
       <div>
         <input
           class="search-control"
@@ -34,10 +32,7 @@
         </tr>
       </thead>
       <tbody class="content-tbody">
-        <tr
-          v-for="(item, index) in filterListCpt"
-          :key="item.discountNo"
-        >
+        <tr v-for="(item, index) in filterListCpt" :key="item.discountNo">
           <td>
             <p>{{ item.title }}</p>
           </td>
@@ -88,8 +83,10 @@ const showAddUI = ref(false);
 const showEditUI = ref(false);
 let search = ref("");
 let selData: any = [];
-
-getSingleDiscountApi();
+onBeforeFn();
+function onBeforeFn() {
+  getSingleDiscountApi();
+}
 
 let filterListCpt: any = computed(() =>
   singleDiscountListRef.value.filter(getFilterListFn)
@@ -101,13 +98,13 @@ function getFilterListFn(data: any) {
   );
 }
 
-const showAddUIFn = (state: boolean) => {
+function showAddUIFn(state: boolean) {
   showAddUI.value = state;
-};
-const showEditUIFn = (state: boolean) => {
+}
+function showEditUIFn(state: boolean) {
   showEditUI.value = state;
   getSingleDiscountApi();
-};
+}
 //新增
 function showAddFormFn() {
   selData.value = [];

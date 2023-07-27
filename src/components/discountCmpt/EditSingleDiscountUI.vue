@@ -167,7 +167,7 @@
   ></CheckboxGoodsUI>
 </template>
 <script setup lang="ts">
-import { usePriceStore} from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import type { IBackStatus } from "@/types/IData";
 import { showErrorMsg } from "@/types/IMessage";
 import { verify_methods } from "@/utils/utils";
@@ -194,8 +194,8 @@ let formInputRef: any = ref({
   goodsGroup: [],
   serviceGroup: [],
 });
-
-onMounted(() => {
+onBeforeFn();
+function onBeforeFn() {
   formInputRef.value.name = props.formInfo.value.title;
   formInputRef.value.dType = props.formInfo.value.dType;
   formInputRef.value.discount = props.formInfo.value.discount;
@@ -206,7 +206,9 @@ onMounted(() => {
   formInputRef.value.serviceGroup = props.formInfo.value.servicesList
     ? props.formInfo.value.servicesList
     : [];
-});
+}
+
+onMounted(() => {});
 
 function showServiceUIFn(state: boolean) {
   showServiceUIRef.value = state;
@@ -318,22 +320,6 @@ const verify_all = () => {
   return is_valid;
 };
 //-----------------------------------我是底部-------------------------------------------
-
-//-------------------------------------------------------alertUI
-const alertInformation = reactive({
-  selfData: {},
-  selfType: "",
-  messageText: "", // 提示內容
-  buttonState: 2, //按鈕顯示狀態 0:全部 1:只顯示確定按鈕 2:不顯示按鈕
-  timerVal: 2, //時間計時器
-  showAlert: false, //顯示
-});
-const handAlertView = (msg: string, btnState: number, timer: number) => {
-  alertInformation.messageText = msg;
-  alertInformation.buttonState = btnState;
-  alertInformation.timerVal = timer;
-  alertInformation.showAlert = !alertInformation.showAlert;
-};
 </script>
 
 <style lang="scss" scoped>

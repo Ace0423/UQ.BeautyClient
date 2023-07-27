@@ -55,15 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { usePriceStore } from "@/stores/priceStore";
-import search_ico from "@/assets/images/icon_search.png";
 import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
-
-let store = usePriceStore();
-let { allDiscountList } = storeToRefs(store);
-let { getAllDiscountApi } = store;
-
 const props = defineProps<{
   showUIFn: Function;
   getDataFn: Function;
@@ -74,14 +66,14 @@ let formInputRef: any = ref({
   selectService: [],
   selectGood: [],
 });
-onMounted(() => {
-  // console.log('onMounted');
-});
 onBrfore();
 function onBrfore() {
   formInputRef.value.selectService = props.selData.buyServicesGroup;
   formInputRef.value.selectGood = props.selData.buyGoodsGroup;
 }
+onMounted(() => {
+  // console.log('onMounted');
+});
 //1:服務，2:商品，
 let itemTypeRef: any = ref(0);
 

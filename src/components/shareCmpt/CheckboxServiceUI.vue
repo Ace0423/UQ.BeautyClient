@@ -81,11 +81,9 @@ let formInputRef: any = ref({
   search: "",
   service: [],
 });
-setUI();
-function setUI() {
+onBeforeFn();
+function onBeforeFn() {
   getCourseDetailApi();
-  console.log(props.selData);
-  
   for (let i = 0; i < props.selData.length; i++) {
     const element = props.selData[i];
     // element.lid = element.lid ? element.lid : element.lessonId;

@@ -148,8 +148,11 @@ import { showErrorMsg } from "@/types/IMessage";
 import { verify_methods } from "@/utils/utils";
 import { storeToRefs } from "pinia";
 import type { FormInstance, FormRules } from "element-plus";
-const alertState = ref(false);
-let addCourseTypesName = ref();
+const props = defineProps<{
+  showAddDetailForm: Function;
+  filterCourseData: any;
+  addDetailTypeID?: any;
+}>();
 let formInputRef: any = ref({
   name: null,
   timer: null,
@@ -159,16 +162,18 @@ let formInputRef: any = ref({
   isEditAccounting: false,
   state: false,
 });
-
-function clickType(val: any) {
-  addCourseTypesName.value = filterTypesTabs.value[val].nameTw;
-}
 let store = useApptStore();
 let { courseTypesTabs } = storeToRefs(store);
-let { delCourseDetailApi, addCourseDetailApi, getCourseTypeApi } = store;
+let { addCourseDetailApi } = store;
 
 let timeGroup: any = ref(["30", "60", "90", "120", "150", "180", "210", "240"]);
-onMounted(() => {
+let filterTypesTabs: any = computed(() =>
+  courseTypesTabs.value.filter(function (value: any) {
+    return value.lessonTypeId > 0;
+  })
+);
+onBeforeFn();
+function onBeforeFn() {
   formInputRef.value.name = "";
   formInputRef.value.timer = "";
   formInputRef.value.lessonTypeId = "";
@@ -176,17 +181,8 @@ onMounted(() => {
   formInputRef.value.state = false;
   formInputRef.isBonusOpen = true;
   formInputRef.isEditAccounting = false;
-});
-let filterTypesTabs: any = computed(() =>
-  courseTypesTabs.value.filter(function (value: any) {
-    return value.lessonTypeId > 0;
-  })
-);
-const props = defineProps<{
-  showAddDetailForm: Function;
-  filterCourseData: any;
-  addDetailTypeID?: any;
-}>();
+}
+onMounted(() => {});
 //新增課程-確認
 let confirmAddCourseDataForm = () => {
   ruleLists.ruleItem.lessonTypeId.value = formInputRef.value.lessonTypeId;

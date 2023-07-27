@@ -54,21 +54,19 @@ let { getAllDiscountApi } = store;
 
 const props = defineProps<{
   showUIFn: Function;
-  //   formInfo: any;
-  //   addDetailTypeID?: any;
 }>();
-
-onMounted(() => {
-  // console.log('onMounted');
-});
 let formInputRef: any = ref({
   name: "",
   serviceItem: [],
   serviceId: 0,
   goods: [],
 });
+
 //1:服務，2:商品，
 let itemTypeRef: any = ref(0);
+onMounted(() => {
+  // console.log('onMounted');
+});
 
 function submitBtn() {
   console.log("提交");

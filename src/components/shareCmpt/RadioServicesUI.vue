@@ -69,18 +69,16 @@ let formInputRef: any = ref({
   courses: null,
 });
 
-setData();
-function setData() {
+onBeforeFn();
+function onBeforeFn() {
   getCourseDetailApi();
 }
-console.log("getCourseDetailApi");
 onMounted(() => {
   // console.log('onMounted');
 });
 if (props.selData) {
   formInputRef.value.courses = props.selData;
 }
-let clickGroupRef = ref(false);
 let filterCourseData: any = computed(() =>
   courseDataList.value.filter(getCourseFn)
 );

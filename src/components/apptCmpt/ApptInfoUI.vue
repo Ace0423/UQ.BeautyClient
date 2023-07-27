@@ -73,10 +73,7 @@
 </template>
 <script setup lang="ts">
 import closeIcon from "@/assets/Group32.svg";
-import bitmapIcon from "@/assets/bitmap.svg";
 import Icon from "@/assets/Icon zocial-guest.svg";
-import lineIcon from "@/assets/Icon awesome-line.svg";
-import gMailIcon from "@/assets/g-mail.svg";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 
@@ -84,12 +81,6 @@ let store = useApptStore();
 let { memberList, beauticianList } = storeToRefs(store);
 
 const simpleView = ref(true);
-const currentIndex = ref(2);
-const memberDetailData: any = reactive({
-  accountBalance: 0,
-  recentConsumption: { amount: "-", date: "-" },
-  recentDeposit: { amount: "-", date: "-" },
-});
 const props = defineProps<{
   selItemData: any;
   showUIHdr: Function;
@@ -139,10 +130,6 @@ let weekDayCpt: any = computed(() => {
   var week = weekArray[new Date(props.selItemData.dateBooking).getDay()];
   return week;
 });
-
-const handsimpleViewBtn = () => {
-  simpleView.value = !simpleView.value;
-};
 onMounted(() => {
   // getmemberInfoApi();
 });

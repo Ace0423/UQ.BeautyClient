@@ -308,8 +308,6 @@ import { storeToRefs } from "pinia";
 import { usePriceStore } from "@/stores/priceStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
-import icon_customer from "@/assets/images/icon_customer.png";
-import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
 import { formatZeroDate } from "@/utils/utils";
 import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
@@ -320,11 +318,7 @@ let { addCouponApi } = store;
 
 const props = defineProps<{
   showUIFn: Function;
-  //   formInfo: any;
-  //   addDetailTypeID?: any;
 }>();
-let showMemberUIRef = ref(false);
-let showAddItemMenuUIRef = ref(false);
 let showSelItemUIRef = ref(false);
 let showSelGroupsUIRef = ref(false);
 
@@ -392,9 +386,6 @@ let discountType = [
     name: "免費",
   },
 ];
-onMounted(() => {
-  // console.log('onMounted');
-});
 let formInputRef: any = ref({
   name: "",
   theme: "",
@@ -410,6 +401,9 @@ let formInputRef: any = ref({
   groupItem: 0,
   checkoutType: 0,
   groups: [],
+});
+onMounted(() => {
+  // console.log('onMounted');
 });
 
 var date = new Date();
@@ -427,21 +421,8 @@ formInputRef.value.endDate =
   "-" +
   formatZeroDate(date.getDate());
 
-function showMemberUIFn(state: boolean) {
-  showMemberUIRef.value = state;
-}
 function showSelItemUIFn(state: boolean) {
   showSelItemUIRef.value = state;
-}
-function showItemMenuUIFn(state: boolean) {
-  showAddItemMenuUIRef.value = state;
-}
-function getMembersFn(data: any) {
-  formInputRef.value.memberInfo = data;
-}
-function countCoustomerFn(data: number) {
-  if (formInputRef.value.customerTotal + data > 0)
-    formInputRef.value.customerTotal += data;
 }
 function submitBtn() {
   let curGroupMaps = [];

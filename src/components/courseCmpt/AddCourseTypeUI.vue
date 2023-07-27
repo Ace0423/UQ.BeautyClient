@@ -61,13 +61,11 @@
 </template>
 <script setup lang="ts">
 import { useApptStore } from "@/stores/apptStore";
-import type { IBackStatus } from "@/types/IData";
 import Icon_edit from "@/assets/images/icon_edit.png";
 import Icon_back from "@/assets/images/icon_back.png";
 import { storeToRefs } from "pinia";
 
 import draggable from "vuedraggable";
-import { showErrorMsg } from "@/types/IMessage";
 import { verify_methods } from "@/utils/utils";
 import Alert from "../alertCmpt";
 let addCourseTypesName = ref("");
@@ -75,73 +73,18 @@ const props = defineProps<{
   showAddForm: Function;
 }>();
 
-//-------------------------------------form驗證
-const ruleLists: any = reactive({
-  ruleItem: {
-    name: {
-      label: "名稱",
-      component: "input",
-      type: "number",
-      is_readonly: false,
-      value: "",
-      rules: {
-        required: {
-          warn: "此項為必填",
-        },
-        length: {
-          max: 9,
-          warn: "不高於9字",
-        },
-      },
-      is_error: false,
-      warn: "",
-      is_show: true,
-    },
-  },
-});
-let { ruleItem } = toRefs(ruleLists);
-const verify_all = () => {
-  let is_valid = true;
-  for (let component in ruleLists.ruleItem) {
-    let item = ruleLists.ruleItem[component];
-    for (let rule in item.rules) {
-      if (!verify_methods[rule](item)) {
-        is_valid = false;
-        break;
-      }
-    }
-  }
-  return is_valid;
-};
-//-------------------------------------------------------------------
-
 const store = useApptStore();
 const {
   addCourseTypeApi,
   delCourseTypeApi,
   editCourseTypeApi,
   editCourseTypeOrderApi,
-  getCourseTypeApi,
 } = store;
-let { courseTypesTabs, courseTypesTabsValue } = storeToRefs(store);
-// let courseTypesTabs: any = ref([]);
+let { courseTypesTabs } = storeToRefs(store);
+
 onMounted(() => {
   addCourseTypesName.value = "";
 });
-
-setTypeData();
-function setTypeData() {
-  // let data = courseTypesTabs.value;
-  // courseTypesTabs.value = [];
-  // for (let i = 0; i < data.length; i++) {
-  //   const element = data[i];
-  //   courseTypesTabs.value.push({
-  //     lessonTypeId: element.lessonTypeId,
-  //     nameTw: element.nameTw,
-  //     display: element.display,
-  //   });
-  // }
-}
 
 //新增分類--確認
 let confirmShowAddForm = () => {
@@ -227,6 +170,45 @@ let editCourseTypeHdr = (index: number, item: any) => {
     input?.focus();
   }, 10);
 };
+//-------------------------------------form驗證
+const ruleLists: any = reactive({
+  ruleItem: {
+    name: {
+      label: "名稱",
+      component: "input",
+      type: "number",
+      is_readonly: false,
+      value: "",
+      rules: {
+        required: {
+          warn: "此項為必填",
+        },
+        length: {
+          max: 9,
+          warn: "不高於9字",
+        },
+      },
+      is_error: false,
+      warn: "",
+      is_show: true,
+    },
+  },
+});
+let { ruleItem } = toRefs(ruleLists);
+const verify_all = () => {
+  let is_valid = true;
+  for (let component in ruleLists.ruleItem) {
+    let item = ruleLists.ruleItem[component];
+    for (let rule in item.rules) {
+      if (!verify_methods[rule](item)) {
+        is_valid = false;
+        break;
+      }
+    }
+  }
+  return is_valid;
+};
+//-------------------------------------------------------------------
 </script>
 
 <style lang="scss" scoped>

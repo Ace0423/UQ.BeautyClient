@@ -267,8 +267,8 @@ let filterTypesTabs: any = computed(() =>
     return value.pgId > 0;
   })
 );
-
-onMounted(() => {
+onBeforeFn();
+function onBeforeFn() {
   formInputRef.value.NameNo = props.formInfo.value.pCode;
   formInputRef.value.name = props.formInfo.value.pName;
   formInputRef.value.msg = props.formInfo.value.memo;
@@ -280,7 +280,9 @@ onMounted(() => {
   formInputRef.value.GoodsTypeId = props.formInfo.value.groupList[0]
     ? props.formInfo.value.groupList[0].pgId
     : [];
-});
+}
+
+onMounted(() => {});
 
 function countTotalBtn(data: number) {
   console.log(formInputRef.value.total);
@@ -332,7 +334,7 @@ let submitBtn = () => {
       setTimeout(() => {
         props.showUIFn(false);
       }, 1000);
-    } 
+    }
   });
 };
 

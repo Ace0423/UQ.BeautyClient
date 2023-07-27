@@ -232,6 +232,9 @@ const { managerList } = storeToRefs(managerstore);
 const { getManagerList } = managerstore;
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
+const managerStore = useManagerStore();
+const { getWorkingHours } = managerStore;
+const { workingHoursList } = storeToRefs(managerStore);
 /**true:新增 false:修改 */
 onBefore();
 function onBefore() {
@@ -249,6 +252,7 @@ function onBefore() {
         }, 2000);
       }
     });
+  getRestList();
 }
 onMounted(() => {
   newApptDataRef.value.selDate = getNowDay();
@@ -334,10 +338,6 @@ let confirmReserveForm = () => {
   });
 };
 
-const managerStore = useManagerStore();
-const { getWorkingHours } = managerStore;
-const { workingHoursList } = storeToRefs(managerStore);
-getRestList();
 function getRestList() {
   let data = {
     managerId: 0,

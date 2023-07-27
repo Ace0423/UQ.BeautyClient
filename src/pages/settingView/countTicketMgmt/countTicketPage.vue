@@ -81,7 +81,7 @@
               <p>${{ item.ffPrice }}</p>
             </td>
             <td>
-              <button v-on:click="showInfoUIFn(true, item)">
+              <button v-on:click="showInfoUIHdr(true, item)">
                 <img class="edit_img" :src="Icon_edit" />
               </button>
               <button v-on:click="deleteHdr(index, item)">
@@ -96,10 +96,10 @@
   </div>
   <CountTicketInfo
     v-if="showInfoUI"
-    :showInfoUIHdr="showInfoUIFn"
+    :showInfoUIHdr="showInfoUIHdr"
     :selItemData="selData"
   />
-  <AddCountTicket v-if="showAddUI" :showUIFn="showAddUIFn"></AddCountTicket>
+  <AddCountTicket v-if="showAddUI" :showUIFn="showAddUIHdr"></AddCountTicket>
 </template>
 <script setup lang="ts">
 import Icon_edit from "@/assets/images/icon_edit.png";
@@ -114,17 +114,16 @@ const showAddUI = ref(false);
 const showEditUI = ref(false);
 let showInfoUI = ref(false);
 let couponStateValue = ref(-1);
+let selData: any = [];
 let couponStateTabs: any = [
   { label: "所有狀態", value: -1 },
   { label: "啟用中", value: 1 },
   { label: "已停用", value: 0 },
 ];
-getAllDiscountFn();
-
+let search = ref("");
 let filterCTicketListCpt: any = computed(() =>
   countTicketListRef.value.filter(getCTicketListFn)
 );
-let search = ref("");
 function getCTicketListFn(data: any) {
   return (
     (!search.value ||
@@ -132,20 +131,20 @@ function getCTicketListFn(data: any) {
     (couponStateValue.value == -1 || data.ffType == couponStateValue.value)
   );
 }
+onBefore();
+function onBefore() {
+  getAllDiscountFn();
+}
 
-const showAddUIFn = (state: boolean) => {
+const showAddUIHdr = (state: boolean) => {
   showAddUI.value = state;
   getAllDiscountFn();
 };
-const showInfoUIFn = (state: boolean, item: any) => {
+
+const showInfoUIHdr = (state: boolean, item: any) => {
   showInfoUI.value = state;
   selData.value = item;
   // getAllDiscountFn();
-};
-
-const showEditUIFn = (state: boolean) => {
-  showEditUI.value = state;
-  getAllDiscountFn();
 };
 
 function getAllDiscountFn() {
@@ -153,7 +152,6 @@ function getAllDiscountFn() {
     // console.log(countTicketListRef.value);
   });
 }
-let selData: any = [];
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     console.log("確認刪除");
@@ -166,12 +164,7 @@ const onDeleteAlertBtn = (data: any) => {
 //新增
 function showAddFormFn() {
   selData.value = [];
-  showAddUIFn(true);
-}
-//編輯
-function showEditFormFn(index: number, item: any) {
-  selData.value = item;
-  showEditUIFn(true);
+  showAddUIHdr(true);
 }
 //刪除
 let deleteHdr = (index: number, item: any) => {

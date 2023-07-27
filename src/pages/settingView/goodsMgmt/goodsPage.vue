@@ -35,7 +35,7 @@
             <thead>
               <tr>
                 <td v-for="(item, value) in goodsTableThead" :key="item">
-                  <p @click="sorttheadHdr(value)">{{ item }}</p>
+                  <p @click="sorttheadFn(value)">{{ item }}</p>
                 </td>
               </tr>
             </thead>
@@ -104,6 +104,8 @@ let showAddUIRef = ref(false);
 let showEditUIRef = ref(false);
 let showAddTypeRef = ref(false);
 let goodsTableThead = ["產品編號", "產品名稱", "售價(NT)", "上架", "操作"];
+let selItem: any = [];
+let sortUpDown: string = "";
 
 let search = ref("");
 let filterGoodsData: any = computed(() =>
@@ -115,8 +117,8 @@ function getGoodsFn(data: any) {
     data.pName.toLowerCase().includes(search.value.toLowerCase())
   );
 }
-setTableFn();
-function setTableFn() {
+onBeforeFn();
+function onBeforeFn() {
   getGoodsTypeApi().then((res: any) => {
     getGoodsDetailApi(
       goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
@@ -153,7 +155,6 @@ const onDeleteAlertBtn = (data: any) => {
 };
 
 //編輯
-let selItem: any = [];
 function showEditFormFn(index: number, item: any) {
   selItem.value = item;
   showEditDetailUIHdr(true);
@@ -164,8 +165,7 @@ let changeTab = (index: number, item: any) => {
   getGoodsDetailApi(item.pgId, 0);
 };
 //排序明細
-let sortUpDown: string = "";
-function sorttheadHdr(name: number) {
+function sorttheadFn(name: number) {
   let nameGroup = ["nameTw", "servicesTime", "price", "display"];
   let sortName = nameGroup[name];
   if (sortName)
@@ -182,7 +182,7 @@ function sorttheadHdr(name: number) {
     }
 }
 //改變狀態
-let updataStutusFn = (index: number, item: any) => {
+function updataStutusFn(index: number, item: any) {
   let curdata: any = {
     pId: item.pId,
     pCode: item.pCode,
@@ -214,7 +214,7 @@ let updataStutusFn = (index: number, item: any) => {
     goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
     0
   );
-};
+}
 </script>
 
 <style lang="scss" scoped>

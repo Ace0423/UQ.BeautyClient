@@ -66,7 +66,7 @@
                 disabled="false"
               />
             </div>
-          </div >
+          </div>
           <div class="input-item" v-if="formInputRef.ffServiceId != 0">
             <div>
               <span>販售價格</span>
@@ -283,8 +283,7 @@ let showAddItemMenuUIRef: any = ref(false);
 let showAddServicesUIRef: any = ref(false);
 let showGoodsUIRef: any = ref(false);
 let showServiceUIRef: any = ref(false);
-let selGoodsGroupRef: any = ref([]);
-let selServiceGroupRef: any = ref([]);
+let itemTypeRef: any = ref(0);
 let content = [
   {
     id: 0,
@@ -325,23 +324,6 @@ let selDays = [
     name: "180天",
   },
 ];
-let discountType = [
-  {
-    id: 1,
-    name: "折扣佔比(%)",
-  },
-  {
-    id: 2,
-    name: "折讓金額($)",
-  },
-  {
-    id: 3,
-    name: "免費",
-  },
-];
-onMounted(() => {
-  // console.log('onMounted');
-});
 let formInputRef: any = ref({
   name: "",
   msg: "",
@@ -359,8 +341,61 @@ let formInputRef: any = ref({
   giftGoods: [],
 });
 
-var date = new Date();
+onBeforeFn();
+function onBeforeFn() {
+  formInputRef.value.name = props.selItemData.value.ffTitle;
+  formInputRef.value.msg = props.selItemData.value.ffContext;
+  formInputRef.value.imgUrl = props.selItemData.value.ffImage;
+  formInputRef.value.ffServiceId = props.selItemData.value.ffServiceId;
+  formInputRef.value.limitTotal = props.selItemData.value.ffLimit;
+  formInputRef.value.ffPrice = props.selItemData.value.ffPrice;
+  formInputRef.value.ffDateType = props.selItemData.value.ffDateType;
+  formInputRef.value.days = props.selItemData.value.ffDateOfUsedDay;
+  formInputRef.value.startDate = props.selItemData.value.ffSdt;
+  formInputRef.value.endDate = props.selItemData.value.ffEdt;
 
+  //取服務資料
+  getCourseDetailApi().then((res: any) => {
+    //計次項目
+    for (let i = 0; i < courseDataList.value.length; i++) {
+      const element = courseDataList.value[i];
+      if (element.lessonId == props.selItemData.value.ffServiceId) {
+        formInputRef.value.oldPrice = element.price;
+        formInputRef.value.ffServiceItem = element;
+      }
+      //贈送服務
+      let curGiftServices = props.selItemData.value.forFreeCardMapServices;
+      for (let j = 0; j < curGiftServices.length; j++) {
+        const eleGiftServices = curGiftServices[j];
+        if (eleGiftServices.lid == element.lessonId) {
+          element.giftTotal = eleGiftServices.lCount;
+          formInputRef.value.giftServices.push(element);
+          break;
+        }
+      }
+    }
+  });
+  //取贈送商品資料
+  getGoodsDetailApi().then((res: any) => {
+    for (let i = 0; i < goodsDetailListRef.value.length; i++) {
+      let curGiftGoods = props.selItemData.value.forFreeCardMapProducts;
+      const element = goodsDetailListRef.value[i];
+      for (let j = 0; j < curGiftGoods.length; j++) {
+        const eleGiftGoods = curGiftGoods[j];
+        if (eleGiftGoods.pid == element.pId) {
+          element.giftTotal = eleGiftGoods.pCount;
+          formInputRef.value.giftGoods.push(element);
+          break;
+        }
+      }
+    }
+  });
+}
+onMounted(() => {
+  // console.log('onMounted');
+});
+
+var date = new Date();
 formInputRef.value.startDate =
   date.getFullYear() +
   "-" +
@@ -374,72 +409,6 @@ formInputRef.value.endDate =
   "-" +
   formatZeroDate(date.getDate());
 
-setDataFn();
-function setDataFn() {
-  formInputRef.value.name = props.selItemData.value.ffTitle;
-  formInputRef.value.msg = props.selItemData.value.ffContext;
-  formInputRef.value.imgUrl = props.selItemData.value.ffImage;
-  formInputRef.value.ffServiceId = props.selItemData.value.ffServiceId;
-  formInputRef.value.limitTotal = props.selItemData.value.ffLimit;
-  formInputRef.value.ffPrice = props.selItemData.value.ffPrice;
-  formInputRef.value.ffDateType = props.selItemData.value.ffDateType;
-  formInputRef.value.days = props.selItemData.value.ffDateOfUsedDay;
-  formInputRef.value.startDate = props.selItemData.value.ffSdt;
-  formInputRef.value.endDate = props.selItemData.value.ffEdt;
-}
-//取服務資料
-getCourseDetailApi().then((res: any) => {
-  //計次項目
-  for (let i = 0; i < courseDataList.value.length; i++) {
-    const element = courseDataList.value[i];
-    if (element.lessonId == props.selItemData.value.ffServiceId) {
-      formInputRef.value.oldPrice = element.price;
-      formInputRef.value.ffServiceItem = element;
-    }
-    //贈送服務
-    let curGiftServices = props.selItemData.value.forFreeCardMapServices;
-    for (let j = 0; j < curGiftServices.length; j++) {
-      const eleGiftServices = curGiftServices[j];
-      if (eleGiftServices.lid == element.lessonId) {
-        element.giftTotal = eleGiftServices.lCount;
-        formInputRef.value.giftServices.push(element);
-        break;
-      }
-    }
-  }
-});
-//取贈送商品資料
-getGoodsDetailApi().then((res: any) => {
-  for (let i = 0; i < goodsDetailListRef.value.length; i++) {
-    let curGiftGoods = props.selItemData.value.forFreeCardMapProducts;
-    const element = goodsDetailListRef.value[i];
-    for (let j = 0; j < curGiftGoods.length; j++) {
-      const eleGiftGoods = curGiftGoods[j];
-      if (eleGiftGoods.pid == element.pId) {
-        element.giftTotal = eleGiftGoods.pCount;
-        formInputRef.value.giftGoods.push(element);
-        break;
-      }
-    }
-  }
-});
-
-function showMemberUIFn(state: boolean) {
-  showMemberUIRef.value = state;
-}
-function showServicesUIFn(state: boolean) {
-  showAddServicesUIRef.value = state;
-}
-function showItemMenuUIFn(state: boolean) {
-  showAddItemMenuUIRef.value = state;
-}
-function getMembersFn(data: any) {
-  formInputRef.value.memberInfo = data;
-}
-function countCoustomerFn(data: number) {
-  if (formInputRef.value.customerTotal + data > 0)
-    formInputRef.value.customerTotal += data;
-}
 function submitBtn() {
   console.log("提交formInputRef", formInputRef.value);
 
@@ -493,9 +462,6 @@ function submitBtn() {
     }
   });
 }
-function updateImgUrl() {
-  console.log("更新圖片");
-}
 function changeValue() {
   console.log(formInputRef.value);
 }
@@ -505,8 +471,6 @@ function showGoodsUIFn(state: boolean) {
 function getGoodsFn(data: any) {
   console.log(data, "獲取");
   formInputRef.value.giftGoods = data;
-  // selGoodsGroupRef.value = data;
-  // props.showAddUIFn(false);
 }
 function showServiceUIFn(state: boolean) {
   showServiceUIRef.value = state;
@@ -523,11 +487,9 @@ function getRadioServiceFn(data: any) {
   formInputRef.value.oldPrice = "$" + data.price;
 }
 function cancleServiceFn(item: any, index: number) {
-  // selServiceGroupRef.value.splice(index, 1);
   formInputRef.value.giftServices.value.splice(index, 1);
 }
 function cancleGoodsFn(item: any, index: number) {
-  // selGoodsGroupRef.value.splice(index, 1);
   formInputRef.value.giftGoods.value.splice(index, 1);
 }
 function countTotalBtn(data: number, item: any) {
@@ -538,7 +500,6 @@ function countLimitTotalBtn(data: number) {
     formInputRef.value.limitTotal += data;
 }
 //1:服務，2:商品，
-let itemTypeRef: any = ref(0);
 function showItemTypeFn(type: number) {
   itemTypeRef.value = type;
 }

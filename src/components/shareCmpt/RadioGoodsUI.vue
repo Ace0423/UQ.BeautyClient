@@ -72,8 +72,8 @@ let formInputRef: any = ref({
   goods: null,
 });
 
-setData();
-function setData() {
+onBeforeFn();
+function onBeforeFn() {
   getGoodsDetailApi(0, 0);
 }
 

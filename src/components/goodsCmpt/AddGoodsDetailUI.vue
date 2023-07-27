@@ -231,7 +231,6 @@ let { goodsTypesListRef } = storeToRefs(store);
 let { addGoodsDetailApi } = store;
 const props = defineProps<{
   showAddUIFn: Function;
-  //   addDetailTypeID?: any;
 }>();
 let unitGroup: string[] = [
   "不選擇",
@@ -267,8 +266,8 @@ let filterTypesTabs: any = computed(() =>
     return value.pgId > 0;
   })
 );
-
-onMounted(() => {
+onBeforeFn();
+function onBeforeFn() {
   formInputRef.value.name = "";
   formInputRef.value.unit = "";
   formInputRef.value.capacity = "";
@@ -279,7 +278,9 @@ onMounted(() => {
   formInputRef.value.total = 0;
   formInputRef.value.state = 0;
   formInputRef.value.msg = "";
-});
+}
+
+onMounted(() => {});
 
 function countTotalBtn(data: number) {
   if (!formInputRef.value.total) formInputRef.value.total = 0;
@@ -327,12 +328,12 @@ let submitBtn = () => {
   /**新增明細 */
   addGoodsDetailApi(curdata).then((res: any) => {
     if (res.state == 1) {
-        Alert.sussess("成功", 1000);
+      Alert.sussess("成功", 1000);
       setTimeout(() => {
         props.showAddUIFn(false);
       }, 1000);
     } else {
-        Alert.warning(showErrorMsg(res.msg), 1000);
+      Alert.warning(showErrorMsg(res.msg), 1000);
     }
   });
 };

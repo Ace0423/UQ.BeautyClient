@@ -159,18 +159,10 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from "pinia";
-import { usePriceStore } from "@/stores/priceStore";
-import search_ico from "@/assets/images/icon_search.png";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_customer from "@/assets/images/icon_customer.png";
 import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
 import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
-
-let store = usePriceStore();
-let { allDiscountList } = storeToRefs(store);
-let { getAllDiscountApi } = store;
-
 const props = defineProps<{
   showUIFn: Function;
   //   formInfo: any;
@@ -178,9 +170,6 @@ const props = defineProps<{
 }>();
 let showMemberUIRef = ref(false);
 let showAddItemMenuUIRef = ref(false);
-let showAddServicesUIRef = ref(false);
-
-let selectIItemRef = ref([]);
 onMounted(() => {
   // console.log('onMounted');
 });
@@ -195,9 +184,6 @@ let formInputRef: any = ref({
 
 function showMemberUIFn(state: boolean) {
   showMemberUIRef.value = state;
-}
-function showServicesUIFn(state: boolean) {
-  showAddServicesUIRef.value = state;
 }
 function showItemMenuUIFn(state: boolean) {
   showAddItemMenuUIRef.value = state;

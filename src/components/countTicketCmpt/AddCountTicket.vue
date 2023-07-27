@@ -254,32 +254,22 @@
 import { storeToRefs } from "pinia";
 import { usePriceStore } from "@/stores/priceStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
-import icon_ticket from "@/assets/images/icon_cancle.png";
 import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
 import icon_plus from "@/assets/images/icon_plus.png";
 import icon_minus from "@/assets/images/icon_minus.png";
-import icon_customer from "@/assets/images/icon_customer.png";
-import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
 import { formatZeroDate } from "@/utils/utils";
 import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 
 let store = usePriceStore();
-let {  } = storeToRefs(store);
+let {} = storeToRefs(store);
 let { addCountTicketApi } = store;
 
 const props = defineProps<{
   showUIFn: Function;
-  //   formInfo: any;
-  //   addDetailTypeID?: any;
 }>();
-let showMemberUIRef: any = ref(false);
-let showAddItemMenuUIRef: any = ref(false);
-let showAddServicesUIRef: any = ref(false);
 let showGoodsUIRef: any = ref(false);
 let showServiceUIRef: any = ref(false);
-let selGoodsGroupRef: any = ref([]);
-let selServiceGroupRef: any = ref([]);
 let content = [
   {
     id: 0,
@@ -320,23 +310,6 @@ let selDays = [
     name: "180天",
   },
 ];
-let discountType = [
-  {
-    id: 1,
-    name: "折扣佔比(%)",
-  },
-  {
-    id: 2,
-    name: "折讓金額($)",
-  },
-  {
-    id: 3,
-    name: "免費",
-  },
-];
-onMounted(() => {
-  // console.log('onMounted');
-});
 let formInputRef: any = ref({
   name: "",
   msg: "",
@@ -354,8 +327,10 @@ let formInputRef: any = ref({
   giftGoods: [],
 });
 
+onMounted(() => {
+  // console.log('onMounted');
+});
 var date = new Date();
-
 formInputRef.value.startDate =
   date.getFullYear() +
   "-" +
@@ -368,23 +343,6 @@ formInputRef.value.endDate =
   formatZeroDate(date.getMonth() + 1) +
   "-" +
   formatZeroDate(date.getDate());
-
-function showMemberUIFn(state: boolean) {
-  showMemberUIRef.value = state;
-}
-function showServicesUIFn(state: boolean) {
-  showAddServicesUIRef.value = state;
-}
-function showItemMenuUIFn(state: boolean) {
-  showAddItemMenuUIRef.value = state;
-}
-function getMembersFn(data: any) {
-  formInputRef.value.memberInfo = data;
-}
-function countCoustomerFn(data: number) {
-  if (formInputRef.value.customerTotal + data > 0)
-    formInputRef.value.customerTotal += data;
-}
 function submitBtn() {
   console.log("提交formInputRef", formInputRef.value);
 
@@ -438,9 +396,6 @@ function submitBtn() {
     }
   });
 }
-function updateImgUrl() {
-  console.log("更新圖片");
-}
 function changeValue() {
   console.log(formInputRef.value);
 }
@@ -450,15 +405,12 @@ function showGoodsUIFn(state: boolean) {
 function getGoodsFn(data: any) {
   console.log(data, "獲取");
   formInputRef.value.giftGoods = data;
-  // selGoodsGroupRef.value = data;
-  // props.showAddUIFn(false);
 }
 function showServiceUIFn(state: boolean) {
   showServiceUIRef.value = state;
 }
 function getSelServiceFn(data: any) {
   console.log(data, "獲取");
-  // selServiceGroupRef.value = data;
   formInputRef.value.giftServices = data;
 }
 function getRadioServiceFn(data: any) {
@@ -468,11 +420,9 @@ function getRadioServiceFn(data: any) {
   formInputRef.value.oldPrice = "$" + data.price;
 }
 function cancleServiceFn(item: any, index: number) {
-  // selServiceGroupRef.value.splice(index, 1);
   formInputRef.value.giftServices.value.splice(index, 1);
 }
 function cancleGoodsFn(item: any, index: number) {
-  // selGoodsGroupRef.value.splice(index, 1);
   formInputRef.value.giftGoods.value.splice(index, 1);
 }
 function countTotalBtn(data: number, item: any) {

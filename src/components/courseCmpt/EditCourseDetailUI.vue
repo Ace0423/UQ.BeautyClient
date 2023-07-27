@@ -133,36 +133,14 @@
       </div>
     </div>
   </div>
-  <Alert
-    v-if="alertInformation.showAlert"
-    :alertInformation="alertInformation"
-    :handAlertView="handAlertView"
-  ></Alert>
 </template>
 <script setup lang="ts">
 import { useApptStore } from "@/stores/apptStore";
-import { showErrorMsg } from "@/types/IMessage";
 import { verify_methods } from "@/utils/utils";
-import type { FormRules } from "element-plus";
 import { storeToRefs } from "pinia";
 let store = useApptStore();
 let { courseTypesTabs } = storeToRefs(store);
 const { updateCourseDetailApi, getCourseDetailApi } = store;
-//alertUI
-const alertInformation = reactive({
-  selfData: {},
-  selfType: "",
-  messageText: "", // 提示內容
-  buttonState: 2, //按鈕顯示狀態 0:全部 1:只顯示確定按鈕 2:不顯示按鈕
-  timerVal: 2, //時間計時器
-  showAlert: false, //顯示
-});
-const handAlertView = (msg: string, btnState: number, timer: number) => {
-  alertInformation.messageText = msg;
-  alertInformation.buttonState = btnState;
-  alertInformation.timerVal = timer;
-  alertInformation.showAlert = !alertInformation.showAlert;
-};
 const formInputRef: any = ref({
   userId: 0,
   email: "",
@@ -185,14 +163,17 @@ let filterTypesTabs: any = computed(() =>
   })
 );
 
-if (props.editCourseInfo) {
-  formInputRef.value.nameTw = props.editCourseInfo.nameTw;
-  formInputRef.value.servicesTime = props.editCourseInfo.servicesTime;
-  formInputRef.value.lessonTypeId = props.editCourseInfo.lessonTypeId;
-  formInputRef.value.price = props.editCourseInfo.price;
-  formInputRef.value.state = props.editCourseInfo.display;
-  formInputRef.value.isBonusOpen = props.editCourseInfo.isBonusOpen;
-  formInputRef.value.isEditAccounting = props.editCourseInfo.isEditAccounting;
+onBeforeFn();
+function onBeforeFn() {
+  if (props.editCourseInfo) {
+    formInputRef.value.nameTw = props.editCourseInfo.nameTw;
+    formInputRef.value.servicesTime = props.editCourseInfo.servicesTime;
+    formInputRef.value.lessonTypeId = props.editCourseInfo.lessonTypeId;
+    formInputRef.value.price = props.editCourseInfo.price;
+    formInputRef.value.state = props.editCourseInfo.display;
+    formInputRef.value.isBonusOpen = props.editCourseInfo.isBonusOpen;
+    formInputRef.value.isEditAccounting = props.editCourseInfo.isEditAccounting;
+  }
 }
 
 onMounted(() => {});

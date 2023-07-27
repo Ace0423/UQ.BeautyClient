@@ -8,7 +8,7 @@
         :handmemuStateBtn="props.handmemuStateBtn"
       ></Header>
       <div class="top_menu">
-        <img @click="showAddDetailForm(true)" :src="icon_add" />
+        <img @click="showAddDetailFn(true)" :src="icon_add" />
       </div>
     </div>
     <div class="customer-top">
@@ -23,34 +23,23 @@
             {{ item.nameTw }}
           </button>
         </div>
-        <!-- <div class="addcoursetype-btn">
-          <div class="btn-open" @click="showAddForm(true)">分類管理</div>
-        </div> -->
       </div>
       <div class="course_table">
         <div class="header-tab">
           <p>課程(全部{{ filterCourseData.length }}個)</p>
           <input v-model="search" placeholder="搜尋產品" />
-          <!-- <div
-            class="btn-open"
-            v-if="courseTypesTabsValue != 0"
-            @click="showAddDetailForm(true)"
-          >
-            新增課程
-          </div> -->
-          <div class="btn-open" @click="showAddForm(true)">分類管理</div>
+          <div class="btn-open" @click="showAddUIHdr(true)">分類管理</div>
         </div>
         <table>
           <thead>
             <tr>
               <td v-for="(item, value) in coursetitle" :key="item">
-                <p @click="sortthradHdr(value)">{{ item }}</p>
+                <p @click="sortthradFn(value)">{{ item }}</p>
               </td>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(item, index) in filterCourseData" :key="item.lessonId">
-              <!-- <td><img :src="item.img" /></td> -->
               <td>
                 <p>{{ item.nameTw }}</p>
               </td>
@@ -61,8 +50,6 @@
                 <p>{{ item.price }}</p>
               </td>
               <td>
-                <!-- <p>{{ item.display ? '1' : '0' }}</p> -->
-
                 <div class="checked_state">
                   <input
                     class="checked_status"
@@ -71,13 +58,13 @@
                     value=""
                     :id="item.lessonId"
                     :checked="item.display == true"
-                    v-on:click="changeStutusFn(index, item)"
+                    v-on:click="changeStutusHdr(index, item)"
                   />
                   <label :for="item.lessonId"></label>
                 </div>
               </td>
               <td>
-                <button v-on:click="showEditFormBtn(index, item)">
+                <button v-on:click="showEditUIFn(index, item)">
                   <img class="edit_img" :src="Icon_edit" />
                 </button>
                 <button v-on:click="deleteHdr(index, item.lessonId)">
@@ -89,25 +76,19 @@
         </table>
       </div>
     </div>
-    <AddCourseTypeUI v-if="showAddType" :show-add-form="showAddForm" />
+    <AddCourseTypeUI v-if="showAddType" :show-add-form="showAddUIHdr" />
     <AddCourseDetailUI
       v-if="showCourseFormRef"
-      :showAddDetailForm="showAddDetailForm"
+      :showAddDetailForm="showAddDetailFn"
       :filterCourseData="filterCourseData"
       :addDetailTypeID="addDetailTypeID"
     />
     <EditCourseDetailUI
       v-if="showEditCourse"
-      :show-edit-form="showEditForm"
+      :show-edit-form="showEditUI"
       :edit-course-info="editCourseInfo"
     />
   </div>
-  <Alert
-    v-if="alertInformation.showAlert"
-    :alert-information="alertInformation"
-    :hand-alert-view="handAlertView"
-    @callbackBtn="btnSumitHdr"
-  ></Alert>
 </template>
 
 <script lang="ts" setup>
@@ -121,48 +102,8 @@ import type { IBackStatus } from "@/types/IData";
 import { useApptStore } from "@/stores/apptStore";
 import { showErrorMsg } from "@/types/IMessage";
 import icon_add from "@/assets/images/icon_add.png";
-const props = defineProps<{
-  memuState: any;
-  handmemuStateBtn: Function;
-}>();
-let search = ref("");
-let showAddType = ref(false);
-
-let showCourseFormRef = ref(false);
-let coursetitle = ["產品名稱", "服務時長(Min)", "售價(NT)", "上架", "操作"];
-
-const handAlertView = (msg: string, btnState: number, timer: number) => {
-  alertInformation.messageText = msg;
-  alertInformation.buttonState = btnState;
-  alertInformation.timerVal = timer;
-  alertInformation.showAlert = !alertInformation.showAlert;
-};
-
-const alertInformation = reactive({
-  selfData: {},
-  selfType: "",
-  messageText: "是否刪除", // 提示內容
-  buttonState: 0, //按鈕顯示狀態 0:全部 1:只顯示確定按鈕 2:不顯示按鈕
-  timerVal: 0, //時間計時器
-  showAlert: false, //時間計時器
-});
-
-const btnSumitHdr = (val: IBackStatus) => {
-  switch (alertInformation.selfType) {
-    case "delCourseDetail":
-      if (val.btnStatus) {
-        delCourseDetailApi(alertInformation.selfData).then((res: any) => {});
-      } else {
-        console.log(val.btnStatus, "取消");
-      }
-      break;
-
-    default:
-      break;
-  }
-  alertInformation.showAlert = false;
-};
-
+import Alert from "@/components/alertCmpt";
+import { ElScrollbar } from "element-plus";
 let store = useApptStore();
 let { courseTypesTabs, courseDataList, courseTypesTabsValue } =
   storeToRefs(store);
@@ -170,11 +111,22 @@ let {
   getCourseTypeApi,
   delCourseTypeApi,
   getCourseDetailApi,
-  addCourseTypeApi,
-  addCourseDetailApi,
   delCourseDetailApi,
   updateCourseDetailApi,
 } = store;
+const props = defineProps<{
+  memuState: any;
+  handmemuStateBtn: Function;
+}>();
+
+let search = ref("");
+let showAddType = ref(false);
+let showCourseFormRef = ref(false);
+let coursetitle = ["產品名稱", "服務時長(Min)", "售價(NT)", "上架", "操作"];
+courseDataList.value = [];
+let showEditCourse: any = ref(false);
+let editCourseInfo: any = ref([]);
+let sortUpDown: string = "";
 let filterCourseData: any = computed(() =>
   courseDataList.value.filter(getCourseFn)
 );
@@ -188,27 +140,27 @@ let addDetailTypeID = computed(() =>
   Number(courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId)
 );
 
-courseDataList.value = [];
-getCourseTypeApi(0);
+let changeTab = (index: number, item: any) => {
+  courseTypesTabsValue.value = index;
+  getCourseDetailApi(item.lessonTypeId, 0);
+};
+onBefore();
+function onBefore() {
+  getCourseTypeApi(0);
+}
 onMounted(() => {});
 
 watchEffect(() => {
   courseTypesTabs.value;
 });
 
-// }
-
-let changeTab = (index: number, item: any) => {
-  courseTypesTabsValue.value = index;
-  getCourseDetailApi(item.lessonTypeId, 0);
-};
 //刪除類型
 let delCourseTypeHdr = (index: number, itemId: number) => {
   delCourseTypeApi(itemId);
 };
 
 //改變課程狀態
-let changeStutusFn = (index: number, item: any) => {
+let changeStutusHdr = (index: number, item: any) => {
   let curdata: any = {
     lessonId: item.lessonId,
     lessonTypeId: item.lessonTypeId,
@@ -228,23 +180,22 @@ let changeStutusFn = (index: number, item: any) => {
     }, 1000);
   });
 };
-let alertSumit: boolean = false;
 //刪除課程
 let deleteHdr = (index: number, itemId: number) => {
-  alertInformation.selfType = "delCourseDetail";
-  alertInformation.selfData = itemId;
-  handAlertView("是否刪除", 0, 0);
-  // delCourseDetailApi(itemId);
+  Alert.check("是否刪除", 1000, (data: any) => {
+    if (data) {
+      delCourseDetailApi(itemId).then((res: any) => {});
+    } else {
+    }
+  });
 };
 
-let showEditCourse: any = ref(false);
-let editCourseInfo: any = ref([]);
-function showEditFormBtn(index: number, item: any) {
+function showEditUIFn(index: number, item: any) {
   editCourseInfo.value = item;
-  showEditForm(true);
+  showEditUI(true);
 }
 
-function showEditForm(state: boolean) {
+function showEditUI(state: boolean) {
   showEditCourse.value = state;
   getCourseDetailApi(
     courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
@@ -252,18 +203,17 @@ function showEditForm(state: boolean) {
   );
 }
 //新增分類-顯示
-let showAddForm = (state: boolean) => {
+let showAddUIHdr = (state: boolean) => {
   showAddType.value = state;
   getCourseTypeApi(0);
 };
 
 //新增課程-顯示
-let showAddDetailForm = (state: boolean) => {
+let showAddDetailFn = (state: boolean) => {
   showCourseFormRef.value = state;
 };
-let sortUpDown: string = "";
 //排序明細
-function sortthradHdr(name: number) {
+function sortthradFn(name: number) {
   let nameGroup = ["nameTw", "servicesTime", "price", "display"];
   let sortName = nameGroup[name];
   if (sortName)

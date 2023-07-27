@@ -41,7 +41,7 @@
           <div class="main-content" v-if="infoListRef == 1">
             <p>建立時間</p>
             <!-- <span>{{ selItemData.value.dateCreate.replace("T", " , ") }}</span> -->
-            <span v-if="addTime">{{ addTime[0]+":"+addTime[1] }}</span>
+            <span v-if="addTime">{{ addTime[0] + ":" + addTime[1] }}</span>
 
             <p>使用期限</p>
             <!-- <span>{{ selItemData.value.ffDateOfUsedDay }}</span> -->
@@ -140,7 +140,6 @@
 import { storeToRefs } from "pinia";
 import { usePriceStore } from "@/stores/priceStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
-import icon_ticket from "@/assets/images/icon_cancle.png";
 import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 import { useApptStore } from "@/stores/apptStore";
@@ -150,33 +149,18 @@ let { selectCountTicketRef } = storeToRefs(store);
 let { updateCountTicketApi, getCountTicketApi } = store;
 
 let storeAppt = useApptStore();
-let { courseDataList, goodsDetailListRef } = storeToRefs(storeAppt);
-let { getCourseDetailApi, getGoodsDetailApi } = storeAppt;
+let { courseDataList } = storeToRefs(storeAppt);
+let { getCourseDetailApi } = storeAppt;
 
-const simpleView = ref(true);
 let showEditUI = ref(false);
-const currentIndex = ref(2);
 const infoListRef = ref(1);
-const memberDetailData: any = reactive({
-  accountBalance: 0,
-  recentConsumption: { amount: "-", date: "-" },
-  recentDeposit: { amount: "-", date: "-" },
-});
 const props = defineProps<{
   selItemData: any;
   showInfoUIHdr: Function;
 }>();
 let addTime = ref("");
 props.selItemData.value.dateCreate = "";
-getCountTicketApi(props.selItemData.value.ffId, 0).then((res: any) => {
-  props.selItemData.value.dateCreate = selectCountTicketRef.value[0].dateCreate;
-  addTime.value = selectCountTicketRef.value[0].dateCreate
-    .replace("T", ",  ")
-    .split(":");
-});
-onMounted(() => {
-  // getmemberInfoApi();
-});
+let serviceItem: any = ref({});
 
 let filteItemData: any = computed(() => {
   let curData: any = "";
@@ -193,9 +177,20 @@ let filteItemData: any = computed(() => {
 
   return curData.substring(0, curData.length - 1);
 });
-
+onBeforeFn();
+function onBeforeFn() {
+  getCountTicketApi(props.selItemData.value.ffId, 0).then((res: any) => {
+    props.selItemData.value.dateCreate =
+      selectCountTicketRef.value[0].dateCreate;
+    addTime.value = selectCountTicketRef.value[0].dateCreate
+      .replace("T", ",  ")
+      .split(":");
+  });
+}
+onMounted(() => {
+  // getmemberInfoApi();
+});
 //取服務資料
-let serviceItem: any = ref({});
 getCourseDetailApi().then((res: any) => {
   //計次項目
   for (let i = 0; i < courseDataList.value.length; i++) {
@@ -219,16 +214,6 @@ function updateCoupon() {
   apiData.ffType = apiData.ffType == 0 ? 1 : 0;
   apiData.serviceMaps = apiData.forFreeCardMapServices;
   apiData.productMaps = apiData.forFreeCardMapProducts;
-  // for (let i = 0; i < apiData.forFreeCardMapServices.length; i++) {
-  //   const element = apiData.forFreeCardMapServices[i];
-  //   apiData.serviceMaps.push({ lid: element.lid, lCount: element.lCount });
-  // }
-  // for (let i = 0; i < apiData.forFreeCardMapProducts.length; i++) {
-  //   const element = apiData.forFreeCardMapProducts[i];
-  //   apiData.productMaps.push({ pid: element.pid, pCount: element.pCount });
-  // }
-  // delete apiData.forFreeCardMapServices;
-  // delete apiData.forFreeCardMapProducts;
 
   /**更新 */
   updateCountTicketApi(apiData).then((res: any) => {

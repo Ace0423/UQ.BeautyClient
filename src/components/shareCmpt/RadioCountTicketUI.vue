@@ -30,8 +30,6 @@
   
   const props = defineProps<{
     showCountTicketUIFn: Function;
-    //   formInfo: any;
-    //   addDetailTypeID?: any;
   }>();
   
   onMounted(() => {

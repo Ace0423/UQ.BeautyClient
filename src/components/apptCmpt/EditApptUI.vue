@@ -277,14 +277,6 @@ let filterBeauticianCpt: any = computed(() => {
   }
   return curBeautician;
 });
-
-function getNowDay() {
-  let datetime = new Date();
-  let year = datetime.getFullYear();
-  let month = (datetime.getMonth(), 1);
-  let date = datetime.getDate();
-  return `${year}-${month}-${date}`;
-}
 //預約--確認
 let confirmReserveForm = () => {
   ruleLists.ruleItem.name.value = newApptDataRef.value.memberId;
@@ -319,13 +311,6 @@ let confirmReserveForm = () => {
     }
   });
 };
-function resetAddReserveForm() {
-  newApptDataRef.value.courses = [];
-  newApptDataRef.value.memberId = null;
-  newApptDataRef.value.timeBooking = null;
-  newApptDataRef.value.beauticianId = 0;
-  newApptDataRef.value.selDate = newApptDataRef.value.selDate;
-}
 </script>
 
 <style lang="scss" scoped>

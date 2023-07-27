@@ -8,38 +8,6 @@
         <p>已選擇({{ formInputRef.groups.length }})項服務</p>
         <input v-model="formInputRef.search" />
         <div class="div-item">
-          <!-- <div>
-            <label class="label-group">
-              <input
-                class="input-group"
-                type="checkbox"
-                id="lessonTypeId"
-                value="item"
-                v-model="clickServicesGroupRef"
-                @click="clickServicesGroup"
-              />
-              <label for="lessonTypeId"></label>
-              <span> 全選(課程) </span>
-            </label>
-          </div>
-          <div v-for="item in filterCourseTypesData" :key="item">
-            <label class="label-item" :value="item">
-              <input
-                class="input-item"
-                type="checkbox"
-                :id="item.lessonTypeId"
-                :value="item.lessonTypeId"
-                v-model="formInputRef.service"
-                @click="clickItem"
-              />
-              <label :for="item.lessonTypeId"></label>
-              <div>
-                <span value="{{item}}" name="{{item.nameTw}}">{{
-                  item.nameTw
-                }}</span>
-              </div>
-            </label>
-          </div> -->
           <div>
             <label class="label-group">
               <input
@@ -91,13 +59,12 @@ import search_ico from "@/assets/images/icon_search.png";
 
 let store = useApptStore();
 let { courseTypesTabs, goodsTypesListRef } = storeToRefs(store);
-let { getCourseTypeApi, getGoodsTypeApi } = store;
+let { getGoodsTypeApi } = store;
 
 const props = defineProps<{
   showCGroupsUIFn: Function;
   getDataFn: Function;
   selData: any;
-  //   addDetailTypeID?: any;
 }>();
 let clickServicesGroupRef = ref(false);
 let clickGoodssGroupRef = ref(false);
@@ -108,8 +75,8 @@ let formInputRef: any = ref({
   service: [],
   groups: [],
 });
-setUI();
-function setUI() {
+onBeforeFn();
+function onBeforeFn() {
   // getCourseTypeApi();
   formInputRef.value.groups = [];
   getGoodsTypeApi().then((res: any) => {
@@ -139,18 +106,6 @@ let filterGoodsTypesData: any = computed(() => {
     return item.pgId != 0; // 取得陣列中雙數的物件
   });
 });
-
-function clickServicesGroup() {
-  let curCourse = formInputRef.value.service;
-  if (curCourse.length > 0) {
-    formInputRef.value.service = [];
-  } else {
-    for (let i = 0; i < filterCourseTypesData.value.length; i++) {
-      const element = filterCourseTypesData.value[i];
-      formInputRef.value.service.push(element.lessonTypeId);
-    }
-  }
-}
 function clickGoodssGroup() {
   let curGoods = formInputRef.value.groups;
   if (curGoods.length > 0) {
@@ -173,19 +128,6 @@ function clickItem() {
 }
 
 function submitBtn() {
-  // let curServiceData = [];
-  // for (let i = 0; i < formInputRef.value.service.length; i++) {
-  //   const element = formInputRef.value.service[i];
-  //   for (let j = 0; j < filterCourseTypesData.value.length; j++) {
-  //     const element2 = filterCourseTypesData.value[j];
-  //     let Lid = element2.pId ? element2.pId : element2.lessonId;
-  //     if (Lid == element) {
-  //       element2.giftTotal = 1;
-  //       curServiceData.push(element2);
-  //       break;
-  //     }
-  //   }
-  // }
   let curGoodsData = formInputRef.value.groups;
 
   props.getDataFn(curGoodsData);

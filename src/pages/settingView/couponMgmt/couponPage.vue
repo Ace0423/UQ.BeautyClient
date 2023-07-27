@@ -94,7 +94,7 @@
             </td>
             <td>
               <p v-if="item.ccDiscountType == 1">
-                優惠 {{( item.ccDiscount )/10}} 折
+                優惠 {{ item.ccDiscount / 10 }} 折
               </p>
               <p v-if="item.ccDiscountType == 2">
                 優惠 {{ item.ccDiscount }} 元
@@ -102,7 +102,7 @@
               <p v-if="item.ccDiscountType == 3">免費使用</p>
             </td>
             <td>
-              <button v-on:click="showInfoUIFn(true, item)">
+              <button v-on:click="showInfoUIHdr(true, item)">
                 <img class="edit_img" :src="Icon_edit" />
               </button>
               <button v-on:click="deleteHdr(index, item)">
@@ -116,10 +116,10 @@
   </div>
   <CouponInfoUI
     v-if="showInfoUI"
-    :showInfoUIHdr="showInfoUIFn"
+    :showInfoUIHdr="showInfoUIHdr"
     :selItemData="selData"
   />
-  <AddCouponUI v-if="showAddUI" :showUIFn="showAddUIFn"></AddCouponUI>
+  <AddCouponUI v-if="showAddUI" :showUIFn="showAddUIHdr"></AddCouponUI>
 </template>
 <script setup lang="ts">
 import search_ico from "@/assets/images/icon_search.png";
@@ -142,12 +142,14 @@ let couponTypeTabs: any = [
   { label: "所有優惠方式", value: -1 },
   { label: "折扣佔比(%)", value: 1 },
   { label: "折讓現金($)", value: 2 },
-  { label: "免費", value:  3},
+  { label: "免費", value: 3 },
 ];
 let showAddUI = ref(false);
 let showEditUI = ref(false);
 let showInfoUI = ref(false);
 let search = ref("");
+let selData: any = [];
+let sortState: boolean = false;
 let filterCouponDataCpt: any = computed(() =>
   couponListRef.value.filter(getFilterCouponFn)
 );
@@ -160,27 +162,30 @@ function getFilterCouponFn(data: any) {
       data.ccDiscountType == couponTypeValue.value)
   );
 }
-getCouponFn();
+onBefore();
+function onBefore() {
+  getCouponApi();
+}
 
-const showAddUIFn = (state: boolean) => {
+const showAddUIHdr = (state: boolean) => {
   showAddUI.value = state;
-  getCouponFn();
+  getCouponApi();
 };
-const showInfoUIFn = (state: boolean, item: any) => {
+const showInfoUIHdr = (state: boolean, item: any) => {
   showInfoUI.value = state;
   selData.value = item;
   // getAllDiscountFn();
 };
-
-const showEditUIFn = (state: boolean) => {
-  showEditUI.value = state;
-  getCouponFn();
-};
-
-function getCouponFn() {
-  getCouponApi();
+//新增
+function showAddFormFn() {
+  selData.value = [];
+  showAddUIHdr(true);
 }
-let selData: any = [];
+//刪除
+let deleteHdr = (index: number, item: any) => {
+  selData = item;
+  Alert.check("是否刪除", 1000, onDeleteAlertBtn);
+};
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     console.log("確認刪除");
@@ -190,22 +195,6 @@ const onDeleteAlertBtn = (data: any) => {
   }
   selData.value = [];
 };
-//新增
-function showAddFormFn() {
-  selData.value = [];
-  showAddUIFn(true);
-}
-//編輯
-function showEditFormFn(index: number, item: any) {
-  selData.value = item;
-  showEditUIFn(true);
-}
-//刪除
-let deleteHdr = (index: number, item: any) => {
-  selData = item;
-  Alert.check("是否刪除", 1000, onDeleteAlertBtn);
-};
-let sortState: boolean = false;
 //排序明細
 function sortDataListFn(name: number) {
   let nameGroup = ["ccTitle", "ccOnDate", "ccLimit", "ccType", "ccDiscount"];
@@ -222,7 +211,6 @@ function sortDataListFn(name: number) {
       });
       sortState = !sortState;
     }
-  console.log(couponListRef.value);
 }
 </script>
 
@@ -391,4 +379,3 @@ function sortDataListFn(name: number) {
   }
 }
 </style>
-

@@ -206,29 +206,26 @@ const { getManagerList, postWorkingHours } = managerstore;
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
 /**true:新增 false:修改 */
-
+onBeforeFn();
+function onBeforeFn() {
+  getManagerList({ id: 0, pageindex: 0, count: 0 })
+    .then((res) => {
+      if (res.state == 2) {
+        Alert.warning(showErrorMsg(res.msg), 2000);
+      }
+    })
+    .catch((e: any) => {
+      Alert.warning(showHttpsStatus(e.response.status), 2000);
+      if (e.response.status == 401) {
+        setTimeout(() => {
+          handLogOut();
+        }, 2000);
+      }
+    });
+}
 onMounted(() => {
   newApptDataRef.value.date = getNowDay();
 });
-
-getManagerList({ id: 0, pageindex: 0, count: 0 })
-  .then((res) => {
-    if (res.state == 2) {
-      Alert.warning(showErrorMsg(res.msg), 2000);
-    }
-  })
-  .catch((e: any) => {
-    Alert.warning(showHttpsStatus(e.response.status), 2000);
-    if (e.response.status == 401) {
-      setTimeout(() => {
-        handLogOut();
-      }, 2000);
-    }
-  });
-
-// let filterManagerCpt: any = computed(() => {
-//   return managerList.value.data.roleList[0].roleId == 5;
-// });
 
 let filterManagerCpt: any = computed(() =>
   managerList.value.data.filter(getDataFn)

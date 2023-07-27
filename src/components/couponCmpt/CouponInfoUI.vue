@@ -19,7 +19,7 @@
                 selItemData.value.ccDiscountType == 1 &&
                 selItemData.value.ccDiscount != 0
               "
-              >優惠 {{( 100 - selItemData.value.ccDiscount)/10 + "折" }}
+              >優惠 {{ (100 - selItemData.value.ccDiscount) / 10 + "折" }}
             </span>
             <span v-if="selItemData.value.ccDiscountType == 3"> 免費</span>
             <span class="coupon-theme">{{ selItemData.value.ccTheme }}</span>
@@ -138,27 +138,22 @@ let store = usePriceStore();
 let { selectCouponRef } = storeToRefs(store);
 let { updateCouponApi, getCouponApi } = store;
 
-const simpleView = ref(true);
 let showEditUI = ref(false);
-const currentIndex = ref(2);
 const infoListRef = ref(1);
-const memberDetailData: any = reactive({
-  accountBalance: 0,
-  recentConsumption: { amount: "-", date: "-" },
-  recentDeposit: { amount: "-", date: "-" },
-});
 const props = defineProps<{
   selItemData: any;
   showInfoUIHdr: Function;
 }>();
-console.log(props.selItemData);
 let addTime = ref("");
-getCouponApi(props.selItemData.value.ccId, 0).then((res: any) => {
-  props.selItemData.value.dateCreate = selectCouponRef.value[0].dateCreate;
-  addTime.value = props.selItemData.value.dateCreate
-    .replace("T", " ")
-    .split(":");
-});
+onBeforeFn();
+function onBeforeFn() {
+  getCouponApi(props.selItemData.value.ccId, 0).then((res: any) => {
+    props.selItemData.value.dateCreate = selectCouponRef.value[0].dateCreate;
+    addTime.value = props.selItemData.value.dateCreate
+      .replace("T", " ")
+      .split(":");
+  });
+}
 onMounted(() => {
   // getmemberInfoApi();
 });
@@ -290,7 +285,7 @@ function updateCoupon() {
             font-size: 20px;
             align-items: baseline;
           }
-          .coupon-theme{
+          .coupon-theme {
             color: #84715c;
             font-weight: bold;
           }

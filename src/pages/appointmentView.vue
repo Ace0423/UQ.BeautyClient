@@ -691,7 +691,7 @@ function getApptInfoFn(
             "<br>" +
             element.timer +
             " Min",
-          titleMonth: "" + element.customer + "" + element.lesson,
+          titleMonth: "" + element.customer + " - " + element.lesson,
           category: "time",
           dueDateClass: "",
           start: element.dateBooking,
@@ -1320,7 +1320,6 @@ function getRestList() {
         }, 2000);
       }
     });
-
 }
 function setRestTimeFn(data: any) {
   let tidyRestData = [];
@@ -1354,7 +1353,7 @@ function setRestTimeFn(data: any) {
               "<br>" +
               eleRestTime.times +
               " Min",
-            titleMonth: "222",
+            titleMonth: eleTable.nameView + " - 休息時間",
             category: "time",
             dueDateClass: "",
             start: eleTimeTableList.date + "T" + eleRestTime.dayOn + ":00",

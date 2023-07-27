@@ -69,11 +69,11 @@ onMounted(() => {
               >系統設定</router-link
             >
           </li> -->
-          <li v-show="showTestUI">
+          <!-- <li v-show="showTestUI">
             <img :src="settingImg" /><router-link to="/testView"
               >Api測試</router-link
             >
-          </li>
+          </li> -->
         </ul>
       </div>
       <div class="user-info">

@@ -14,8 +14,8 @@
                 class="input-item"
                 type="radio"
                 :key="item"
-                :id="item.lessonId"
                 :value="item"
+                :id="item"
                 v-model="formInputRef.courses"
                 @click="clickItem(item, item.lessonId)"
               />
@@ -66,7 +66,7 @@ const props = defineProps<{
 let formInputRef: any = ref({
   name: "",
   search: "",
-  courses: 0,
+  courses: null,
 });
 
 setData();
@@ -169,7 +169,7 @@ function clickItem(item: any, id: number) {
       }
       .group-content {
         height: calc(100% - 35px);
-        border: solid 1px #ff0000;
+        // border: solid 1px #ff0000;
         box-sizing: border-box;
         > div {
           .label-group {

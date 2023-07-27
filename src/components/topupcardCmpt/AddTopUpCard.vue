@@ -175,8 +175,11 @@ const handSubmit = () => {
     if (cardData.tuId == 0) {
         addTopUpCardInfo(cardData)
             .then((res: any) => {
-                if (res.table) {
-
+                if (res.state == 1) {
+                    Alert.warning("新增成功", 1500);
+                    setTimeout(() => {
+                        props.handAddTopUpCardView('');
+                    }, 2000);
                 }
                 if (res.state == 2) {
                     Alert.warning(showErrorMsg(res.msg), 2000);
@@ -188,14 +191,18 @@ const handSubmit = () => {
     } else if (cardData.tuId != 0) {
         editTopUpCardInfo(cardData)
             .then((res: any) => {
-                if (res.table) {
-
+                if (res.state == 1) {
+                    Alert.warning("修改成功", 1500);
+                    setTimeout(() => {
+                        props.handAddTopUpCardView('');
+                    }, 2000);
                 }
                 if (res.state == 2) {
                     Alert.warning(showErrorMsg(res.msg), 2000);
                 }
             })
             .catch((e: any) => {
+                console.log(e)
                 Alert.warning(showHttpsStatus(e.response.status), 2000);
             });
     }

@@ -13,14 +13,15 @@ onMounted(() => {
   <div class="container">
     <Header
       :Icon="Icon"
-      :moduleType="'儲值金'"
+      :moduleType="'顧客管理'"
       :memuState="props.memuState"
       :handmemuStateBtn="props.handmemuStateBtn"
     >
     </Header>
     <div class="content">
       <div class="nav">
-        <router-link to="/memberBankView/memberBankView">所有顧客</router-link>
+        <router-link to="/memberManagerView/memberView">所有顧客</router-link>
+        <router-link to="/memberManagerView/groupView">標籤設定</router-link>
       </div>
       <router-view />
     </div>

@@ -4,6 +4,9 @@ import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
 import { storeToRefs } from "pinia";
 import { usePriceStore } from "@/stores/priceStore";
+import { useCounterStore } from "@/stores/counter";
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
 const priceStore = usePriceStore();
 const { getTopUpCardList, editTopUpCardInfo } = priceStore;
 const { topUpCardList } = storeToRefs(priceStore);
@@ -22,7 +25,7 @@ const getTopUpCardData = ((id: any) => {
     let allTopUpCard = {
         TUId: id,
         select: currentIndex.value,
-        type: 0,
+        type: props.selectItem.tuType,
         pageindex: 0,
         count: 0,
     };
@@ -41,6 +44,11 @@ const getTopUpCardData = ((id: any) => {
         })
         .catch((e: any) => {
             Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
         });
 })
 onMounted(() => {
@@ -64,7 +72,7 @@ const handStopCardBtn = (() => {
         tuLimitType: infoDate.data.tuLimitType,
         tuSellCount: infoDate.data.tuSellCount,
         tuSellPrice: infoDate.data.tuSellPrice,
-        tuType: infoDate.data.tuType,
+        tuType: infoDate.data.tuType == 0 ? 1 : 0,
         tuViewPrice: infoDate.data.tuViewPrice,
         tudType: infoDate.data.tudType,
         tuddPrice: infoDate.data.tuddPrice,
@@ -86,8 +94,11 @@ const handStopCardBtn = (() => {
     }
     editTopUpCardInfo(data)
         .then((res: any) => {
-            if (res.table) {
-
+            if (res.state == 1) {
+                Alert.warning("修改成功", 1500);
+                setTimeout(() => {
+                    props.handTopUpCardInfoView();
+                }, 1600);
             }
             if (res.state == 2) {
                 Alert.warning(showErrorMsg(res.msg), 2000);
@@ -216,7 +227,10 @@ const handEditCardBtn = (() => {
                 </div>
             </div>
             <div class="sub-btn">
-                <button class="cancelBtn" type="submit" @click="handStopCardBtn()">停用儲值卡</button>
+                <button v-if="infoDate.data.tuType == 0" class="cancelBtn" type="submit"
+                    @click="handStopCardBtn()">啟用儲值卡</button>
+                <button v-if="infoDate.data.tuType == 1" class="cancelBtn" type="submit"
+                    @click="handStopCardBtn()">停用儲值卡</button>
                 <button class="submitBtn" type="submit" @click="handEditCardBtn()">編輯</button>
             </div>
         </div>

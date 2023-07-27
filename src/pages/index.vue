@@ -21,7 +21,7 @@ function logoutFn() {
       <div>
         <img class="logo_img" :src="Icon_logo" />
       </div>
-      <router-link class="router-btn" to="/memberView">
+      <router-link class="router-btn" to="/memberManagerView/memberView">
         <img :src="customerImg" />
         <p>顧客管理</p>
       </router-link>

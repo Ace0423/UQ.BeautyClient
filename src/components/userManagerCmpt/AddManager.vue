@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useManagerStore } from "@/stores/manager";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
-import Alert from "./alertCmpt";
+import Alert from "../alertCmpt";
 
 const managerStore = useManagerStore();
 const { createManagerData, editManagerData, getRoleList } = managerStore;

@@ -49,7 +49,7 @@ onMounted(() => {
     let allTopUpCard = {
         TUId: 0,
         select: 0,
-        type: 0,
+        type: -1,
         pageindex: 0,
         count: 0,
     };

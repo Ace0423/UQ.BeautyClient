@@ -11,7 +11,7 @@ const props = defineProps<{
   Icon: string;
 }>();
 const handRouterLink = (() => {
-  router.push("/" + routerLink.value[1]);
+  // router.push("/" + routerLink.value[1]);
 })
 onMounted(() => {
   routerLink.value = route.path.split("/")

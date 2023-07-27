@@ -133,7 +133,7 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
         <div class="nav">
           <h1>應用程式</h1>
           <div class="nav-content">
-            <router-link to="">
+            <router-link to="/settingView/connectionLineOA/connection">
               <div>
                 <h1>LINE OA 串接</h1>
                 <p>管理LiINE OA 與系統的串接相關規定</p>
@@ -142,7 +142,7 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
             </router-link>
           </div>
           <div class="nav-content">
-            <router-link to="">
+            <router-link to="/settingView/connectionLinePay/connection">
               <div>
                 <h1>LINE Pay 串接</h1>
                 <p>管理LiINE Pay 與系統的串接相關規定</p>

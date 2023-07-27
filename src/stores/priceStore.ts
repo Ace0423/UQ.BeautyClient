@@ -20,7 +20,7 @@ import {
 } from "@/api/priceRequest";
 import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
-import { apiGetTopUpCardListRequest,apiAddTopUpCardInfoRequest, apiEditTopUpCardInfoRequest } from "@/api/index";
+import { apiGetTopUpCardListRequest, apiAddTopUpCardInfoRequest, apiEditTopUpCardInfoRequest } from "@/api/index";
 export const usePriceStore = defineStore("priceStore", () => {
   let allDiscountList: any = ref([]);
   let singleDiscountListRef: any = ref([]);
@@ -181,7 +181,7 @@ export const usePriceStore = defineStore("priceStore", () => {
                 element.productMaps = element.productList;
                 element.serviceMaps = element.servicesList;
               }
-            }else{
+            } else {
 
             }
           }
@@ -311,6 +311,7 @@ export const usePriceStore = defineStore("priceStore", () => {
   const getTopUpCardList = async (data: any) => {
     try {
       const res = await apiGetTopUpCardListRequest(data);
+      console.log(res);
       if (res.data.state == 1) {
         if (data.select == 0) {
           topUpCardList.data = res.data.data.table;
@@ -318,6 +319,8 @@ export const usePriceStore = defineStore("priceStore", () => {
         } else if (data.select == 1 || data.select == 2) {
           return res.data.data;
         }
+      }else if(res.data.state == 2){
+        return res.data;
       }
     } catch (error) {
       console.log(error);
@@ -340,12 +343,39 @@ export const usePriceStore = defineStore("priceStore", () => {
     try {
       const res = await apiEditTopUpCardInfoRequest(data);
       if (res.data.state == 1) {
-        console.log(res.data)
+        updataTopUpCardList(res.data.data.table[0]);
       }
       return res.data;
     } catch (error) {
       console.log(error);
       return Promise.reject(error);
+    }
+  };
+  const updataTopUpCardList = (data: any) => {
+    if (topUpCardList.data.filter((item: any) => item.tuId == data.tuId).length > 0) {
+      topUpCardList.data.findIndex((item: any) => {
+        if (item.tuId == data.tuId) {
+          item.tuTitle = data.tuTitle;
+          item.tuContext = data.tuContext;
+          item.tuType = data.tuType;
+          item.tuImage = data.tuImage;
+          item.tuSellCount = data.tuSellCount;
+          item.tuSellPrice = data.tuSellPrice;
+          item.tuViewPrice = data.tuViewPrice;
+          item.tudType = data.tudType;
+          item.tuddType = data.tuddType;
+          item.tuddPrice = data.tuddPrice;
+          item.tuLimitType = data.tuLimitType;
+          item.tuLimitDay = data.tuLimitDay;
+          item.utShared = data.utShared;
+          item.topUpCardMapProducts = data.topUpCardMapProducts;
+          item.topUpCardMapServices = data.topUpCardMapServices;
+          item.topUpCardFreeProducts = data.topUpCardFreeProducts;
+          item.topUpCardFreeServices = data.topUpCardFreeServices;
+        }
+      })
+    } else {
+      topUpCardList.data.push(data);
     }
   };
   return {

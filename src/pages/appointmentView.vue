@@ -671,6 +671,7 @@ function getApptInfoFn(
   getCourseDetailApi(0, 0);
   //先取得會員清單
   getMemberData().then((res: any) => {
+
     //預先呼叫api獲取數據
     getApptDataApi(year, month).then((res: any) => {
       resetApptTable(year, month, date);
@@ -702,6 +703,7 @@ function getApptInfoFn(
       setRestTimeFn(workingHoursList.value.data);
       // getRestList();
     });
+    
   });
 }
 

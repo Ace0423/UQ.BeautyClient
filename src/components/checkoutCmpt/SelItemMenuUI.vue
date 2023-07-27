@@ -69,13 +69,13 @@ const props = defineProps<{
   getDataFn: Function;
   selData: any;
 }>();
-onMounted(() => {
-  // console.log('onMounted');
-});
 let formInputRef: any = ref({
   name: "",
   selectService: [],
   selectGood: [],
+});
+onMounted(() => {
+  // console.log('onMounted');
 });
 onBrfore();
 function onBrfore() {

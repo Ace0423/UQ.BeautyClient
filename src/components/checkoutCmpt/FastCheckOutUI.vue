@@ -132,7 +132,7 @@
           <div class="customer-msg">
             <div>
               <span>總計</span>
-              <span>$599</span>
+              <span>{{ formInputRef.priceTotal }}</span>
             </div>
           </div>
           <div class="customer-submit">
@@ -190,6 +190,7 @@ let formInputRef: any = ref({
   memo: "",
   buyServicesGroup: [],
   buyGoodsGroup: [],
+  priceTotal: 0,
 });
 
 function showMemberUIFn(state: boolean) {
@@ -221,6 +222,19 @@ function getItemInfoFn(data: any) {
   if (data.selectService) {
     formInputRef.value.buyServicesGroup = data.selectService;
   }
+  console.log(data.selectGood);
+  console.log(data.selectService);
+
+  let priceTotal = 0;
+  for (let i = 0; i < data.selectGood.length; i++) {
+    const element = data.selectGood[i];
+    priceTotal += element.price;
+  }
+  for (let i = 0; i < data.selectService.length; i++) {
+    const element = data.selectService[i];
+    priceTotal += element.price;
+  }
+  formInputRef.value.priceTotal = priceTotal;
   console.log("選擇", formInputRef.value);
 }
 function cancleServiceFn(item: any, index: number) {

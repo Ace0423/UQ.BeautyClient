@@ -27,8 +27,8 @@ import {
   updateGoodsTypeReq,
 } from "@/api/goodsRequest";
 import Alert from "@/components/alertCmpt";
+import type { IServiceTypeVo } from "@/types/IDataVo";
 import { showErrorMsg } from "@/types/IMessage";
-import type { IResVo } from "@/types/IModel";
 import { defineStore } from "pinia";
 
 export const useApptStore = defineStore("apptStore", () => {
@@ -80,12 +80,13 @@ export const useApptStore = defineStore("apptStore", () => {
         },
       ];
       let res: any = await getCourseTypeReq(data).then((res: any) => {
-        if (res.data.data.table) {
-          for (let i = 0; i < res.data.data.table.length; i++) {
-            let element = res.data.data.table[i];
+        let tableVo: IServiceTypeVo[] = res.data.data.table;
+        if (tableVo) {
+          for (let i = 0; i < tableVo.length; i++) {
+            let element = tableVo[i];
             // element.orderCheck = element.order;
             element.editState = false;
-            element.lessonTypeId = parseInt(element.lessonTypeId);
+            element.lessonTypeId = element.lessonTypeId;
             element.editNameTw = element.nameTw;
             element.editState = false;
             courseTypesTabs.value.push(element);

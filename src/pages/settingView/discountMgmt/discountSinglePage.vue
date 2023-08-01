@@ -127,6 +127,8 @@ const onDeleteAlertBtn = (data: any) => {
     delSingleDiscountApi(selData.discountNo).then((res: any) => {
       console.log(res);
       if (res.state == 1) {
+        Alert.sussess("成功", 1000);
+        getSingleDiscountApi();
       } else {
       }
     });

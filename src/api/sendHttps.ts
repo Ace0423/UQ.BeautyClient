@@ -4,7 +4,6 @@ import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
 import axios from "axios"; // 參照axios
 
 import { useCounterStore } from "@/stores/counter";
-import type { IResVo } from "@/types/IModel";
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
 
@@ -86,9 +85,15 @@ export function deleteHttps(instance: any = httpRequest, url: any, data = {}) {
 //
 function errorFn(err: any) {
   if (err && err.request && err.request.status) {
-    if (err.request.status == 401)
-      Alert.tip(showHttpsStatus(err.request.status), 1000, onAlertBtn);
-    else Alert.warning(showHttpsStatus(err.request.status), 1000);
+    if (err.request.status == 401) {
+      setTimeout(() => {
+        Alert.tip(showHttpsStatus(err.request.status), 1000, onAlertBtn);
+      }, 200);
+    } else {
+      setTimeout(() => {
+        Alert.warning(showHttpsStatus(err.request.status), 1000);
+      }, 200);
+    }
   }
 }
 

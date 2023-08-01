@@ -17,6 +17,9 @@ export default function Alert({
   onAlertBtn,
   duration = 3000,
 }: Props) {
+  render(null, div);
+  console.log("移除");
+  
   const alertBtnHdr = (data: any) => {
     if (onAlertBtn) onAlertBtn(data == 1);
     onClose();
@@ -48,11 +51,11 @@ Alert.warning = (message: string, duration?: number) => {
 };
 //可用是否選擇 2按鈕
 Alert.check = (message: string, duration?: number, onAlertBtn?: Function) => {
-  Alert({ type: 0, message, duration, onAlertBtn });
+  Alert({ type: 0, message, duration: 0, onAlertBtn });
 };
 //提示  1按鈕
 Alert.tip = (message: string, duration?: number, onAlertBtn?: Function) => {
-  Alert({ type: 1, message, duration, onAlertBtn });
+  Alert({ type: 1, message, duration: 0, onAlertBtn });
 };
 
 //---------------------使用

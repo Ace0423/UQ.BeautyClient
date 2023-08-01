@@ -189,7 +189,13 @@ let deleteHdr = (index: number, item: any) => {
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     console.log("確認刪除");
-    delCouponApi(selData.ccId);
+    delCouponApi(selData.ccId).then((res: any) => {
+      if (res.state == 1) {
+        Alert.sussess("成功", 1000);
+        getCouponApi();
+      } else {
+      }
+    });
   } else {
     console.log("取消刪除");
   }

@@ -102,7 +102,13 @@ function getAllDiscountFn() {
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     console.log("確認刪除");
-    delAllDiscountApi(selData.discountNo);
+    delAllDiscountApi(selData.discountNo).then((res: any) => {
+      if (res.state == 1) {
+        Alert.sussess("成功", 1000);
+        getAllDiscountApi();
+      } else {
+      }
+    });
   } else {
     console.log("取消刪除");
   }

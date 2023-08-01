@@ -163,8 +163,8 @@ export const useApptStore = defineStore("apptStore", () => {
   const delCourseTypeApi = async (data: any) => {
     try {
       let res = await delCourseTypeReq(data).then((res: any) => {
-        // alertStateFn(res, "刪除服務類型");
-        if (alertStateFn(res, "刪除服務類型")) getCourseTypeApi(0);
+        alertStateFn(res, "刪除服務類型");
+        // if (alertStateFn(res, "刪除服務類型")) getCourseTypeApi(0);
         return res;
       });
     } catch (error) {

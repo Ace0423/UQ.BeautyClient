@@ -82,7 +82,7 @@ export const usePriceStore = defineStore("priceStore", () => {
     try {
       let res = await deleteAllDiscountReq(data).then((res: any) => {
         alertStateFn(res, "刪除全單折扣資料");
-        getAllDiscountApi();
+        // getAllDiscountApi();
         return res;
       });
     } catch (error) {
@@ -142,7 +142,7 @@ export const usePriceStore = defineStore("priceStore", () => {
     try {
       let res = await deleteSingleDiscountReq(data).then((res: any) => {
         alertStateFn(res, "刪除全單折扣資料");
-        getAllDiscountApi();
+        // getAllDiscountApi();
         return res;
       });
       return res;
@@ -222,7 +222,7 @@ export const usePriceStore = defineStore("priceStore", () => {
     try {
       let res = await deleteCouponReq(data).then((res: any) => {
         alertStateFn(res, "刪除全單折扣資料");
-        getCouponApi();
+        // getCouponApi();
         return res;
       });
       return res;
@@ -297,7 +297,7 @@ export const usePriceStore = defineStore("priceStore", () => {
     try {
       let res = await deleteCountTicketReq(data).then((res: any) => {
         alertStateFn(res, "刪除計次券");
-        getCountTicketApi();
+        // getCountTicketApi();
         return res;
       });
       return res;

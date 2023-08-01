@@ -155,7 +155,13 @@ function getAllDiscountFn() {
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     console.log("確認刪除");
-    delCountTicketApi(selData.ffId);
+    delCountTicketApi(selData.ffId).then((res: any) => {
+      if (res.state == 1) {
+        Alert.sussess("成功", 1000);
+        getCountTicketApi();
+      } else {
+      }
+    });
   } else {
     console.log("取消刪除");
   }

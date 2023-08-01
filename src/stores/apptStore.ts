@@ -27,7 +27,14 @@ import {
   updateGoodsTypeReq,
 } from "@/api/goodsRequest";
 import Alert from "@/components/alertCmpt";
-import type { IServiceTypeVo } from "@/types/IDataVo";
+import type {
+  IApptDetailVo,
+  IBookingVo,
+  IGoodsTypeVo,
+  IMemberListVo,
+  IServiceDetailVo,
+  IServiceTypeVo,
+} from "@/types/IDataVo";
 import { showErrorMsg } from "@/types/IMessage";
 import { defineStore } from "pinia";
 
@@ -80,8 +87,8 @@ export const useApptStore = defineStore("apptStore", () => {
         },
       ];
       let res: any = await getCourseTypeReq(data).then((res: any) => {
-        let tableVo: IServiceTypeVo[] = res.data.data.table;
-        if (tableVo) {
+        if (res.data.data) {
+          let tableVo: IServiceTypeVo[] = res.data.data.table;
           for (let i = 0; i < tableVo.length; i++) {
             let element = tableVo[i];
             // element.orderCheck = element.order;
@@ -162,7 +169,10 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       courseDataList.value = [];
       let res: any = await getCourseDetailReq(g, id).then((res: any) => {
-        if (res.data.data.table) courseDataList.value = res.data.data.table;
+        if (res.data.data) {
+          let detailVo: IServiceDetailVo = res.data.data.table;
+          courseDataList.value = detailVo;
+        }
         return res;
       });
       return res;
@@ -263,7 +273,10 @@ export const useApptStore = defineStore("apptStore", () => {
       });
       const res = await apiGetMemberListRequest(dataRequest).then(
         (res: any) => {
-          memberList.value = res.data.data.table;
+          if (res.data.data) {
+            let listVo: IMemberListVo = res.data.data.table;
+            memberList.value = listVo;
+          }
           return res;
         }
       );
@@ -290,6 +303,7 @@ export const useApptStore = defineStore("apptStore", () => {
       let res: any = await getApptDataRequest(data).then((res: any) => {
         //插入預約
         if (res.data.data) {
+          let DetailVo: IApptDetailVo = res.data.data.table;
           tuiBookingListRef.value = res.data.data.table.filter(function (
             value: any,
             index: any,
@@ -311,7 +325,7 @@ export const useApptStore = defineStore("apptStore", () => {
                 ":" +
                 curDateTime[1].split(":")[1];
               if (curTime == timeEmt.timePeriod && bookingListEmt.lesson) {
-                let bookingData: any = {
+                let bookingData: IBookingVo = {
                   id: bookingListEmt.bookingNo,
                   timePeriod: curTime, //hh:mm
                   date: curDateTime[0], //yyyy-mm-dd
@@ -389,7 +403,8 @@ export const useApptStore = defineStore("apptStore", () => {
         },
       ];
       let res: any = await getGoodsTypeReq(data, 0).then((res: any) => {
-        if (res.data.data.table) {
+        if (res.data.data) {
+          let typeVo: IGoodsTypeVo = res.data.data.table;
           for (let i = 0; i < res.data.data.table.length; i++) {
             let element = res.data.data.table[i].group;
             element.editState = false;
@@ -551,7 +566,7 @@ export const useApptStore = defineStore("apptStore", () => {
   const getOrderDetailApi = async (g: any, id: any) => {
     try {
       let res: any = await getOrderDetailReq(g, id).then((res: any) => {
-        if (res.data.data.table) {
+        if (res.data.data) {
           let curData = res.data.data.table;
           for (let i = 0; i < curData.length; i++) {
             const element = curData[i];

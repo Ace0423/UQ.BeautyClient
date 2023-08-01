@@ -184,7 +184,12 @@ let changeStutusHdr = (index: number, item: any) => {
 let deleteHdr = (index: number, itemId: number) => {
   Alert.check("是否刪除", 1000, (data: any) => {
     if (data) {
-      delCourseDetailApi(itemId).then((res: any) => {});
+      delCourseDetailApi(itemId).then((res: any) => {
+        getCourseDetailApi(
+          courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
+          "0"
+        );
+      });
     } else {
     }
   });

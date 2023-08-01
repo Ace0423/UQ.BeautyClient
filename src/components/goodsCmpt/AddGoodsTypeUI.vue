@@ -37,7 +37,7 @@
                   <img
                     class="add-goodsType-ico"
                     :src="Icon_back"
-                    v-on:click="delTypeHdr(element, element.lessonTypeId)"
+                    v-on:click="deleteHdr(element, element.lessonTypeId)"
                   />
                 </button>
               </div>
@@ -95,23 +95,43 @@ let editTypeHdr = (index: number, item: any) => {
   }, 10);
 };
 
-let delTypeHdr = (item: any, index: number) => {
-  selItemBtn = item;
-  Alert({
-    type: 0,
-    message: "是否刪除",
-    duration: 1000,
-    onAlertBtn: onDelReturn,
-  });
-};
 let selItemBtn: any = ref([]);
-const onDelReturn = (data: any) => {
+
+// let delTypeHdr = (item: any, index: number) => {
+//   selItemBtn = item;
+//   Alert({
+//     type: 0,
+//     message: "是否刪除",
+//     duration: 1000,
+//     onAlertBtn: onDelReturn,
+//   });
+// };
+// const onDelReturn = (data: any) => {
+//   if (data) {
+//     delGoodsTypeApi(selItemBtn.pgId).then((res: any) => {
+//       if (res.state == 1) {
+//       }
+//     });
+//   }
+// };
+
+//刪除
+let deleteHdr = (item: any, index: number) => {
+  selItemBtn = item;
+  Alert.check("是否刪除", 1000, onDeleteAlertBtn);
+};
+const onDeleteAlertBtn = (data: any) => {
   if (data) {
+    let curId = selItemBtn.pgId;
     delGoodsTypeApi(selItemBtn.pgId).then((res: any) => {
       if (res.state == 1) {
-      } 
+        props.showAddUIFn(false);
+      }
     });
+  } else {
+    console.log("取消刪除");
   }
+  selItemBtn.value = [];
 };
 
 let submitTypeHdr = () => {

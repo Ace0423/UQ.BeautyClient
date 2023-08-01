@@ -125,18 +125,19 @@
               </div>
             </div>
             <div class="main-input">
-              <div class="form-total">
+              <div class="form-total"  >
                 <div>
                   <p>庫存數量</p>
                   <div>
-                    <img :src="icon_minus" @click="countTotalBtn(-1)" />
+                    <!-- <img :src="icon_minus" @click="countTotalBtn(-1)" /> -->
                     <el-input
                       class="input-total"
                       v-model="formInputRef.total"
                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
+                      disabled="disabled"
                     >
                     </el-input>
-                    <img :src="icon_plus" @click="countTotalBtn(+1)" />
+                    <!-- <img :src="icon_plus" @click="countTotalBtn(+1)" /> -->
                   </div>
                   <span class="p_error" v-if="ruleItem.total.is_error">
                     {{ ruleItem.total.warn }}

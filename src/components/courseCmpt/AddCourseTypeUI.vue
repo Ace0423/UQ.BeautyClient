@@ -158,7 +158,6 @@ let selItem: any = ref([]);
 //   }
 // };
 
-
 //刪除
 let deleteHdr = (item: any, index: number) => {
   selItem = item;
@@ -167,7 +166,8 @@ let deleteHdr = (item: any, index: number) => {
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     let curId = selItem.lessonTypeId;
-    delCourseTypeApi( curId).then((res: any) => {
+    delCourseTypeApi(curId).then((res: any) => {
+      props.showAddForm(false);
     });
   } else {
     console.log("取消刪除");

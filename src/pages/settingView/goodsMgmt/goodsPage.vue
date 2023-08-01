@@ -120,15 +120,21 @@ function getGoodsFn(data: any) {
 onBeforeFn();
 function onBeforeFn() {
   getGoodsTypeApi().then((res: any) => {
-    getGoodsDetailApi(
-      goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
-      0
-    );
+    getDetailByTypeFn();
   });
+}
+function getDetailByTypeFn() {
+  getGoodsDetailApi(
+    goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
+    0
+  );
 }
 //新增-顯示
 let showAddDetailFormHdr = (state: boolean) => {
   showAddUIRef.value = state;
+  if (!state) {
+    getDetailByTypeFn();
+  }
 };
 //新增分類-顯示
 let showAddTypeFormHdr = (state: boolean) => {
@@ -137,6 +143,7 @@ let showAddTypeFormHdr = (state: boolean) => {
 };
 const showEditDetailUIHdr = (state: boolean) => {
   showEditUIRef.value = state;
+  getDetailByTypeFn();
   // getGoodsDetailApi(0, 0);
 };
 //刪除
@@ -147,7 +154,9 @@ let deleteHdr = (item: any, index: number) => {
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     let curPgId = goodsTypesListRef.value[goodsTypesListValueRef.value].pgId;
-    delGoodsDetailApi(selItem.pId, curPgId).then((res: any) => {});
+    delGoodsDetailApi(selItem.pId, curPgId).then((res: any) => {
+      getDetailByTypeFn();
+    });
   } else {
     console.log("取消刪除");
   }
@@ -207,13 +216,9 @@ function updataStutusFn(index: number, item: any) {
 
   updateGoodsDetailApi(curdata).then((res: any) => {
     if (res.state == 1) {
+      getDetailByTypeFn();
     }
   });
-
-  getGoodsDetailApi(
-    goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
-    0
-  );
 }
 </script>
 

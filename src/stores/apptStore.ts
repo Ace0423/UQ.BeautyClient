@@ -200,7 +200,7 @@ export const useApptStore = defineStore("apptStore", () => {
           // setTimeout(() => {
           //   getCourseDetailApi(0, 0);
           // }, 1000);
-        return res;
+          return res;
       });
       return res;
     } catch (error) {
@@ -224,17 +224,8 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       let res = await delCourseDetailReq(data).then((res: any) => {
         alertStateFn(res, "刪除服務資料");
-        if (res)
-          setTimeout(() => {
-            getCourseDetailApi(
-              courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
-              "0"
-            );
-          }, 1000);
-
         return res;
       });
-      return res;
     } catch (error) {
       console.log(error);
     }
@@ -404,6 +395,7 @@ export const useApptStore = defineStore("apptStore", () => {
   const getGoodsTypeApi = async (data: any = 0) => {
     try {
       goodsDetailListRef.value = [];
+      goodsTypesListRef.value = [];
       goodsTypesListRef.value = [
         {
           pgId: 0,
@@ -477,7 +469,7 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       let res = await delGoodsTypeReq(data).then((res: any) => {
         alertStateFn(res, "刪除商品分類");
-        if (res) getGoodsTypeApi(0);
+        // if (res) getGoodsTypeApi(0);
         return res;
       });
       return res;
@@ -532,9 +524,9 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       let res = await addGoodsDetailReq(data).then((res: any) => {
         alertStateFn(res, "新增商品資料");
-        setTimeout(() => {
-          if (res) getGoodsDetailApi(0, 0);
-        }, 1000);
+        // setTimeout(() => {
+        //   if (res) getGoodsDetailApi(0, 0);
+        // }, 1000);
         return res;
       });
       return res;
@@ -559,9 +551,9 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       let res = await delGoodsDetailReq(data, pgId).then((res: any) => {
         alertStateFn(res, "刪除商品資料");
-        setTimeout(() => {
-          if (res) getGoodsDetailApi(pgId, 0);
-        }, 1000);
+        // setTimeout(() => {
+        //   if (res) getGoodsDetailApi(pgId, 0);
+        // }, 1000);
         return res;
       });
       return res;

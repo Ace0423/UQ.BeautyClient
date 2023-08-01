@@ -20,16 +20,24 @@ import {
 } from "@/api/priceRequest";
 import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
-import { apiGetTopUpCardListRequest, apiAddTopUpCardInfoRequest, apiEditTopUpCardInfoRequest } from "@/api/index";
+import {
+  apiGetTopUpCardListRequest,
+  apiAddTopUpCardInfoRequest,
+  apiEditTopUpCardInfoRequest,
+} from "@/api/index";
 export const usePriceStore = defineStore("priceStore", () => {
   let allDiscountList: any = ref([]);
   let singleDiscountListRef: any = ref([]);
 
   function alertStateFn(res: any, apiName: string = "") {
     if (res.state == 1) {
-      Alert.sussess("成功", 1000);
+      setTimeout(() => {
+        Alert.sussess("成功", 1000);
+      }, 200);
     } else {
-      Alert.error("失敗(" + showErrorMsg(res.msg) + ")", 1000);
+      setTimeout(() => {
+        Alert.error("失敗(" + showErrorMsg(res.msg) + ")", 1000);
+      }, 200);
     }
   }
 
@@ -181,7 +189,6 @@ export const usePriceStore = defineStore("priceStore", () => {
                 element.serviceMaps = element.servicesList;
               }
             } else {
-
             }
           }
           return res.data.data;
@@ -318,7 +325,7 @@ export const usePriceStore = defineStore("priceStore", () => {
         } else if (data.select == 1 || data.select == 2) {
           return res.data.data;
         }
-      }else if(res.data.state == 2){
+      } else if (res.data.state == 2) {
         return res.data;
       }
     } catch (error) {
@@ -330,7 +337,7 @@ export const usePriceStore = defineStore("priceStore", () => {
     try {
       const res = await apiAddTopUpCardInfoRequest(data);
       if (res.data.state == 1) {
-        console.log(res.data)
+        console.log(res.data);
       }
       return res.data;
     } catch (error) {
@@ -351,7 +358,10 @@ export const usePriceStore = defineStore("priceStore", () => {
     }
   };
   const updataTopUpCardList = (data: any) => {
-    if (topUpCardList.data.filter((item: any) => item.tuId == data.tuId).length > 0) {
+    if (
+      topUpCardList.data.filter((item: any) => item.tuId == data.tuId).length >
+      0
+    ) {
       topUpCardList.data.findIndex((item: any) => {
         if (item.tuId == data.tuId) {
           item.tuTitle = data.tuTitle;
@@ -372,7 +382,7 @@ export const usePriceStore = defineStore("priceStore", () => {
           item.topUpCardFreeProducts = data.topUpCardFreeProducts;
           item.topUpCardFreeServices = data.topUpCardFreeServices;
         }
-      })
+      });
     } else {
       topUpCardList.data.push(data);
     }
@@ -407,6 +417,6 @@ export const usePriceStore = defineStore("priceStore", () => {
     topUpCardList,
     getTopUpCardList,
     addTopUpCardInfo,
-    editTopUpCardInfo
+    editTopUpCardInfo,
   };
 });

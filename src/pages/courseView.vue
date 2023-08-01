@@ -211,6 +211,10 @@ let showAddUIHdr = (state: boolean) => {
 //新增課程-顯示
 let showAddDetailFn = (state: boolean) => {
   showCourseFormRef.value = state;
+  getCourseDetailApi(
+    courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
+    0
+  );
 };
 //排序明細
 function sortthradFn(name: number) {

@@ -197,9 +197,9 @@ export const useApptStore = defineStore("apptStore", () => {
       let res = await postAddUQLessonDetailReq(data).then((res: any) => {
         alertStateFn(res, "新增服務資料");
         if (res)
-          setTimeout(() => {
-            getCourseDetailApi(0, 0);
-          }, 1000);
+          // setTimeout(() => {
+          //   getCourseDetailApi(0, 0);
+          // }, 1000);
         return res;
       });
       return res;

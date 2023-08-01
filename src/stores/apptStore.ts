@@ -41,11 +41,20 @@ import { defineStore } from "pinia";
 export const useApptStore = defineStore("apptStore", () => {
   function alertStateFn(res: any, apiName: string = "") {
     if (res.state == 1) {
-      Alert.sussess("成功", 1000);
+      setTimeout(() => {
+        Alert.sussess("成功", 1000);
+      }, 200);
+      return true;
     } else {
-      Alert.error("失敗(" + showErrorMsg(res.msg) + ")", 1000);
+      setTimeout(() => {
+        Alert.error("失敗(" + showErrorMsg(res.msg) + ")", 1000);
+      }, 200);
+      return false;
     }
   }
+  const onAlertBtn = (err: any) => {
+    console.log(err, "err");
+  };
   //---------------------------------course
   const beauticianList: any = ref([{ userId: 0, nameView: "不指定" }]);
   /**獲取美容師 */
@@ -154,14 +163,16 @@ export const useApptStore = defineStore("apptStore", () => {
   const delCourseTypeApi = async (data: any) => {
     try {
       let res = await delCourseTypeReq(data).then((res: any) => {
-        alertStateFn(res, "刪除服務類型");
-        if (res) getCourseTypeApi(0);
+        // alertStateFn(res, "刪除服務類型");
+        if (alertStateFn(res, "刪除服務類型")) getCourseTypeApi(0);
         return res;
       });
-      return res;
     } catch (error) {
       console.log(error);
     }
+  };
+  const onDeleteAlertBtn = (data: any) => {
+    console.log("2000");
   };
   let courseDataList: any = ref([]);
   /**獲取服務資料 */

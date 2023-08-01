@@ -40,7 +40,7 @@
                   <img
                     class="add-coursedetail-ico"
                     :src="Icon_back"
-                    v-on:click="delCourseTypeHdr(element, element.lessonTypeId)"
+                    v-on:click="deleteHdr(element, element.lessonTypeId)"
                   />
                 </button>
               </div>
@@ -142,21 +142,39 @@ let confirmShowAddForm = () => {
   }, 1000);
 };
 let selItem: any = ref([]);
-//刪除課程
-let delCourseTypeHdr = (item: any, itemId: number) => {
+// //刪除課程
+// let delCourseTypeHdr = (item: any, itemId: number) => {
+//   selItem = item;
+//   Alert({
+//     type: 0,
+//     message: "是否刪除",
+//     duration: 1000,
+//     onAlertBtn: onDelReturn,
+//   });
+// };
+// const onDelReturn = (data: any) => {
+//   if (data) {
+//     delCourseTypeApi(selItem.lessonTypeId).then((res: any) => {});
+//   }
+// };
+
+
+//刪除
+let deleteHdr = (item: any, index: number) => {
   selItem = item;
-  Alert({
-    type: 0,
-    message: "是否刪除",
-    duration: 1000,
-    onAlertBtn: onDelReturn,
-  });
+  Alert.check("是否刪除", 1000, onDeleteAlertBtn);
 };
-const onDelReturn = (data: any) => {
+const onDeleteAlertBtn = (data: any) => {
   if (data) {
-    delCourseTypeApi(selItem.lessonTypeId).then((res: any) => {});
+    let curId = selItem.lessonTypeId;
+    delCourseTypeApi( curId).then((res: any) => {
+    });
+  } else {
+    console.log("取消刪除");
   }
+  selItem.value = [];
 };
+
 //編輯課程
 let oldInput: any = "";
 let editCourseTypeHdr = (index: number, item: any) => {

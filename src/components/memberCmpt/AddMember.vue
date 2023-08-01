@@ -5,7 +5,8 @@ import "vue-multiselect/dist/vue-multiselect.css";
 import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
 
 const memberStore = useMemberStore();
-const { createMemberData, editMemberData, groupListData } = memberStore;
+const { createMemberData, editMemberData, groupListData, getGroupData } =
+  memberStore;
 const alertState = ref(false);
 const alertInformation = reactive({
   messageText: "", // 提示內容
@@ -188,7 +189,9 @@ const verify_all = () => {
   let is_valid = true;
   for (let component in state.form_items) {
     let item = state.form_items[component];
-    if (component == 'password' && item.value == undefined) {break;}
+    if (component == "password" && item.value == undefined) {
+      break;
+    }
     for (let rule in item.rules) {
       if (!verify_methods[rule](item)) {
         is_valid = false;
@@ -242,6 +245,7 @@ const handSubmit = () => {
 };
 
 onMounted(() => {
+  getGroupData();
   if (props.selectMemberItem) {
     newMember.userId = props.selectMemberItem.userId;
     state.form_items.email.value = props.selectMemberItem.email;
@@ -297,7 +301,22 @@ onMounted(() => {
       <div>
         <span>標籤</span>
         <div>
-          <multiselect
+          <el-select
+            v-model="newMember.groupList"
+            multiple
+            collapse-tags
+            collapse-tags-tooltip
+            style="width: 100%"
+            size="large"
+          >
+            <el-option
+              v-for="item in groupListData.data"
+              :key="item.groupId"
+              :label="item.label"
+              :value="item.groupId"
+            />
+          </el-select>
+          <!-- <multiselect
             v-model="newMember.groupList"
             :options="groupListData.data"
             :multiple="true"
@@ -310,7 +329,7 @@ onMounted(() => {
             :preselect-first="false"
             :maxHeight="200"
           >
-          </multiselect>
+          </multiselect> -->
         </div>
       </div>
       <div>

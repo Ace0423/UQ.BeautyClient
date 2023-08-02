@@ -17,9 +17,6 @@ export default function Alert({
   onAlertBtn,
   duration = 3000,
 }: Props) {
-  render(null, div);
-  console.log("移除");
-  
   const alertBtnHdr = (data: any) => {
     if (onAlertBtn) onAlertBtn(data == 1);
     onClose();

@@ -33,13 +33,13 @@
                 type="text"
               />
             </div>
-            <div>
+            <!-- <div>
               <span>附加圖片</span>
               <p v-on:click="updateImgUrl()">上傳圖片</p>
-            </div>
-            <span class="msg-content"
+            </div> -->
+            <!-- <span class="msg-content"
               >最大長寬 1200px x 1200px，檔案小於 1MB，支援JPG、JPEG，PNG</span
-            >
+            > -->
           </div>
           <div class="radio-item" name="radio_item">
             <span>指定項目</span>

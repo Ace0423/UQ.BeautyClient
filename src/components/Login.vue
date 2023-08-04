@@ -204,7 +204,7 @@ const loginFn = () => {
           {{ item.warn }}
         </p>
       </div>
-      <div class="btn">
+      <div class="login-btn">
         <button @click="loginFn">登入</button>
       </div>
     </div>
@@ -266,7 +266,7 @@ const loginFn = () => {
       }
     }
 
-    > .btn {
+    > .login-btn {
       width: 100%;
       margin-top: 20px;
 
@@ -280,7 +280,7 @@ const loginFn = () => {
         font-family: HeitiTC;
         color: #fff;
         border-radius: 13px;
-        border: 1px solid #707070;
+        // border: 1px solid #707070;
         background-color: #877059;
       }
     }

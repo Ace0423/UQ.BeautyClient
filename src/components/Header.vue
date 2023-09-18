@@ -10,18 +10,24 @@ const props = defineProps<{
   moduleType: string;
   Icon: string;
 }>();
-const handRouterLink = (() => {
-  // router.push("/" + routerLink.value[1]);
-})
+const handRouterLink = () => {
+  if (routerLink.value[1] == "settingView") {
+    router.push("/" + routerLink.value[1]);
+  }
+};
 onMounted(() => {
-  routerLink.value = route.path.split("/")
+  routerLink.value = route.path.split("/");
 });
 </script>
 
 <template>
   <header>
     <div class="head-title">
-      <button class="memu-btn" v-if="!memuState" v-on:click="handmemuStateBtn()">
+      <button
+        class="memu-btn"
+        v-if="!memuState"
+        v-on:click="handmemuStateBtn()"
+      >
         <img :src="memuIcon" />
       </button>
       <button v-on:click="handRouterLink()">
@@ -44,22 +50,22 @@ header {
 
   // height: 100px;
   // background-color: burlywood;
-  >.head-title {
+  > .head-title {
     display: flex;
     align-items: center;
 
-    >button {
+    > button {
       display: flex;
       border: none;
       background-color: transparent;
 
-      >img {
+      > img {
         width: 30px;
         height: 30px;
         // margin: 0 5px;
       }
 
-      >h1 {
+      > h1 {
         // padding: 1%;
         // min-width: 150px;
         margin: 0 10px;
@@ -69,7 +75,6 @@ header {
       }
     }
   }
-
 
   .memu-btn {
     position: relative;

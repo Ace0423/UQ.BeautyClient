@@ -208,7 +208,6 @@ const handSubmit = () => {
   newMember.nameFirst = state.form_items.name.value;
   newMember.phone = state.form_items.cellphone.value;
   newMember.birthday = newMember.birthday.split("T")[0];
-
   if (props.selectMemberItem) {
     newMember.nameView = newMember.nameFirst;
     editMemberData(newMember)
@@ -303,6 +302,7 @@ onMounted(() => {
         <div>
           <el-select
             v-model="newMember.groupList"
+            value-key="groupId"
             multiple
             collapse-tags
             collapse-tags-tooltip
@@ -313,7 +313,7 @@ onMounted(() => {
               v-for="item in groupListData.data"
               :key="item.groupId"
               :label="item.label"
-              :value="item.groupId"
+              :value="item"
             />
           </el-select>
           <!-- <multiselect
@@ -391,7 +391,9 @@ onMounted(() => {
     font-family: HeitiTC;
     color: #84715c;
     font-weight: bold;
-
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
     > h1 {
       text-align: center;
       font-size: 20px;
@@ -401,7 +403,7 @@ onMounted(() => {
       //   margin-top: 15px;
       display: flex;
       // justify-content: end;
-      margin: 20px;
+      margin: 10px;
 
       > span {
         min-width: 40px;
@@ -460,7 +462,7 @@ onMounted(() => {
       display: flex;
       justify-content: center;
 
-      > button {
+      button {
         // width: 72px;
         // height: 38px;
         padding: 10px 10px;

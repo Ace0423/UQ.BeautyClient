@@ -59,7 +59,7 @@ function logoutFn() {
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 50001;
+  z-index: 0;
   background: white;
   display: flex;
   align-items: center;

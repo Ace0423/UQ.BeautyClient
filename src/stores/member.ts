@@ -101,7 +101,6 @@ export const useMemberStore = defineStore("member", () => {
                     item.poto = data.poto;
                     item.memo = data.memo;
                     item.groupList = data.groupList;
-                    console.log(item);
                 }
             })
         } else {

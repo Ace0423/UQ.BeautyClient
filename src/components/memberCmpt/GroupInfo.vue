@@ -140,7 +140,7 @@ onMounted(() => {
       <h1>新增客戶</h1>
       <div class="content">
         <p>客戶</p>
-        <select v-model="selectMember">
+        <select v-model="selectMember" >
           <option v-for="item in memberList.data" :key="item.userId" :value="item">
             {{ item.nameView }}
           </option>

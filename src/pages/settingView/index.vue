@@ -27,7 +27,7 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
             </router-link>
           </div>
           <div class="nav-content">
-            <router-link to="">
+            <router-link to="/settingView/onlineWebSettingsView">
               <div>
                 <h1>線上網站設定</h1>
                 <p>管理商店線上網站相關設定</p>
@@ -36,7 +36,7 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
             </router-link>
           </div>
           <div class="nav-content">
-            <router-link to="">
+            <router-link to="/settingView/ordersSubView">
               <div>
                 <h1>帳單與訂閱</h1>
                 <p>瀏覽商店目前訂閱方案</p>

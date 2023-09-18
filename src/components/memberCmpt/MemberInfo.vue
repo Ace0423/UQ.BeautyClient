@@ -58,7 +58,6 @@ const getmemberInfoApi = () => {
 };
 onMounted(() => {
   getmemberInfoApi();
-  console.log(props.selectMemberItem);
 });
 </script>
 

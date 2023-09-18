@@ -9,14 +9,13 @@ const memuState = ref(false);
 const handmemuStateBtn = () => {
   memuState.value = !memuState.value;
 };
-
 onMounted(() => {
   setIsLogin(false);
   if (getToken("token")) {
     setIsLogin(true);
     setUserData();
   }
-
+ 
   scrollListenerHandler();
   window.addEventListener(
     "onorientationchange" in window ? "orientationchange" : "resize",

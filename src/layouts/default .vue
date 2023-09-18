@@ -9,13 +9,14 @@ const memuState = ref(false);
 const handmemuStateBtn = () => {
   memuState.value = !memuState.value;
 };
+
 onMounted(() => {
   setIsLogin(false);
   if (getToken("token")) {
     setIsLogin(true);
     setUserData();
   }
- 
+
   scrollListenerHandler();
   window.addEventListener(
     "onorientationchange" in window ? "orientationchange" : "resize",
@@ -27,10 +28,26 @@ onMounted(() => {
 function onResize() {
   setTimeout(() => {
     scrollListenerHandler(); //此处为要执行方法
-  }, 10);
+  }, 30);
 }
 
 const scrollListenerHandler = () => {
+  var isIpad = navigator.userAgent.search("iPad") > -1;
+  if (!isIpad) {
+    document.getElementById("strLanguage")!.innerHTML =
+      "不支援此設備，請換ipad";
+      
+    document.getElementById("effect")!.style.display = "none";
+    document.getElementById("MoblileR")!.style.display = "block";
+  } else {
+    document.getElementById("strLanguage")!.innerHTML =
+      "為了更好的體驗，請將設備橫過來";
+    document.getElementById("effect")!.style.display = "block";
+    document.getElementById("MoblileR")!.style.display = "none";
+    checkTurn();
+  }
+};
+function checkTurn() {
   const clientHeight = document.documentElement.clientHeight;
   const clientWidth = document.documentElement.clientWidth;
   // 滚动到了底部
@@ -40,7 +57,7 @@ const scrollListenerHandler = () => {
     document.getElementById("effect")!.classList.add("pad");
     document.getElementById("MoblileR")!.style.display = "block";
   }
-};
+}
 </script>
 
 <template>
@@ -48,7 +65,10 @@ const scrollListenerHandler = () => {
   <main v-if="isLogin" class="main-display">
     <side-bar v-if="memuState" :handmemuStateBtn="handmemuStateBtn"></side-bar>
     <div class="wraps">
-      <RouterView :memuState="memuState" :handmemuStateBtn="handmemuStateBtn"></RouterView>
+      <RouterView
+        :memuState="memuState"
+        :handmemuStateBtn="handmemuStateBtn"
+      ></RouterView>
     </div>
   </main>
 </template>

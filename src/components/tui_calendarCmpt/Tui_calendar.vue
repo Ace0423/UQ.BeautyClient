@@ -153,7 +153,7 @@
           >
             Today
           </button>
-          <button
+          <!-- <button
             type="button"
             class="btn btn-default btn-sm move-day"
             data-action="move-prev"
@@ -172,6 +172,22 @@
               class="calendar-icon ic-arrow-line-right"
               data-action="move-next"
             ></i>
+            <span >123</span>123
+          </button> -->
+
+          <button
+            type="button"
+            data-action="move-prev"
+            style="border-radius: 100px; background-color: #fff"
+          >
+            &lt;
+          </button>
+          <button
+            type="button"
+            data-action="move-next"
+            style="border-radius: 100px; background-color: #fff"
+          >
+            &gt;
           </button>
         </span>
         <span id="renderRange" class="render-range"></span>

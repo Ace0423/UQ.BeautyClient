@@ -39,11 +39,11 @@
 }
 
 .ic-arrow-line-left {
-  background: url('../src/assets/images/ic-arrow-line-left.png') no-repeat;
+  background: url('../image/ic-arrow-line-left.png') no-repeat;
 }
 
 .ic-arrow-line-right {
-  background: url('../src/assets/images/ic-arrow-line-right.png') no-repeat;
+  background: url('../image/ic-arrow-line-right.png') no-repeat;
 }
 
 /* font icons */

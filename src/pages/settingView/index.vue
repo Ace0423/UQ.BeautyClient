@@ -54,7 +54,7 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
             </router-link>
           </div>
         </div>
-        <div class="nav">
+        <!-- <div class="nav">
           <h1>其他</h1>
           <div class="nav-content">
             <router-link to="">
@@ -65,7 +65,7 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
               <img :src="icon_right_arrow" />
             </router-link>
           </div>
-        </div>
+        </div> -->
       </el-scrollbar>
     </div>
     <div class="menu">

@@ -32,11 +32,13 @@ function onResize() {
 }
 
 const scrollListenerHandler = () => {
-  var isIpad = navigator.userAgent.search("iPad") > -1;
+  var isIpad =( navigator.userAgent.search("iPad") > -1)||(navigator.userAgent.search("Macintosh") > -1 &&
+    navigator.userAgent.search("OS") > -1);
+    
   if (!isIpad) {
     document.getElementById("strLanguage")!.innerHTML =
       "不支援此設備，請換ipad";
-      
+
     document.getElementById("effect")!.style.display = "none";
     document.getElementById("MoblileR")!.style.display = "block";
   } else {

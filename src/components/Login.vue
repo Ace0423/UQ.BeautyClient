@@ -205,7 +205,7 @@ const loginFn = () => {
         </p>
       </div>
       <div class="login-btn">
-        <button @click="loginFn">登入</button>
+        <button class="login-btn2" @click="loginFn">登入</button>
       </div>
     </div>
   </div>
@@ -269,8 +269,7 @@ const loginFn = () => {
     > .login-btn {
       width: 100%;
       margin-top: 20px;
-
-      > button {
+      > button  {
         display: block;
         width: 50%;
         padding: 10px;
@@ -280,8 +279,8 @@ const loginFn = () => {
         font-family: HeitiTC;
         color: #fff;
         border-radius: 13px;
-        // border: 1px solid #707070;
         background-color: #877059;
+        border:#000000 1px solid;
       }
     }
 

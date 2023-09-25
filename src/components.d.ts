@@ -65,6 +65,10 @@ declare module '@vue/runtime-core' {
     MemberRadioUI: typeof import('./components/shareCmpt/MemberRadioUI.vue')['default']
     PromotionalItems: typeof import('./components/topupcardCmpt/PromotionalItems.vue')['default']
     QuicklySchedule: typeof import('./components/userManagerCmpt/QuicklySchedule.vue')['default']
+<<<<<<< HEAD
+    RadioColorUI: typeof import('./components/shareCmpt/RadioColorUI.vue')['default']
+=======
+>>>>>>> 9a1e25fc57c71bc2957af2f39d4d36dd29d03787
     RadioCountTicketUI: typeof import('./components/shareCmpt/RadioCountTicketUI.vue')['default']
     RadioCouponUI: typeof import('./components/shareCmpt/RadioCouponUI.vue')['default']
     RadioGoodsUI: typeof import('./components/shareCmpt/RadioGoodsUI.vue')['default']

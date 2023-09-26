@@ -78,7 +78,7 @@
             </div>
           </div>
         </div> -->
-        <!-- <RadioColorUI :selColorIndex="curColorIndex" :updataColorFn="updataColorFn" /> -->
+        <RadioColorUI :selColorIndex="curColorIndex" :updataColorFn="updataColorFn" />
         <div class="switch-info">
           <span>上架</span>
           <div class="online">

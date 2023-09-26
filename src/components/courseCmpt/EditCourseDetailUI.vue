@@ -80,6 +80,7 @@
             </span>
           </div>
         </div>
+        <RadioColorUI :selColorIndex="curColorIndex" :updataColorFn="updataColorFn" />
         <div class="switch-info">
           <span>上架</span>
           <div class="online">
@@ -178,6 +179,29 @@ function onBeforeFn() {
 
 onMounted(() => {});
 
+const curColorIndex = ref(0);
+const colorValues = [
+  "",
+  "#fb9ea6",
+  "#f7bf9a",
+  "#eddb9d",
+  "#c3eda0",
+  "#98e8eb",
+  "#aac9e2",
+  "#fb9ea6",
+  "#abadd7",
+  "#d8baea",
+  "#e7b1e6",
+];
+const selColorName = ref("");
+function clickColorFn(params: any) {
+  console.log("coloe", params);
+  curColorIndex.value = params;
+  selColorName.value = colorValues[params];
+}
+function updataColorFn(params: any) {
+  curColorIndex.value = params
+}
 //編輯課程
 const editConfirmHdr = () => {
   ruleLists.ruleItem.name.value = formInputRef.value.nameTw;

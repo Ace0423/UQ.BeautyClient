@@ -9,20 +9,9 @@
               {{ item.nameView + "(" + item.phone + ")" }}
             </option>
           </select> -->
-          <el-select
-            v-model="newApptDataRef.memberId"
-            filterable
-            allow-create
-            default-first-option
-            :reserve-keyword="false"
-            placeholder=" "
-          >
-            <el-option
-              v-for="item in memberList"
-              :key="item.nameView"
-              :value="item.userId"
-              :label="item.nameView"
-            >
+          <el-select v-model="newApptDataRef.memberId" filterable allow-create default-first-option
+            :reserve-keyword="false" placeholder=" ">
+            <el-option v-for="item in memberList" :key="item.nameView" :value="item.userId" :label="item.nameView">
               {{ item.nameView + "(" + item.phone + ")" }}
             </el-option>
           </el-select>
@@ -34,19 +23,9 @@
         <div class="basic_info_item time">
           <p>選擇時段</p>
           <div class="news-filter">
-            <el-select
-              v-model="newApptDataRef.timeBooking"
-              allow-create
-              default-first-option
-              :reserve-keyword="false"
-              placeholder=" "
-            >
-              <el-option
-                v-for="(item, index) in timeGroup"
-                :key="index"
-                :label="item"
-                :value="item"
-              />
+            <el-select v-model="newApptDataRef.timeBooking" allow-create default-first-option :reserve-keyword="false"
+              placeholder=" ">
+              <el-option v-for="(item, index) in timeGroup" :key="index" :label="item" :value="item" />
             </el-select>
             <span class="p_error" v-if="ruleItem.timeBooking.is_error">
               {{ ruleItem.timeBooking.warn }}
@@ -56,19 +35,10 @@
         <div class="basic_info_item beautician">
           <p>美容師</p>
           <div class="news-filter">
-            <el-select
-              v-model="newApptDataRef.beauticianId"
-              allow-create
-              default-first-option
-              :reserve-keyword="false"
-              placeholder=" "
-            >
-              <el-option
-                v-for="item in filterBeauticianCpt"
-                :key="item.managerId"
-                :value="item.managerId"
-                :label="item.nameView"
-              >
+            <el-select v-model="newApptDataRef.beauticianId" allow-create default-first-option :reserve-keyword="false"
+              placeholder=" ">
+              <el-option v-for="item in beauticianRef" :key="item.managerId" :value="item.managerId"
+                :label="item.nameView">
                 <span class="form_name"> {{ item.nameView }}</span>
               </el-option>
             </el-select>
@@ -83,38 +53,19 @@
         <div v-if="true" class="add-reserve-div">
           <template v-for="item in courseDataList" :key="item">
             <label v-if="item.display" :value="item">
-              <input
-                class="add-reserve-btn2"
-                type="checkbox"
-                :value="item"
-                v-model="newApptDataRef.courses"
-              />
-              <span
-                class="lesson-span"
-                value="{{item}}"
-                name="{{item.nameTw}}"
-                >{{ item.nameTw + "(" + item.servicesTime + ")" }}</span
-              >
+              <input class="add-reserve-btn2" type="checkbox" :value="item" v-model="newApptDataRef.courses" />
+              <span class="lesson-span" value="{{item}}" name="{{item.nameTw}}">{{ item.nameTw + "(" + item.servicesTime +
+                ")" }}</span>
             </label>
           </template>
         </div>
         <div v-else class="edit-reserve-div">
           <template v-for="(item, index) in courseDataList" :key="item">
             <label v-if="item.display" :value="item">
-              <input
-                class="add-reserve-btn2"
-                type="radio"
-                :value="item"
-                v-model="newApptDataRef.courses"
-              />
-              <span
-                :class="{
-                  checkLesson: newApptDataRef.courses == index,
-                }"
-                value="{{item}}"
-                name="{{item.nameTw}}"
-                >{{ item.nameTw + "(" + item.servicesTime + ")" }}</span
-              >
+              <input class="add-reserve-btn2" type="radio" :value="item" v-model="newApptDataRef.courses" />
+              <span :class="{
+                checkLesson: newApptDataRef.courses == index,
+              }" value="{{item}}" name="{{item.nameTw}}">{{ item.nameTw + "(" + item.servicesTime + ")" }}</span>
             </label>
           </template>
         </div>
@@ -228,8 +179,8 @@ const { postAddApptDataApi } = store;
 let { memberList, timeGroup, beauticianList, courseDataList } =
   storeToRefs(store);
 const managerstore = useManagerStore();
-const { managerList } = storeToRefs(managerstore);
-const { getManagerList } = managerstore;
+const { managerList, managerRoleList } = storeToRefs(managerstore);
+const { getManagerListNew } = managerstore;
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
 const managerStore = useManagerStore();
@@ -238,28 +189,17 @@ const { workingHoursList } = storeToRefs(managerStore);
 /**true:新增 false:修改 */
 onBefore();
 function onBefore() {
-  getManagerList({ id: 0, pageindex: 0, count: 0 })
-    .then((res) => {
-      if (res.state == 2) {
-        Alert.warning(showErrorMsg(res.msg), 2000);
-      }
-    })
-    .catch((e: any) => {
-      Alert.warning(showHttpsStatus(e.response.status), 2000);
-      if (e.response.status == 401) {
-        setTimeout(() => {
-          handLogOut();
-        }, 2000);
-      }
-    });
+  getManagerListNew({ id: 0, pageindex: 0, count: 0 })
   getRestList();
 }
 onMounted(() => {
   newApptDataRef.value.selDate = getNowDay();
 });
-let filterBeauticianCpt: any = computed(() => {
-  let curBeautician = [];
-  curBeautician.push({
+
+let beauticianRef: any = ref([]);
+getManagerListNew({ id: 0, pageindex: 0, count: 0 }).then((res: any) => {
+  beauticianRef.value = managerRoleList.value
+  beauticianRef.value.unshift({
     managerId: 0,
     nameView: "不指定",
     phone: "0000000000",
@@ -271,14 +211,8 @@ let filterBeauticianCpt: any = computed(() => {
         nameView: "CCCAdmin",
       },
     ],
-  });
-  for (let i = 0; i < managerList.value.data.length; i++) {
-    const element = managerList.value.data[i];
-    if (element.roleList.length > 0 && element.roleList[0].roleId == 5)
-      curBeautician.push(element);
-  }
-  return curBeautician;
-});
+  })
+})
 
 function getNowDay() {
   let datetime = new Date();
@@ -427,9 +361,11 @@ function isTimeOverlap(
     .basic_info_main {
       display: flex;
       align-items: baseline;
+
       .basic_info_item {
         padding: 8px 8px 8px 8px;
         display: grid;
+
         p {
           text-align: left;
           font-size: 20px;
@@ -437,7 +373,7 @@ function isTimeOverlap(
           // color: #875959;
         }
 
-        > input {
+        >input {
           width: 100%;
           height: 25px;
           border: solid 1px #707070;
@@ -445,7 +381,7 @@ function isTimeOverlap(
           border-radius: 5px;
         }
 
-        > select {
+        >select {
           width: 300px;
           height: 30px;
           font-size: 20px;
@@ -455,26 +391,31 @@ function isTimeOverlap(
         }
 
         .news-filter {
-          > select {
-            > option {
+          >select {
+            >option {
               .form_name {
                 color: #ff0000;
               }
             }
           }
         }
+
         .search_item {
           height: 100px;
+
           .search_item2 {
             height: 100px;
+
             .search_item3 {
               height: 100px;
             }
           }
-          > datalist {
+
+          >datalist {
             height: 100px;
           }
-          > input {
+
+          >input {
             width: 270px;
             height: 26px;
             font-size: 20px;
@@ -483,7 +424,7 @@ function isTimeOverlap(
             border-radius: 5px;
           }
 
-          > select {
+          >select {
             width: 300px;
             height: 30px;
             font-size: 20px;
@@ -492,6 +433,7 @@ function isTimeOverlap(
             border-radius: 5px;
           }
         }
+
         span {
           display: block;
           height: 30px;
@@ -502,22 +444,27 @@ function isTimeOverlap(
           color: #877059;
           font-weight: bold;
         }
+
         .p_error {
           color: #fc0505;
           width: 100%;
         }
+
         .el-select {
           border: solid 1px #707070;
           background-color: #fff;
           border-radius: 5px;
         }
       }
+
       .name {
         width: 60%;
       }
+
       .time {
         width: 20%;
       }
+
       .beautician {
         width: 20%;
       }
@@ -550,7 +497,8 @@ function isTimeOverlap(
       font-family: HeitiTC;
       color: #84715c;
       font-weight: bold;
-      > input {
+
+      >input {
         width: 178px;
         height: 30px;
         text-align: center;
@@ -563,15 +511,17 @@ function isTimeOverlap(
       max-height: 200px;
       overflow-y: scroll;
     }
+
     .edit-reserve-div {
       max-height: 200px;
       overflow-y: scroll;
+
       span {
         font-weight: 500;
       }
     }
 
-    > div {
+    >div {
       .p_error {
         color: #fc0505;
         width: 100%;
@@ -579,7 +529,7 @@ function isTimeOverlap(
       }
     }
 
-    > p {
+    >p {
       font-size: 20px;
       font-weight: bold;
     }
@@ -618,7 +568,7 @@ function isTimeOverlap(
       }
     }
 
-    .add-reserve-btn:checked + span {
+    .add-reserve-btn:checked+span {
       // color: yellow;
       background-color: #444;
     }
@@ -627,7 +577,7 @@ function isTimeOverlap(
       display: none;
     }
 
-    .add-reserve-btn2 + span {
+    .add-reserve-btn2+span {
       width: 262px;
       line-height: 45px;
       justify-content: space-between;
@@ -647,14 +597,15 @@ function isTimeOverlap(
       /* 防止文字被滑鼠選取反白 */
     }
 
-    .add-reserve-btn2 + .checkLesson {
+    .add-reserve-btn2+.checkLesson {
       background-color: #906e6c;
     }
+
     .lesson-span {
       font-weight: 500;
     }
 
-    .add-reserve-btn2:checked + span {
+    .add-reserve-btn2:checked+span {
       background-color: #906e6c;
     }
 

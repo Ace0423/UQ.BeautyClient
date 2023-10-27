@@ -13,12 +13,8 @@
     </div> -->
     <div id="lnb">
       <div class="lnb-new-schedule">
-        <button
-          id="btn-new-schedule"
-          type="button"
-          class="btn btn-default btn-block lnb-new-schedule-btn"
-          data-toggle="modal"
-        >
+        <button id="btn-new-schedule" type="button" class="btn btn-default btn-block lnb-new-schedule-btn"
+          data-toggle="modal">
           New schedule
         </button>
       </div>
@@ -26,12 +22,7 @@
         <div>
           <div class="lnb-calendars-item">
             <label>
-              <input
-                class="tui-full-calendar-checkbox-square"
-                type="checkbox"
-                value="all"
-                checked
-              />
+              <input class="tui-full-calendar-checkbox-square" type="checkbox" value="all" checked />
               <span></span>
               <strong>View all</strong>
             </label>
@@ -45,112 +36,61 @@
       <div id="menu">
         <!-- <span class="dropdown"> -->
         <span class="dropdown" style="display: none">
-          <button
-            id="dropdownMenu-calendarType"
-            class="btn btn-default btn-sm dropdown-toggle"
-            type="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="true"
-          >
-            <i
-              id="calendarTypeIcon"
-              class="calendar-icon ic_view_month"
-              style="margin-right: 4px"
-            ></i>
+          <button id="dropdownMenu-calendarType" class="btn btn-default btn-sm dropdown-toggle" type="button"
+            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <i id="calendarTypeIcon" class="calendar-icon ic_view_month" style="margin-right: 4px"></i>
             <span id="calendarTypeName">Dropdown</span>&nbsp;
             <i class="calendar-icon tui-full-calendar-dropdown-arrow"></i>
           </button>
-          <ul
-            class="dropdown-menu"
-            role="menu"
-            aria-labelledby="dropdownMenu-calendarType"
-          >
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu-calendarType">
             <li role="presentation">
-              <a
-                class="dropdown-menu-title"
-                role="menuitem"
-                data-action="toggle-daily"
-              >
+              <a class="dropdown-menu-title" role="menuitem" data-action="toggle-daily">
                 <i class="calendar-icon ic_view_day"></i>Daily
               </a>
             </li>
             <li role="presentation">
-              <a
-                class="dropdown-menu-title"
-                role="menuitem"
-                data-action="toggle-weekly"
-              >
+              <a class="dropdown-menu-title" role="menuitem" data-action="toggle-weekly">
                 <i class="calendar-icon ic_view_week"></i>Weekly
               </a>
             </li>
             <li role="presentation">
-              <a
-                class="dropdown-menu-title"
-                role="menuitem"
-                data-action="toggle-monthly"
-              >
+              <a class="dropdown-menu-title" role="menuitem" data-action="toggle-monthly">
                 <i class="calendar-icon ic_view_month"></i>Month
               </a>
             </li>
             <li role="presentation">
-              <a
-                class="dropdown-menu-title"
-                role="menuitem"
-                data-action="toggle-weeks2"
-              >
+              <a class="dropdown-menu-title" role="menuitem" data-action="toggle-weeks2">
                 <i class="calendar-icon ic_view_week"></i>2 weeks
               </a>
             </li>
             <li role="presentation">
-              <a
-                class="dropdown-menu-title"
-                role="menuitem"
-                data-action="toggle-weeks3"
-              >
+              <a class="dropdown-menu-title" role="menuitem" data-action="toggle-weeks3">
                 <i class="calendar-icon ic_view_week"></i>3 weeks
               </a>
             </li>
             <li role="presentation" class="dropdown-divider"></li>
             <li role="presentation">
               <a role="menuitem" data-action="toggle-workweek">
-                <input
-                  type="checkbox"
-                  class="tui-full-calendar-checkbox-square"
-                  value="toggle-workweek"
-                  checked
-                />
+                <input type="checkbox" class="tui-full-calendar-checkbox-square" value="toggle-workweek" checked />
                 <span class="checkbox-title"></span>Show weekends
               </a>
             </li>
             <li role="presentation">
               <a role="menuitem" data-action="toggle-start-day-1">
-                <input
-                  type="checkbox"
-                  class="tui-full-calendar-checkbox-square"
-                  value="toggle-start-day-1"
-                />
+                <input type="checkbox" class="tui-full-calendar-checkbox-square" value="toggle-start-day-1" />
                 <span class="checkbox-title"></span>Start Week on Monday
               </a>
             </li>
             <li role="presentation">
               <a role="menuitem" data-action="toggle-narrow-weekend">
-                <input
-                  type="checkbox"
-                  class="tui-full-calendar-checkbox-square"
-                  value="toggle-narrow-weekend"
-                />
+                <input type="checkbox" class="tui-full-calendar-checkbox-square" value="toggle-narrow-weekend" />
                 <span class="checkbox-title"></span>Narrower than weekdays
               </a>
             </li>
           </ul>
         </span>
         <span id="menu-navi" class="move-span">
-          <button
-            type="button"
-            class="btn btn-default btn-sm move-today"
-            data-action="move-today"
-          >
+          <button type="button" class="btn btn-default btn-sm move-today" data-action="move-today">
             Today
           </button>
           <!-- <button
@@ -175,18 +115,10 @@
             <span >123</span>123
           </button> -->
 
-          <button
-            type="button"
-            data-action="move-prev"
-            style="border-radius: 100px; background-color: #fff"
-          >
+          <button type="button" data-action="move-prev" style="border-radius: 100px; background-color: #fff">
             &lt;
           </button>
-          <button
-            type="button"
-            data-action="move-next"
-            style="border-radius: 100px; background-color: #fff"
-          >
+          <button type="button" data-action="move-next" style="border-radius: 100px; background-color: #fff">
             &gt;
           </button>
         </span>
@@ -249,6 +181,7 @@ export default {
         for (let i = 0; i < this.proptuiList.length; i++) {
           const element = this.proptuiList[i];
           if (num) {
+            console.log("000");
             window.cal.createSchedules([
               {
                 id: element.id,
@@ -537,7 +470,7 @@ export default {
       this.category = "";
       this.dueDateClass = "";
       this.listData = null;
-
+      console.log(555);
       this.color = null;
       this.bgColor = null;
       this.dragBgColor = null;
@@ -573,7 +506,7 @@ export default {
       var startDate = moment(renderStart.getTime());
       var endDate = moment(renderEnd.getTime());
       var diffDate = endDate.diff(startDate, "days");
-
+      console.log(666);
       schedule.isAllday = chance.bool({ likelihood: 30 });
       if (schedule.isAllday) {
         schedule.category = "allday";
@@ -636,7 +569,7 @@ export default {
       // schedule.raw.creator.phone = chance.phone();
       ScheduleList.push(schedule);
     }
-    //隨機慘生數據
+    //切換產生數據
     function generateSchedule(viewName, renderStart, renderEnd) {
       for (let i = 0; i < tuiList.length; i++) {
         const element = tuiList[i];
@@ -650,6 +583,7 @@ export default {
             start: element.start,
             end: element.end,
             location: "",
+            raw: element.raw,
           },
         ]);
       }
@@ -726,9 +660,11 @@ export default {
           );
         },
         allday: function (schedule) {
+          console.log(333);
           return getTimeTemplate(schedule, true);
         },
         time: function (schedule) {
+          console.log(444, schedule);
           return getTimeTemplate(schedule, false);
         },
       },
@@ -773,7 +709,7 @@ export default {
         // var element = cal.getElement(schedule.id, schedule.calendarId);
       },
     });
-    /**
+    /**日曆內容item樣式
      * Get time template for time and all-day
      * @param {Schedule} schedule - schedule
      * @param {boolean} isAllDay - isAllDay or hasMultiDates
@@ -782,8 +718,16 @@ export default {
     function getTimeTemplate(schedule, isAllDay) {
       var html = [];
       var start = moment(schedule.start.toUTCString());
+      var serverMsg = schedule.raw.serverName;
       if (!isAllDay) {
         html.push("<strong>" + start.format("HH:mm") + "</strong> ");
+        if (this_.proptuiOptions.tuiType != 0)
+          if (schedule.raw.serverId == 0) {
+            html.push("<strong  style='float:right; background-color:#5B5B5B; border-radius:20%;'>" + serverMsg + "</strong> ");
+          }
+          else {
+            html.push("<strong  style='float:right;  border-radius:20%;'>" + serverMsg + "</strong> ");
+          }
       }
       if (schedule.isPrivate) {
         html.push('<span class="calendar-font-icon ic-lock-b"></span>');
@@ -799,7 +743,19 @@ export default {
           //icon
           // html.push('<span class="calendar-font-icon ic-location-b"></span>');
         }
-        html.push(" " + schedule.title);
+        // html.push(" " + schedule.title);
+        if (this_.proptuiOptions.tuiType == 0) {
+          html.push(" " + schedule.title);
+        } else {
+          html.push("<br>" + "<span>" +
+            schedule.raw.customer +
+            "<br>" +
+            schedule.raw.lesson +
+            "(" +
+            schedule.raw.timer +
+            " Min)" + "</span> ");
+        }
+
       }
 
       return html.join("");
@@ -939,10 +895,10 @@ export default {
 
       html.push(
         '<span class="calendar-bar" style="background-color: ' +
-          calendar.bgColor +
-          "; border-color:" +
-          calendar.borderColor +
-          ';"></span>'
+        calendar.bgColor +
+        "; border-color:" +
+        calendar.borderColor +
+        ';"></span>'
       );
       html.push('<span class="calendar-name">' + calendar.name + "</span>");
 
@@ -1161,18 +1117,18 @@ export default {
       CalendarList.forEach(function (calendar) {
         html.push(
           '<div class="lnb-calendars-item"><label>' +
-            '<input type="checkbox" class="tui-full-calendar-checkbox-round" value="' +
-            calendar.id +
-            '" checked>' +
-            '<span style="border-color: ' +
-            calendar.borderColor +
-            "; background-color: " +
-            calendar.borderColor +
-            ';"></span>' +
-            "<span>" +
-            calendar.name +
-            "</span>" +
-            "</label></div>"
+          '<input type="checkbox" class="tui-full-calendar-checkbox-round" value="' +
+          calendar.id +
+          '" checked>' +
+          '<span style="border-color: ' +
+          calendar.borderColor +
+          "; background-color: " +
+          calendar.borderColor +
+          ';"></span>' +
+          "<span>" +
+          calendar.name +
+          "</span>" +
+          "</label></div>"
         );
       });
       calendarList.innerHTML = html.join("\n");
@@ -1187,14 +1143,17 @@ export default {
   /* .tui-full-calendar-dayname-container { */
   border-top: 0px solid rgb(229, 229, 229) !important;
 }
+
 :deep(.tui-full-calendar-month-dayname) {
   /* .tui-full-calendar-dayname-container { */
   border-top: 0px solid rgb(229, 229, 229) !important;
 }
+
 .move-today {
   background: white;
   border: solid 1px #999999;
 }
+
 .move-day {
   background: white;
   align-items: center;
@@ -1202,25 +1161,31 @@ export default {
   margin-left: 2px;
   border: solid 1px #999999;
 }
+
 .render-range {
   /* display: inline-flex;
   align-items: center; */
   margin-left: 2px;
 }
+
 .move-span {
   align-items: center;
   display: inline-flex;
 }
+
 :deep(.tui-full-calendar-week-container) {
   min-height: 100px !important;
   height: calc(100%);
 }
+
 :deep(.tui-full-calendar-vlayout-container) {
   height: calc(100% - 42px) !important;
 }
+
 :deep(.tui-full-calendar-timegrid-container) {
   height: calc(100%);
 }
+
 :deep(.tui-full-calendar-layout div:nth-child(1)) {
   /* height: calc(50px) !important; */
 }

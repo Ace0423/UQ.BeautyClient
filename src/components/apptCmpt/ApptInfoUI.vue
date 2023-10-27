@@ -18,16 +18,10 @@
             </div>
           </div>
           <div class="list_btn">
-            <button
-              :class="selItemData.state == 1 ? 'finish' : ''"
-              @click="infoBtnState(2)"
-            >
+            <button :class="selItemData.state == 1 ? 'finish' : ''" @click="infoBtnState(2)">
               修改預約
             </button>
-            <button
-              :class="selItemData.state == 1 ? 'finish' : ''"
-              @click="infoBtnState(3)"
-            >
+            <button :class="selItemData.state == 1 ? 'finish' : ''" @click="infoBtnState(3)">
               刪除預約
             </button>
           </div>
@@ -36,10 +30,7 @@
             <div class="grey-box">
               <span>人數1位</span>
             </div>
-            <button
-              :class="selItemData.state == 1 ? 'finish' : ''"
-              @click="infoBtnState(1)"
-            >
+            <button :class="selItemData.state == 1 ? 'finish' : ''" @click="infoBtnState(1)">
               預約完成
             </button>
           </div>
@@ -76,10 +67,14 @@ import closeIcon from "@/assets/Group32.svg";
 import Icon from "@/assets/Icon zocial-guest.svg";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
+import { useManagerStore } from "@/stores/manager";
 
 let store = useApptStore();
 let { memberList, beauticianList } = storeToRefs(store);
 
+const managerstore = useManagerStore();
+const { managerRoleList, } = storeToRefs(managerstore);
+const { getManagerListNew } = managerstore;
 const simpleView = ref(true);
 const props = defineProps<{
   selItemData: any;
@@ -105,13 +100,17 @@ let customerDataCpt: any = computed(() => {
   }
   return customerData;
 });
-
+getManagerListNew({ id: 0, pageindex: 0, count: 0 })
 let beauticianCpt: any = computed(() => {
-  let beauticianData = [];
-  for (let i = 0; i < beauticianList.value.length; i++) {
-    const element = beauticianList.value[i];
-    if (element.userId == props.selItemData.serverId) {
-      beauticianData = element;
+  let beauticianData = {};
+  if (props.selItemData.serverId == 0) {
+    beauticianData = { "nameView": "不指定" }
+  } else {
+    for (let i = 0; i < managerRoleList.value.length; i++) {
+      const element = managerRoleList.value[i];
+      if (element.managerId == props.selItemData.serverId) {
+        beauticianData = element;
+      }
     }
   }
   return beauticianData;
@@ -149,7 +148,7 @@ onMounted(() => {
   align-items: center;
   justify-content: end;
 
-  > div {
+  >div {
     height: 100%;
     border-radius: 10px 0 0 10px;
     border: solid 1px #707070;
@@ -158,28 +157,29 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
 
-    > .info-head {
+    >.info-head {
       height: 7%;
-      > img {
+
+      >img {
         justify-content: center;
         margin: 10px 10px 10px 10px;
       }
     }
 
-    > .bitmap-img {
+    >.bitmap-img {
       position: relative;
       left: 220px;
     }
 
-    > img {
+    >img {
       cursor: pointer;
       margin: 10px 20px;
     }
 
-    > .content {
+    >.content {
       height: 92%;
 
-      > div {
+      >div {
         min-width: 360px;
         margin: 0 10px;
       }
@@ -194,13 +194,15 @@ onMounted(() => {
           display: flex;
           width: 80%;
           margin: 5px 30px;
+
           .head-shot {
             margin: 5px 30px;
             position: relative;
             width: 15%;
           }
-          > div {
-            > p {
+
+          >div {
+            >p {
               justify-content: left;
               display: flex;
               font-family: STXihei;
@@ -211,7 +213,7 @@ onMounted(() => {
           }
         }
 
-        > h1 {
+        >h1 {
           margin: 5px 30px;
           font-family: STXihei;
           font-size: 25px;
@@ -219,7 +221,7 @@ onMounted(() => {
           text-align: left;
         }
 
-        > p {
+        >p {
           margin: 5px 30px;
           font-family: STXigei;
           font-size: 20px;
@@ -227,7 +229,7 @@ onMounted(() => {
           text-align: left;
         }
 
-        > div {
+        >div {
           button {
             width: 84%;
             height: 55px;
@@ -243,12 +245,14 @@ onMounted(() => {
             border: solid 1px #707070;
             font-size: 18px;
           }
+
           .finish {
             opacity: 0.5;
             /*設定蒙版效果*/
             pointer-events: none;
             /*禁止滑鼠事件*/
           }
+
           .grey-box {
             align-items: center;
             justify-content: center;
@@ -260,6 +264,7 @@ onMounted(() => {
             border-radius: 10px;
             color: #717171;
             font-weight: bold;
+
             span {
               font-size: 18px;
             }
@@ -270,6 +275,7 @@ onMounted(() => {
           margin: 5px 30px 18px;
           color: #877059;
           min-height: 200px;
+
           P {
             text-align: left;
             font-weight: bold;
@@ -277,10 +283,11 @@ onMounted(() => {
             font-size: 20px;
           }
 
-          > div {
+          >div {
             border: solid 1px #707070;
             background-color: #e6e2de;
             border-radius: 10px;
+
             P {
               margin: 0 0 5px 0;
             }
@@ -308,7 +315,7 @@ onMounted(() => {
           color: #877059;
 
           // flex: 1;
-          > p {
+          >p {
             margin: 0;
           }
 
@@ -328,7 +335,8 @@ onMounted(() => {
           height: 35px;
           display: flex;
           justify-content: center;
-          > button {
+
+          >button {
             height: 45px;
             border-radius: 10px;
             box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
@@ -341,6 +349,7 @@ onMounted(() => {
             border: solid 1px #707070;
             font-size: 18px;
           }
+
           .finish {
             opacity: 0.5;
             /*設定蒙版效果*/
@@ -349,14 +358,17 @@ onMounted(() => {
           }
         }
       }
+
       .current {
         display: none;
       }
+
       .content-checkoutbtn {
         height: 65px;
         display: flex;
         justify-content: center;
         align-items: center;
+
         button {
           width: 84%;
           height: 55px;
@@ -373,6 +385,7 @@ onMounted(() => {
       }
     }
   }
+
   .link-bottom {
     padding: 0 10px;
     opacity: 0.5;
@@ -381,5 +394,4 @@ onMounted(() => {
     height: 2px;
     background-color: #707070;
   }
-}
-</style>
+}</style>

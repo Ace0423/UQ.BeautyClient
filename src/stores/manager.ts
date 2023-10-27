@@ -6,6 +6,7 @@ export const useManagerStore = defineStore("manager", () => {
     const roleInfoList: any = reactive({ data: [] });
     const workingHoursList: any = reactive({ data: [] });
 
+    const managerRoleList: any = ref([]);
 
     const getManagerList = async (data: any) => {
         try {
@@ -20,6 +21,35 @@ export const useManagerStore = defineStore("manager", () => {
             return Promise.reject(error);
         }
     };
+
+    const getManagerListNew = async (data: any) => {
+        try {
+            managerRoleList.value = []
+            managerList.data = []
+            
+            const res = await apiGetAdminListRequest(data).then((res: any) => {
+                if (res.data.state == 1) {
+                    managerList.data = res.data.data.table;
+                    setManagerRoleListFn(5)
+                    console.log(managerRoleList.value);
+                }
+                return res.data;
+            });
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+
+    function setManagerRoleListFn(level: any) {
+        managerRoleList.value = []
+        //芳療師
+        for (let i = 0; i < managerList.data.length; i++) {
+            const element = managerList.data[i];
+            if (element.roleList.length > 0 && element.roleList[0].roleId == level)
+                managerRoleList.value.push(element);
+        }
+    }
 
     const createManagerData = async (data: any) => {
         try {
@@ -186,6 +216,8 @@ export const useManagerStore = defineStore("manager", () => {
     return {
         managerList,
         getManagerList,
+        managerRoleList,
+        getManagerListNew,
         createManagerData,
         editManagerData,
         roleList,

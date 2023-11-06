@@ -10,31 +10,16 @@
               v-model="formInputRef.name"
               placeholder="請輸入課程名稱"
             /> -->
-            <el-input
-              class="input-name"
-              v-model="formInputRef.nameTw"
-              placeholder="請輸入課程名稱"
-            />
+            <el-input class="input-name" v-model="formInputRef.nameTw" placeholder="請輸入課程名稱" />
             <span class="p_error" v-if="ruleItem.name.is_error">
               {{ ruleItem.name.warn }}
             </span>
           </div>
           <div class="formtime">
             <span>時長(min)</span>
-            <el-select
-              class="input-timer"
-              v-model="formInputRef.servicesTime"
-              allow-create
-              default-first-option
-              :reserve-keyword="false"
-              placeholder=" "
-            >
-              <el-option
-                v-for="(item, index) in timeGroup"
-                :key="index"
-                :label="item"
-                :value="item"
-              />
+            <el-select class="input-timer" v-model="formInputRef.servicesTime" allow-create default-first-option
+              :reserve-keyword="false" placeholder=" ">
+              <el-option v-for="(item, index) in timeGroup" :key="index" :label="item" :value="item" />
             </el-select>
             <!-- <el-input
               class="input-timer"
@@ -49,18 +34,9 @@
         <div class="userinfo">
           <div class="formtype">
             <span>類別</span>
-            <el-select
-              class="info-type"
-              filterable
-              placeholder="請選擇類別"
-              v-model="formInputRef.lessonTypeId"
-            >
-              <el-option
-                v-for="item in filterTypesTabs"
-                :key="item.nameTw"
-                :value="item.lessonTypeId"
-                :label="item.nameTw"
-              >
+            <el-select class="info-type" filterable placeholder="請選擇類別" v-model="formInputRef.lessonTypeId">
+              <el-option v-for="item in filterTypesTabs" :key="item.nameTw" :value="item.lessonTypeId"
+                :label="item.nameTw">
                 {{ item.nameTw + "" }}
               </el-option>
             </el-select>
@@ -70,26 +46,19 @@
           </div>
           <div class="formprice">
             <span>售價(NT)</span>
-            <el-input
-              class="input-price"
-              v-model="formInputRef.price"
-              onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-            />
+            <el-input class="input-price" v-model="formInputRef.price"
+              onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" />
             <span class="p_error" v-if="ruleItem.price.is_error">
               {{ ruleItem.price.warn }}
             </span>
           </div>
         </div>
-        <RadioColorUI :selColorIndex="curColorIndex" :updataColorFn="updataColorFn" />
+        <RadioColorUI :selColorIndex="formInputRef.color" :updataColorFn="updataColorFn" />
         <div class="switch-info">
           <span>上架</span>
           <div class="online">
             <div class="switch">
-              <input
-                type="checkbox"
-                id="switch"
-                v-model="formInputRef.isBonusOpen"
-              /><label for="switch">Toggle</label>
+              <input type="checkbox" id="switch" v-model="formInputRef.isBonusOpen" /><label for="switch">Toggle</label>
             </div>
             <div class="label-info">
               <label>服務是否提供抽成</label>
@@ -98,11 +67,8 @@
           </div>
           <div class="online">
             <div class="switch">
-              <input
-                type="checkbox"
-                id="switch2"
-                v-model="formInputRef.isEditAccounting"
-              /><label for="switch2">Toggle1</label>
+              <input type="checkbox" id="switch2" v-model="formInputRef.isEditAccounting" /><label
+                for="switch2">Toggle1</label>
             </div>
             <div class="label-info">
               <label>是否允許結帳畤修改金額 </label>
@@ -111,11 +77,7 @@
           </div>
           <div class="online">
             <div class="switch">
-              <input
-                type="checkbox"
-                id="switch3"
-                v-model="formInputRef.state"
-              /><label for="switch3">Toggle2</label>
+              <input type="checkbox" id="switch3" v-model="formInputRef.state" /><label for="switch3">Toggle2</label>
             </div>
             <div class="label-info">
               <label>上架 </label>
@@ -152,6 +114,7 @@ const formInputRef: any = ref({
   state: "",
   isBonusOpen: "",
   isEditAccounting: "",
+  color: "",
 });
 let timeGroup: any = ref(["30", "60", "90", "120", "150", "180", "210", "240"]);
 const props = defineProps<{
@@ -174,33 +137,15 @@ function onBeforeFn() {
     formInputRef.value.state = props.editCourseInfo.display;
     formInputRef.value.isBonusOpen = props.editCourseInfo.isBonusOpen;
     formInputRef.value.isEditAccounting = props.editCourseInfo.isEditAccounting;
+    formInputRef.value.color = props.editCourseInfo.color;
   }
 }
 
-onMounted(() => {});
+onMounted(() => { });
 
-const curColorIndex = ref(0);
-const colorValues = [
-  "",
-  "#fb9ea6",
-  "#f7bf9a",
-  "#eddb9d",
-  "#c3eda0",
-  "#98e8eb",
-  "#aac9e2",
-  "#fb9ea6",
-  "#abadd7",
-  "#d8baea",
-  "#e7b1e6",
-];
 const selColorName = ref("");
-function clickColorFn(params: any) {
-  console.log("coloe", params);
-  curColorIndex.value = params;
-  selColorName.value = colorValues[params];
-}
 function updataColorFn(params: any) {
-  curColorIndex.value = params
+  formInputRef.value.color = params
 }
 //編輯課程
 const editConfirmHdr = () => {
@@ -221,7 +166,9 @@ const editConfirmHdr = () => {
     discount: 0,
     isBonusOpen: formInputRef.value.isBonusOpen,
     isEditAccounting: formInputRef.value.isEditAccounting,
+    color: formInputRef.value.color
   };
+  
   updateCourseDetailApi(apiEditCourseData).then((res: any) => {
     let resData = res;
     if (resData.state == 1) {
@@ -362,7 +309,8 @@ const verify_all = () => {
         display: flex;
         // height: 80px;
         justify-content: center;
-        > div {
+
+        >div {
           p {
             text-align: left;
             font-size: 15px;
@@ -370,6 +318,7 @@ const verify_all = () => {
             color: #877059;
             height: 8px;
           }
+
           span {
             display: block;
             height: 30px;
@@ -382,7 +331,7 @@ const verify_all = () => {
           }
 
           // width: 98%;
-          > input {
+          >input {
             vertical-align: middle;
             width: 95%;
             margin: 5;
@@ -391,7 +340,7 @@ const verify_all = () => {
             background-color: #fff;
           }
 
-          > div {
+          >div {
             width: 40px;
 
             .checked_status {
@@ -419,14 +368,17 @@ const verify_all = () => {
           width: 260px;
           // margin-right: 10px;
           padding: 0px 10px;
+
           .input-name {
             width: 255px;
             // border: solid 1px #707070;
           }
         }
+
         .formtype {
           width: 260px;
           padding: 0px 10px;
+
           .info-type {
             width: 255px;
             // border: solid 1px #707070;
@@ -436,6 +388,7 @@ const verify_all = () => {
         .formtime {
           width: 95px;
           padding: 0px 10px;
+
           .input-timer {
             width: 95px;
             margin-left: 0;
@@ -445,6 +398,7 @@ const verify_all = () => {
         .formprice {
           width: 95px;
           padding: 0px 10px;
+
           .input-price {
             width: 95px;
           }
@@ -473,7 +427,8 @@ const verify_all = () => {
       .switch-info {
         padding: 0px 15px;
         width: 100%;
-        > span {
+
+        >span {
           display: block;
           height: 30px;
           width: 95%;
@@ -483,31 +438,38 @@ const verify_all = () => {
           color: #877059;
           font-weight: bold;
         }
-        > div {
+
+        >div {
           display: flex;
           width: 100%;
+
           .label-info {
             display: grid;
             width: 80%;
-            > label {
+
+            >label {
               color: #707070;
               font-size: 15px;
             }
-            > span {
+
+            >span {
               color: #c1bdb8;
               font-size: 8px;
             }
           }
         }
+
         .switch {
           align-items: center;
           display: flex;
           width: 20%;
+
           input[type="checkbox"] {
             height: 0;
             width: 0;
             visibility: hidden;
           }
+
           label {
             cursor: pointer;
             text-indent: -9999px;
@@ -531,11 +493,11 @@ const verify_all = () => {
             transition: 0.3s;
           }
 
-          input:checked + label {
+          input:checked+label {
             background: #877059;
           }
 
-          input:checked + label:after {
+          input:checked+label:after {
             left: calc(100% - 1px);
             transform: translateX(-100%);
           }
@@ -553,11 +515,13 @@ const verify_all = () => {
           }
         }
       }
+
       .add-coursedetail-btndiv {
         padding: 0px 20px;
         max-height: 250px;
         overflow-y: scroll;
         width: 100%;
+
         div {
           flex-wrap: wrap;
           display: flex;
@@ -576,7 +540,7 @@ const verify_all = () => {
               color: #717171;
               display: flex;
 
-              > span {
+              >span {
                 margin-top: 5px;
                 width: 88%;
                 justify-content: center;

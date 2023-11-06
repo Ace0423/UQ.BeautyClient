@@ -31,7 +31,7 @@
               {{ item.title }}
             </button>
           </div>
-          <div class="basic_info_item beautician">
+          <!-- <div class="basic_info_item beautician">
             <div class="news-filter">
               <el-select v-model="newApptDataRef.beauticianId" allow-create default-first-option :reserve-keyword="false"
                 placeholder=" ">
@@ -41,7 +41,7 @@
                 </el-option>
               </el-select>
             </div>
-          </div>
+          </div> -->
           <div class="weektoday_div" v-show="mainTabIndexRef == 0">
             <div class="weektoday_btn" @click="changeWeekToday(0)" :class="{
               noSelbtn: showWeekBoxRef != 0,
@@ -61,12 +61,18 @@
             }">
               日曆
             </div>
+            <!-- <div class="weektoday_btn" @click="changeWeekToday(3)" :class="{
+              noSelbtn: showWeekBoxRef != 3,
+              selbtn: showWeekBoxRef == 3,
+            }">
+              日曆
+            </div> -->
           </div>
         </div>
         <div class="appt_main">
           <div class="week_main" v-show="showWeekBoxRef != 2 && mainTabIndexRef == 0">
             <div>
-              <div class="appointment_schedule" v-show="false">
+              <!-- <div class="appointment_schedule" v-show="false">
                 <div class="appointment_week">
                   <div class="week-top">
                     <div class="btn_wrap">
@@ -142,7 +148,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="date_main" v-show="showWeekBoxRef == 2 && mainTabIndexRef == 0">
@@ -211,15 +217,15 @@
                     </div>
                   </div>
                 </div>
-                <div class="list_btn">
+                <!-- <div class="list_btn">
                   <div class="btn_add" @click="addAddReserveBtn()">
                     新增預約
                   </div>
-                  <!-- <div class="btn_add" @click="editAddReserveBtn()">
+                  <div class="btn_add" @click="editAddReserveBtn()">
                     修改預約
                   </div>
-                  <div class="btn_add" @click="delReserveId()">刪除預約</div> -->
-                </div>
+                  <div class="btn_add" @click="delReserveId()">刪除預約</div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -296,9 +302,13 @@
     :infoBtnState="infoBtnState" />
   <FastCheckOutUI v-if="showFastCheckOutRef" :showUIFn="showFastCheckOutUIHdr" />
   <div :class="tuiOptions.tuiType == 2 ? ' Tui_calendar_date' : 'Tui_calendar_main'
-    " class="Tui_calendar_main" v-if="mainTabIndexRef == 0">
+    " class="Tui_calendar_main" v-if="mainTabIndexRef == 0 && showWeekBoxRef != 3">
     <Tui_calendar :tuiList="tuiList" :tuiOptions="tuiOptions" :selectDate="selectDate" :selTuiListFn="selTuiListFn"
       :tuiSetDate="tuiSetDate"></Tui_calendar>
+  </div>
+
+  <div v-if="mainTabIndexRef == 0 && showWeekBoxRef == 3">
+
   </div>
 </template>
 

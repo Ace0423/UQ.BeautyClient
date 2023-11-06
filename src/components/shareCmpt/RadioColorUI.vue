@@ -43,14 +43,37 @@ import search_ico from "@/assets/images/icon_search.png";
 let store = usePriceStore();
 let { allDiscountList } = storeToRefs(store);
 let { getAllDiscountApi } = store;
-let colorIndex = ref(0)
+let colorIndex = ref(1)
 const props = defineProps<{
   updataColorFn: Function;
   selColorIndex: any;
   // updataColorFn?: any;
 }>();
 
-colorIndex.value = props.selColorIndex
+const curColorIndex = ref(1);
+const colorValues = [
+  "0000000",
+  "#fb9ea6",
+  "#f7bf9a",
+  "#eddb9d",
+  "#c3eda0",
+  "#98e8eb",
+  "#aac9e2",
+  "#abadd7",
+  "#d8baea",
+  "#e7b1e6",
+];
+console.log(props.selColorIndex);
+for (let i = 0; i < colorValues.length; i++) {
+  const element = colorValues[i];
+  if (element == props.selColorIndex) {
+    colorIndex.value = i
+  } 
+}
+console.log(props.selColorIndex);
+console.log(colorIndex.value);
+
+// colorIndex.value = props.selColorIndex
 
 onMounted(() => {
   // console.log('onMounted');
@@ -62,8 +85,7 @@ let formInputRef: any = ref({
 function clickColorFn(data: any) {
   // props.selColorIndex = data
   colorIndex.value = data
-  props.updataColorFn(colorIndex.value)
-  console.log("提交", colorIndex.value);
+  props.updataColorFn(colorValues[colorIndex.value])
 }
 </script>
 

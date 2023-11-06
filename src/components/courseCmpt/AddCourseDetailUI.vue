@@ -33,7 +33,7 @@
         </div>
         <div class="userinfo">
           <div class="formtype">
-            <span>類別</span>
+            <span>群組</span>
             <el-select class="info-type" filterable placeholder="請選擇類別" v-model="formInputRef.lessonTypeId">
               <el-option v-for="item in filterTypesTabs" :key="item.nameTw" :value="item.lessonTypeId"
                 :label="item.nameTw">
@@ -78,7 +78,7 @@
             </div>
           </div>
         </div> -->
-        <RadioColorUI :selColorIndex="curColorIndex" :updataColorFn="updataColorFn" />
+        <RadioColorUI :selColorIndex="formInputRef.color" :updataColorFn="updataColorFn" />
         <div class="switch-info">
           <span>上架</span>
           <div class="online">
@@ -161,8 +161,9 @@ function onBeforeFn() {
   formInputRef.value.lessonTypeId = "";
   formInputRef.value.price = "";
   formInputRef.value.state = false;
-  formInputRef.isBonusOpen = true;
-  formInputRef.isEditAccounting = false;
+  formInputRef.value.isBonusOpen = true;
+  formInputRef.value.isEditAccounting = false;
+  formInputRef.value.color = "";
 }
 onMounted(() => { });
 //新增課程-確認
@@ -184,6 +185,7 @@ let confirmAddCourseDataForm = () => {
     discount: 0,
     isBonusOpen: formInputRef.value.isBonusOpen,
     isEditAccounting: formInputRef.value.isEditAccounting,
+    color: formInputRef.value.color,
   };
   /**新增明細 */
   addCourseDetailApi(curdata).then((res: any) => {
@@ -195,28 +197,8 @@ let confirmAddCourseDataForm = () => {
   });
 };
 
-const curColorIndex = ref(0);
-const colorValues = [
-  "",
-  "#fb9ea6",
-  "#f7bf9a",
-  "#eddb9d",
-  "#c3eda0",
-  "#98e8eb",
-  "#aac9e2",
-  "#fb9ea6",
-  "#abadd7",
-  "#d8baea",
-  "#e7b1e6",
-];
-const selColorName = ref("");
-function clickColorFn(params: any) {
-  console.log("coloe", params);
-  curColorIndex.value = params;
-  selColorName.value = colorValues[params];
-}
 function updataColorFn(params: any) {
-  curColorIndex.value = params
+  formInputRef.value.color = params
 }
 //-------------------------------------form驗證
 const ruleLists: any = reactive({

@@ -9,15 +9,12 @@
               {{ item.nameView + "(" + item.phone + ")" }}
             </option>
           </select> -->
-          <el-select v-model="newApptDataRef.memberId" filterable allow-create default-first-option
+          <el-select v-model="newApptDataRef.memberId"  filterable allow-create default-first-option
             :reserve-keyword="false" placeholder=" ">
             <el-option v-for="item in memberList" :key="item.nameView" :value="item.userId" :label="item.nameView">
               {{ item.nameView + "(" + item.phone + ")" }}
             </el-option>
           </el-select>
-          <span class="p_error" v-if="ruleItem.name.is_error">
-            {{ ruleItem.name.warn }}
-          </span>
           <!-- <SelectSearchUI :dataList="memberList.data" /> -->
         </div>
         <div class="basic_info_item time">
@@ -108,6 +105,23 @@ let newApptDataRef: any = ref({
   courses: [],
   selDate: "",
 });
+
+let options: [{
+  value: '选项1',
+  label: '黄金糕'
+}, {
+  value: '选项2',
+  label: '双皮奶'
+}, {
+  value: '选项3',
+  label: '蚵仔煎'
+}, {
+  value: '选项4',
+  label: '龙须面'
+}, {
+  value: '选项5',
+  label: '北京烤鸭'
+}]
 //-------------------------------------form驗證
 const ruleLists: any = reactive({
   ruleItem: {
@@ -175,7 +189,7 @@ const verify_all = () => {
 //-------------------------------------------------------------------
 
 let store = useApptStore();
-const { postAddApptDataApi } = store;
+const { postAddApptDataApi, getMemberData } = store;
 let { memberList, timeGroup, beauticianList, courseDataList } =
   storeToRefs(store);
 const managerstore = useManagerStore();
@@ -195,7 +209,6 @@ function onBefore() {
 onMounted(() => {
   newApptDataRef.value.selDate = getNowDay();
 });
-
 let beauticianRef: any = ref([]);
 getManagerListNew({ id: 0, pageindex: 0, count: 0 }).then((res: any) => {
   beauticianRef.value = managerRoleList.value

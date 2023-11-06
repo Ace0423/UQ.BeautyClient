@@ -750,10 +750,11 @@ export default {
           html.push("<br>" + "<span>" +
             schedule.raw.customer +
             "<br>" +
-            schedule.raw.lesson +
-            "(" +
-            schedule.raw.timer +
-            " Min)" + "</span> ");
+            schedule.raw.lesson 
+            //+ "(" +
+            // schedule.raw.timer +
+            // " Min)" + "</span> "
+            );
         }
 
       }

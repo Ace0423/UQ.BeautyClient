@@ -8,6 +8,7 @@ import lineIcon from "@/assets/Icon awesome-line.svg";
 import mailIcon from "@/assets/Icon feather-mail.svg";
 import gMailIcon from "@/assets/g-mail.svg";
 import editIcon from "@/assets/Icon awesome-edit.svg";
+import addIcon from "@/assets/images/icon_add.png"
 import { useMemberBankStore } from "@/stores/memberBank";
 
 const memberBankStore = useMemberBankStore();
@@ -77,8 +78,9 @@ onMounted(() => {
             <p>{{ props.selectMemberItem.phone }}</p>
             <div class="group-lab">
               <div v-for="item in props.selectMemberItem.groupList" :key="item.groupId">
-                {{ item.label }}
+                <p>{{ item.label }}</p>
               </div>
+              <img class="circle" :src="addIcon" v-on:click="handAddMemberView()" />
             </div>
           </div>
           <div class="info-detail">
@@ -100,8 +102,11 @@ onMounted(() => {
             </div>
           </div>
           <div class="info-memo">
-            <p>備註</p>
-            <textarea disabled v-model="props.selectMemberItem.memo"></textarea>
+            <h4>來源</h4>
+            <p3 v-if="props.selectMemberItem.fromWhere == 0">現場</p3>
+            <p3 v-if="props.selectMemberItem.fromWhere == 1">網路</p3>
+            <h4>加入時間</h4>
+            <p3>{{ props.selectMemberItem.dateCreate }}</p3>
           </div>
         </div>
       </div>
@@ -228,14 +233,27 @@ onMounted(() => {
           .group-lab {
             display: flex;
             width: 100%;
+            height: 30px;
             justify-content: center;
             flex-wrap: wrap;
 
             >div {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-size: 14px;
               border: solid 1px #707070;
               background-color: #e6e2de;
               padding: 1px 1px;
               margin: 2px 2px;
+
+              >p {
+                margin: 0px 0px;
+              }
+            }
+
+            .circle {
+              clip-path: circle(50% at 50% 50%);
             }
           }
 
@@ -294,15 +312,6 @@ onMounted(() => {
           margin: 0 10px;
           border-bottom: 2px #707070 solid;
           color: #877059;
-
-          textarea {
-            border: solid 1px #707070;
-            background-color: #e6e2de;
-            border-radius: 10px;
-            width: auto;
-            min-height: 120px;
-            margin-bottom: 25px;
-          }
         }
       }
     }

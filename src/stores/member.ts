@@ -35,7 +35,8 @@ export const useMemberStore = defineStore("member", () => {
             sex: data.sex,
             poto: data.poto,
             memo: data.memo,
-            groupList: []
+            groupList: [],
+            FromWhere: data.FromWhere,
         }
         for (let index = 0; index < data.groupList.length; index++) {
             memberVal.groupList.push(data.groupList[index].groupId);

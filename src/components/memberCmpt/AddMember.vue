@@ -26,6 +26,7 @@ const newMember: any = reactive({
   sex: 1,
   poto: "",
   memo: "",
+  FromWhere: 0,
   groupList: [],
 });
 

@@ -97,11 +97,7 @@ onMounted(() => {
             </div>
           </td>
           <td>
-            <div
-              class="group-frame"
-              v-for="gItem in item.groupList"
-              :key="gItem.groupId"
-            >
+            <div class="group-frame" v-for="gItem in item.groupList" :key="gItem.groupId">
               {{ gItem.label }}
             </div>
           </td>
@@ -117,17 +113,9 @@ onMounted(() => {
       </tbody>
     </table>
   </div>
-  <AddMember
-    v-if="addMemberView"
-    :hand-add-member-view="handAddMemberView"
-    :select-member-item="selectMemberItem"
-  />
-  <MemberInfo
-    v-if="memberInfoView"
-    :hand-member-info-view="handMemberInfoView"
-    :select-member-item="selectMemberItem"
-    :hand-add-member-view="handAddMemberView"
-  />
+  <AddMember v-if="addMemberView" :hand-add-member-view="handAddMemberView" :select-member-item="selectMemberItem" />
+  <MemberInfo v-if="memberInfoView" :hand-member-info-view="handMemberInfoView" :select-member-item="selectMemberItem"
+    :hand-add-member-view="handAddMemberView" />
 </template>
 
 <style lang="scss" scoped>
@@ -143,7 +131,7 @@ onMounted(() => {
   font-family: STXihei;
   color: #717171;
 
-  > .function-area {
+  >.function-area {
     height: 50px;
     position: absolute;
     top: -50px;
@@ -155,7 +143,7 @@ onMounted(() => {
     right: 0px;
     width: auto;
 
-    > input {
+    >input {
       width: auto;
       height: 60%;
       border-radius: 6px;
@@ -165,7 +153,7 @@ onMounted(() => {
       text-align: center;
     }
 
-    > button {
+    >button {
       border-radius: 6px;
       min-width: 100px;
       height: 70%;
@@ -176,11 +164,11 @@ onMounted(() => {
     }
   }
 
-  > table {
+  >table {
     width: 100%;
     height: 100%;
 
-    > .header-tab {
+    >.header-tab {
       display: block;
       // height: 50px;
       color: #717171;
@@ -188,28 +176,28 @@ onMounted(() => {
       background-color: #e6e2de;
       box-sizing: border-box;
 
-      > tr {
+      >tr {
         display: flex;
         align-items: center;
         height: 50px;
         justify-content: space-between;
 
-        > th {
+        >th {
           width: calc(100% / 4);
 
-          > p {
+          >p {
             min-width: 108px;
             text-align: left;
           }
 
-          > .nameview {
+          >.nameview {
             padding-left: 10px;
           }
         }
       }
     }
 
-    > .content-tab {
+    >.content-tab {
       position: absolute;
       width: 100%;
       top: 52px;
@@ -217,7 +205,7 @@ onMounted(() => {
       overflow: auto;
       display: block;
 
-      > tr {
+      >tr {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -235,18 +223,33 @@ onMounted(() => {
           transform: translateX(-50%);
         }
 
-        > td {
+        >td {
           display: flex;
           width: calc(100% / 4);
 
-          > button {
+          >.group-frame {
+            display: flex;
+              justify-content: center;
+              align-items: center;
+              font-size: 14px;
+              border: solid 1px #707070;
+              background-color: #e6e2de;
+              padding: 1px 1px;
+              margin: 2px 2px;
+
+              >p {
+                margin: 0px 0px;
+              }
+          }
+
+          >button {
             height: 100%;
             background-color: transparent;
             border: none;
             padding: 0 0 0 0;
             margin: 0 2px;
 
-            > img {
+            >img {
               cursor: pointer;
               width: 40px;
               height: 40px;
@@ -254,6 +257,7 @@ onMounted(() => {
             }
           }
         }
+
         .content-name {
           // padding-left: 10px;
           display: flex;
@@ -261,6 +265,7 @@ onMounted(() => {
           img {
             margin: 0 15px;
           }
+
           P {
             margin: 0 0;
           }

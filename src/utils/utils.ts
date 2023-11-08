@@ -2,6 +2,21 @@ export const myGlobalMethod = () => {
   console.log("This is my global method.");
 };
 
+
+export const checkVerify_all = (ruleLists: any) => {
+  let is_valid = true;
+  for (let component in ruleLists.ruleItem) {
+    let item = ruleLists.ruleItem[component];
+    for (let rule in item.rules) {
+      if (!verify_methods[rule](item)) {
+        is_valid = false;
+        break;
+      }
+    }
+  }
+  return is_valid;
+};
+
 export const verify_methods: any = {
   required(component: any) {
     if (!component.value) {

@@ -1,12 +1,8 @@
 <template>
   <div class="container">
     <div class="top_box">
-      <Header
-        :Icon="Icon"
-        :moduleType="'預約紀錄'"
-        :memuState="props.memuState"
-        :handmemuStateBtn="props.handmemuStateBtn"
-      ></Header>
+      <Header :Icon="Icon" :moduleType="'預約紀錄'" :memuState="props.memuState" :handmemuStateBtn="props.handmemuStateBtn">
+      </Header>
       <div class="top_menu">
         <div>
           <img :src="btn_msg_ico" />
@@ -17,12 +13,8 @@
             <template #dropdown>
               <el-dropdown-menu class="top-menu-drop">
                 <el-dropdown-item command="addAppt">新增預約</el-dropdown-item>
-                <el-dropdown-item command="addRest"
-                  >加入休息時間</el-dropdown-item
-                >
-                <el-dropdown-item command="addCheckOut"
-                  >新增快速結帳單</el-dropdown-item
-                >
+                <el-dropdown-item command="addRest">加入休息時間</el-dropdown-item>
+                <el-dropdown-item command="addCheckOut">新增快速結帳單</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -34,85 +26,64 @@
       <div class="appointment_box">
         <div class="item-tab">
           <div>
-            <button
-              :class="mainTabIndexRef == index ? 'active' : ''"
-              v-for="(item, index) in mainTypeDataRef"
-              :key="item.id"
-              v-on:click="changeMainTab(index)"
-            >
+            <button :class="mainTabIndexRef == index ? 'active' : ''" v-for="(item, index) in mainTypeDataRef"
+              :key="item.id" v-on:click="changeMainTab(index)">
               {{ item.title }}
             </button>
           </div>
+          <!-- <div class="basic_info_item beautician">
+            <div class="news-filter">
+              <el-select v-model="newApptDataRef.beauticianId" allow-create default-first-option :reserve-keyword="false"
+                placeholder=" ">
+                <el-option v-for="item in beauticianRef" :key="item.managerId" :value="item.managerId"
+                  :label="item.nameView">
+                  <span class="form_name"> {{ item.nameView }}</span>
+                </el-option>
+              </el-select>
+            </div>
+          </div> -->
           <div class="weektoday_div" v-show="mainTabIndexRef == 0">
-            <div
-              class="weektoday_btn"
-              @click="changeWeekToday(0)"
-              :class="{
-                noSelbtn: showWeekBoxRef != 0,
-                selbtn: showWeekBoxRef == 0,
-              }"
-            >
+            <div class="weektoday_btn" @click="changeWeekToday(0)" :class="{
+              noSelbtn: showWeekBoxRef != 0,
+              selbtn: showWeekBoxRef == 0,
+            }">
               月曆
             </div>
-            <div
-              class="weektoday_btn"
-              @click="changeWeekToday(1)"
-              :class="{
-                noSelbtn: showWeekBoxRef != 1,
-                selbtn: showWeekBoxRef == 1,
-              }"
-            >
+            <div class="weektoday_btn" @click="changeWeekToday(1)" :class="{
+              noSelbtn: showWeekBoxRef != 1,
+              selbtn: showWeekBoxRef == 1,
+            }">
               週曆
             </div>
-            <div
-              class="weektoday_btn"
-              @click="changeWeekToday(2)"
-              :class="{
-                noSelbtn: showWeekBoxRef != 2,
-                selbtn: showWeekBoxRef == 2,
-              }"
-            >
+            <div class="weektoday_btn" @click="changeWeekToday(2)" :class="{
+              noSelbtn: showWeekBoxRef != 2,
+              selbtn: showWeekBoxRef == 2,
+            }">
               日曆
             </div>
+            <!-- <div class="weektoday_btn" @click="changeWeekToday(3)" :class="{
+              noSelbtn: showWeekBoxRef != 3,
+              selbtn: showWeekBoxRef == 3,
+            }">
+              日曆
+            </div> -->
           </div>
         </div>
         <div class="appt_main">
-          <div
-            class="week_main"
-            v-show="showWeekBoxRef != 2 && mainTabIndexRef == 0"
-          >
+          <div class="week_main" v-show="showWeekBoxRef != 2 && mainTabIndexRef == 0">
             <div>
-              <div class="appointment_schedule" v-show="false">
+              <!-- <div class="appointment_schedule" v-show="false">
                 <div class="appointment_week">
                   <div class="week-top">
                     <div class="btn_wrap">
                       <div class="dateBox_title">
                         <span @click="goTodayHdr()">TODAY </span>
-                        <img
-                          v-if="stopDown"
-                          class="arrow arrow-left"
-                          :src="arrow_left_ico"
-                          @click="getLastWeek()"
-                        />
-                        <img
-                          v-if="!stopDown"
-                          class="arrow arrow-left"
-                          :src="stop_left_ico"
-                        />
-                        <span class="todayDate"
-                          >{{ weeekTodayTitle + "月" }}
+                        <img v-if="stopDown" class="arrow arrow-left" :src="arrow_left_ico" @click="getLastWeek()" />
+                        <img v-if="!stopDown" class="arrow arrow-left" :src="stop_left_ico" />
+                        <span class="todayDate">{{ weeekTodayTitle + "月" }}
                         </span>
-                        <img
-                          v-if="stopDown"
-                          class="arrow arrow-right"
-                          :src="arrow_right_ico"
-                          @click="getNextWeek()"
-                        />
-                        <img
-                          v-if="!stopDown"
-                          class="arrow stop-right"
-                          :src="stop_left_ico"
-                        />
+                        <img v-if="stopDown" class="arrow arrow-right" :src="arrow_right_ico" @click="getNextWeek()" />
+                        <img v-if="!stopDown" class="arrow stop-right" :src="stop_left_ico" />
                       </div>
                     </div>
                   </div>
@@ -121,22 +92,16 @@
                       <table class="Listinfotbody" style="">
                         <thead>
                           <tr>
-                            <template
-                              v-for="(item, index) of months"
-                              :key="index"
-                            >
+                            <template v-for="(item, index) of months" :key="index">
                               <th v-on:click="onWeekSeldate(item.date)">
                                 <span class="first" v-if="index === 0">
                                   {{}}
                                 </span>
                                 <span v-else :key="index + 0">
-                                  <span
-                                    class="day_item"
-                                    :class="{
-                                      isCurDate: item.isCurDate,
-                                      isSelDate: selDate == item.date,
-                                    }"
-                                  >
+                                  <span class="day_item" :class="{
+                                    isCurDate: item.isCurDate,
+                                    isSelDate: selDate == item.date,
+                                  }">
                                     {{ item.showDate }}
                                   </span>
                                   <span> {{ item.weekTitle }} </span>
@@ -146,43 +111,23 @@
                           </tr>
                         </thead>
                         <tbody>
-                          <tr
-                            class="timePeriod_col2"
-                            v-for="(period, p_index) in monthsThingsRef"
-                            align="center"
-                            valign="center"
-                            :key="`period${p_index}`"
-                          >
+                          <tr class="timePeriod_col2" v-for="(period, p_index) in monthsThingsRef" align="center"
+                            valign="center" :key="`period${p_index}`">
                             <td class="timeGroup">{{ period.time }}</td>
-                            <template
-                              v-for="(thingGroup, t_index) of period.newThings"
-                              :key="`thing${t_index}`"
-                            >
-                              <td
-                                class="thing_group"
-                                :rowspan="thingGroup.range"
-                              >
-                                <div
-                                  :class="{
-                                    one_things: thingGroup.things.length == 1,
-                                    more_things: thingGroup.things.length > 1,
-                                    zero_things: thingGroup.things.length == 0,
-                                  }"
-                                >
-                                  <template
-                                    v-for="(
+                            <template v-for="(thingGroup, t_index) of period.newThings" :key="`thing${t_index}`">
+                              <td class="thing_group" :rowspan="thingGroup.range">
+                                <div :class="{
+                                  one_things: thingGroup.things.length == 1,
+                                  more_things: thingGroup.things.length > 1,
+                                  zero_things: thingGroup.things.length == 0,
+                                }">
+                                  <template v-for="(
                                       thing, t_index
-                                    ) of thingGroup.things"
-                                    :key="`thing${t_index}`"
-                                  >
-                                    <div
-                                      class="thing_item"
-                                      @click="handleDetail(thing)"
-                                      :class="{
-                                        finish: thing.state == 1,
-                                        waiting: thing.state == 0,
-                                      }"
-                                    >
+                                    ) of thingGroup.things" :key="`thing${t_index}`">
+                                    <div class="thing_item" @click="handleDetail(thing)" :class="{
+                                      finish: thing.state == 1,
+                                      waiting: thing.state == 0,
+                                    }">
                                       <span class="timeSpan">{{
                                         thing.timePeriod
                                       }}</span>
@@ -203,13 +148,10 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
-          <div
-            class="date_main"
-            v-show="showWeekBoxRef == 2 && mainTabIndexRef == 0"
-          >
+          <div class="date_main" v-show="showWeekBoxRef == 2 && mainTabIndexRef == 0">
             <div class="date_schedule">
               <div class="appointment_date" v-show="false">
                 <div class="date_top">
@@ -220,39 +162,22 @@
                   <div class="date_timePeriodList">
                     <table class="date_Listinfotbody" style="">
                       <tbody>
-                        <tr
-                          class="date_timePeriod_col2"
-                          v-for="(period, p_index) in todayThingsRef"
-                          align="center"
-                          valign="center"
-                          :key="`period${p_index}`"
-                        >
+                        <tr class="date_timePeriod_col2" v-for="(period, p_index) in todayThingsRef" align="center"
+                          valign="center" :key="`period${p_index}`">
                           <td class="time_row">{{ period.time }}</td>
-                          <template
-                            v-for="(thingGroup, t_index) of period.newThings"
-                            :key="`thing${t_index}`"
-                          >
+                          <template v-for="(thingGroup, t_index) of period.newThings" :key="`thing${t_index}`">
                             <td class="thing_group" :rowspan="thingGroup.range">
-                              <div
-                                :class="{
-                                  one_things: thingGroup.things.length == 1,
-                                  more_things: thingGroup.things.length > 1,
-                                  zero_things: thingGroup.things.length == 0,
-                                }"
-                              >
-                                <template
-                                  v-for="(thing, t_index) of thingGroup.things"
-                                  :key="`thing${t_index}`"
-                                >
-                                  <div
-                                    class="thing_item"
-                                    @click="handleDetail(thing)"
-                                    :class="{
-                                      finish: thing.state == 1,
-                                      waiting: thing.state == 0,
-                                      seldated: thing.state == 99,
-                                    }"
-                                  >
+                              <div :class="{
+                                one_things: thingGroup.things.length == 1,
+                                more_things: thingGroup.things.length > 1,
+                                zero_things: thingGroup.things.length == 0,
+                              }">
+                                <template v-for="(thing, t_index) of thingGroup.things" :key="`thing${t_index}`">
+                                  <div class="thing_item" @click="handleDetail(thing)" :class="{
+                                    finish: thing.state == 1,
+                                    waiting: thing.state == 0,
+                                    seldated: thing.state == 99,
+                                  }">
                                     <span>{{ thing.timePeriod }}</span>
                                     <span>{{ thing.customer }}</span>
                                     <span>{{
@@ -272,54 +197,35 @@
               <div class="little_date">
                 <div class="dateBox">
                   <div class="dateBox_title">
-                    <img
-                      class="arrow arrow-left"
-                      :src="arrow_left_ico"
-                      @click="lastMonth()"
-                    />
+                    <img class="arrow arrow-left" :src="arrow_left_ico" @click="lastMonth()" />
                     <div class="data">
                       {{ currentYear }}-{{ curMonthAdd + "月" }}
                     </div>
-                    <img
-                      class="arrow arrow-right"
-                      :src="arrow_right_ico"
-                      @click="nextMonth()"
-                    />
+                    <img class="arrow arrow-right" :src="arrow_right_ico" @click="nextMonth()" />
                   </div>
                   <div class="dateBox_content">
                     <div class="row_title">
                       <span v-for="item in title" :key="item">{{ item }}</span>
                     </div>
                     <div class="row_content">
-                      <span
-                        class="prevDay"
-                        v-for="item in prevDays"
-                        :key="'A' + item"
-                        >{{ item }}</span
-                      >
-                      <span
-                        class="thisDay"
-                        :class="{
-                          active: currentDay == index + 1 && checkYM,
-                          todayEff: new Date().getDate() == item && checkToday,
-                        }"
-                        v-for="(item, index) in currentDays"
-                        :key="item"
-                        v-on:click="onSelect(index + 1)"
-                        >{{ item }}</span
-                      >
+                      <span class="prevDay" v-for="item in prevDays" :key="'A' + item">{{ item }}</span>
+                      <span class="thisDay" :class="{
+                        active: currentDay == index + 1 && checkYM,
+                        todayEff: new Date().getDate() == item && checkToday,
+                      }" v-for="(item, index) in currentDays" :key="item" v-on:click="onSelect(index + 1)">{{ item
+}}</span>
                     </div>
                   </div>
                 </div>
-                <div class="list_btn">
+                <!-- <div class="list_btn">
                   <div class="btn_add" @click="addAddReserveBtn()">
                     新增預約
                   </div>
-                  <!-- <div class="btn_add" @click="editAddReserveBtn()">
+                  <div class="btn_add" @click="editAddReserveBtn()">
                     修改預約
                   </div>
-                  <div class="btn_add" @click="delReserveId()">刪除預約</div> -->
-                </div>
+                  <div class="btn_add" @click="delReserveId()">刪除預約</div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -332,11 +238,7 @@
                     <th v-for="item in aptTitle" :key="item">
                       <p>{{ item }}</p>
                     </th>
-                    <input
-                      v-model="searchList"
-                      class="search-control"
-                      placeholder="搜尋顧客"
-                    />
+                    <input v-model="searchList" class="search-control" placeholder="搜尋顧客" />
                   </tr>
                 </thead>
                 <tbody id="content">
@@ -371,20 +273,13 @@
                         v-on:click="changeStutusFn(index, item)"
                       /> -->
                       <div class="checked_state">
-                        <input
-                          type="checkbox"
-                          :id="item.bookingNo"
-                          :checked="item.state == 1"
-                          v-on:click="changeStutusFn(index, item)"
-                        />
+                        <input type="checkbox" :id="item.bookingNo" :checked="item.state == 1"
+                          v-on:click="changeStutusFn(index, item)" />
                         <label :for="item.bookingNo"></label>
                       </div>
                     </td>
                     <td>
-                      <button
-                        v-show="item.state == 0"
-                        v-on:click="delCourseListHdr(index, item.id)"
-                      >
+                      <button v-show="item.state == 0" v-on:click="delCourseListHdr(index, item.id)">
                         <img :src="DeleteIcon" />
                       </button>
                     </td>
@@ -397,51 +292,23 @@
       </div>
     </div>
   </div>
-  <AddApptUI
-    v-if="showAddReserveFormRef"
-    :showAddReserveForm="showAddReserveForm"
-  ></AddApptUI>
-  <EditApptUI
-    v-if="showEditReserveFormRef"
-    :showAddReserveForm="showEditReserveForm"
-    :curApptDataRef="newApptDataRef"
-    :showOkBtnRef="showOkBtnRef"
-    :oldSelList="oldSelList"
-  ></EditApptUI>
-  <AddRestTimeUI
-    v-if="showAddRestUIRef"
-    :showAddRestUIFn="showAddRestUIFn"
-  ></AddRestTimeUI>
-  <LittleDateUI
-    v-if="showLittleDateRef"
-    :showUIFn="updataShowLittleDate"
-    :selDate="selDate"
-    :selLittleDateFn="selLittleDateFn"
-  />
-  <ApptInfoUI
-    v-if="showApptInfoRef"
-    :showUIHdr="updataShowApptInfoRef"
-    :selItemData="oldSelList"
-    :infoBtnState="infoBtnState"
-  />
-  <FastCheckOutUI
-    v-if="showFastCheckOutRef"
-    :showUIFn="showFastCheckOutUIHdr"
-  />
-  <div
-    :class="
-      tuiOptions.tuiType == 2 ? ' Tui_calendar_date' : 'Tui_calendar_main'
-    "
-    class="Tui_calendar_main"
-    v-if="mainTabIndexRef == 0"
-  >
-    <Tui_calendar
-      :tuiList="tuiList"
-      :tuiOptions="tuiOptions"
-      :selectDate="selectDate"
-      :selTuiListFn="selTuiListFn"
-      :tuiSetDate="tuiSetDate"
-    ></Tui_calendar>
+  <AddApptUI v-if="showAddReserveFormRef" :showAddReserveForm="showAddReserveForm"></AddApptUI>
+  <EditApptUI v-if="showEditReserveFormRef" :showAddReserveForm="showEditReserveForm" :curApptDataRef="newApptDataRef"
+    :showOkBtnRef="showOkBtnRef" :oldSelList="oldSelList"></EditApptUI>
+  <AddRestTimeUI v-if="showAddRestUIRef" :showAddRestUIFn="showAddRestUIFn"></AddRestTimeUI>
+  <LittleDateUI v-if="showLittleDateRef" :showUIFn="updataShowLittleDate" :selDate="selDate"
+    :selLittleDateFn="selLittleDateFn" />
+  <ApptInfoUI v-if="showApptInfoRef" :showUIHdr="updataShowApptInfoRef" :selItemData="oldSelList"
+    :infoBtnState="infoBtnState" />
+  <FastCheckOutUI v-if="showFastCheckOutRef" :showUIFn="showFastCheckOutUIHdr" />
+  <div :class="tuiOptions.tuiType == 2 ? ' Tui_calendar_date' : 'Tui_calendar_main'
+    " class="Tui_calendar_main" v-if="mainTabIndexRef == 0 && showWeekBoxRef != 3">
+    <Tui_calendar :tuiList="tuiList" :tuiOptions="tuiOptions" :selectDate="selectDate" :selTuiListFn="selTuiListFn"
+      :tuiSetDate="tuiSetDate"></Tui_calendar>
+  </div>
+
+  <div v-if="mainTabIndexRef == 0 && showWeekBoxRef == 3">
+
   </div>
 </template>
 
@@ -475,6 +342,10 @@ const props = defineProps<{
   memuState: any;
   handmemuStateBtn: Function;
 }>();
+
+const managerstore = useManagerStore();
+const { managerList, managerRoleList } = storeToRefs(managerstore);
+const { getManagerListNew } = managerstore;
 let searchList = ref("");
 let showWeekBoxRef = ref(1);
 let showFastCheckOutRef = ref(false);
@@ -514,6 +385,24 @@ let mainTypeDataRef = ref([
     title: "預約列表",
   },
 ]);
+
+let beauticianRef: any = ref([]);
+getManagerListNew({ id: 0, pageindex: 0, count: 0 }).then((res: any) => {
+  beauticianRef.value = managerRoleList.value
+  beauticianRef.value.unshift({
+    managerId: -1,
+    nameView: "全部",
+    phone: "0000000000",
+    roleList: [
+      {
+        roleId: 5,
+        mgrId: -1,
+        label: "Expert",
+        nameView: "All",
+      },
+    ],
+  })
+})
 //--------------------------------------------------tui套件設置
 let tuiList: any = reactive([
   // {
@@ -677,6 +566,7 @@ function getApptInfoFn(
       tuiList = [];
       for (let i = 0; i < tuiBookingListRef.value.length; i++) {
         const element = tuiBookingListRef.value[i];
+        element.serverName = getManagerName(element.serverId);
         //顯示課程ITEM
         tuiList.push({
           id: element.bookingNo,
@@ -684,16 +574,17 @@ function getApptInfoFn(
           calendarId: "9", // (element.lessonId / 2).toString(),
           //顯示內容
           title:
-            "" +
+            "<br>" +
             element.customer +
             "<br>" +
             element.lesson +
-            "<br>" +
+            "(" +
             element.timer +
-            " Min",
+            " Min)",
           titleMonth: "" + element.customer + " - " + element.lesson,
           category: "time",
           dueDateClass: "",
+          serverId: element.serverId,
           start: element.dateBooking,
           end: computeDate(element.dateBooking, "add", 0, 0, element.timer),
           raw: element,
@@ -703,6 +594,21 @@ function getApptInfoFn(
       // getRestList();
     });
   });
+}
+
+function getManagerName(params: number) {
+  let beauticianData = ""
+  if (params == 0) {
+    beauticianData = "不指定"
+  } else {
+    for (let i = 0; i < managerRoleList.value.length; i++) {
+      const element = managerRoleList.value[i];
+      if (element.managerId == params) {
+        beauticianData = element.nameView;
+      }
+    }
+  }
+  return beauticianData
 }
 
 getApptInfoFn(new Date().getFullYear(), new Date().getMonth() + 1);
@@ -1171,7 +1077,7 @@ function onWeekSeldate(data: any) {
   checkYM.value = true;
 }
 
-function visibleChange(value: any) {}
+function visibleChange(value: any) { }
 
 //新增預約表單-顯示
 let showAddReserveForm = (state: boolean) => {
@@ -1360,6 +1266,8 @@ function setRestTimeFn(data: any) {
             end: eleTimeTableList.date + " " + eleRestTime.dayOff + ":00",
             raw: tidyRestData[tidyRestData.length - 1],
           });
+          console.log(111);
+
         }
       }
     }
@@ -1376,6 +1284,7 @@ function setRestTimeFn(data: any) {
 
 <style scoped lang="scss">
 $borderCoder: #eaedf2;
+
 .container {
   height: calc(var(--vh, 1vh) * 100);
   position: relative;
@@ -1384,17 +1293,20 @@ $borderCoder: #eaedf2;
   .top_box {
     display: flex;
     width: 100%;
+
     .top_menu {
       display: flex;
       width: calc(100%);
       justify-content: right;
       height: 80px;
-      > div {
+
+      >div {
         height: 29px;
         position: relative;
         right: 15px;
         top: 15px;
-        > img {
+
+        >img {
           margin-right: 10px;
           height: 29px;
           width: 29px;
@@ -1414,18 +1326,20 @@ $borderCoder: #eaedf2;
       // height: 100%;
       height: 100%;
       position: relative;
-      > .item-tab {
+
+      >.item-tab {
         display: flex;
         height: 45px;
         width: 94%;
         position: relative;
         left: 3%;
-        > div {
+
+        >div {
           display: flex;
           width: calc(100% - 240px);
           height: 100%;
 
-          > button {
+          >button {
             white-space: nowrap;
             min-width: 120px;
             justify-content: center;
@@ -1440,7 +1354,7 @@ $borderCoder: #eaedf2;
             border-radius: 10px 10px 0 0;
           }
 
-          > button.active {
+          >button.active {
             background-color: #e6e2de;
           }
         }
@@ -1499,7 +1413,7 @@ $borderCoder: #eaedf2;
           width: 100%;
           height: 100%;
 
-          > div {
+          >div {
             position: relative;
             width: 100%;
             height: 100%;
@@ -1577,6 +1491,7 @@ $borderCoder: #eaedf2;
                       .arrow-right {
                         color: #b89087;
                       }
+
                       .stop-right {
                         transform: scaleX(-1);
                       }
@@ -1675,15 +1590,15 @@ $borderCoder: #eaedf2;
                       height: 100%;
                       word-break: break-all;
 
-                      > thead {
+                      >thead {
                         display: flex;
                         width: 100%;
 
-                        > tr {
+                        >tr {
                           display: flex;
                           width: 100%;
 
-                          > th {
+                          >th {
                             display: flex;
                             width: 100%;
                             text-align: left;
@@ -1691,7 +1606,7 @@ $borderCoder: #eaedf2;
                             align-items: center;
                             // border: 1px solid #ffffff;
 
-                            > span {
+                            >span {
                               flex: 1;
                               height: 100%;
                               display: flex;
@@ -1709,13 +1624,14 @@ $borderCoder: #eaedf2;
                                 padding: 5px;
                               }
 
-                              > span {
+                              >span {
                                 // color: #000;
                                 font-size: 15px;
                               }
                             }
 
                             .first {
+
                               // cursor: pointer;
                               i {
                                 margin-left: 1%;
@@ -1724,35 +1640,43 @@ $borderCoder: #eaedf2;
                               }
                             }
                           }
-                          > th:nth-child(1) {
+
+                          >th:nth-child(1) {
                             width: 9%;
                           }
-                          > th:nth-child(2) {
+
+                          >th:nth-child(2) {
                             width: 13%;
                           }
-                          > th:nth-child(3) {
+
+                          >th:nth-child(3) {
                             width: 13%;
                           }
-                          > th:nth-child(4) {
+
+                          >th:nth-child(4) {
                             width: 13%;
                           }
-                          > th:nth-child(5) {
+
+                          >th:nth-child(5) {
                             width: 13%;
                           }
-                          > th:nth-child(6) {
+
+                          >th:nth-child(6) {
                             width: 13%;
                           }
-                          > th:nth-child(7) {
+
+                          >th:nth-child(7) {
                             width: 13%;
                           }
-                          > th:nth-child(8) {
+
+                          >th:nth-child(8) {
                             width: 13%;
                           }
                         }
                       }
 
                       // border: 1px solid #000000;
-                      > tbody {
+                      >tbody {
                         width: 100%;
                         border: 3px gary solid;
                         height: 100%;
@@ -1764,7 +1688,8 @@ $borderCoder: #eaedf2;
                           height: 56px;
                           // display: flex;
                           width: 100%;
-                          > td {
+
+                          >td {
                             height: 50px;
                             // border: 1px solid #ffffff;
                             //網格
@@ -1772,7 +1697,7 @@ $borderCoder: #eaedf2;
                             color: #906e6c;
                             table-layout: fixed;
 
-                            > span {
+                            >span {
                               flex: 1;
                               color: #000;
                               height: 100%;
@@ -1791,28 +1716,35 @@ $borderCoder: #eaedf2;
                           // > td:nth-child(0) {
                           //   height: 9%;
                           // }
-                          > td:nth-child(1) {
+                          >td:nth-child(1) {
                             width: 9%;
                           }
-                          > td:nth-child(2) {
+
+                          >td:nth-child(2) {
                             width: 13%;
                           }
-                          > td:nth-child(3) {
+
+                          >td:nth-child(3) {
                             width: 13%;
                           }
-                          > td:nth-child(4) {
+
+                          >td:nth-child(4) {
                             width: 13%;
                           }
-                          > td:nth-child(5) {
+
+                          >td:nth-child(5) {
                             width: 13%;
                           }
-                          > td:nth-child(6) {
+
+                          >td:nth-child(6) {
                             width: 13%;
                           }
-                          > td:nth-child(7) {
+
+                          >td:nth-child(7) {
                             width: 13%;
                           }
-                          > td:nth-child(8) {
+
+                          >td:nth-child(8) {
                             width: 13%;
                           }
 
@@ -1840,7 +1772,8 @@ $borderCoder: #eaedf2;
                           .thing_group {
                             // height: 100%;
                             height: 70px;
-                            > div {
+
+                            >div {
                               .thing_item {
                                 height: 100%;
                                 min-height: 70px;
@@ -1863,10 +1796,12 @@ $borderCoder: #eaedf2;
                                   max-height: 15px;
                                   overflow: hidden;
                                 }
+
                                 .nameSpan {
                                   max-height: 15px;
                                   overflow: hidden;
                                 }
+
                                 .lessonSpan {
                                   max-height: 40px;
                                   overflow: hidden;
@@ -1881,13 +1816,15 @@ $borderCoder: #eaedf2;
                                 color: #906e6c;
                                 background: #ecdbd3;
                               }
+
                               .seldated {
                                 // color: #fbff00;
                                 background: #79baff;
                                 width: 150px;
                                 z-index: 2;
                                 position: relative;
-                                > span {
+
+                                >span {
                                   width: 120px;
                                 }
                               }
@@ -2018,7 +1955,7 @@ $borderCoder: #eaedf2;
                       border-bottom: 1px solid #906e6c;
                       // height: 10%;
 
-                      > td {
+                      >td {
                         height: 39px;
                         width: 1px;
                         color: #906e6c;
@@ -2032,7 +1969,7 @@ $borderCoder: #eaedf2;
                         // height: 100%;
                         height: 0px;
 
-                        > div {
+                        >div {
                           display: flex;
                           height: 100%;
 
@@ -2061,7 +1998,7 @@ $borderCoder: #eaedf2;
                             box-sizing: border-box;
                             border: 1px solid #000000;
 
-                            > span {
+                            >span {
                               overflow: hidden;
                             }
                           }
@@ -2152,11 +2089,13 @@ $borderCoder: #eaedf2;
                     height: 40px;
                     line-height: 40px;
                     color: #b89087;
+
                     span {
                       width: calc(14.285714285714286%);
                       text-align: center;
                     }
                   }
+
                   .row_content {
                     width: 100%;
                     display: flex;
@@ -2355,7 +2294,7 @@ $borderCoder: #eaedf2;
               font-weight: bold;
               height: 100%;
 
-              > thead {
+              >thead {
                 width: 100%;
                 height: 47px;
                 align-items: center;
@@ -2365,7 +2304,7 @@ $borderCoder: #eaedf2;
                 background-color: #e6e2de;
                 width: calc(100% - 1em);
 
-                > tr {
+                >tr {
                   // border: solid 1px #707070; //格線
                   display: table;
                   width: 100%;
@@ -2373,9 +2312,10 @@ $borderCoder: #eaedf2;
                   height: 10%;
                   height: 100%;
 
-                  > th:nth-child(1) {
+                  >th:nth-child(1) {
                     width: 20%;
-                    > p {
+
+                    >p {
                       margin: 3px 5px;
                       display: flex;
                       justify-content: center;
@@ -2383,47 +2323,50 @@ $borderCoder: #eaedf2;
                     }
                   }
 
-                  > th:nth-child(2) {
+                  >th:nth-child(2) {
                     width: 30%;
-                    > p {
+
+                    >p {
                       margin: 3px 5px;
                     }
                   }
 
-                  > th:nth-child(3) {
+                  >th:nth-child(3) {
                     width: 20%;
-                    > p {
+
+                    >p {
                       margin: 3px 5px;
                     }
                   }
 
-                  > th:nth-child(4) {
+                  >th:nth-child(4) {
                     width: 10%;
-                    > p {
+
+                    >p {
                       margin: 3px 5px;
                     }
                   }
 
-                  > th {
+                  >th {
                     // border: solid 1px #707070; //格線
                     flex-wrap: nowrap;
                     padding: 2px 0px 2px 0px;
                     // width: 100%;
                     font-size: 18px;
 
-                    > img {
+                    >img {
                       width: 40px;
                       height: 40px;
                       border-radius: 45px;
                     }
 
-                    > button {
+                    >button {
                       background-color: transparent;
                       border: none;
                     }
                   }
 
-                  > input {
+                  >input {
                     display: flex;
                     float: right;
                     margin-top: 9px;
@@ -2444,14 +2387,14 @@ $borderCoder: #eaedf2;
                 }
               }
 
-              > tbody {
+              >tbody {
                 //滾動
                 display: block;
                 position: relative;
                 overflow-y: scroll;
                 height: 100%;
 
-                > tr {
+                >tr {
                   // border: solid 1px #707070; //格線
                   border-bottom: 2px solid rgba(112, 112, 112, 0.5);
                   display: table;
@@ -2502,35 +2445,39 @@ $borderCoder: #eaedf2;
                     }
                   }
 
-                  > td:nth-child(1) {
+                  >td:nth-child(1) {
                     width: 20%;
-                    > p {
+
+                    >p {
                       margin: 3px 5px;
                     }
                   }
 
-                  > td:nth-child(2) {
+                  >td:nth-child(2) {
                     width: 30%;
-                    > p {
+
+                    >p {
                       margin: 3px 5px;
                     }
                   }
 
-                  > td:nth-child(3) {
+                  >td:nth-child(3) {
                     width: 20%;
-                    > p {
+
+                    >p {
                       margin: 3px 5px;
                     }
                   }
 
-                  > td:nth-child(4) {
+                  >td:nth-child(4) {
                     width: 10%;
-                    > p {
+
+                    >p {
                       margin: 3px 5px;
                     }
                   }
 
-                  > td {
+                  >td {
                     // border: solid 1px #707070; //格線
                     height: 47px;
                     padding: 2px;
@@ -2538,7 +2485,7 @@ $borderCoder: #eaedf2;
                     table-layout: fixed;
                     font-size: 18px;
 
-                    > img {
+                    >img {
                       width: 20px;
                       height: 40px;
                       // padding: 0 20px;
@@ -2549,7 +2496,7 @@ $borderCoder: #eaedf2;
                     //   margin: 3px 5px;
                     // }
 
-                    > button {
+                    >button {
                       background-color: transparent;
                       border: none;
                       display: inline;
@@ -2560,9 +2507,11 @@ $borderCoder: #eaedf2;
                     .checked_state {
                       display: flex;
                       align-items: center;
+
                       input {
                         display: none;
                       }
+
                       label {
                         display: inline-block;
                         width: 20px;
@@ -2572,6 +2521,7 @@ $borderCoder: #eaedf2;
                         position: relative;
                         cursor: pointer;
                       }
+
                       label::before {
                         display: inline-block;
                         content: " ";
@@ -2586,18 +2536,22 @@ $borderCoder: #eaedf2;
                         position: absolute;
                         opacity: 0;
                       }
-                      input:checked + label {
+
+                      input:checked+label {
                         background: #8b6f6d;
                       }
-                      input:checked + label::before {
+
+                      input:checked+label::before {
                         opacity: 1;
                         transform: all 0.5s;
                       }
                     }
                   }
-                  > th:nth-child(0) {
+
+                  >th:nth-child(0) {
                     width: 20%;
-                    > p {
+
+                    >p {
                       justify-content: center;
                     }
                   }
@@ -2610,6 +2564,7 @@ $borderCoder: #eaedf2;
     }
   }
 }
+
 .isCurDate {
   color: #ff1100 !important;
   // background-color: #8b6f6d !important;
@@ -2638,6 +2593,7 @@ li {
   color: #9cadadb7;
   box-sizing: border-box;
 }
+
 .Tui_calendar_main {
   border-radius: 15px; // 99em;
   // background-color: #ff1100;
@@ -2648,6 +2604,7 @@ li {
   left: 47px;
   right: 47px;
 }
+
 .Tui_calendar_date {
   border-radius: 15px; // 99em;
   // background-color: #ff1100;

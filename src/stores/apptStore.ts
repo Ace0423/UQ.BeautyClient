@@ -276,7 +276,7 @@ export const useApptStore = defineStore("apptStore", () => {
       const res = await apiGetMemberListRequest(dataRequest).then(
         (res: any) => {
           if (res.data.data) {
-            let listVo: IMemberListVo = res.data.data.table;
+            let listVo: IMemberListVo[] = res.data.data.table;
             memberList.value = listVo;
           }
           return res;

@@ -88,6 +88,7 @@
       :show-edit-form="showEditUI"
       :edit-course-info="editCourseInfo"
     />
+    <!-- <Resourceimages2 /> -->
   </div>
 </template>
 

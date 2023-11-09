@@ -121,7 +121,7 @@ const cardData: any = reactive({
     topUpCardMapServices: [],
     topUpCardFreeProducts: [],
     topUpCardFreeServices: [],
-    color: '#aac9e2',
+    tucolor: '#aac9e2',
 });
 
 const cancelDiscount = (() => {
@@ -151,7 +151,9 @@ onMounted(() => {
         cardData.tuLimitType = props.selectTopUpCardItem.tuLimitType;
         cardData.tuLimitDay = props.selectTopUpCardItem.tuLimitDay;
         cardData.utShared = props.selectTopUpCardItem.utShared;
-        cardData.color = props.selectTopUpCardItem.color;
+        // cardData.tucolor = props.selectTopUpCardItem.tuColor;
+        handChooseColor(props.selectTopUpCardItem.tuColor)
+        console.log(cardData.tucolor)
         for (let index = 0; index < props.selectTopUpCardItem.topUpCardFreeProducts.length; index++) {
             cardData.topUpCardFreeProducts.push(props.selectTopUpCardItem.topUpCardFreeProducts[index].pid);
         }
@@ -235,7 +237,7 @@ const handHandselSubmit = ((products: any, services: any) => {
     cardData.topUpCardFreeServices = services;
 })
 const handChooseColor = ((params: any) => {
-    cardData.color = params;
+    cardData.tucolor = params;
 })
 </script>
 
@@ -368,7 +370,7 @@ const handChooseColor = ((params: any) => {
                 </div>
                 <div class="example-img">
                     <p>優惠樣式參考</p>
-                    <div :style="{ '--color': cardData.color }" class="example-bg">
+                    <div :style="{ '--color': cardData.tucolor }" class="example-bg">
                         <div class="card-munber">
                             <p>代碼</p>
                         </div>
@@ -384,7 +386,7 @@ const handChooseColor = ((params: any) => {
                         </div>
                     </div>
                     <div class="choose-color">
-                        <RadioColorUI :selColorIndex="cardData.color" :updataColorFn="handChooseColor" />
+                        <RadioColorUI :selColorIndex="cardData.tucolor" :updataColorFn="handChooseColor" />
                     </div>
                     <div class="hint-content">
                         <ol>

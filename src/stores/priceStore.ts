@@ -317,7 +317,6 @@ export const usePriceStore = defineStore("priceStore", () => {
   const getTopUpCardList = async (data: any) => {
     try {
       const res = await apiGetTopUpCardListRequest(data);
-      console.log(res);
       if (res.data.state == 1) {
         if (data.select == 0) {
           topUpCardList.data = res.data.data.table;
@@ -337,7 +336,7 @@ export const usePriceStore = defineStore("priceStore", () => {
     try {
       const res = await apiAddTopUpCardInfoRequest(data);
       if (res.data.state == 1) {
-        console.log(res.data);
+        updataTopUpCardList(res.data.data.table[0]);
       }
       return res.data;
     } catch (error) {
@@ -358,10 +357,7 @@ export const usePriceStore = defineStore("priceStore", () => {
     }
   };
   const updataTopUpCardList = (data: any) => {
-    if (
-      topUpCardList.data.filter((item: any) => item.tuId == data.tuId).length >
-      0
-    ) {
+    if (topUpCardList.data.filter((item: any) => item.tuId == data.tuId).length > 0) {
       topUpCardList.data.findIndex((item: any) => {
         if (item.tuId == data.tuId) {
           item.tuTitle = data.tuTitle;
@@ -376,6 +372,7 @@ export const usePriceStore = defineStore("priceStore", () => {
           item.tuddPrice = data.tuddPrice;
           item.tuLimitType = data.tuLimitType;
           item.tuLimitDay = data.tuLimitDay;
+          item.tuColor = data.tuColor;
           item.utShared = data.utShared;
           item.topUpCardMapProducts = data.topUpCardMapProducts;
           item.topUpCardMapServices = data.topUpCardMapServices;

@@ -34,6 +34,7 @@ const getTopUpCardData = ((id: any) => {
             if (res.table) {
                 if (allTopUpCard.select == 1) {
                     infoDate.data = res.table[0];
+                    infoDate.data.color = props.selectItem.tuColor;
                 } else if (allTopUpCard.select == 2) {
                     recordDate.data = res.table;
                 }
@@ -122,7 +123,7 @@ const handEditCardBtn = (() => {
                 <img class="closeX" :src="icon_closeX" v-on:click="handTopUpCardInfoView()" />
                 <h3>{{ infoDate.data.tuTitle }}</h3>
             </div>
-            <div class="style-card">
+            <div :style="{ '--color': props.selectItem.tuColor }" class="style-card">
                 <p>代碼</p>
                 <div class="info-card">
                     <div>
@@ -275,10 +276,11 @@ const handEditCardBtn = (() => {
 
         .style-card {
             border-radius: 10px;
-            border: solid 1px #707070;
+            // border: solid 1px #707070;
             height: 20%;
             margin: 0 25px;
             padding: 0px 15px;
+            background: var(--color);
 
             >.info-card {
                 display: flex;

@@ -195,17 +195,13 @@ const loginFn = () => {
       <img src="@/assets/images/logo.png" />
       <div class="input-box" v-for="item in form_items" :key="item.label">
         <p>{{ item.label }}</p>
-        <input
-          :type="item.type"
-          :placeholder="item.placeholder"
-          v-model="item.value"
-        />
+        <input :type="item.type" :placeholder="item.placeholder" v-model="item.value" />
         <p v-show="item.is_error" class="error">
           {{ item.warn }}
         </p>
       </div>
       <div class="login-btn">
-        <button class="login-btn2" @click="loginFn">登入</button>
+        <button @click="loginFn">登入</button>
       </div>
     </div>
   </div>
@@ -222,7 +218,7 @@ const loginFn = () => {
   // width: 17%;
   // margin: auto;
 
-  > .container {
+  >.container {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -235,13 +231,13 @@ const loginFn = () => {
       height: 122px;
     }
 
-    > .input-box {
+    >.input-box {
       display: block;
       width: 324px;
       margin: 10px 0 20px 0;
       position: relative;
 
-      > p {
+      >p {
         display: block;
         padding-left: 20px;
         font-weight: 500;
@@ -250,7 +246,7 @@ const loginFn = () => {
         color: #707070;
       }
 
-      > input {
+      >input {
         display: block;
         margin: auto;
         width: 90%;
@@ -260,16 +256,18 @@ const loginFn = () => {
         border-radius: 20px;
         border: 1px solid #707070;
       }
-      > .error {
+
+      >.error {
         position: absolute;
         color: #ff0000;
       }
     }
 
-    > .login-btn {
+    >.login-btn {
       width: 100%;
       margin-top: 20px;
-      > button  {
+
+      >button {
         display: block;
         width: 50%;
         padding: 10px;
@@ -278,9 +276,10 @@ const loginFn = () => {
         font-weight: bold;
         font-family: HeitiTC;
         color: #fff;
+        border: solid 1px #707070;
         border-radius: 13px;
         background-color: #877059;
-        border:#000000 1px solid;
+        // border: #000000 1px solid;   
       }
     }
 
@@ -293,12 +292,12 @@ const loginFn = () => {
         height: 79px;
       }
 
-      > .input-box {
+      >.input-box {
         display: block;
         width: 211px;
         margin: 45px 0;
 
-        > p {
+        >p {
           display: block;
           padding-left: 20px;
           font-weight: 500;
@@ -307,7 +306,7 @@ const loginFn = () => {
           color: #707070;
         }
 
-        > input {
+        >input {
           display: block;
           margin: auto;
           width: 90%;
@@ -318,11 +317,11 @@ const loginFn = () => {
         }
       }
 
-      > .btn {
+      >.btn {
         width: 100%;
         margin-top: 70px;
 
-        > button {
+        >button {
           display: block;
           width: 50%;
           padding: 10px;

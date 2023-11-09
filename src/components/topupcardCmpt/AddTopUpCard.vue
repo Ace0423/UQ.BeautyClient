@@ -12,7 +12,7 @@ const specifiedItem = ref(0);
 const submitNameBtn = ref('確認');
 const promotionalItemsView = ref(false);
 const handselItemsView = ref(false);
-const handselType = ref(0)
+const handselType = ref(0);
 const promotionMethod: any = [
     {
         value: 0,
@@ -120,7 +120,8 @@ const cardData: any = reactive({
     topUpCardMapProducts: [],
     topUpCardMapServices: [],
     topUpCardFreeProducts: [],
-    topUpCardFreeServices: []
+    topUpCardFreeServices: [],
+    color: '#aac9e2',
 });
 
 const cancelDiscount = (() => {
@@ -150,6 +151,7 @@ onMounted(() => {
         cardData.tuLimitType = props.selectTopUpCardItem.tuLimitType;
         cardData.tuLimitDay = props.selectTopUpCardItem.tuLimitDay;
         cardData.utShared = props.selectTopUpCardItem.utShared;
+        cardData.color = props.selectTopUpCardItem.color;
         for (let index = 0; index < props.selectTopUpCardItem.topUpCardFreeProducts.length; index++) {
             cardData.topUpCardFreeProducts.push(props.selectTopUpCardItem.topUpCardFreeProducts[index].pid);
         }
@@ -223,7 +225,6 @@ const getErrorHint = computed(() => {
     } else if (cardData.tudType == 1 && cardData.tuddType != 0 && cardData.tuddPrice == '') {
         return cardData.tuddPrice == "" ? '必填項目' : '';
     }
-
 })
 const handPromotionalSubmit = ((products: any, services: any) => {
     cardData.topUpCardMapProducts = products;
@@ -232,6 +233,9 @@ const handPromotionalSubmit = ((products: any, services: any) => {
 const handHandselSubmit = ((products: any, services: any) => {
     cardData.topUpCardFreeProducts = products;
     cardData.topUpCardFreeServices = services;
+})
+const handChooseColor = ((params: any) => {
+    cardData.color = params;
 })
 </script>
 
@@ -363,7 +367,33 @@ const handHandselSubmit = ((products: any, services: any) => {
                     </div>
                 </div>
                 <div class="example-img">
-
+                    <p>優惠樣式參考</p>
+                    <div :style="{ '--color': cardData.color }" class="example-bg">
+                        <div class="card-munber">
+                            <p>代碼</p>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-info">
+                                <h3>儲值卡名稱</h3>
+                                <p>不限期</p>
+                            </div>
+                            <div class="card-balance">
+                                <h3>$0</h3>
+                                <p>剩餘面額</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="choose-color">
+                        <RadioColorUI :selColorIndex="cardData.color" :updataColorFn="handChooseColor" />
+                    </div>
+                    <div class="hint-content">
+                        <ol>
+                            <li>1.僅於店內或線上預約消費時使用，店家將保留最終決議隨時可能取消。</li>
+                        </ol>
+                        <ol>
+                            <li>2.顧客使用儲值卡消費時，將根據服務或商品項目的分潤計算給相應人員。</li>
+                        </ol>
+                    </div>
                 </div>
             </div>
         </div>
@@ -688,6 +718,86 @@ const handHandselSubmit = ((products: any, services: any) => {
                 }
             }
 
+            >.example-img {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 40%;
+                text-align: center;
+
+                >.example-bg {
+                    display: flex;
+                    flex-direction: column;
+                    justify-items: center;
+                    height: 180px;
+                    width: 85%;
+                    border-radius: 15px 15px 15px 15px;
+                    background: var(--color);
+                    position: relative;
+                    color: #ffffff;
+
+                    >.card-munber {
+                        display: flex;
+                        align-items: center;
+                        height: 50%;
+
+                        >p {
+                            margin: 10px 15px;
+                        }
+                    }
+
+                    >.card-content {
+                        display: flex;
+                        justify-content: space-between;
+                        height: 50%;
+
+                        .card-info {
+                            h3 {
+                                text-align: left;
+                                margin: 0 15px;
+                            }
+
+                            p {
+                                text-align: left;
+                                margin: 0 15px;
+                            }
+                        }
+
+                        .card-balance {
+                            h3 {
+                                text-align: right;
+                                margin: 0 15px;
+                            }
+
+                            p {
+                                text-align: right;
+                                margin: 0 15px;
+                            }
+                        }
+
+                    }
+
+                }
+
+                >.choose-color {
+                    // width: 85%;
+                    // margin: 15px;
+                    // border: solid 1px #f6f6f6;
+                    font-size: 16px;
+                    text-align: left;
+                }
+
+                >.hint-content {
+                    font-size: 16px;
+                    font-family: HeitiTC;
+                    color: #717171;
+
+                    >ol {
+                        padding: 0 30px;
+                        text-align: left;
+                    }
+                }
+            }
         }
 
         .current {

@@ -21,8 +21,9 @@
         </div>
       </div>
     </div>
-    <div class="appt_main">
-      <div>
+
+    <div class="appointment_main">
+      <div class="appointment_box">
         <div class="item-tab">
           <div>
             <button :class="mainTabIndexRef == index ? 'active' : ''" v-for="(item, index) in mainTypeDataRef"
@@ -53,11 +54,52 @@
 
           </div>
         </div>
-        <div class="appt_box">
-          <div class="appt_calendar" v-show="mainTabIndexRef == 0">
-            <div v-show="false">
-              <div class="little_date" v-show="showWeekBoxRef == 2">
-                <div>
+        <div class="appt_main">
+          <div class="date_main" v-show="showWeekBoxRef == 2 && mainTabIndexRef == 0">
+            <div class="date_schedule">
+              <div class="appointment_date" v-show="false">
+                <div class="date_top">
+                  <span @click="goTodayHdr()">TODAY</span>
+                  <span class="todayDate">{{ weeekTodayTitle + "月" }} </span>
+                </div>
+                <div class="date_table">
+                  <div class="date_timePeriodList">
+                    <table class="date_Listinfotbody" style="">
+                      <tbody>
+                        <tr class="date_timePeriod_col2" v-for="(period, p_index) in todayThingsRef" align="center"
+                          valign="center" :key="`period${p_index}`">
+                          <td class="time_row">{{ period.time }}</td>
+                          <template v-for="(thingGroup, t_index) of period.newThings" :key="`thing${t_index}`">
+                            <td class="thing_group" :rowspan="thingGroup.range">
+                              <div :class="{
+                                one_things: thingGroup.things.length == 1,
+                                more_things: thingGroup.things.length > 1,
+                                zero_things: thingGroup.things.length == 0,
+                              }">
+                                <template v-for="(thing, t_index) of thingGroup.things" :key="`thing${t_index}`">
+                                  <div class="thing_item" @click="handleDetail(thing)" :class="{
+                                    finish: thing.state == 1,
+                                    waiting: thing.state == 0,
+                                    seldated: thing.state == 99,
+                                  }">
+                                    <span>{{ thing.timePeriod }}</span>
+                                    <span>{{ thing.customer }}</span>
+                                    <span>{{
+                                      thing.lesson + "(" + thing.timer + ")"
+                                    }}</span>
+                                  </div>
+                                </template>
+                              </div>
+                            </td>
+                          </template>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="little_date">
+                <div class="dateBox">
                   <div class="dateBox_title">
                     <img class="arrow arrow-left" :src="arrow_left_ico" @click="lastMonth()" />
                     <div class="data">
@@ -79,13 +121,22 @@
                     </div>
                   </div>
                 </div>
+                <!-- <div class="list_btn">
+                  <div class="btn_add" @click="addAddReserveBtn()">
+                    新增預約
+                  </div>
+                  <div class="btn_add" @click="editAddReserveBtn()">
+                    修改預約
+                  </div>
+                  <div class="btn_add" @click="delReserveId()">刪除預約</div>
+                </div> -->
               </div>
             </div>
           </div>
 
-          <div class="appt_list" v-show="mainTabIndexRef == 1">
-            <div>
-              <table>
+          <div class="appointment_list" v-show="mainTabIndexRef == 1">
+            <div class="table_title">
+              <table class="table_main">
                 <thead align="left">
                   <tr>
                     <th v-for="item in aptTitle" :key="item">
@@ -117,6 +168,14 @@
                       <p>{{ item.customer }}</p>
                     </td>
                     <td>
+                      <!-- <input
+                        class="checked_state"
+                        type="checkbox"
+                        name="sub"
+                        value="item"
+                        :checked="item.state == 1"
+                        v-on:click="changeStutusFn(index, item)"
+                      /> -->
                       <div class="checked_state">
                         <input type="checkbox" :id="item.bookingNo" :checked="item.state == 1"
                           v-on:click="changeStutusFn(index, item)" />
@@ -138,19 +197,18 @@
     </div>
   </div>
   <AddApptUI v-if="showAddReserveFormRef" :showAddReserveForm="showAddReserveForm"></AddApptUI>
-  <AddRestTimeUI v-if="showAddRestUIRef" :showAddRestUIFn="showAddRestUIFn"></AddRestTimeUI>
-  <FastCheckOutUI v-if="showFastCheckOutRef" :showUIFn="showFastCheckOutUIHdr" />
-
   <EditApptUI v-if="showEditReserveFormRef" :showAddReserveForm="showEditReserveForm" :curApptDataRef="newApptDataRef"
     :showOkBtnRef="showOkBtnRef" :oldSelList="oldSelList"></EditApptUI>
+  <AddRestTimeUI v-if="showAddRestUIRef" :showAddRestUIFn="showAddRestUIFn"></AddRestTimeUI>
   <LittleDateUI v-if="showLittleDateRef" :showUIFn="updataShowLittleDate" :selDate="selDate"
     :selLittleDateFn="selLittleDateFn" />
   <ApptInfoUI v-if="showApptInfoRef" :showUIHdr="updataShowApptInfoRef" :selItemData="oldSelList"
     :infoBtnState="infoBtnState" />
+  <FastCheckOutUI v-if="showFastCheckOutRef" :showUIFn="showFastCheckOutUIHdr" />
   <div :class="tuiOptions.tuiType == 2 ? ' Tui_calendar_date' : 'Tui_calendar_main'
     " class="Tui_calendar_main" v-if="mainTabIndexRef == 0 && showWeekBoxRef != 3">
-    <Tui_calendar v-if="showTuiApptRef" :tuiList="showTuiList" :tuiOptions="tuiOptions" :selectDate="selectDate"
-      :selTuiListFn="selTuiListFn" :tuiSetDate="tuiSetDate"></Tui_calendar>
+    <Tui_calendar :tuiList="tuiList" :tuiOptions="tuiOptions" :selectDate="selectDate" :selTuiListFn="selTuiListFn"
+      :tuiSetDate="tuiSetDate"></Tui_calendar>
   </div>
 
   <div v-if="mainTabIndexRef == 0 && showWeekBoxRef == 3">
@@ -173,6 +231,14 @@ import Alert from "@/components/alertCmpt";
 import { useManagerStore } from "@/stores/manager";
 import { useCounterStore } from "@/stores/counter";
 
+// let alertBtnState: any = ref(false);
+// const onAlertBtn = (data: any) => {
+//   alertBtnState = data;
+//   console.log(alertBtnState, "alertBtnState");
+// };
+// Alert({ type: 0, message: "登录失败", duration: 1000,onAlertBtn });
+// Alert.warning("登录失败", 1000);
+
 const props = defineProps<{
   memuState: any;
   handmemuStateBtn: Function;
@@ -181,12 +247,6 @@ const props = defineProps<{
 const managerstore = useManagerStore();
 const { managerList, managerRoleList } = storeToRefs(managerstore);
 const { getManagerListNew } = managerstore;
-
-const counterStore = useCounterStore();
-const { handLogOut } = counterStore;
-const managerStore = useManagerStore();
-const { getWorkingHours } = managerStore;
-const { workingHoursList } = storeToRefs(managerStore);
 
 
 let searchList = ref("");
@@ -209,7 +269,6 @@ let showAddRestUIRef = ref(false);
 let showApptInfoRef = ref(false);
 let showLittleDateRef = ref(false);
 let showOkBtnRef = ref(false);
-let showTuiApptRef = ref(false);
 
 let checkYM = ref(true);
 let currentDay = ref(new Date().getDate());
@@ -249,14 +308,65 @@ getManagerListNew({ id: 0, pageindex: 0, count: 0 }).then((res: any) => {
 })
 //--------------------------------------------------tui套件設置
 let tuiList: any = reactive([
+  // {
+  //   id: "1",
+  //   calendarId: "9",
+  //   title: "<br>" + "會員名稱" + "<br>" + "課程 - " + "1",
+  //   titleMonth: "" + "會員名稱" + "" + "課程 - " + "1",
+  //   category: "time",
+  //   dueDateClass: "",
+  //   start: "2023-06-20T08:30:00+09:00",
+  //   end: "2023-06-20T10:30:00+09:00",
+  //   listData: {
+  //     beautyTherapist: "",
+  //     bookingMemo: "string",
+  //     bookingNo: "230619-0001",
+  //     customer: "會員名稱",
+  //     dateBooking: "2023-06-20T10:00:00",
+  //     dateCreate: "2023-06-19T09:59:04.96",
+  //     dateUpdate: "2023-06-19T09:59:04.9588135",
+  //     discount: 0,
+  //     lesson: "課程-手",
+  //     lessonId: 77,
+  //     price: 2000,
+  //     serverId: 0,
+  //     state: 0,
+  //     timer: 120,
+  //     tradeDone: false,
+  //     updater: "testadmin@gamil.com",
+  //     userId: 76,
+  //   },
+  // },
+  // {
+  //   id: "2",
+  //   calendarId: "9",
+  //   title: "<br>" + "會員名稱" + "<br>" + "課程 - " + "2",
+  //   titleMonth: "" + "會員名稱" + "" + "課程 - " + "2",
+  //   category: "time",
+  //   dueDateClass: "",
+  //   start: "2023-06-21T12:30:00+09:00",
+  //   end: "2023-06-21T15:30:00+09:00",
+  //   listData: {
+  //     beautyTherapist: "",
+  //     bookingMemo: "string",
+  //     bookingNo: "230619-0001",
+  //     customer: "會員名稱",
+  //     dateBooking: "2023-06-21T10:00:00",
+  //     dateCreate: "2023-06-19T09:59:04.96",
+  //     dateUpdate: "2023-06-19T09:59:04.9588135",
+  //     discount: 0,
+  //     lesson: "課程-腳",
+  //     lessonId: 77,
+  //     price: 2000,
+  //     serverId: 0,
+  //     state: 0,
+  //     timer: 180,
+  //     tradeDone: false,
+  //     updater: "testadmin@gamil.com",
+  //     userId: 76,
+  //   },
+  // },
 ]);
-let restList: any = reactive([
-]);
-
-let showTuiList = computed(() => {
-  return (
-    tuiList.concat(restList));
-});
 
 let tuiOptions = reactive({
   leftArea: false,
@@ -343,16 +453,6 @@ let showFastCheckOutUIHdr = (state: boolean) => {
   showFastCheckOutRef.value = state;
   // getGoodsTypeApi(0);
 };
-onFirstTime();
-function onFirstTime() {
-  // 獲取美容師
-  getBeauticianApi(0);
-  getApptInfoFn(new Date().getFullYear(), new Date().getMonth() + 1);
-  // getRestList();
-}
-onMounted(() => {
-  // resetApptTable();
-});
 
 /**抓取預約紀錄 */
 function getApptInfoFn(
@@ -365,7 +465,7 @@ function getApptInfoFn(
   getMemberData().then((res: any) => {
     //預先呼叫api獲取數據
     getApptDataApi(year, month).then((res: any) => {
-      resetApptTable(year, month, date)
+      resetApptTable(year, month, date);
       tuiList = [];
       for (let i = 0; i < tuiBookingListRef.value.length; i++) {
         const element = tuiBookingListRef.value[i];
@@ -395,7 +495,8 @@ function getApptInfoFn(
           raw: element,
         });
       }
-      getRestList();
+      setRestTimeFn(workingHoursList.value.data);
+      // getRestList();
     });
   });
 }
@@ -415,6 +516,9 @@ function getManagerName(params: number) {
   return beauticianData
 }
 
+getApptInfoFn(new Date().getFullYear(), new Date().getMonth() + 1);
+// 獲取美容師
+getBeauticianApi(0);
 
 let filterAptData: any = computed(() => {
   let curAptData: any = [];
@@ -442,6 +546,9 @@ let changeMainTab = (index: number) => {
   mainTabIndexRef.value = index;
   changeWeekToday(1);
 };
+onMounted(() => {
+  // resetApptTable();
+});
 //刪除課程
 let delCourseListHdr = (index: number, itemId: string) => {
   // if (itemId)
@@ -874,6 +981,9 @@ function onWeekSeldate(data: any) {
   currentDay.value = parseInt(curData[2]);
   checkYM.value = true;
 }
+
+function visibleChange(value: any) { }
+
 //新增預約表單-顯示
 let showAddReserveForm = (state: boolean) => {
   showAddReserveFormRef.value = state;
@@ -907,6 +1017,17 @@ function addAddReserveBtn() {
 function changeWeekToday(data: number) {
   showWeekBoxRef.value = data;
   tuiOptions.tuiType = data;
+  // tuiList.push({
+  //   id: "3",
+  //   calendarId: "9",
+  //   title: "<br>" + "會員名稱" + "<br>" + "課程 - " + "2",
+  //   titleMonth: "會員名稱課程 2",
+  //   category: "time",
+  //   dueDateClass: "",
+  //   start: "2023-06-16T15:30:00+09:00",
+  //   end: "2023-06-16T18:30:00+09:00",
+  //   listData: null,
+  // });
 }
 
 function selTuiListFn(data: any) {
@@ -932,6 +1053,12 @@ function editAddReserveBtn() {
       }
     }
 
+    // for (let i = 0; i < timeGroup.value.length; i++) {
+    //   let element = timeGroup.value[i];
+    //   if (element == oldSelList.timePeriod) {
+    //     newApptDataRef.value.timeBooking = element;
+    //   }
+    // }
     newApptDataRef.value.beauticianId = oldSelList.serverId;
     newApptDataRef.value.selDate = oldSelList.dateBooking.split("T")[0];
     newApptDataRef.value.timeBooking =
@@ -975,6 +1102,13 @@ let delReserveId = () => {
 };
 
 //-------------------------------------------休息日
+
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
+const managerStore = useManagerStore();
+const { getWorkingHours } = managerStore;
+const { workingHoursList } = storeToRefs(managerStore);
+getRestList();
 function getRestList() {
   let data = {
     managerId: 0,
@@ -987,7 +1121,7 @@ function getRestList() {
 
   getWorkingHours(data)
     .then(() => {
-      setRestTimeFn(workingHoursList.value.data);
+      // setRestTimeFn(workingHoursList.value.data);
     })
     .catch((e: any) => {
       Alert.warning(showHttpsStatus(e.response.status), 2000);
@@ -1017,7 +1151,7 @@ function setRestTimeFn(data: any) {
             times: eleRestTime.times,
           });
           // 顯示課程ITEM
-          restList.push({
+          tuiList.push({
             id: eleRestTime.mwrNo,
             //顏色
             calendarId: "888", // (element.lessonId / 2).toString(),
@@ -1039,7 +1173,7 @@ function setRestTimeFn(data: any) {
             raw: {
               title: "休息時間",
               customer: tidyRestData[tidyRestData.length - 1].nameView,
-              serverName: "",//tidyRestData[tidyRestData.length - 1].nameView,
+              serverName:"",//tidyRestData[tidyRestData.length - 1].nameView,
               lesson: "休息時間",
               times: tidyRestData[tidyRestData.length - 1].times,
             }
@@ -1048,9 +1182,6 @@ function setRestTimeFn(data: any) {
       }
     }
   }
-  // showTuiList = [];
-  // showTuiList = tuiList;
-  showTuiApptRef.value = true;
 }
 </script>
 
@@ -1094,19 +1225,19 @@ $borderCoder: #eaedf2;
     }
   }
 
-  .appt_main {
+  .appointment_main {
     position: absolute;
     top: 80px;
     bottom: 10px;
     left: 0px;
     right: 0px;
 
-    >div {
+    .appointment_box {
       // height: 100%;
       height: 100%;
       position: relative;
 
-      .item-tab {
+      >.item-tab {
         display: flex;
         height: 45px;
         width: 94%;
@@ -1179,21 +1310,489 @@ $borderCoder: #eaedf2;
         }
       }
 
-      .appt_box {
+      .appt_main {
         position: relative;
         display: flex;
         height: calc(100% - 45px);
         width: 94%;
         margin-left: 3%;
 
-        .appt_calendar {
+        .week_main {
+          display: flex;
+          position: relative;
+          width: 100%;
+          height: 100%;
+
+          >div {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #ddd;
+
+            .appointment_schedule {
+              position: relative;
+              display: flex;
+              align-items: center;
+              // justify-content: center;
+              top: 1%;
+              width: 98%;
+              height: 98%;
+              border-radius: 15px;
+              background: #e6e2de;
+              margin: 0 auto;
+              border: 1px solid #707070;
+
+              .appointment_week {
+                width: 100%;
+                // min-width: 600px;
+                height: 100%;
+                padding: 1%;
+                box-sizing: border-box;
+
+                .week-top {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  width: 90%;
+                  // height: 40px;
+                  // padding: 0 1%;
+                  margin-left: 3%;
+
+                  .btn_wrap {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-around;
+                    // color: #409EFF;
+
+                    span {
+                      cursor: pointer;
+                      // display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      font-size: 15px;
+                    }
+
+                    .dateBox_title {
+                      width: 100%;
+                      display: flex;
+                      text-align: center;
+                      cursor: pointer;
+
+                      span {
+                        // width: 10%;
+                        height: 100%;
+                        text-align: center;
+                        display: flex;
+                        font-family: ArialBlack;
+                        font-size: 25px;
+                        font-weight: bold;
+                        color: #906e6c;
+                      }
+
+                      .arrow {
+                        display: flex;
+                        text-align: center;
+                        width: 10%;
+                        height: 35%;
+                        color: #b89087;
+                        padding: 15px 0 0 0;
+                      }
+
+                      .arrow-right {
+                        color: #b89087;
+                      }
+
+                      .stop-right {
+                        transform: scaleX(-1);
+                      }
+
+                      .arrow-left {
+                        color: #b89087;
+                      }
+
+                      img {
+                        display: flex;
+                        height: 50%;
+                        top: 10%;
+                      }
+
+                      .data {
+                        font-size: 20px;
+                        display: flex;
+                        text-align: center;
+                      }
+
+                      .todayDate {
+                        font-weight: bold;
+                        font-size: 16px;
+                        cursor: default;
+                        color: #b89087;
+                        white-space: nowrap;
+                        display: block;
+                        position: relative;
+                        display: flex;
+                        text-align: center;
+                      }
+                    }
+                  }
+
+                  .chooseMonth {
+                    display: flex;
+                    justify-content: flex-end;
+                    width: 18%;
+
+                    div {
+                      // flex: 1;
+                      display: flex;
+                      padding: 0 2%;
+                      white-space: nowrap;
+                      line-height: 20px;
+                      box-sizing: border-box;
+
+                      .square {
+                        display: flex;
+                        width: 16px;
+                        height: 16px;
+                        border-radius: 4px;
+                        box-sizing: border-box;
+                      }
+
+                      .title {
+                        display: flex;
+                        align-items: center;
+                        line-height: 16px;
+                        margin-left: 4px;
+                        font-size: 14px;
+                      }
+
+                      .in_progress {
+                        background: #ff6200;
+                      }
+
+                      .has_not_started {
+                        background: #3291f8;
+                      }
+
+                      .is_expired {
+                        background: #8e8e93;
+                      }
+                    }
+                  }
+                }
+
+                .week_table {
+                  height: 87%;
+                  display: flex;
+                  flex-direction: column;
+
+                  .weekTable_main {
+                    width: 100%;
+                    padding-bottom: 0%;
+                    position: relative;
+                    display: flex;
+                    height: 100%;
+                    overflow: auto;
+                    overflow-y: scroll;
+
+                    .Listinfotbody {
+                      // display: flex;
+                      width: 100%;
+                      height: 100%;
+                      word-break: break-all;
+
+                      >thead {
+                        display: flex;
+                        width: 100%;
+
+                        >tr {
+                          display: flex;
+                          width: 100%;
+
+                          >th {
+                            display: flex;
+                            width: 100%;
+                            text-align: left;
+                            justify-content: center;
+                            align-items: center;
+                            // border: 1px solid #ffffff;
+
+                            >span {
+                              flex: 1;
+                              height: 100%;
+                              display: flex;
+                              justify-content: center;
+                              align-items: center;
+                              display: flex;
+                              flex-direction: column;
+                              color: #b89087;
+
+                              .day_item {
+                                font-size: 22px;
+                                justify-content: center;
+                                align-items: center;
+                                color: #b89087;
+                                padding: 5px;
+                              }
+
+                              >span {
+                                // color: #000;
+                                font-size: 15px;
+                              }
+                            }
+
+                            .first {
+
+                              // cursor: pointer;
+                              i {
+                                margin-left: 1%;
+                                font-size: 16px;
+                                font-weight: bold;
+                              }
+                            }
+                          }
+
+                          >th:nth-child(1) {
+                            width: 9%;
+                          }
+
+                          >th:nth-child(2) {
+                            width: 13%;
+                          }
+
+                          >th:nth-child(3) {
+                            width: 13%;
+                          }
+
+                          >th:nth-child(4) {
+                            width: 13%;
+                          }
+
+                          >th:nth-child(5) {
+                            width: 13%;
+                          }
+
+                          >th:nth-child(6) {
+                            width: 13%;
+                          }
+
+                          >th:nth-child(7) {
+                            width: 13%;
+                          }
+
+                          >th:nth-child(8) {
+                            width: 13%;
+                          }
+                        }
+                      }
+
+                      // border: 1px solid #000000;
+                      >tbody {
+                        width: 100%;
+                        border: 3px gary solid;
+                        height: 100%;
+                        display: inherit;
+                        // table-layout: fixed;
+
+                        .timePeriod_col2 {
+                          border-top: 1px solid #906e6c;
+                          height: 56px;
+                          // display: flex;
+                          width: 100%;
+
+                          >td {
+                            height: 50px;
+                            // border: 1px solid #ffffff;
+                            //網格
+                            width: 5%;
+                            color: #906e6c;
+                            table-layout: fixed;
+
+                            >span {
+                              flex: 1;
+                              color: #000;
+                              height: 100%;
+                              font-size: 14px;
+                              display: flex;
+                              justify-content: center;
+                              align-items: center;
+                              font-weight: bold;
+                            }
+                          }
+
+                          // > td:nth-child(1) {
+                          //   justify-content: left;
+                          //   // display: inherit;
+                          // }
+                          // > td:nth-child(0) {
+                          //   height: 9%;
+                          // }
+                          >td:nth-child(1) {
+                            width: 9%;
+                          }
+
+                          >td:nth-child(2) {
+                            width: 13%;
+                          }
+
+                          >td:nth-child(3) {
+                            width: 13%;
+                          }
+
+                          >td:nth-child(4) {
+                            width: 13%;
+                          }
+
+                          >td:nth-child(5) {
+                            width: 13%;
+                          }
+
+                          >td:nth-child(6) {
+                            width: 13%;
+                          }
+
+                          >td:nth-child(7) {
+                            width: 13%;
+                          }
+
+                          >td:nth-child(8) {
+                            width: 13%;
+                          }
+
+                          .timeGroup {
+                            vertical-align: top;
+                          }
+
+                          .more_things {
+                            display: flex;
+                            width: 100%;
+                            height: 100%;
+                          }
+
+                          .s {
+                            display: flex;
+                            width: 100%;
+                            height: 100%;
+                          }
+
+                          .one_things {
+                            // display: contents;
+                            height: 100%;
+                          }
+
+                          .thing_group {
+                            // height: 100%;
+                            height: 70px;
+
+                            >div {
+                              .thing_item {
+                                height: 100%;
+                                min-height: 70px;
+                                flex: 1;
+                                display: flex;
+                                font-size: 14px;
+                                flex-direction: column;
+                                color: #906e6c;
+                                border-radius: 10px;
+                                cursor: pointer;
+                                box-sizing: border-box;
+                                border: 1px solid #000000;
+                                justify-content: center;
+                                align-items: center;
+
+                                // .thing_coursename {
+                                //   overflow: hidden;
+                                // }
+                                .timeSpan {
+                                  max-height: 15px;
+                                  overflow: hidden;
+                                }
+
+                                .nameSpan {
+                                  max-height: 15px;
+                                  overflow: hidden;
+                                }
+
+                                .lessonSpan {
+                                  max-height: 40px;
+                                  overflow: hidden;
+                                }
+                              }
+
+                              .waiting {
+                                background: #ffffff;
+                              }
+
+                              .finish {
+                                color: #906e6c;
+                                background: #ecdbd3;
+                              }
+
+                              .seldated {
+                                // color: #fbff00;
+                                background: #79baff;
+                                width: 150px;
+                                z-index: 2;
+                                position: relative;
+
+                                >span {
+                                  width: 120px;
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .weekEdit_btn {
+            position: relative;
+            width: 10%;
+            min-width: 78px;
+            left: 3px;
+            border-radius: 15px;
+            background: #ffffff;
+            height: 100%;
+            border: solid 0px #707070;
+
+            .list_btn {
+              position: relative;
+              width: 100%;
+              // margin: 0px;
+              display: grid;
+              margin-top: 12px;
+
+              .btn_add {
+                position: relative;
+                width: 100%;
+                height: 35px;
+                margin-bottom: 5%;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                display: flex;
+                border-radius: 8px;
+                border: solid 1px #707070;
+                background-color: #ffffff;
+                color: #906e6c;
+                cursor: pointer;
+              }
+            }
+          }
+        }
+
+        .date_main {
           position: relative;
           width: 100%;
           height: 100%;
           border: 1px solid #ddd;
           // min-width: 900px;
 
-          >div {
+          .date_schedule {
             position: relative;
             top: 0px;
             display: flex;
@@ -1350,7 +1949,7 @@ $borderCoder: #eaedf2;
               border: 1px solid #707070;
               z-index: 1;
 
-              >div {
+              .dateBox {
                 width: 100%;
                 height: 68%;
 
@@ -1583,7 +2182,7 @@ $borderCoder: #eaedf2;
           }
         }
 
-        .appt_list {
+        .appointment_list {
           position: relative;
           top: 0px;
           left: 0px;
@@ -1594,13 +2193,13 @@ $borderCoder: #eaedf2;
           margin: 0 auto;
           border: 1px solid #ddd;
 
-          >div {
+          .table_title {
             height: 100%;
             width: 100%;
             font-weight: bold;
             color: #717171;
 
-            >table {
+            .table_main {
               width: 100%;
               font-weight: bold;
               height: 100%;
@@ -1907,6 +2506,7 @@ li {
 
 .Tui_calendar_main {
   border-radius: 15px; // 99em;
+  // background-color: #ff1100;
   border: 1px solid #707070;
   position: absolute;
   top: 133px;
@@ -1917,12 +2517,12 @@ li {
 
 .Tui_calendar_date {
   border-radius: 15px; // 99em;
-  border: 1px solid #707070;
+  // background-color: #ff1100;
+  border: 0px solid #000000;
   position: absolute;
   top: 133px;
   bottom: 18px;
   left: 47px;
-  right: 47px;
-  // right: 350px;
+  right: 350px;
 }
 </style>

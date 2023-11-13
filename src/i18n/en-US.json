@@ -1,5 +1,7 @@
 {
   "typeMgmt": "typeMgmt",
+  "AddGoods": "AddGoods",
+  "AddGoodsType": "AddGoodsType",
   "goodsMgmt": "goodsMgmt",
   "edit": "Edit"
 }

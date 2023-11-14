@@ -104,7 +104,7 @@ function getGoodsFn(data: any) {
 
 onBeforeFn();
 function onBeforeFn() {
-    getDetailByTypeFn();
+    getDetailByTypeFn(0,0);
 
 }
 
@@ -136,15 +136,15 @@ function OrderGroupFn() {
         })
     }
     updataGoodsTypeOrderApi(orderApiData).then((res: any) => {
-    getDetailByTypeFn();
+    getDetailByTypeFn(0,0);
     });
 }
 
-function getDetailByTypeFn() {
+function getDetailByTypeFn(id:any,isList:any) {
     getGoodsTypeApi().then(() => {
         getGoodsDetailApi(
-            goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
-            0
+            id,
+            isList
         );
     });
 }
@@ -155,7 +155,7 @@ let showAddTypeFormHdr = (state: boolean) => {
 };
 const showEditDetailUIHdr = (state: boolean) => {
     showEditUIRef.value = state;
-    getDetailByTypeFn();
+    getDetailByTypeFn(0,0);
     // getGoodsDetailApi(0, 0);
 };
 //編輯
@@ -165,7 +165,7 @@ const onDeleteAlertBtn = (data: any) => {
     if (data) {
         let curPgId = goodsTypesListRef.value[goodsTypesListValueRef.value].pgId;
         delGoodsDetailApi(selItem.pId, curPgId).then(() => {
-            getDetailByTypeFn();
+            getDetailByTypeFn(0,0);
         });
     } else {
         console.log("取消刪除");

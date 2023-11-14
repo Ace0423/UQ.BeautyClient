@@ -101,9 +101,7 @@ function getGoodsFn(data: any) {
 
 onBeforeFn();
 function onBeforeFn() {
-  getGoodsTypeApi().then((res: any) => {
-    getDetailByTypeFn();
-  });
+  getDetailByTypeFn(0, 0);
 }
 
 onMounted(() => {
@@ -114,14 +112,16 @@ onMounted(() => {
 let showAddDetailFormHdr = (state: boolean) => {
   showAddUIRef.value = state;
   if (!state) {
-    getDetailByTypeFn();
+    getDetailByTypeFn(0, 0);
   }
 };
-function getDetailByTypeFn() {
-  getGoodsDetailApi(
-    goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
-    0
-  );
+function getDetailByTypeFn(id: any, isList: any) {
+  getGoodsTypeApi().then((res: any) => {
+    getGoodsDetailApi(
+      id,
+      isList
+    );
+  });
 }
 //新增分類-顯示
 let showAddTypeFormHdr = (state: boolean) => {
@@ -130,7 +130,7 @@ let showAddTypeFormHdr = (state: boolean) => {
 };
 const showEditDetailUIHdr = (state: boolean) => {
   showEditUIRef.value = state;
-  getDetailByTypeFn();
+  getDetailByTypeFn(0, 0);
 };
 //編輯
 function showEditFormFn(index: number, item: any) {
@@ -163,7 +163,7 @@ function updataStutusBtn(index: number, item: any) {
 
   updateGoodsDetailApi(curdata).then((res: any) => {
     if (res.state == 1) {
-      getDetailByTypeFn();
+      getDetailByTypeFn(0,0);
     }
   });
 }
@@ -176,7 +176,7 @@ const onDeleteAlertBtn = (data: any) => {
   if (data) {
     let curPgId = goodsTypesListRef.value[goodsTypesListValueRef.value].pgId;
     delGoodsDetailApi(selItem.pId, curPgId).then((res: any) => {
-      getDetailByTypeFn();
+      getDetailByTypeFn(0, 0);
     });
   } else {
     console.log("取消刪除");

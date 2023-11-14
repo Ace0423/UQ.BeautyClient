@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="content-main">
-                <table>
+                <!-- <table>
                     <thead>
                         <tr>
                             <td v-for="(item, value) in goodsTableTitle" :key="item">
@@ -38,16 +38,27 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
-            </div>
-
-            <div>
-
+                </table> -->
+                <el-table :data="filterGoodsType" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
+                    :header-cell-style="headerRowStyle">
+                    <el-table-column prop="pgTitle" label="群組名稱" width="180" />
+                    <el-table-column prop="pgId" label="群組名稱" width="180" />
+                    <el-table-column prop="pgTitle" label="操作" />
+                    <el-table-column label="操作" width="100">
+                        <template #default>
+                            <div class="handle-drag">
+                                <el-icon>
+                                    <Sort />
+                                </el-icon>
+                                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;" />
+                            </div>
+                        </template>
+                    </el-table-column>
+                </el-table>
             </div>
         </div>
-        <div class="footer">
-
-        </div>
+    </div>
+    <div class="footer">
     </div>
     <AddGoodsTypeUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" />
 </template>
@@ -59,6 +70,9 @@ import icon_delete from "@/assets/images/icon_delete.png";
 import { useApptStore } from "@/stores/apptStore";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
+import Sortable from 'sortablejs'
+import { Sort } from '@element-plus/icons-vue'
+import Icon_edit from "@/assets/images/icon_edit.png";
 
 let store = useApptStore();
 let { goodsTypesListRef, goodsTypesListValueRef, goodsDetailListRef } =
@@ -68,13 +82,11 @@ let {
     getGoodsDetailApi,
     updateGoodsDetailApi,
     delGoodsDetailApi,
+    updataGoodsTypeOrderApi,
 } = store;
 
-
-let showAddUIRef = ref(false);
 let showEditUIRef = ref(false);
 let showAddTypeRef = ref(false);
-let goodsTableTitle = ["群組名稱", "群組名稱", "操作"];
 
 let selItem: any = [];
 let sortUpDown: string = "";
@@ -90,23 +102,51 @@ function getGoodsFn(data: any) {
     );
 }
 
-
 onBeforeFn();
 function onBeforeFn() {
-    getGoodsTypeApi().then((res: any) => {
-        getDetailByTypeFn();
-    });
+    getDetailByTypeFn();
+
 }
 
 onMounted(() => {
     // console.log('onMounted');
+    setSort()
 });
+function setSort() {
+    const el = document.querySelector('#dragTable table tbody')
+    new Sortable(el, {
+        sort: true,
+        handle: '.handle-drag',
+        ghostClass: 'sortable-ghost',
+        onEnd: (e: any) => {
+            const targetRow = filterGoodsType.value.splice(e.oldIndex, 1)[0]
+            filterGoodsType.value.splice(e.newIndex, 0, targetRow)
+            OrderGroupFn();
+        },
+    })
+}
+function OrderGroupFn() {
+    let orderApiData = [];
+    for (let i = 0; i < filterGoodsType.value.length; i++) {
+        const element = filterGoodsType.value[i];
+        element.order = i;
+        orderApiData.push({
+            pgId: element.pgId,
+            order: i
+        })
+    }
+    updataGoodsTypeOrderApi(orderApiData).then((res: any) => {
+    getDetailByTypeFn();
+    });
+}
 
 function getDetailByTypeFn() {
-    getGoodsDetailApi(
-        goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
-        0
-    );
+    getGoodsTypeApi().then(() => {
+        getGoodsDetailApi(
+            goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
+            0
+        );
+    });
 }
 //新增分類-顯示
 let showAddTypeFormHdr = (state: boolean) => {
@@ -119,49 +159,12 @@ const showEditDetailUIHdr = (state: boolean) => {
     // getGoodsDetailApi(0, 0);
 };
 //編輯
-function showEditFormFn(index: number, item: any) {
-    selItem.value = item;
-    showEditDetailUIHdr(true);
-}
 //改變狀態
-function updataStutusFn(index: number, item: any) {
-    let curdata: any = {
-        pId: item.pId,
-        pCode: item.pCode,
-        pName: item.pName,
-        memo: item.memo,
-        price: item.price,
-        imageBig: item.imageBig,
-        imageSmall: item.imageSmall,
-        unit: item.unit,
-        amount: item.amount,
-        brand: item.brand,
-        stock: item.stock,
-        stockTrace: item.stockTrace,
-        bonusOpen: item.amount,
-        updateOpen: item.updateOpen,
-        display: !item.display,
-        stockOpen: item.stockOpen,
-        productGroup: item.groupList,
-        productProvider: item.providerList,
-        productDiscount: item.discountList,
-    };
-
-    updateGoodsDetailApi(curdata).then((res: any) => {
-        if (res.state == 1) {
-            getDetailByTypeFn();
-        }
-    });
-}
 //刪除
-let deleteHdr = (item: any, index: number) => {
-    selItem = item;
-    Alert.check("是否刪除", 1000, onDeleteAlertBtn);
-};
 const onDeleteAlertBtn = (data: any) => {
     if (data) {
         let curPgId = goodsTypesListRef.value[goodsTypesListValueRef.value].pgId;
-        delGoodsDetailApi(selItem.pId, curPgId).then((res: any) => {
+        delGoodsDetailApi(selItem.pId, curPgId).then(() => {
             getDetailByTypeFn();
         });
     } else {
@@ -169,23 +172,29 @@ const onDeleteAlertBtn = (data: any) => {
     }
     selItem.value = [];
 };
-//排序明細
-function sorttheadFn(name: number) {
-    let nameGroup = ["nameTw", "servicesTime", "price", "display"];
-    let sortName = nameGroup[name];
-    if (sortName)
-        if (sortUpDown == sortName) {
-            goodsDetailListRef.value.sort(function (a: any, b: any) {
-                return a[sortName] > b[sortName] ? -1 : 1;
-            });
-            sortUpDown = "";
-        } else {
-            goodsDetailListRef.value.sort(function (a: any, b: any) {
-                return a[sortName] > b[sortName] ? 1 : -1;
-            });
-            sortUpDown = sortName;
-        }
+//-------------------------------------------------------------------------表格css
+//內容css
+const rowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
+    return {
+        backgroundColor: '#fff',
+        color: '#717171',
+        fontSize: "16px",
+        fontWeight: "bold",
+        margin: "3px 5px",
+        fontFamily: " STXihei",
+        borderBottom: "2px solid rgba(112, 112, 112, 0.5)"
+    }
 }
+//標頭css
+const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
+    return {
+        height: "50px",
+        backgroundColor: '#fff',
+        fontSize: "20px",
+        borderBottom: "0px solid rgba(112, 112, 112, 0.5)"
+    }
+}
+//排序明細
 </script>
   
 <style lang="scss" scoped>
@@ -269,6 +278,7 @@ function sorttheadFn(name: number) {
                 color: #717171;
                 height: 100%;
                 overflow-y: scroll;
+
                 >thead {
                     display: inline-table;
                     width: 100%;
@@ -441,4 +451,17 @@ function sorttheadFn(name: number) {
     .footer {}
 }
 </style>
-  
+
+<style lang="scss" >
+// table th,
+// table td {
+//   border-bottom: 2px !important;
+// }
+// .el-table__row {
+//   border-bottom: 1px solid #000000 !important;/* 设置表格线的底边为 1px 实线 */
+// }
+// .el-table::before {
+//     border-bottom: 10px solid blue;
+//     height: 20px
+// }
+</style>

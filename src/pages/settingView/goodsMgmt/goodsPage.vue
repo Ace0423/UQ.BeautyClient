@@ -281,7 +281,7 @@ function sorttheadFn(name: number) {
         border: solid 0.5px #ddd;
         box-sizing: border-box;
         color: #717171;
-        height: 95%;
+        height: 100%;
         overflow-y: scroll;
 
         // display: inline-table;

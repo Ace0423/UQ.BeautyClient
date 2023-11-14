@@ -396,15 +396,15 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       goodsDetailListRef.value = [];
       goodsTypesListRef.value = [];
-      goodsTypesListRef.value = [
-        {
-          pgId: 0,
-          display: true,
-          pgTitle: "全部",
-          order: 0,
-          isList: 0,
-        },
-      ];
+      // goodsTypesListRef.value = [
+      //   {
+      //     pgId: 0,
+      //     display: true,
+      //     pgTitle: "全部",
+      //     order: 0,
+      //     isList: 0,
+      //   },
+      // ];
       let res: any = await getGoodsTypeReq(data, 0).then((res: any) => {
         if (res.data.data) {
           let typeVo: IGoodsTypeVo = res.data.data.table;
@@ -418,7 +418,7 @@ export const useApptStore = defineStore("apptStore", () => {
             goodsTypesListRef.value.push(element);
           }
           goodsTypesListRef.value.sort(function (a: any, b: any) {
-            return a.pgId > b.pgId ? 1 : -1;
+            return a.order > b.order ? 1 : -1;
           });
         }
         return res;

@@ -11,13 +11,13 @@ export const getGoodsTypeReq = (data: any, isList: any = 0) =>
   getHttps(
     httpRequest,
     "/Product/ProductGroup?pgid=" +
-      data +
-      "&isList=" +
-      isList +
-      "&pageIndex=0&count=0"
+    data +
+    "&isList=" +
+    isList +
+    "&pageIndex=0&count=0"
   );
 export const updateGoodsTypeOrderReq = (data: any) =>
-  getHttps(httpRequest, "/Lesson/GroupUpdateOrder", data);
+  postHttps(httpRequest, "/Product/GroupUpdateOrder", data);
 export const addGoodsTypeReq = (data: any) =>
   postHttps(httpRequest, "/Product/ProductGroup", data);
 export const updateGoodsTypeReq = (data: any) =>

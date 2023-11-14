@@ -95,7 +95,7 @@
                   </tr>
                 </thead>
                 <tbody id="content">
-                  <tr v-for="(item, index) in filterAptData" :key="item.id">
+                  <tr v-for="(item, index) in filterAptData" :v-if="item.state < 2" :key="item.id">
                     <td class="td_time">
                       <div class="dateBox">
                         <span class="p_month">
@@ -119,7 +119,7 @@
                     <td>
                       <div class="checked_state">
                         <input type="checkbox" :id="item.bookingNo" :checked="item.state == 1"
-                          v-on:click="changeStutusFn(index, item)" />
+                          v-on:click="changeStutusFn(item.state == 1 ? 0 : 1, item)" />
                         <label :for="item.bookingNo"></label>
                       </div>
                     </td>
@@ -317,6 +317,7 @@ let {
   getMemberData,
   getCourseDetailApi,
   postEditApptDataApi,
+  postEditApptStateApi,
   getBeauticianApi,
 } = store;
 
@@ -462,25 +463,25 @@ let delCourseListHdr = (index: number, itemId: string) => {
   //   }
 };
 //改變課程狀態
-let changeStutusFn = (index: number, item: any) => {
-  item.state = item.state == 0 ? 1 : 0;
+let changeStutusFn = (state: number, item: any) => {
+  item.state = state;
   let editApptDate = {
     bookingNo: item.id ? item.id : item.bookingNo,
-    userId: item.userId,
-    lessonId: item.lessonId,
-    serverId: item.serverId,
-    dateBooking: item.dateBooking,
-    timer: item.timer,
-    tradeDone: item.tradeDone,
     state: item.state,
-    price: item.price,
-    discount: item.discount,
-    dateCreate: item.dateCreate,
-    bookingMemo: item.bookingMemo,
+    // userId: item.userId,
+    // lessonId: item.lessonId,
+    // serverId: item.serverId,
+    // dateBooking: item.dateBooking,
+    // timer: item.timer,
+    // tradeDone: item.tradeDone,
+    // price: item.price,
+    // discount: item.discount,
+    // dateCreate: item.dateCreate,
+    // bookingMemo: item.bookingMemo,
   };
   //修改預約
-  postEditApptDataApi(editApptDate).then((res: any) => {
-    console.log();
+  postEditApptStateApi(editApptDate).then((res: any) => {
+    console.log(res);
   });
 
   getApptInfoFn(currentYear.value, currentMonth.value + 1);
@@ -759,7 +760,7 @@ const infoBtnState = (state: number) => {
     case 1:
       //完成
       showApptInfoRef.value = false;
-      changeStutusFn(0, oldSelList);
+      changeStutusFn(1, oldSelList);
       break;
     case 2:
       //修改
@@ -771,7 +772,11 @@ const infoBtnState = (state: number) => {
       showApptInfoRef.value = false;
       delReserveId();
       break;
-
+    case 4:
+      //未出席
+      showApptInfoRef.value = false;
+      changeStutusFn(4, oldSelList);
+      break;
     default:
       break;
   }

@@ -11,6 +11,7 @@ import {
   postAddUQLessonDetailReq,
   postAddUQLessonTypeReq,
   postEditApptDataReq,
+  postEditApptStateReq,
   updateCourseDetailReq,
   updateLessonTypeOrderReq,
   updateLessonTypeReq,
@@ -387,7 +388,18 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
-
+  /**更新預約資料 */
+  const postEditApptStateApi = async (data: any) => {
+    try {
+      let res = await postEditApptStateReq(data).then((res: any) => {
+        alertStateFn(res, "更新預約資料");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //--------------------goods
   /**獲取商品分類 */
   const goodsTypesListValueRef = ref(0);
@@ -604,6 +616,7 @@ export const useApptStore = defineStore("apptStore", () => {
     getApptDataApi,
     postAddApptDataApi,
     postEditApptDataApi,
+    postEditApptStateApi,
     getBeauticianApi,
     bookingList,
     tuiBookingListRef,

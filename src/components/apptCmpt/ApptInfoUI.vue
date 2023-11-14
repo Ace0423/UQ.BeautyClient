@@ -18,10 +18,14 @@
             </div>
           </div>
           <div class="list_btn">
-            <button :class="selItemData.state == 1 ? 'finish' : ''" @click="infoBtnState(2)">
+            <button :class="{
+              finish: selItemData.state == 1 || selItemData.state == 4,
+            }" @click="infoBtnState(2)">
               修改預約
             </button>
-            <button :class="selItemData.state == 1 ? 'finish' : ''" @click="infoBtnState(3)">
+            <button :class="{
+              finish: selItemData.state == 1 || selItemData.state == 4,
+            }" @click="infoBtnState(3)">
               刪除預約
             </button>
           </div>
@@ -30,9 +34,18 @@
             <div class="grey-box">
               <span>人數1位</span>
             </div>
-            <button :class="selItemData.state == 1 ? 'finish' : ''" @click="infoBtnState(1)">
-              預約完成
-            </button>
+            <div class="list_btn">
+              <button :class="{
+                finish: selItemData.state == 1 || selItemData.state == 4,
+              }" @click="infoBtnState(1)">
+                預約完成
+              </button>
+              <button :class="{
+                finish: selItemData.state == 1 || selItemData.state == 4,
+              }" @click="infoBtnState(4)">
+                未出席
+              </button>
+            </div>
           </div>
           <div class="link-bottom"></div>
           <div class="content-box">
@@ -394,4 +407,5 @@ onMounted(() => {
     height: 2px;
     background-color: #707070;
   }
-}</style>
+}
+</style>

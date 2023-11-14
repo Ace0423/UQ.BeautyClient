@@ -19,6 +19,9 @@ export const postAddApptDataReq = (data: any) =>
 /**更新預約 */
 export const postEditApptDataReq = (data: any) =>
   postHttps(httpRequest, "/Booking/update", data);
+/**更新預約狀態 */
+export const postEditApptStateReq = (data: any) =>
+  postHttps(httpRequest, "/Booking/UpdateState", data);
 //-----------------------------------------
 /**獲取課程資料 */
 export const getCourseDetailReq = (Group: any, id: any) =>

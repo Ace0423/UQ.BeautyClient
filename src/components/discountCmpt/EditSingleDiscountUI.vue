@@ -10,11 +10,7 @@
             <div class="formname">
               <span>折扣名稱</span>
               <div>
-                <el-input
-                  class="input-name"
-                  v-model="formInputRef.name"
-                  placeholder="請輸入名稱"
-                />
+                <el-input class="input-name" v-model="formInputRef.name" placeholder="請輸入名稱" />
                 <span class="p_error" v-if="ruleItem.name.is_error">
                   {{ ruleItem.name.warn }}
                 </span>
@@ -26,30 +22,15 @@
               <span>售價(NT)</span>
               <div>
                 <div>
-                  <el-input
-                    class="input-price"
-                    v-model="formInputRef.discount"
-                    placeholder="請輸入折扣"
-                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                  >
+                  <el-input class="input-price" v-model="formInputRef.discount" placeholder="請輸入折扣"
+                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')">
                   </el-input>
                   <div class="switch">
-                    <span
-                      class="box_item"
-                      :class="{ actived_box: formInputRef.dType }"
-                    ></span>
-                    <span
-                      class="left"
-                      :class="{ actived_Area: !formInputRef.dType }"
-                      @click="formInputRef.dType = !formInputRef.dType"
-                      >%</span
-                    >
-                    <span
-                      class="right"
-                      :class="{ actived_Area: formInputRef.dType }"
-                      @click="formInputRef.dType = !formInputRef.dType"
-                      >$</span
-                    >
+                    <span class="box_item" :class="{ actived_box: formInputRef.dType }"></span>
+                    <span class="left" :class="{ actived_Area: !formInputRef.dType }"
+                      @click="formInputRef.dType = !formInputRef.dType">%</span>
+                    <span class="right" :class="{ actived_Area: formInputRef.dType }"
+                      @click="formInputRef.dType = !formInputRef.dType">$</span>
                   </div>
                 </div>
                 <span class="p_error" v-if="ruleItem.discount.is_error">
@@ -70,10 +51,7 @@
                       <th></th>
                     </tr>
                   </thead>
-                  <tbody
-                    v-for="(item, index) in formInputRef.serviceGroup"
-                    :key="item.lessonId"
-                  >
+                  <tbody v-for="(item, index) in formInputRef.serviceGroup" :key="item.lid">
                     <tr>
                       <td>
                         <p v-if="item.nameTw">{{ item.nameTw }}</p>
@@ -83,25 +61,19 @@
                         <p>{{ item.price }}</p>
                       </td>
                       <td>
-                        <img
-                          class="delete_img"
-                          :src="icon_cancleItem"
-                          @click="cancleServiceFn(item, index)"
-                        />
+                        <img class="delete_img" :src="icon_cancleItem" @click="cancleServiceFn(item, index)" />
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <span class="link-btn" @click="showServiceUIFn(true)"
-                >加入服務項目</span
-              >
+              <span class="link-btn" @click="showServiceUIFn(true)">加入服務項目</span>
             </div>
           </div>
           <div class="form-info">
             <div class="form-item">
               <span>已套用商品項目</span>
-              <div v-if="formInputRef.serviceGroup.length > 0">
+              <div v-if="formInputRef.goodsGroup.length > 0">
                 <table>
                   <thead>
                     <tr>
@@ -110,10 +82,7 @@
                       <th></th>
                     </tr>
                   </thead>
-                  <tbody
-                    v-for="(item, index) in formInputRef.goodsGroup"
-                    :key="item.pId"
-                  >
+                  <tbody v-for="(item, index) in formInputRef.goodsGroup" :key="item.pid">
                     <tr>
                       <td>
                         <p v-if="item.pName">{{ item.pName }}</p>
@@ -123,19 +92,13 @@
                         <p>{{ item.price }}</p>
                       </td>
                       <td>
-                        <img
-                          class="delete_img"
-                          :src="icon_cancleItem"
-                          @click="cancleGoodsFn(item, index)"
-                        />
+                        <img class="delete_img" :src="icon_cancleItem" @click="cancleGoodsFn(item, index)" />
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <span class="link-btn" @click="showGoodsUIFn(true)"
-                >加入商品項目</span
-              >
+              <span class="link-btn" @click="showGoodsUIFn(true)">加入商品項目</span>
             </div>
           </div>
         </div>
@@ -143,28 +106,17 @@
           <button class="confirm-discountdetail-btn" @click="submitBtn()">
             確認
           </button>
-          <button
-            class="confirm-discountdetail-btn"
-            @click="showEditUIFn(false)"
-          >
+          <button class="confirm-discountdetail-btn" @click="showEditUIFn(false)">
             取消
           </button>
         </div>
       </div>
     </div>
   </div>
-  <CheckboxServiceUI
-    v-if="showServiceUIRef"
-    :selData="formInputRef.serviceGroup"
-    :showCServiceUIFn="showServiceUIFn"
-    :getDataFn="getSelServiceFn"
-  ></CheckboxServiceUI>
-  <CheckboxGoodsUI
-    v-if="showGoodsUIRef"
-    :selData="formInputRef.goodsGroup"
-    :showCGoodsUIFn="showGoodsUIFn"
-    :getDataFn="getGoodsFn"
-  ></CheckboxGoodsUI>
+  <CheckboxServiceUI v-if="showServiceUIRef" :selData="formInputRef.serviceGroup" :showCServiceUIFn="showServiceUIFn"
+    :getDataFn="getSelServiceFn"></CheckboxServiceUI>
+  <CheckboxGoodsUI v-if="showGoodsUIRef" :selData="formInputRef.goodsGroup" :showCGoodsUIFn="showGoodsUIFn"
+    :getDataFn="getGoodsFn"></CheckboxGoodsUI>
 </template>
 <script setup lang="ts">
 import { usePriceStore } from "@/stores/priceStore";
@@ -176,7 +128,7 @@ import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
 
 // import { tr } from "element-plus/es/locale";
 let store = usePriceStore();
-let {} = storeToRefs(store);
+let { } = storeToRefs(store);
 let { updateSingleDiscountApi } = store;
 
 const props = defineProps<{
@@ -208,7 +160,7 @@ function onBeforeFn() {
     : [];
 }
 
-onMounted(() => {});
+onMounted(() => { });
 
 function showServiceUIFn(state: boolean) {
   showServiceUIRef.value = state;
@@ -351,6 +303,7 @@ const verify_all = () => {
 
     .top-form {
       width: 100%;
+
       p {
         font-weight: bold;
         width: 80px;
@@ -361,14 +314,17 @@ const verify_all = () => {
         color: #877059;
       }
     }
+
     .main-form {
       width: 100%;
+
       .form-info {
         width: 100%;
         // height: 60px;
         display: flex;
         justify-content: center;
-        > div {
+
+        >div {
           p {
             text-align: left;
             font-size: 15px;
@@ -376,6 +332,7 @@ const verify_all = () => {
             color: #877059;
             height: 8px;
           }
+
           span {
             display: block;
             height: 30px;
@@ -387,7 +344,7 @@ const verify_all = () => {
             font-weight: bold;
           }
 
-          > input {
+          >input {
             vertical-align: middle;
             width: 95%;
             margin: 5;
@@ -396,40 +353,48 @@ const verify_all = () => {
             background-color: #fff;
           }
         }
+
         .formname {
           display: flex;
           justify-content: center;
           padding: 5px 10px;
-          > span {
+
+          >span {
             width: 110px;
             font-size: 20px;
           }
-          > div {
+
+          >div {
             .input-name {
               width: 210px;
               height: 40px;
             }
-            > span {
+
+            >span {
               font-size: 10px;
             }
           }
         }
+
         .formprice {
           display: flex;
           justify-content: center;
           width: 100%;
           padding: 0px 10px;
-          > span {
+
+          >span {
             width: 110px;
             font-size: 20px;
           }
 
-          > div {
-            > span {
+          >div {
+            >span {
               font-size: 10px;
             }
-            > div {
+
+            >div {
               display: flex;
+
               .input-price {
                 width: 150px;
               }
@@ -442,6 +407,7 @@ const verify_all = () => {
                 padding: 2px 2px;
                 background-color: #877059;
                 filter: brightness(90%);
+
                 span {
                   cursor: pointer;
                   font-size: 12px;
@@ -451,6 +417,7 @@ const verify_all = () => {
                   color: #fff;
                   width: 50%;
                 }
+
                 .box_item {
                   position: absolute;
                   color: #fff;
@@ -458,6 +425,7 @@ const verify_all = () => {
                   border-radius: 5px;
                   background-color: #fff;
                 }
+
                 .actived_Area {
                   color: #877059;
                   border-radius: 5px;
@@ -465,6 +433,7 @@ const verify_all = () => {
                   font-weight: 60;
                   width: 50%;
                 }
+
                 .actived_box {
                   margin-left: 43%;
                   width: 50%;
@@ -473,50 +442,64 @@ const verify_all = () => {
             }
           }
         }
+
         .form-item {
           width: 320px;
-          > span {
+
+          >span {
             display: flex;
             width: 100%;
             justify-content: center;
             align-items: center;
             height: 40px;
           }
-          > div {
+
+          >div {
             display: flex;
             width: 100%;
             justify-content: center;
-            > table {
+            max-height: 100px;
+            overflow-y: auto;
+
+            >table {
               // display: flex;
               width: 100%;
-              > thead {
+
+              >thead {
                 background-color: #c1bdb8;
                 color: #877059;
 
-                > tr > th:nth-child(1) {
+                >tr>th:nth-child(1) {
                   width: 70%;
                 }
-                > tr > th:nth-child(2) {
+
+                >tr>th:nth-child(2) {
                   width: 20%;
                 }
-                > tr > th:nth-child(3) {
+
+                >tr>th:nth-child(3) {
                   width: 10%;
                 }
               }
-              > tbody {
+
+              >tbody {
                 border-bottom: 1px solid #fff;
-                > tr > td:nth-child(1) {
+
+                >tr>td:nth-child(1) {
                   width: 70%;
                 }
-                > tr > td:nth-child(2) {
+
+                >tr>td:nth-child(2) {
                   width: 20%;
                 }
-                > tr > th:nth-child(3) {
+
+                >tr>th:nth-child(3) {
                   width: 10%;
                 }
               }
             }
           }
+
           .link-btn {
             color: #b89087;
           }
@@ -534,6 +517,7 @@ const verify_all = () => {
         max-height: 250px;
         overflow-y: scroll;
         width: 100%;
+
         div {
           flex-wrap: wrap;
           display: flex;
@@ -552,7 +536,7 @@ const verify_all = () => {
               color: #717171;
               display: flex;
 
-              > span {
+              >span {
                 margin-top: 5px;
                 width: 88%;
                 justify-content: center;
@@ -579,10 +563,12 @@ const verify_all = () => {
         }
       }
     }
+
     .bottom-form {
       width: 100%;
       display: flex;
       justify-content: center;
+
       .confirm-discountdetail-btn {
         position: relative;
         width: 100px;

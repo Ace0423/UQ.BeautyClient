@@ -179,7 +179,7 @@ let deleteHdr = (item: any, index: number) => {
 const onDeleteAlertBtn = (state: any, item: any) => {
   if (state) {
     let curPgId = goodsTypesListRef.value[goodsTypesListValueRef.value].pgId;
-    delGoodsDetailApi(selItem.pId, curPgId).then((res: any) => {
+    delGoodsDetailApi(selItem.pId).then((res: any) => {
       getDetailByTypeFn(0, 0);
     });
   } else {

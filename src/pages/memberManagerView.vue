@@ -11,12 +11,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="container">
-    <Header
-      :Icon="Icon"
-      :moduleType="'顧客管理'"
-      :memuState="props.memuState"
-      :handmemuStateBtn="props.handmemuStateBtn"
-    >
+    <Header :Icon="Icon" :moduleType="'顧客管理'" :memuState="props.memuState" :handmemuStateBtn="props.handmemuStateBtn">
     </Header>
     <div class="content">
       <div class="nav">
@@ -33,7 +28,8 @@ onMounted(() => {
   height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
   position: relative;
-  > .content {
+
+  >.content {
     position: absolute;
     top: 80px;
     bottom: 0px;
@@ -41,11 +37,11 @@ onMounted(() => {
     right: 0px;
     margin: 2px 40px;
 
-    > .nav {
+    >.nav {
       display: flex;
       // pointer-events: none;
 
-      > a {
+      >a {
         border: none;
         width: 120px;
         height: 45px;
@@ -71,12 +67,12 @@ onMounted(() => {
           color: #717171;
         }
 
-        > .router-link-exact-active {
+        >.router-link-exact-active {
           background-color: #e6e2de;
         }
       }
 
-      > .router-link-exact-active {
+      >.router-link-exact-active {
         background-color: #e6e2de;
       }
     }

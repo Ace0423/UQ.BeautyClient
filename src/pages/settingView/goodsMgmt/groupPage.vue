@@ -12,45 +12,20 @@
                 </div>
             </div>
             <div class="content-main">
-                <!-- <table>
-                    <thead>
-                        <tr>
-                            <td v-for="(item, value) in goodsTableTitle" :key="item">
-                                <p @click="sorttheadFn(value)">{{ item }}</p>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(item, index) in filterGoodsType" :key="item.pgId">
-                            <td>
-                                <p>{{ item.pgTitle }}</p>
-                            </td>
-                            <td>
-                                <p>{{ item.pgTitle }}</p>
-                            </td>
-                            <td>
-                                <button v-on:click="showEditFormFn(index, item)">
-                                    <img class="edit_img" :src="icon_edit" />
-                                </button>
-                                <button @click="deleteHdr(item, index)">
-                                    <img class="delete_img" :src="icon_delete" />
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table> -->
                 <el-table :data="filterGoodsType" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
                     :header-cell-style="headerRowStyle">
-                    <el-table-column prop="pgTitle" label="群組名稱" width="180" />
-                    <el-table-column prop="pgId" label="群組名稱" width="180" />
+                    <el-table-column prop="pgTitle" label="群組名稱" width="500" />
+                    <el-table-column prop="pgId" label="群組名稱" width="150" />
                     <el-table-column prop="pgTitle" label="操作" />
-                    <el-table-column label="操作" width="100">
-                        <template #default>
+                    <el-table-column label="操作" width="150">
+                        <template #default="scope">
                             <div class="handle-drag">
                                 <el-icon>
                                     <Sort />
                                 </el-icon>
-                                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;" />
+                                <img class="edit_img" :src="Icon_edit" />
+                                <img class="del_img" :src="Icon_del"
+                                    @click="deleteHdr(scope.$index, filterGoodsType[scope.$index])" />
                             </div>
                         </template>
                     </el-table-column>
@@ -64,15 +39,13 @@
 </template>
   
 <script lang="ts" setup>
-import icon_add from "@/assets/images/icon_add.png";
-import icon_edit from "@/assets/images/icon_edit.png";
-import icon_delete from "@/assets/images/icon_delete.png";
 import { useApptStore } from "@/stores/apptStore";
 import { storeToRefs } from "pinia";
-import Alert from "@/components/alertCmpt";
 import Sortable from 'sortablejs'
 import { Sort } from '@element-plus/icons-vue'
 import Icon_edit from "@/assets/images/icon_edit.png";
+import Icon_del from "@/assets/Icon material-delete.svg";
+import Alert from "@/components/alertCmpt";
 
 let store = useApptStore();
 let { goodsTypesListRef, goodsTypesListValueRef, goodsDetailListRef } =
@@ -81,7 +54,7 @@ let {
     getGoodsTypeApi,
     getGoodsDetailApi,
     updateGoodsDetailApi,
-    delGoodsDetailApi,
+    delGoodsTypeApi,
     updataGoodsTypeOrderApi,
 } = store;
 
@@ -104,7 +77,7 @@ function getGoodsFn(data: any) {
 
 onBeforeFn();
 function onBeforeFn() {
-    getDetailByTypeFn(0,0);
+    getDetailByTypeFn(0, 0);
 
 }
 
@@ -136,11 +109,12 @@ function OrderGroupFn() {
         })
     }
     updataGoodsTypeOrderApi(orderApiData).then((res: any) => {
-    getDetailByTypeFn(0,0);
+        getDetailByTypeFn(0, 0);
     });
 }
 
-function getDetailByTypeFn(id:any,isList:any) {
+function getDetailByTypeFn(id: any, isList: any) {
+    goodsTypesListRef.value = [];
     getGoodsTypeApi().then(() => {
         getGoodsDetailApi(
             id,
@@ -155,17 +129,21 @@ let showAddTypeFormHdr = (state: boolean) => {
 };
 const showEditDetailUIHdr = (state: boolean) => {
     showEditUIRef.value = state;
-    getDetailByTypeFn(0,0);
+    getDetailByTypeFn(0, 0);
     // getGoodsDetailApi(0, 0);
 };
-//編輯
-//改變狀態
-//刪除
-const onDeleteAlertBtn = (data: any) => {
-    if (data) {
-        let curPgId = goodsTypesListRef.value[goodsTypesListValueRef.value].pgId;
-        delGoodsDetailApi(selItem.pId, curPgId).then(() => {
-            getDetailByTypeFn(0,0);
+
+//刪除課程
+let deleteHdr = (index: any, itemId: any) => {
+    Alert.check("是否刪除", 1000, (data: any) => {
+        onDeleteAlertBtn(data, itemId)
+    });
+};
+
+const onDeleteAlertBtn = (state: any, itemId: any) => {
+    if (state) {
+        delGoodsTypeApi(itemId.pgId).then((res: any) => {
+            getDetailByTypeFn(0, 0);
         });
     } else {
         console.log("取消刪除");
@@ -267,7 +245,7 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
             width: 100%;
             height: calc(100% - 47px);
 
-            >table {
+            >el-table {
                 // display: inline-block;
                 padding: 10px 25px;
                 width: 100%;
@@ -443,6 +421,19 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
                     >tr>td:nth-child(3) {
                         width: 10%;
                     }
+                }
+            }
+
+            .handle-drag {
+                .edit_img {
+                    width: 27px;
+                    height: 27px;
+                    margin: 0 5px;
+                }
+
+                .del_img {
+                    width: 27px;
+                    height: 27px;
                 }
             }
         }

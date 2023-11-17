@@ -95,16 +95,12 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
+import { useApptStore } from "@/stores/apptStore";
+import Alert from "@/components/alertCmpt";
 import DeleteIcon from "@/assets/Icon material-delete.svg";
-import addcoursetype from "@/assets/Icon course-addcoursetype.svg";
 import Icon from "@/assets/Icon awesome-spa.svg";
 import Icon_edit from "@/assets/Ico_edit.svg";
-import type { IBackStatus } from "@/types/IData";
-import { useApptStore } from "@/stores/apptStore";
-import { showErrorMsg } from "@/types/IMessage";
 import icon_add from "@/assets/images/icon_add.png";
-import Alert from "@/components/alertCmpt";
-import { ElScrollbar } from "element-plus";
 let store = useApptStore();
 let { courseTypesTabs, courseDataList, courseTypesTabsValue } =
   storeToRefs(store);

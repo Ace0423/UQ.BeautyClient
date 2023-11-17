@@ -88,14 +88,6 @@ export const useApptStore = defineStore("apptStore", () => {
   const getCourseTypeApi = async (data: any = 0) => {
     try {
       courseDataList.value = [];
-      courseTypesTabs.value = [
-        {
-          lessonTypeId: 0,
-          display: true,
-          nameTw: "全部",
-          order: 0,
-        },
-      ];
       let res: any = await getCourseTypeReq(data).then((res: any) => {
         if (res.data.data) {
           let tableVo: IServiceTypeVo[] = res.data.data.table;
@@ -112,7 +104,7 @@ export const useApptStore = defineStore("apptStore", () => {
             return a.order > b.order ? 1 : -1;
           });
           getCourseDetailApi(
-            courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
+            0,
             "0"
           );
         }
@@ -559,9 +551,9 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   /**刪除商品資料 */
-  const delGoodsDetailApi = async (data: any, pgId: any) => {
+  const delGoodsDetailApi = async (pId: any) => {
     try {
-      let res = await delGoodsDetailReq(data, pgId).then((res: any) => {
+      let res = await delGoodsDetailReq(pId).then((res: any) => {
         alertStateFn(res, "刪除商品資料");
         // setTimeout(() => {
         //   if (res) getGoodsDetailApi(pgId, 0);

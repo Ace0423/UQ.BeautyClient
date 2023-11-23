@@ -270,10 +270,6 @@ onMounted(() => {
               vertical-align: middle;
             }
           }
-
-          >.content-btn {
-            widows: 5%;
-          }
         }
 
         .content-btn {

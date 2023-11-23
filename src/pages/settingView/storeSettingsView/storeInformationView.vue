@@ -27,13 +27,14 @@ const companyInfoData = reactive({
 const fileImageSmall = ((e: any) => {
     const file = e.target.files.item(0);
     let suffixName = file.name.substring(file.name.lastIndexOf('.') + 1);
-    console.log(suffixName)
     if (suffixName !== 'jpg' && suffixName !== 'png' && suffixName !== 'JPG' && suffixName !== 'PNG') {
         Alert.warning("上傳檔案只能是 jpg、png 格式!", 2000);
         return;
     }
     const reader = new FileReader();
     reader.addEventListener('load', (e: any) => {
+        
+    console.log(e.target)
         companyInfoData.imageSmall = e.target.result;
     });
     reader.readAsDataURL(file);
@@ -130,10 +131,10 @@ onMounted(() => {
                             <td>商店名稱</td>
                             <td><input :disabled="disabled" v-model="filterCompanyInfo.cName" /></td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td>商店類型</td>
                             <td><input v-model="filterCompanyInfo.companyGroup" /></td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <td>商店地址</td>
                             <td><input v-model="filterCompanyInfo.cAddress" /></td>

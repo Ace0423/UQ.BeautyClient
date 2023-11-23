@@ -101,9 +101,9 @@ onMounted(() => {
                     <td>
                         <p>{{ item.dateCreate }}</p>
                     </td>
-                    <td>
+                    <td class="content-btn">
                         <button class="header-btn" v-on:click="handAddManagerView(item)">
-                            <img :src="editIcon" />
+                           >
                         </button>
                     </td>
                 </tr>
@@ -176,10 +176,10 @@ div {
                 display: flex;
                 align-items: center;
                 height: 50px;
-                justify-content: space-between;
+                // justify-content: space-between;
 
                 >th {
-                    width: calc(100%/4);
+                    width:23.75%;
 
                     >p {
                         min-width: 108px;
@@ -204,7 +204,7 @@ div {
             >tr {
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
+                // justify-content: space-between;
                 position: relative;
 
                 &::after {
@@ -221,7 +221,7 @@ div {
 
                 >td {
                     display: flex;
-                    width: calc(100%/4);
+                    width: 23.75%;
 
                     >button {
                         height: 100%;
@@ -240,12 +240,20 @@ div {
                 }
 
                 .content-name {
-                    // padding-left: 10px;
                     display: flex;
 
                     img {
                         margin: 0 15px;
                     }
+
+                    P {
+                        margin: 0 0;
+                    }
+                }
+
+                .content-btn {
+                    // width: 5%;
+                    justify-content: end;
                 }
             }
         }

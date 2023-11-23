@@ -11,13 +11,13 @@ export const getGoodsTypeReq = (data: any, isList: any = 0) =>
   getHttps(
     httpRequest,
     "/Product/ProductGroup?pgid=" +
-      data +
-      "&isList=" +
-      isList +
-      "&pageIndex=0&count=0"
+    data +
+    "&isList=" +
+    isList +
+    "&pageIndex=0&count=0"
   );
 export const updateGoodsTypeOrderReq = (data: any) =>
-  getHttps(httpRequest, "/Lesson/GroupUpdateOrder", data);
+  postHttps(httpRequest, "/Product/GroupUpdateOrder", data);
 export const addGoodsTypeReq = (data: any) =>
   postHttps(httpRequest, "/Product/ProductGroup", data);
 export const updateGoodsTypeReq = (data: any) =>
@@ -39,8 +39,8 @@ export const addGoodsDetailReq = (data: any) =>
   postHttps(httpRequest, "/Product/ProductInfo", data);
 export const updateGoodsDetailReq = (data: any) =>
   putHttps(httpRequest, "/Product/ProductInfo?pId=" + data.pId, data);
-export const delGoodsDetailReq = (data: any, pgId: any) =>
-  deleteHttps(httpRequest, "/Product/ProductInfo/" + data);
+export const delGoodsDetailReq = ( pId: any) =>
+  deleteHttps(httpRequest, "/Product/ProductInfo/" + pId);
 
 // //分類
 // export const getGoodsTypeReq = (data: any) => {

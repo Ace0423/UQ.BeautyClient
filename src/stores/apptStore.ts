@@ -11,6 +11,7 @@ import {
   postAddUQLessonDetailReq,
   postAddUQLessonTypeReq,
   postEditApptDataReq,
+  postEditApptStateReq,
   updateCourseDetailReq,
   updateLessonTypeOrderReq,
   updateLessonTypeReq,
@@ -87,14 +88,6 @@ export const useApptStore = defineStore("apptStore", () => {
   const getCourseTypeApi = async (data: any = 0) => {
     try {
       courseDataList.value = [];
-      courseTypesTabs.value = [
-        {
-          lessonTypeId: 0,
-          display: true,
-          nameTw: "全部",
-          order: 0,
-        },
-      ];
       let res: any = await getCourseTypeReq(data).then((res: any) => {
         if (res.data.data) {
           let tableVo: IServiceTypeVo[] = res.data.data.table;
@@ -111,7 +104,7 @@ export const useApptStore = defineStore("apptStore", () => {
             return a.order > b.order ? 1 : -1;
           });
           getCourseDetailApi(
-            courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
+            0,
             "0"
           );
         }
@@ -387,7 +380,18 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
-
+  /**更新預約資料 */
+  const postEditApptStateApi = async (data: any) => {
+    try {
+      let res = await postEditApptStateReq(data).then((res: any) => {
+        alertStateFn(res, "更新預約資料");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //--------------------goods
   /**獲取商品分類 */
   const goodsTypesListValueRef = ref(0);
@@ -396,15 +400,15 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       goodsDetailListRef.value = [];
       goodsTypesListRef.value = [];
-      goodsTypesListRef.value = [
-        {
-          pgId: 0,
-          display: true,
-          pgTitle: "全部",
-          order: 0,
-          isList: 0,
-        },
-      ];
+      // goodsTypesListRef.value = [
+      //   {
+      //     pgId: 0,
+      //     display: true,
+      //     pgTitle: "全部",
+      //     order: 0,
+      //     isList: 0,
+      //   },
+      // ];
       let res: any = await getGoodsTypeReq(data, 0).then((res: any) => {
         if (res.data.data) {
           let typeVo: IGoodsTypeVo = res.data.data.table;
@@ -418,7 +422,7 @@ export const useApptStore = defineStore("apptStore", () => {
             goodsTypesListRef.value.push(element);
           }
           goodsTypesListRef.value.sort(function (a: any, b: any) {
-            return a.pgId > b.pgId ? 1 : -1;
+            return a.order > b.order ? 1 : -1;
           });
         }
         return res;
@@ -547,9 +551,9 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   /**刪除商品資料 */
-  const delGoodsDetailApi = async (data: any, pgId: any) => {
+  const delGoodsDetailApi = async (pId: any) => {
     try {
-      let res = await delGoodsDetailReq(data, pgId).then((res: any) => {
+      let res = await delGoodsDetailReq(pId).then((res: any) => {
         alertStateFn(res, "刪除商品資料");
         // setTimeout(() => {
         //   if (res) getGoodsDetailApi(pgId, 0);
@@ -604,6 +608,7 @@ export const useApptStore = defineStore("apptStore", () => {
     getApptDataApi,
     postAddApptDataApi,
     postEditApptDataApi,
+    postEditApptStateApi,
     getBeauticianApi,
     bookingList,
     tuiBookingListRef,

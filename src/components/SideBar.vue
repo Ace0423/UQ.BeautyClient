@@ -55,6 +55,11 @@ onMounted(() => {
             >
           </li>
           <li>
+            <img :src="courseImg" /><router-link to="/serviceView/servicePage"
+              >服務管理</router-link
+            >
+          </li>
+          <li>
             <img :src="bankImg" /><router-link to="/memberBankView/memberBankView"
               >儲值金</router-link
             >

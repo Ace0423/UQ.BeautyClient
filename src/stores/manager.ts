@@ -26,12 +26,11 @@ export const useManagerStore = defineStore("manager", () => {
         try {
             managerRoleList.value = []
             managerList.data = []
-            
+
             const res = await apiGetAdminListRequest(data).then((res: any) => {
                 if (res.data.state == 1) {
                     managerList.data = res.data.data.table;
                     setManagerRoleListFn(5)
-                    console.log(managerRoleList.value);
                 }
                 return res.data;
             });
@@ -163,10 +162,11 @@ export const useManagerStore = defineStore("manager", () => {
 
     const getWorkingHours = async (data: any) => {
         try {
-            const res = await apiGetWorkingHoursRequest(data);
-            if (res.data.data.table) {
-                workingHoursList.data = res.data.data.table;
-            }
+            const res = await apiGetWorkingHoursRequest(data).then((res: any)=> {
+                if (res.data.data.table) {
+                    workingHoursList.data = res.data.data.table;
+                }
+            })
         } catch (error) {
             console.log(error);
             return Promise.reject(error);

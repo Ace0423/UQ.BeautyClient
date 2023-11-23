@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { usePriceStore} from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import search_ico from "@/assets/images/icon_search.png";
 
 let store = usePriceStore();
@@ -27,10 +27,13 @@ const props = defineProps<{
   //   formInfo: any;
   //   addDetailTypeID?: any;
 }>();
-
+ 
+onBeforeFn();
+function onBeforeFn() {
+  // console.log('onBeforeFn');
+}
 onMounted(() => {
   // console.log('onMounted');
-  
 });
 let formInputRef: any = ref({
   name: "",
@@ -63,19 +66,24 @@ function submitBtn() {
     font-family: HeitiTC;
     color: #84715c;
     font-weight: bold;
+
     .top-content {
       display: block;
-      > p {
+
+      >p {
         display: flex;
         justify-content: center;
       }
     }
+
     .main-content {
       display: block;
     }
+
     .bottom-content {
       display: flex;
-      > button {
+
+      >button {
         position: relative;
         width: 100px;
         height: 45px;
@@ -86,9 +94,11 @@ function submitBtn() {
         color: #717171;
         background-color: #fff;
       }
+
       .submit-btn {
         display: block;
       }
+
       .cancle-btn {
         display: block;
       }

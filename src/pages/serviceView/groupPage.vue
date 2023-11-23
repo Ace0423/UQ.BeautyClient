@@ -1,50 +1,34 @@
+
 <template>
   <div class="container">
     <div class="header"></div>
     <div class="content">
-      <div class="content-top">
-        <p>商品(全部{{ filterGoodsData.length }}個)</p>
+      <div class="content-topBar">
+        <p>商品(全部{{ filterServiceType.length }}個)</p>
         <div>
           <input v-model="search" class="search-control" placeholder="搜尋名稱" />
-          <div class="btn-open" @click="showAddDetailFormHdr(true)">
+          <div class="btn-open" @click="showAddUIHdr(true)">
             {{ $t("AddGoods") }}
           </div>
         </div>
       </div>
       <div class="content-main">
-        <table>
-          <thead>
-            <tr>
-              <td v-for="(item, value) in goodsTableTitle" :key="item">
-                <p @click="sorttheadFn(value)">{{ item }}</p>
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in filterGoodsData" :key="item.lessonId">
-              <td>
-                <p>{{ item.pCode }}</p>
-              </td>
-              <td>
-                <p>{{ item.pName }}</p>
-              </td>
-              <td>
-                <p>{{ item.price }}</p>
-              </td>
-              <td class="checkbox_state">
-                <input type="checkbox" :checked="item.display == true" v-on:click="updataStutusBtn(index, item)" />
-              </td>
-              <td>
-                <button v-on:click="showEditFormFn(index, item)">
-                  <img class="edit_img" :src="icon_edit" />
-                </button>
-                <button @click="deleteHdr(item, index)">
-                  <img class="delete_img" :src="icon_delete" />
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <el-table :data="filterServiceType" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
+          :header-cell-style="headerRowStyle">
+          <el-table-column prop="nameTw" label="群組名稱" width="800" />
+          <el-table-column prop="lessonTypeId" label="群組名稱" width="150" />
+          <el-table-column label="操作" width="150">
+            <template #default="scope">
+              <div class="handle-drag">
+                <el-icon>
+                  <Sort />
+                </el-icon>
+                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;" />
+                <img class="del_img" :src="Icon_del" @click="deleteHdr(scope.$index, filterServiceType[scope.$index])" />
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
 
       <div>
@@ -55,122 +39,94 @@
 
     </div>
   </div>
-  <AddGoodsDetailUI v-if="showAddUIRef" :showAddUIFn="showAddDetailFormHdr" />
-  <EditGoodsDetailUI v-if="showEditUIRef" :showUIFn="showEditDetailUIHdr" :formInfo="selItem" />
-  <AddGoodsTypeUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" />
 </template>
 
-<script lang="ts" setup>
-import icon_add from "@/assets/images/icon_add.png";
-import icon_edit from "@/assets/images/icon_edit.png";
-import icon_delete from "@/assets/images/icon_delete.png";
-import { useApptStore } from "@/stores/apptStore";
+<script setup lang="ts">
+import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
+import { useApptStore } from "@/stores/apptStore";
+import Icon_edit from "@/assets/Ico_edit.svg";
+import Icon_del from "@/assets/Icon material-delete.svg";
+import Sortable from "sortablejs";
+import { Sort } from '@element-plus/icons-vue'
 import Alert from "@/components/alertCmpt";
 
 let store = useApptStore();
-let { goodsTypesListRef, goodsTypesListValueRef, goodsDetailListRef } =
+let { courseTypesTabs, courseDataList, courseTypesTabsValue } =
   storeToRefs(store);
 let {
-  getGoodsTypeApi,
-  getGoodsDetailApi,
-  updateGoodsDetailApi,
-  delGoodsDetailApi,
+  getCourseTypeApi,
+  delCourseTypeApi,
+  getCourseDetailApi,
+  delCourseDetailApi,
+  updateCourseDetailApi,
+  editCourseTypeOrderApi
 } = store;
 
+let showAddType = ref(false);
 
-let showAddUIRef = ref(false);
-let showEditUIRef = ref(false);
-let showAddTypeRef = ref(false);
-let goodsTableTitle = ["產品編號", "產品名稱", "售價(NT)", "上架", "操作"];
-
-let selItem: any = [];
-let sortUpDown: string = "";
 
 let search = ref("");
-let filterGoodsData: any = computed(() =>
-  goodsDetailListRef.value.filter(getGoodsFn)
+let filterServiceType: any = computed(() =>
+  courseTypesTabs.value.filter(getServiceFn)
 );
-function getGoodsFn(data: any) {
-  return (
+function getServiceFn(data: any) {
+  let Sdata = (
     !search.value ||
-    data.pName.toLowerCase().includes(search.value.toLowerCase())
+    data.nameTw.toLowerCase().includes(search.value.toLowerCase())
   );
+
+  return Sdata;
 }
-
-
 onBeforeFn();
 function onBeforeFn() {
-  goodsDetailListRef.value = []
-  getDetailByTypeFn(0, 0);
+  courseTypesTabs.value = [];
+  getCourseTypeApi();
+
 }
 
 onMounted(() => {
   // console.log('onMounted');
+  setSort()
 });
-
-//新增-顯示
-let showAddDetailFormHdr = (state: boolean) => {
-  showAddUIRef.value = state;
-  if (!state) {
-    getDetailByTypeFn(0, 0);
+function setSort() {
+  const el = document.querySelector('#dragTable table tbody')
+  new Sortable(el, {
+    sort: true,
+    handle: '.handle-drag',
+    ghostClass: 'sortable-ghost',
+    onEnd: (e: any) => {
+      const targetRow = filterServiceType.value.splice(e.oldIndex, 1)[0]
+      filterServiceType.value.splice(e.newIndex, 0, targetRow)
+      OrderGroupFn();
+    },
+  })
+}
+function OrderGroupFn() {
+  let orderApiData = [];
+  for (let i = 0; i < filterServiceType.value.length; i++) {
+    const element = filterServiceType.value[i];
+    element.order = i;
+    orderApiData.push({
+      lid: element.lessonTypeId,
+      order: i
+    })
   }
-};
-function getDetailByTypeFn(id: any, isList: any) {
-  getGoodsTypeApi().then((res: any) => {
-    getGoodsDetailApi(
-      id,
-      isList
-    );
+  editCourseTypeOrderApi(orderApiData).then((res: any) => {
+    courseTypesTabs.value = [];
+    getCourseTypeApi();
   });
 }
-//新增分類-顯示
-let showAddTypeFormHdr = (state: boolean) => {
-  showAddTypeRef.value = state;
-  getGoodsTypeApi(0);
-};
-const showEditDetailUIHdr = (state: boolean) => {
-  showEditUIRef.value = state;
-  getDetailByTypeFn(0, 0);
-};
-//編輯
-function showEditFormFn(index: number, item: any) {
-  selItem.value = item;
-  showEditDetailUIHdr(true);
-}
-//改變狀態
-function updataStutusBtn(index: number, item: any) {
-  let curdata: any = {
-    pId: item.pId,
-    pCode: item.pCode,
-    pName: item.pName,
-    memo: item.memo,
-    price: item.price,
-    imageBig: item.imageBig,
-    imageSmall: item.imageSmall,
-    unit: item.unit,
-    amount: item.amount,
-    brand: item.brand,
-    stock: item.stock,
-    stockTrace: item.stockTrace,
-    bonusOpen: item.amount,
-    updateOpen: item.updateOpen,
-    display: !item.display,
-    stockOpen: item.stockOpen,
-    productGroup: item.groupList,
-    productProvider: item.providerList,
-    productDiscount: item.discountList,
-  };
 
-  updateGoodsDetailApi(curdata).then((res: any) => {
-    if (res.state == 1) {
-      getDetailByTypeFn(0, 0);
-    }
-  });
-}
-//刪除
-let deleteHdr = (item: any, index: number) => {
-  selItem = item;
+let selItem: any = [];
+//新增分類-顯示
+let showAddUIHdr = (state: boolean) => {
+  showAddType.value = state;
+  getCourseTypeApi(0);
+};
+
+//刪除課程
+let deleteHdr = (index: number, item: number) => {
   Alert.check("是否刪除", 1000, (data: any) => {
     onDeleteAlertBtn(data, item)
   });
@@ -178,50 +134,59 @@ let deleteHdr = (item: any, index: number) => {
 
 const onDeleteAlertBtn = (state: any, item: any) => {
   if (state) {
-    let curPgId = goodsTypesListRef.value[goodsTypesListValueRef.value].pgId;
-    delGoodsDetailApi(selItem.pId).then((res: any) => {
-      getDetailByTypeFn(0, 0);
+    delCourseTypeApi(item.lessonTypeId).then((res: any) => {
+      getCourseDetailApi(
+        0,
+        "0"
+      );
     });
   } else {
     console.log("取消刪除");
   }
   selItem.value = [];
 };
-
-//排序明細
-function sorttheadFn(name: number) {
-  let nameGroup = ["nameTw", "servicesTime", "price", "display"];
-  let sortName = nameGroup[name];
-  if (sortName)
-    if (sortUpDown == sortName) {
-      goodsDetailListRef.value.sort(function (a: any, b: any) {
-        return a[sortName] > b[sortName] ? -1 : 1;
-      });
-      sortUpDown = "";
-    } else {
-      goodsDetailListRef.value.sort(function (a: any, b: any) {
-        return a[sortName] > b[sortName] ? 1 : -1;
-      });
-      sortUpDown = sortName;
-    }
+//-------------------------------------------------------------------------表格css
+//內容css
+const rowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
+  return {
+    backgroundColor: '#fff',
+    color: '#717171',
+    fontSize: "16px",
+    fontWeight: "bold",
+    margin: "3px 5px",
+    fontFamily: " STXihei",
+    borderBottom: "2px solid rgba(112, 112, 112, 0.5)"
+  }
 }
+//標頭css
+const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
+  return {
+    height: "50px",
+    backgroundColor: '#fff',
+    fontSize: "20px",
+    borderBottom: "0px solid rgba(112, 112, 112, 0.5)"
+  }
+}
+//排序明細
 </script>
-
 <style lang="scss" scoped>
 .container {
   position: absolute;
   top: 45px;
   bottom: 10px;
+  left: 0px;
+  right: 0px;
   width: 100%;
-
-  .header {}
+  background-color: #faf9f8;
+  border: solid 0.5px #ddd;
+  font-family: STXihei;
+  color: #717171;
 
   .content {
-    width: 100%;
+    display: block;
     height: calc(100%);
-    border: solid 0.5px #ddd;
 
-    .content-top {
+    .content-topBar {
       height: 47px;
       width: calc(100%);
       font-weight: bold;
@@ -273,6 +238,8 @@ function sorttheadFn(name: number) {
       }
     }
 
+
+
     .content-main {
       width: 100%;
       height: calc(100% - 47px);
@@ -289,30 +256,20 @@ function sorttheadFn(name: number) {
         height: 100%;
         overflow-y: scroll;
 
-        // display: inline-table;
         >thead {
           display: inline-table;
           width: 100%;
-          height: 50px;
 
           >tr>td:nth-child(1) {
-            width: 40%;
+            width: 70%;
           }
 
           >tr>td:nth-child(2) {
-            width: 15%;
-          }
-
-          >tr>td:nth-child(3) {
             width: 20%;
           }
 
-          >tr>td:nth-child(4) {
+          >tr>td:nth-child(3) {
             width: 10%;
-          }
-
-          >tr>td:nth-child(5) {
-            width: 15%;
           }
         }
 
@@ -320,7 +277,7 @@ function sorttheadFn(name: number) {
           overflow-y: scroll;
           display: block;
           width: 100%;
-          height: calc(100% - 50px);
+          height: 90%;
 
           >tr {
             display: flex;
@@ -453,30 +410,21 @@ function sorttheadFn(name: number) {
           }
 
           >tr>td:nth-child(1) {
-            width: 40%;
+            width: 70%;
           }
 
           >tr>td:nth-child(2) {
-            width: 15%;
-          }
-
-          >tr>td:nth-child(3) {
             width: 20%;
           }
 
-          >tr>td:nth-child(4) {
+          >tr>td:nth-child(3) {
             width: 10%;
-          }
-
-          >tr>td:nth-child(5) {
-            width: 15%;
-            min-width: 85px;
           }
         }
       }
     }
   }
 
-  .footer {}
+
 }
 </style>

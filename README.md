@@ -49,6 +49,7 @@ npm install --save @fullcalendar/timegrid
 npm install --save @fullcalendar/interaction
 npm install jquery --save
 npm install vue-i18n@9
+npm install @daypilot/daypilot-lite-vue
 ```
 
 

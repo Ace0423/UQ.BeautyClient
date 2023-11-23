@@ -181,7 +181,6 @@ export default {
         for (let i = 0; i < this.proptuiList.length; i++) {
           const element = this.proptuiList[i];
           if (num) {
-            console.log("000");
             window.cal.createSchedules([
               {
                 id: element.id,
@@ -390,59 +389,86 @@ export default {
       var id = 0;
 
       // console.log(id, "新增服務顏色");
+
+
       calendar = new CalendarInfo();
-      id += 1;
+      id;
       calendar.id = String(id);
-      calendar.name = "My Calendar";
-      setItemColor(calendar, "#9e5fff");
+      calendar.name = "bgColor_00";
+      setItemColor(calendar, "#FF8040");
+
 
       calendar = new CalendarInfo();
       id += 1;
       calendar.id = String(id);
-      calendar.name = "Company";
-      setItemColor(calendar, "#00a9ff");
+      calendar.name = "bgColor_01";
+      setItemColor(calendar, "#fb9ea6");
 
       calendar = new CalendarInfo();
       id += 1;
       calendar.id = String(id);
-      calendar.name = "Family";
-      setItemColor(calendar, "#ff5583");
+      calendar.name = "bgColor_02";
+      setItemColor(calendar, "#f7bf9a");
 
       calendar = new CalendarInfo();
       id += 1;
       calendar.id = String(id);
-      calendar.name = "Friend";
-      setItemColor(calendar, "#03bd9e");
+      calendar.name = "bgColor_03";
+      setItemColor(calendar, "#eddb9d");
 
       calendar = new CalendarInfo();
       id += 1;
       calendar.id = String(id);
-      calendar.name = "Travel";
-      setItemColor(calendar, "#bbdc00");
+      calendar.name = "bgColor_04";
+      setItemColor(calendar, "#c3eda0");
 
       calendar = new CalendarInfo();
       id += 1;
       calendar.id = String(id);
-      calendar.name = "etc";
-      setItemColor(calendar, "#9d9d9d");
+      calendar.name = "bgColor_05";
+      setItemColor(calendar, "#98e8eb");
 
       calendar = new CalendarInfo();
       id += 1;
       calendar.id = String(id);
-      calendar.name = "Birthdays";
-      setItemColor(calendar, "#ffbb3b");
+      calendar.name = "bgColor_06";
+      setItemColor(calendar, "#aac9e2");
 
       calendar = new CalendarInfo();
       id += 1;
       calendar.id = String(id);
-      calendar.name = "National Holidays";
-      setItemColor(calendar, "#ff4040");
+      calendar.name = "bgColor_07";
+      setItemColor(calendar, "#abadd7");
 
       calendar = new CalendarInfo();
       id += 1;
       calendar.id = String(id);
-      calendar.name = "Basic";
-      setItemColor(calendar, "#877059");
+      calendar.name = "bgColor_08";
+      setItemColor(calendar, "#d8baea");
+
+      calendar = new CalendarInfo();
+      id += 1;
+      calendar.id = String(id);
+      calendar.name = "bgColor_09";
+      setItemColor(calendar, "#e7b1e6");
+
+      calendar = new CalendarInfo();
+      id += 1;
+      calendar.id = String(id);
+      calendar.name = "bgColor_10";
+      setItemColor(calendar, "#C2C287");
+      //休息
+      calendar = new CalendarInfo();
+      id = 888;
+      calendar.id = String(id);
+      calendar.name = "rest";
+      setItemColor(calendar, "#5B5B5B");
+      //完成
+      calendar = new CalendarInfo();
+      id = 999;
+      calendar.id = String(id);
+      calendar.name = "finish";
+      setItemColor(calendar, "#5B5B5B");
     })();
 
     function setItemColor(calendar, data) {
@@ -506,7 +532,6 @@ export default {
       var startDate = moment(renderStart.getTime());
       var endDate = moment(renderEnd.getTime());
       var diffDate = endDate.diff(startDate, "days");
-      console.log(666);
       schedule.isAllday = chance.bool({ likelihood: 30 });
       if (schedule.isAllday) {
         schedule.category = "allday";
@@ -598,8 +623,8 @@ export default {
     var taskView = []; //上半部整合訊息['milestone', 'task'],
     var defaultView = "week"; //預設模式
     var scheduleView = ["time"]; //列表顯示訊息['allday', 'time'],
-    var hourStart = 7; //
-    var hourEnd = 22; //
+    var hourStart = 9; //
+    var hourEnd = 18; //
     var datePicker, selectedCalendar;
 
     cal = new Calendar("#calendar", {
@@ -611,6 +636,7 @@ export default {
       defaultView: defaultView,
       taskView: taskView,
       scheduleView: scheduleView,
+      timezonesCollapsed:true,
       // customStyle: {'fontSize': '20px'},
       day: {
         // daynames: ["週日", "週一", "週二", "週三", "週四", "週五", "週六"],
@@ -664,7 +690,6 @@ export default {
           return getTimeTemplate(schedule, true);
         },
         time: function (schedule) {
-          console.log(444, schedule);
           return getTimeTemplate(schedule, false);
         },
       },
@@ -750,11 +775,11 @@ export default {
           html.push("<br>" + "<span>" +
             schedule.raw.customer +
             "<br>" +
-            schedule.raw.lesson 
+            schedule.raw.lesson
             //+ "(" +
             // schedule.raw.timer +
             // " Min)" + "</span> "
-            );
+          );
         }
 
       }

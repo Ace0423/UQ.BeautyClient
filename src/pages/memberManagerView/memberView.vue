@@ -79,12 +79,15 @@ onMounted(() => {
             </p>
           </th>
           <th>
+            <p>未出席次數</p>
+          </th>
+          <th>
             <p>標籤</p>
           </th>
           <th>
             <p>最後消費時間</p>
           </th>
-          <th></th>
+          <th class="header-btn"></th>
         </tr>
       </thead>
       <tbody class="content-tab">
@@ -97,6 +100,11 @@ onMounted(() => {
             </div>
           </td>
           <td>
+            <p>
+              {{ item.userLock }}
+            </p>
+          </td>
+          <td>
             <div class="group-frame" v-for="gItem in item.groupList" :key="gItem.groupId">
               {{ gItem.label }}
             </div>
@@ -104,9 +112,9 @@ onMounted(() => {
           <td>
             <p>{{ item.tradingTime }}</p>
           </td>
-          <td>
-            <button class="header-btn" v-on:click="handMemberInfoView(item)">
-              <img :src="editIcon" />
+          <td class="content-btn">
+            <button class="header-btn" @click="handMemberInfoView(item)">
+              >
             </button>
           </td>
         </tr>
@@ -183,7 +191,7 @@ onMounted(() => {
         justify-content: space-between;
 
         >th {
-          width: calc(100% / 4);
+          width: 23.75%;
 
           >p {
             min-width: 108px;
@@ -193,6 +201,10 @@ onMounted(() => {
           >.nameview {
             padding-left: 10px;
           }
+        }
+
+        >.header-btn {
+          width: 5%;
         }
       }
     }
@@ -208,8 +220,10 @@ onMounted(() => {
       >tr {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        // justify-content: space-between;
         position: relative;
+        // width: 100%;
+        height: 50px;
 
         &::after {
           content: "";
@@ -225,21 +239,21 @@ onMounted(() => {
 
         >td {
           display: flex;
-          width: calc(100% / 4);
+          width: 23.75%;
 
           >.group-frame {
             display: flex;
-              justify-content: center;
-              align-items: center;
-              font-size: 14px;
-              border: solid 1px #707070;
-              background-color: #e6e2de;
-              padding: 1px 1px;
-              margin: 2px 2px;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            border: solid 1px #707070;
+            background-color: #e6e2de;
+            padding: 1px 1px;
+            margin: 2px 2px;
 
-              >p {
-                margin: 0px 0px;
-              }
+            >p {
+              margin: 0px 0px;
+            }
           }
 
           >button {
@@ -256,7 +270,16 @@ onMounted(() => {
               vertical-align: middle;
             }
           }
+
+          >.content-btn {
+            widows: 5%;
+          }
         }
+
+        .content-btn {
+          width:  5%;
+        }
+
 
         .content-name {
           // padding-left: 10px;

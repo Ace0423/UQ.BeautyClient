@@ -22,6 +22,7 @@ onMounted(() => {
       <div class="nav">
         <router-link to="/memberManagerView/memberView">所有顧客</router-link>
         <router-link to="/memberManagerView/groupView">標籤設定</router-link>
+        <router-link to="/memberManagerView/blackListView">黑名單</router-link>
       </div>
       <router-view />
     </div>

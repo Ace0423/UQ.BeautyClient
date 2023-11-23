@@ -56,3 +56,13 @@ export const updateMessagesRequest = (data: any) => {
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return managerRequest.put("/Company/Messages?mId=" + data.mId, data);
 }
+export const getBlackListSetRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.get("/Company/CompanyBlackList", { params: data });
+}
+export const putBlackListSetRequest = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.put("/Company/CompanyBlackList?cId=" + data.cId, data);
+}

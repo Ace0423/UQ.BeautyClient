@@ -11,7 +11,6 @@ const { userInfo } = storeToRefs(counterStore);
 const companyStore = useCompanyStore();
 const { getCompanyInfo, putCompanyInfo } = companyStore;
 const { companyInfoList } = storeToRefs(companyStore);
-const image = ref("");
 const companyInfoData = reactive({
     cId: 0,
     cName: "",
@@ -25,14 +24,32 @@ const companyInfoData = reactive({
     companyGroup: [
     ]
 })
-const fileSelected = ((e: any) => {
+const fileImageSmall = ((e: any) => {
     const file = e.target.files.item(0);
+    let suffixName = file.name.substring(file.name.lastIndexOf('.') + 1);
+    console.log(suffixName)
+    if (suffixName !== 'jpg' && suffixName !== 'png' && suffixName !== 'JPG' && suffixName !== 'PNG') {
+        Alert.warning("上傳檔案只能是 jpg、png 格式!", 2000);
+        return;
+    }
     const reader = new FileReader();
-    reader.addEventListener('load', imageLoaded);
+    reader.addEventListener('load', (e: any) => {
+        companyInfoData.imageSmall = e.target.result;
+    });
     reader.readAsDataURL(file);
 })
-const imageLoaded = ((e: any) => {
-    image.value = e.target.result;
+const fileImageBig = ((e: any) => {
+    const file = e.target.files.item(0);
+    let suffixName = file.name.substring(file.name.lastIndexOf('.') + 1);
+    if (suffixName !== 'jpg' && suffixName !== 'png' && suffixName !== 'JPG' && suffixName !== 'PNG') {
+        Alert.warning("上傳檔案只能是 jpg、png 格式!", 2000);
+        return;
+    }
+    const reader = new FileReader();
+    reader.addEventListener('load', (e: any) => {
+        companyInfoData.imageBig = e.target.result;
+    });
+    reader.readAsDataURL(file);
 })
 const disabled = computed(() => {
     return userInfo.value.roleMgrMappings[0].roleName == "Admin" ? false : true;
@@ -146,21 +163,21 @@ onMounted(() => {
                     <p>商店Logo，建議尺寸200px*200px</p>
                     <div class="photo-box">
                         <div>
-                            <img v-if="image" :src="image" width="200" height="200" />
+                            <img v-if="companyInfoData.imageSmall" :src="companyInfoData.imageSmall" width="200"
+                                height="200" />
                         </div>
                         <label class="button"><span>上傳圖片</span><input class="file-input" type="file"
-                                @change="fileSelected"></label>
+                                @change="fileImageSmall"></label>
                     </div>
                 </div>
                 <div class="background-content">
                     <h1>商店Logo</h1>
                     <p>商店Logo，建議尺寸800px*800px</p>
                     <div class="photo-box">
-                        <div>
-
-                        </div>
                         <label class="button"><span>上傳圖片</span><input class="file-input" type="file"
-                                @change="fileSelected"></label>
+                                @change="fileImageBig"></label>
+                        <div>
+                        </div>
                     </div>
                 </div>
             </div>

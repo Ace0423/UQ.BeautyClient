@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
-import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest } from "@/api/index";
+import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest,apiGetBlackListSetRequest,apiPutBlackListSetRequest } from "@/api/index";
 export const useCompanyStore = defineStore("company", () => {
     const businessHoursList: any = reactive({ data: [] });
     const checkOutTypeList: any = reactive({ data: [] });
     const companyInfoList: any = reactive({ data: [] });
+    const companyBlackListSet: any = reactive({ data: [] });
     const messagesList: any = reactive({ data: [] });
     const getTimeTablesRequest = async (data: any) => {
 
@@ -114,6 +115,7 @@ export const useCompanyStore = defineStore("company", () => {
             return Promise.reject(error);
         }
     };
+  
     const updataCompanyInfo = async (data: any) => {
         if (companyInfoList.data.cId == data.cId) {
             companyInfoList.data.cName = data.cName;
@@ -127,6 +129,41 @@ export const useCompanyStore = defineStore("company", () => {
             companyInfoList.data.companyGroup = data.companyGroup
         }
     };
+
+    const getBlackListSet = async () => {
+        let data = {
+            cid: 0,
+            pageIndex: 0,
+            count: 0
+        }
+        try {
+            const res = await apiGetBlackListSetRequest(data);
+            if (res.data.state == 1) {
+                companyBlackListSet.data = res.data.data.table[0];
+            }
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const submitBlackListSet = async (data: any) => {
+        try {
+            const res = await apiPutBlackListSetRequest(data);
+            if (res.data.state == 1) {
+                updataCheckOutTypeList(res.data.data)
+            }
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const updataBlackListSet = async () => {
+       
+    };
+
+
     const getMessages = async (data: any) => {
 
         try {
@@ -194,6 +231,9 @@ export const useCompanyStore = defineStore("company", () => {
         companyInfoList,
         messagesList,
         getMessages,
-        submitMessages
+        submitMessages,
+        getBlackListSet,
+        submitBlackListSet,
+        companyBlackListSet
     }
 })

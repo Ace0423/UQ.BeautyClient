@@ -339,8 +339,8 @@ onMounted(() => {
             <div>
                 <span>狀態</span>
                 <select v-model="newManager.userLock">
-                    <option value="true">正常</option>
-                    <option value="false">凍結</option>
+                    <option value="false">正常</option>
+                    <option value="true">凍結</option>
                 </select>
             </div>
             <div>

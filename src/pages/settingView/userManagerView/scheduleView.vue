@@ -88,7 +88,6 @@ const requestWorkingHoursList = () => {
         .catch((e: any) => {
             Alert.warning(showHttpsStatus(e.response.status), 2000);
             if (e.response.status == 401) {
-               
                 setTimeout(() => {
                     handLogOut();
                 }, 2000);
@@ -151,7 +150,7 @@ onMounted(() => {
             </thead>
             <tbody class="content-tab">
                 <tr v-for="item in scheduleList" :key="item.managerId">
-                    <td>
+                    <td class="name-td">
                         <div>
                             <p>{{ item.nameView }}</p>
                         </div>
@@ -274,6 +273,7 @@ onMounted(() => {
                 >th {
                     width: calc(100%/8);
 
+
                     >p {
                         min-width: 108px;
                         text-align: center;
@@ -321,6 +321,7 @@ onMounted(() => {
                     height: 0;
                     padding-bottom: calc(100%/8);
                     position: relative;
+                    margin: 20px 10px;
 
                     >div {
                         position: absolute;
@@ -345,6 +346,10 @@ onMounted(() => {
                         }
                     }
 
+                    &.name-td {
+                        margin: 20px 10px;
+                    }
+
                     &.time-td {
                         border-radius: 6px;
                         margin: 20px 10px;
@@ -357,5 +362,4 @@ onMounted(() => {
             }
         }
     }
-}
-</style>
+}</style>

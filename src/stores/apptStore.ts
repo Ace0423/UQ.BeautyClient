@@ -1,5 +1,6 @@
 import { apiGetMemberListRequest } from "@/api";
 import {
+  addServiceGroupReq,
   delCourseDetailReq,
   delCourseTypeReq,
   getApptDataRequest,
@@ -56,6 +57,21 @@ export const useApptStore = defineStore("apptStore", () => {
   const onAlertBtn = (err: any) => {
     console.log(err, "err");
   };
+  //---------------------------------service
+
+  /**新增服務群組 */
+  const addServiceGroupApi = async (data: any) => {
+    try {
+      let res = await addServiceGroupReq(data).then((res: any) => {
+        alertStateFn(res, "新增服務群組");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //---------------------------------course
   const beauticianList: any = ref([{ userId: 0, nameView: "不指定" }]);
   /**獲取美容師 */
@@ -87,6 +103,7 @@ export const useApptStore = defineStore("apptStore", () => {
   /**獲取服務類型 */
   const getCourseTypeApi = async (data: any = 0) => {
     try {
+      courseTypesTabs.value = [];
       courseDataList.value = [];
       let res: any = await getCourseTypeReq(data).then((res: any) => {
         if (res.data.data) {
@@ -590,6 +607,8 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   return {
+    //--------------------service
+    addServiceGroupApi,
     //--------------------course
     getCourseTypeApi,
     courseTypesTabs,

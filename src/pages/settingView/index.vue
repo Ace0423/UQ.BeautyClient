@@ -73,9 +73,9 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
         <div class="nav">
           <h1>項目管理</h1>
           <div class="nav-content">
-            <router-link to="/courseView">
+            <router-link to="/serviceView/servicePage">
               <div>
-                <h1>課程管理</h1>
+                <h1>服務管理</h1>
                 <p>管理商店內所有服務項目</p>
               </div>
               <img :src="icon_right_arrow" />

@@ -12,39 +12,30 @@
         </div>
       </div>
       <div class="content-main">
-        <table>
-          <thead>
-            <tr>
-              <td v-for="(item, value) in goodsTableTitle" :key="item">
-                <p @click="sorttheadFn(value)">{{ item }}</p>
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in filterGoodsData" :key="item.lessonId">
-              <td>
-                <p>{{ item.pCode }}</p>
-              </td>
-              <td>
-                <p>{{ item.pName }}</p>
-              </td>
-              <td>
-                <p>{{ item.price }}</p>
-              </td>
-              <td class="checkbox_state">
-                <input type="checkbox" :checked="item.display == true" v-on:click="updataStutusBtn(index, item)" />
-              </td>
-              <td>
-                <button v-on:click="showEditFormFn(index, item)">
-                  <img class="edit_img" :src="icon_edit" />
-                </button>
-                <button @click="deleteHdr(item, index)">
-                  <img class="delete_img" :src="icon_delete" />
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <el-table :data="filterGoodsData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
+          :header-cell-style="headerRowStyle">
+          <el-table-column prop="pCode" label="產品編號" width="400" :sort-by="['pCode']" sortable />
+          <el-table-column prop="pName" label="產品名稱" width="200" sortable />
+          <el-table-column prop="price" label="售價(NT)" width="200" sortable />
+          <el-table-column label="上架" width="150">
+            <template #default="scope">
+              <div class="handle-drag">
+                <div class="checkbox_state">
+                  <input type="checkbox" :checked="filterGoodsData[scope.$index].display == true"
+                    v-on:click="updataStutusBtn(scope.$index, filterGoodsData[scope.$index])" />
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="150">
+            <template #default="scope">
+              <div class="handle-drag">
+                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;" />
+                <img class="del_img" :src="Icon_del" @click="deleteHdr(scope.$index, filterGoodsData[scope.$index])" />
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
 
       <div>
@@ -61,9 +52,8 @@
 </template>
 
 <script lang="ts" setup>
-import icon_add from "@/assets/images/icon_add.png";
-import icon_edit from "@/assets/images/icon_edit.png";
-import icon_delete from "@/assets/images/icon_delete.png";
+import Icon_edit from "@/assets/Ico_edit.svg";
+import Icon_del from "@/assets/Icon material-delete.svg";
 import { useApptStore } from "@/stores/apptStore";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
@@ -205,6 +195,28 @@ function sorttheadFn(name: number) {
       sortUpDown = sortName;
     }
 }
+//-------------------------------------------------------------------------表格css
+//內容css
+const rowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
+  return {
+    backgroundColor: '#fff',
+    color: '#717171',
+    fontSize: "16px",
+    fontWeight: "bold",
+    margin: "3px 5px",
+    fontFamily: " STXihei",
+    borderBottom: "2px solid rgba(112, 112, 112, 0.5)"
+  }
+}
+//標頭css
+const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
+  return {
+    height: "50px",
+    backgroundColor: '#fff',
+    fontSize: "20px",
+    borderBottom: "0px solid rgba(112, 112, 112, 0.5)"
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -318,6 +330,7 @@ function sorttheadFn(name: number) {
 
         >tbody {
           overflow-y: scroll;
+          overflow: hidden;
           display: block;
           width: 100%;
           height: calc(100% - 50px);
@@ -347,16 +360,6 @@ function sorttheadFn(name: number) {
               >button {
                 background-color: transparent;
                 border: none;
-
-                .edit_img {
-                  height: 27px;
-                  height: 27px;
-                }
-
-                .delete_img {
-                  width: 21px;
-                  height: 27px;
-                }
               }
 
               >input {}
@@ -478,5 +481,90 @@ function sorttheadFn(name: number) {
   }
 
   .footer {}
+}
+</style>
+<style lang="scss" scoped>
+.el-table {
+  .checkbox_state {
+    [type="checkbox"] {
+      width: 2rem;
+      height: 2rem;
+      color: #84715c;
+      vertical-align: middle;
+      -webkit-appearance: none;
+      background: none;
+      border: 0;
+      outline: 0;
+      flex-grow: 0;
+      border-radius: 50%;
+      background-color: #ffffff;
+      transition: background 300ms;
+      cursor: pointer;
+    }
+
+    /* Pseudo element for check styling */
+
+    [type="checkbox"]::before {
+      content: "";
+      color: transparent;
+      display: block;
+      width: inherit;
+      height: inherit;
+      border-radius: inherit;
+      border: 0;
+      background-color: transparent;
+      background-size: contain;
+      box-shadow: inset 0 0 0 1px #ccd3d8;
+    }
+
+    /* Checked */
+
+    [type="checkbox"]:checked {
+      background-color: currentcolor;
+    }
+
+    [type="checkbox"]:checked::before {
+      box-shadow: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+    }
+
+    /* Disabled */
+
+    [type="checkbox"]:disabled {
+      background-color: #ccd3d8;
+      opacity: 0.84;
+      cursor: not-allowed;
+    }
+
+    /* IE */
+
+    [type="checkbox"]::-ms-check {
+      content: "";
+      color: transparent;
+      display: block;
+      width: inherit;
+      height: inherit;
+      border-radius: inherit;
+      border: 0;
+      background-color: transparent;
+      background-size: contain;
+      box-shadow: inset 0 0 0 1px #ccd3d8;
+    }
+
+    [type="checkbox"]:checked::-ms-check {
+      box-shadow: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+    }
+  }
+
+  .edit_img {
+    width: 27px;
+    height: 27px;
+  }
+
+  .del_img {
+    width: 20px;
+    height: 27px;
+  }
 }
 </style>

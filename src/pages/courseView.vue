@@ -1,12 +1,8 @@
 <template>
   <div class="course_div">
     <div class="top_box">
-      <Header
-        :moduleType="'課程管理'"
-        :Icon="Icon"
-        :memuState="props.memuState"
-        :handmemuStateBtn="props.handmemuStateBtn"
-      ></Header>
+      <Header :moduleType="'課程管理'" :Icon="Icon" :memuState="props.memuState" :handmemuStateBtn="props.handmemuStateBtn">
+      </Header>
       <div class="top_menu">
         <img @click="showAddDetailFn(true)" :src="icon_add" />
       </div>
@@ -14,12 +10,8 @@
     <div class="customer-top">
       <div class="customer-tab">
         <div class="item-tab">
-          <button
-            :class="courseTypesTabsValue == index ? 'active' : ''"
-            v-for="(item, index) in courseTypesTabs"
-            :key="item.lessonTypeId"
-            v-on:click="changeTab(index, item)"
-          >
+          <button :class="courseTypesTabsValue == index ? 'active' : ''" v-for="(item, index) in courseTypesTabs"
+            :key="item.lessonTypeId" v-on:click="changeTab(index, item)">
             {{ item.nameTw }}
           </button>
         </div>
@@ -51,15 +43,8 @@
               </td>
               <td>
                 <div class="checked_state">
-                  <input
-                    class="checked_status"
-                    type="checkbox"
-                    name="sub"
-                    value=""
-                    :id="item.lessonId"
-                    :checked="item.display == true"
-                    v-on:click="changeStutusHdr(index, item)"
-                  />
+                  <input class="checked_status" type="checkbox" name="sub" value="" :id="item.lessonId"
+                    :checked="item.display == true" v-on:click="changeStutusHdr(index, item)" />
                   <label :for="item.lessonId"></label>
                 </div>
               </td>
@@ -77,17 +62,9 @@
       </div>
     </div>
     <AddCourseTypeUI v-if="showAddType" :show-add-form="showAddUIHdr" />
-    <AddCourseDetailUI
-      v-if="showCourseFormRef"
-      :showAddDetailForm="showAddDetailFn"
-      :filterCourseData="filterCourseData"
-      :addDetailTypeID="addDetailTypeID"
-    />
-    <EditCourseDetailUI
-      v-if="showEditCourse"
-      :show-edit-form="showEditUI"
-      :edit-course-info="editCourseInfo"
-    />
+    <AddCourseDetailUI v-if="showCourseFormRef" :showAddDetailForm="showAddDetailFn" :filterCourseData="filterCourseData"
+      :addDetailTypeID="addDetailTypeID" />
+    <EditCourseDetailUI v-if="showEditCourse" :show-edit-form="showEditUI" :edit-course-info="editCourseInfo" />
     <!-- <Resourceimages2 /> -->
   </div>
 </template>
@@ -145,7 +122,7 @@ onBefore();
 function onBefore() {
   getCourseTypeApi(0);
 }
-onMounted(() => {});
+onMounted(() => { });
 
 watchEffect(() => {
   courseTypesTabs.value;
@@ -246,6 +223,7 @@ function sortthradFn(name: number) {
   .top_box {
     display: flex;
     width: 100%;
+
     .top_menu {
       display: flex;
       position: relative;
@@ -254,14 +232,16 @@ function sortthradFn(name: number) {
       justify-content: right;
       top: 15px;
       right: 15px;
-      > img {
+
+      >img {
         // margin-right: 10px;
         height: 29px;
         width: 29px;
       }
     }
   }
-  > .customer-top {
+
+  >.customer-top {
     position: absolute;
     top: 80px;
     bottom: 10px;
@@ -275,12 +255,15 @@ function sortthradFn(name: number) {
       height: 50px;
       width: 100%;
       overflow-x: scroll;
+      overflow: hidden;
+
       .item-tab {
         overflow-x: scroll;
+        overflow: hidden;
         display: -webkit-box;
         height: 100%;
 
-        > button {
+        >button {
           white-space: nowrap;
           display: flex;
           justify-content: center;
@@ -297,16 +280,17 @@ function sortthradFn(name: number) {
           border-radius: 10px 10px 0 0;
         }
 
-        > button.active {
+        >button.active {
           background-color: #e6e2de;
         }
       }
     }
 
-    > .course_table {
+    >.course_table {
       display: block;
       height: calc(100% - 50px);
-      > .header-tab {
+
+      >.header-tab {
         height: 50px;
         // width: 100%;
         font-weight: bold;
@@ -330,11 +314,11 @@ function sortthradFn(name: number) {
           background-color: #84715c;
         }
 
-        > p {
+        >p {
           margin: 0 10px;
         }
 
-        > input {
+        >input {
           width: 134px;
           height: 33px;
           border-radius: 6px;
@@ -345,7 +329,7 @@ function sortthradFn(name: number) {
         }
       }
 
-      > table {
+      >table {
         // display: inline-block;
         padding: 10px 25px;
         width: 100%;
@@ -356,38 +340,50 @@ function sortthradFn(name: number) {
         color: #717171;
         height: calc(100% - 50px);
         overflow-y: scroll;
+
         // display: inline-table;
-        > thead {
+        >thead {
           display: inline-table;
           width: 100%;
-          > tr > td:nth-child(1) {
+
+          >tr>td>p {
+            font-weight: bold;
+          }
+
+          >tr>td:nth-child(1) {
             width: 40%;
           }
-          > tr > td:nth-child(2) {
+
+          >tr>td:nth-child(2) {
             width: 15%;
           }
-          > tr > td:nth-child(3) {
+
+          >tr>td:nth-child(3) {
             width: 20%;
           }
-          > tr > td:nth-child(4) {
+
+          >tr>td:nth-child(4) {
             width: 10%;
           }
-          > tr > td:nth-child(5) {
+
+          >tr>td:nth-child(5) {
             width: 15%;
           }
         }
-        > tbody {
+
+        >tbody {
           overflow-y: scroll;
+          overflow: hidden;
           display: block;
           width: 100%;
           height: 90%;
 
-          > tr {
+          >tr {
             display: flex;
             width: 100%;
             border-bottom: 2px solid rgba(112, 112, 112, 0.5);
 
-            > td {
+            >td {
               align-items: center;
               display: flex;
               height: 47px;
@@ -398,18 +394,18 @@ function sortthradFn(name: number) {
                 height: 30px;
               }
 
-              > img {
+              >img {
                 width: 40px;
                 height: 40px;
                 padding: 0 10px;
                 border-radius: 45px;
               }
 
-              > p {
+              >p {
                 margin: 3px 5px;
               }
 
-              > button {
+              >button {
                 background-color: transparent;
                 border: none;
               }
@@ -418,6 +414,7 @@ function sortthradFn(name: number) {
                 input {
                   display: none;
                 }
+
                 label {
                   display: inline-block;
                   width: 20px;
@@ -428,6 +425,7 @@ function sortthradFn(name: number) {
                   position: relative;
                   cursor: pointer;
                 }
+
                 label::before {
                   display: inline-block;
                   content: " ";
@@ -443,29 +441,36 @@ function sortthradFn(name: number) {
                   position: absolute;
                   opacity: 0;
                 }
-                input:checked + label {
+
+                input:checked+label {
                   background: #8b6f6d;
                 }
-                input:checked + label::before {
+
+                input:checked+label::before {
                   opacity: 1;
                   transform: all 0.5s;
                 }
               }
             }
           }
-          > tr > td:nth-child(1) {
+
+          >tr>td:nth-child(1) {
             width: 40%;
           }
-          > tr > td:nth-child(2) {
+
+          >tr>td:nth-child(2) {
             width: 15%;
           }
-          > tr > td:nth-child(3) {
+
+          >tr>td:nth-child(3) {
             width: 20%;
           }
-          > tr > td:nth-child(4) {
+
+          >tr>td:nth-child(4) {
             width: 10%;
           }
-          > tr > td:nth-child(5) {
+
+          >tr>td:nth-child(5) {
             width: 15%;
             min-width: 85px;
           }
@@ -521,12 +526,13 @@ function sortthradFn(name: number) {
   z-index: -1;
 }
 
-.demo-tabs > .el-tabs__content {
+.demo-tabs>.el-tabs__content {
   padding: 32px;
   color: #6b778c;
   font-size: 32px;
   font-weight: 600;
 }
+
 .w_25p {
   width: 25%;
 }

@@ -49,11 +49,11 @@ onMounted(() => {
               >顧客管理</router-link
             >
           </li>
-          <li>
+          <!-- <li>
             <img :src="courseImg" /><router-link to="/courseView"
               >課程管理</router-link
             >
-          </li>
+          </li> -->
           <li>
             <img :src="courseImg" /><router-link to="/serviceView/servicePage"
               >服務管理</router-link

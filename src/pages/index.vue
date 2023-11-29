@@ -29,9 +29,13 @@ function logoutFn() {
         <img :src="commodityImg" />
         <p>商品管理</p>
       </router-link>
-      <router-link class="router-btn" to="/courseView">
+      <!-- <router-link class="router-btn" to="/courseView">
         <img :src="courseImg" />
         <p>課程管理</p>
+      </router-link> -->
+      <router-link class="router-btn" to="/serviceView/servicePage">
+        <img :src="courseImg" />
+        <p>服務管理</p>
       </router-link>
       <router-link class="router-btn" to="/appointmentView">
         <img :src="appointmentImg" />

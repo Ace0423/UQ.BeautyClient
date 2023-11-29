@@ -66,3 +66,6 @@ TUI日曆-月曆重疊資訊(無法修改)
  z-index: 1001;
 ALERT
  z-index: 2000;
+
+服務選單-CheckboxServiceUI
+ z-index: 1003;

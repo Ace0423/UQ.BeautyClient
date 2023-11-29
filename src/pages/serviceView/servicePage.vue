@@ -8,12 +8,12 @@
         <div>
           <input v-model="search" class="search-control" placeholder="搜尋名稱" />
           <div class="btn-open" @click="showAddUIHdr(true)">
-            {{ $t("AddGoods") }}
+            {{ $t("AddService") }}
           </div>
         </div>
       </div>
       <div class="content-main">
-        <table>
+        <!-- <table>
           <thead>
             <tr>
               <td v-for="(item, value) in serviceTitle" :key="item">
@@ -49,15 +49,39 @@
               </td>
             </tr>
           </tbody>
-        </table>
+        </table> -->
+        <el-table :data="filterServiceData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
+          :header-cell-style="headerRowStyle" @sort-change="goclick">
+          <el-table-column prop="nameTw" label="產品名稱" width="400" :sort-by="['nameTw']" sortable />
+          <el-table-column prop="servicesTime" label="服務時長(Min)" width="200" sortable />
+          <el-table-column prop="price" label="售價(NT)" width="200" sortable />
+          <el-table-column prop="display" label="上架" width="150">
+            <template #default="scope">
+              <div class="handle-drag">
+                <div class="checked_state">
+                  <input class="checked_status" type="checkbox" name="sub" value=""
+                    :id="filterServiceData[scope.$index].lessonId"
+                    :checked="filterServiceData[scope.$index].display == true"
+                    v-on:click="changeStutusHdr(scope.$index, scope.row.name)" />
+                  <label :for="filterServiceData[scope.$index].lessonId"></label>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作" width="150">
+            <template #default="scope">
+              <div class="handle-drag">
+                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;" />
+                <img class="del_img" :src="Icon_del" @click="deleteHdr(scope.$index, filterServiceData[scope.$index])" />
+              </div>
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
-
       <div>
-
       </div>
     </div>
     <div class="footer">
-
     </div>
   </div>
 </template>
@@ -67,6 +91,7 @@ import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import Alert from "@/components/alertCmpt";
+import { Sort } from '@element-plus/icons-vue'
 import Icon_edit from "@/assets/Ico_edit.svg";
 import Icon_del from "@/assets/Icon material-delete.svg";
 
@@ -143,7 +168,7 @@ let changeStutusHdr = (index: number, item: any) => {
   updateCourseDetailApi(curdata).then((res: any) => {
     setTimeout(() => {
       getCourseDetailApi(
-        courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
+        0,
         0
       );
     }, 1000);
@@ -152,9 +177,9 @@ let changeStutusHdr = (index: number, item: any) => {
 
 let selItem: any = [];
 //刪除課程
-let deleteHdr = (index: number, itemId: number) => {
+let deleteHdr = (index: number, itemId: any) => {
   Alert.check("是否刪除", 1000, (data: any) => {
-    onDeleteAlertBtn(data, itemId)
+    onDeleteAlertBtn(data, itemId.lessonId)
   });
 };
 
@@ -172,9 +197,14 @@ const onDeleteAlertBtn = (state: any, itemId: any) => {
   selItem.value = [];
 };
 
+function goclick(row: any) {
+  console.log(row)
+}
 //排序明細
 let sortUpDown: string = "";
 function sortthreadFn(name: number) {
+  console.log(name);
+
   let nameGroup = ["nameTw", "servicesTime", "price", "display"];
   let sortName = nameGroup[name];
   if (sortName)
@@ -189,7 +219,29 @@ function sortthreadFn(name: number) {
       });
       sortUpDown = sortName;
     }
-} 
+}
+//-------------------------------------------------------------------------表格css
+//內容css
+const rowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
+  return {
+    backgroundColor: '#fff',
+    color: '#717171',
+    fontSize: "16px",
+    fontWeight: "bold",
+    margin: "3px 5px",
+    fontFamily: " STXihei",
+    borderBottom: "2px solid rgba(112, 112, 112, 0.5)"
+  }
+}
+//標頭css
+const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
+  return {
+    height: "50px",
+    backgroundColor: '#fff',
+    fontSize: "20px",
+    borderBottom: "0px solid rgba(112, 112, 112, 0.5)"
+  }
+}
 </script>
 <style lang="scss" scoped>
 .container {
@@ -306,6 +358,7 @@ function sortthreadFn(name: number) {
 
         >tbody {
           overflow-y: scroll;
+          overflow: hidden;
           display: block;
           width: 100%;
           height: calc(100% - 50px);
@@ -412,5 +465,63 @@ function sortthreadFn(name: number) {
   }
 
 
+}
+</style>
+
+
+<style lang="scss" scoped>
+.el-table {
+
+  .checked_state {
+    input {
+      display: none;
+    }
+
+    label {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      border: 1px solid #8b6f6d;
+      box-sizing: border-box;
+      position: relative;
+      cursor: pointer;
+    }
+
+    label::before {
+      display: inline-block;
+      content: " ";
+      width: 12px;
+      border: 2px solid #fff;
+      box-sizing: border-box;
+      height: 4px;
+      border-top: none;
+      border-right: none;
+      transform: rotate(-45deg);
+      top: 5px;
+      left: 3px;
+      position: absolute;
+      opacity: 0;
+    }
+
+    input:checked+label {
+      background: #8b6f6d;
+    }
+
+    input:checked+label::before {
+      opacity: 1;
+      transform: all 0.5s;
+    }
+  }
+
+  .edit_img {
+    width: 27px;
+    height: 27px;
+  }
+
+  .del_img {
+    width: 20px;
+    height: 27px;
+  }
 }
 </style>

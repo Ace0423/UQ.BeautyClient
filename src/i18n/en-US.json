@@ -1,5 +1,7 @@
 {
   "typeMgmt": "typeMgmt",
+  "AddGroups": "AddGroups",
+  "AddService": "AddService",
   "AddGoods": "AddGoods",
   "AddGoodsType": "AddGoodsType",
   "goodsMgmt": "goodsMgmt",

@@ -7,8 +7,8 @@
         <p>商品(全部{{ filterServiceType.length }}個)</p>
         <div>
           <input v-model="search" class="search-control" placeholder="搜尋名稱" />
-          <div class="btn-open" @click="showAddUIHdr(true)">
-            {{ $t("AddGoods") }}
+          <div class="btn-open" @click="showAddGroupHdr(true)">
+            {{ $t("AddGroups") }}
           </div>
         </div>
       </div>
@@ -39,16 +39,17 @@
 
     </div>
   </div>
+  <AddGroupServiceUI v-if="showAddGroup" :showAddForm="showAddGroupHdr" />
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
+import { Sort } from '@element-plus/icons-vue'
 import Icon_edit from "@/assets/Ico_edit.svg";
 import Icon_del from "@/assets/Icon material-delete.svg";
 import Sortable from "sortablejs";
-import { Sort } from '@element-plus/icons-vue'
 import Alert from "@/components/alertCmpt";
 
 let store = useApptStore();
@@ -63,7 +64,7 @@ let {
   editCourseTypeOrderApi
 } = store;
 
-let showAddType = ref(false);
+let showAddGroup = ref(false);
 
 
 let search = ref("");
@@ -80,9 +81,12 @@ function getServiceFn(data: any) {
 }
 onBeforeFn();
 function onBeforeFn() {
+  getServiceGroupsFn();
+}
+
+function getServiceGroupsFn(data: any = 0) {
   courseTypesTabs.value = [];
   getCourseTypeApi();
-
 }
 
 onMounted(() => {
@@ -113,16 +117,16 @@ function OrderGroupFn() {
     })
   }
   editCourseTypeOrderApi(orderApiData).then((res: any) => {
-    courseTypesTabs.value = [];
-    getCourseTypeApi();
+    getServiceGroupsFn();
   });
 }
 
 let selItem: any = [];
 //新增分類-顯示
-let showAddUIHdr = (state: boolean) => {
-  showAddType.value = state;
-  getCourseTypeApi(0);
+let showAddGroupHdr = (state: boolean) => {
+  showAddGroup.value = state;
+  if (!state)
+    getServiceGroupsFn();
 };
 
 //刪除課程

@@ -56,6 +56,11 @@ export const delCourseTypeReq = (data: any) =>
 /**刪除服務資訊 */
 export const delCourseDetailReq = (data: any) =>
   deleteHttps(httpRequest, "/Lesson/Detail/" + data);
+//-----------------------------------------服務
+/**新增 */
+export const addServiceGroupReq = (data: any) =>
+  postHttps(httpRequest, "/Service/ServiceGroup", data);
+
 //-----------------------------------------Order
 /**獲取訂單資訊 */
 export const getOrderDetailReq = (Group: any, id: any) =>

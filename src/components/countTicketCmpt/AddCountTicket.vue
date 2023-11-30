@@ -17,11 +17,6 @@
             </div>
             <div class="directions-content">
               <span>說明</span>
-              <!-- <input
-                v-model="formInputRef.msg"
-                placeholder="請輸入說明或注意事項"
-                type="text"
-              /> -->
               <textarea v-model="formInputRef.msg" placeholder="請輸入說明或注意事項"></textarea>
             </div>
             <span class="p_error" v-if="ruleLists.ruleItem.ticketName.is_error">

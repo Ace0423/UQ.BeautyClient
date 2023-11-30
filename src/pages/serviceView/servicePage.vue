@@ -7,52 +7,15 @@
         <p>商品(全部{{ filterServiceData.length }}個)</p>
         <div>
           <input v-model="search" class="search-control" placeholder="搜尋名稱" />
-          <div class="btn-open" @click="showAddUIHdr(true)">
+          <div class="btn-open" @click="showAddDetailHdr(true)">
             {{ $t("AddService") }}
           </div>
         </div>
       </div>
       <div class="content-main">
-        <!-- <table>
-          <thead>
-            <tr>
-              <td v-for="(item, value) in serviceTitle" :key="item">
-                <p @click="sortthreadFn(value)">{{ item }}</p>
-              </td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in filterServiceData" :key="item.lessonId">
-              <td>
-                <p>{{ item.nameTw }}</p>
-              </td>
-              <td>
-                <p>{{ item.servicesTime }}</p>
-              </td>
-              <td>
-                <p>{{ item.price }}</p>
-              </td>
-              <td>
-                <div class="checked_state">
-                  <input class="checked_status" type="checkbox" name="sub" value="" :id="item.lessonId"
-                    :checked="item.display == true" v-on:click="changeStutusHdr(index, item)" />
-                  <label :for="item.lessonId"></label>
-                </div>
-              </td>
-              <td>
-                <button v-on:click="showEditUIFn(index, item)">
-                  <img class="edit_img" :src="Icon_edit" />
-                </button>
-                <button v-on:click="deleteHdr(index, item.lessonId)">
-                  <img class="edit_img" :src="Icon_del" />
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table> -->
         <el-table :data="filterServiceData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
           :header-cell-style="headerRowStyle" @sort-change="goclick">
-          <el-table-column prop="nameTw" label="產品名稱" width="400" :sort-by="['nameTw']" sortable />
+          <el-table-column prop="name" label="產品名稱" width="400" :sort-by="['name']" sortable />
           <el-table-column prop="servicesTime" label="服務時長(Min)" width="200" sortable />
           <el-table-column prop="price" label="售價(NT)" width="200" sortable />
           <el-table-column prop="display" label="上架" width="150">
@@ -60,10 +23,10 @@
               <div class="handle-drag">
                 <div class="checked_state">
                   <input class="checked_status" type="checkbox" name="sub" value=""
-                    :id="filterServiceData[scope.$index].lessonId"
+                    :id="filterServiceData[scope.$index].sId"
                     :checked="filterServiceData[scope.$index].display == true"
-                    v-on:click="changeStutusHdr(scope.$index, scope.row.name)" />
-                  <label :for="filterServiceData[scope.$index].lessonId"></label>
+                    v-on:click="changeStutusHdr(scope.$index, scope.row)" />
+                  <label :for="filterServiceData[scope.$index].sId"></label>
                 </div>
               </div>
             </template>
@@ -84,6 +47,8 @@
     <div class="footer">
     </div>
   </div>
+  <AddDetailServiceUI v-if="showAddDetail" :showAddForm="showAddDetailHdr" />
+  
 </template>
 
 <script setup lang="ts">
@@ -96,100 +61,87 @@ import Icon_edit from "@/assets/Ico_edit.svg";
 import Icon_del from "@/assets/Icon material-delete.svg";
 
 let store = useApptStore();
-let { courseTypesTabs, courseDataList, courseTypesTabsValue } =
+let { serviceDetailList } =
   storeToRefs(store);
 let {
-  getCourseTypeApi,
-  delCourseTypeApi,
-  getCourseDetailApi,
-  delCourseDetailApi,
-  updateCourseDetailApi,
+  getServiceDetailApi,
+  delServiceDetailApi,
+  updateServiceDetailApi,
 } = store;
 
-let showAddType = ref(false);
-let showEditService: any = ref(false);
+let showAddDetail = ref(false);
+let showEditDetail: any = ref(false);
 let serviceTitle = ["產品名稱", "服務時長(Min)", "售價(NT)", "上架", "操作"];
 let editServiceInfo: any = ref([]);
 
 
 let search = ref("");
 let filterServiceData: any = computed(() =>
-  courseDataList.value.filter(getServiceFn)
+  serviceDetailList.value.filter(getServiceFn)
 );
 function getServiceFn(data: any) {
   return (
     !search.value ||
-    data.nameTw.toLowerCase().includes(search.value.toLowerCase())
+    data.name.toLowerCase().includes(search.value.toLowerCase())
   );
 }
 
 
 onBefore();
 function onBefore() {
-  getCourseTypeApi(0);
+  getServiceDetailApi(0);
 }
 onMounted(() => { });
 
 watchEffect(() => {
-  courseTypesTabs.value;
+
 });
 
 
 
 //新增分類-顯示
-let showAddUIHdr = (state: boolean) => {
-  showAddType.value = state;
-  getCourseTypeApi(0);
+let showAddDetailHdr = (state: boolean) => {
+  showAddDetail.value = state;
+  getServiceDetailApi(0);
 };
 function showEditUIFn(index: number, item: any) {
   editServiceInfo.value = item;
   showEditUI(true);
 }
 function showEditUI(state: boolean) {
-  showEditService.value = state;
-  getCourseDetailApi(
-    courseTypesTabs.value[courseTypesTabsValue.value].lessonTypeId,
-    0
-  );
+  showEditDetail.value = state;
+  getServiceDetailApi(0);
 }
 
 //改變課程狀態
 let changeStutusHdr = (index: number, item: any) => {
   let curdata: any = {
-    lessonId: item.lessonId,
-    lessonTypeId: item.lessonTypeId,
+    sId: item.sId,
     display: !item.display,
-    nameEn: item.nameEn,
-    nameTw: item.nameTw,
+    groupList:[],
+    name: item.name,
     servicesTime: item.servicesTime,
     price: item.price,
-    discount: item.discount,
   };
-  updateCourseDetailApi(curdata).then((res: any) => {
-    setTimeout(() => {
-      getCourseDetailApi(
-        0,
-        0
-      );
-    }, 1000);
+  updateServiceDetailApi(curdata).then((res: any) => {
+    // setTimeout(() => {
+      getServiceDetailApi(0);
+    // }, 1000);
   });
 };
 
 let selItem: any = [];
 //刪除課程
-let deleteHdr = (index: number, itemId: any) => {
+let deleteHdr = (index: number, item: any) => {
   Alert.check("是否刪除", 1000, (data: any) => {
-    onDeleteAlertBtn(data, itemId.lessonId)
+    onDeleteAlertBtn(data, item.sId)
   });
 };
 
-const onDeleteAlertBtn = (state: any, itemId: any) => {
+const onDeleteAlertBtn = (state: any, id: number) => {
   if (state) {
-    delCourseDetailApi(itemId).then((res: any) => {
-      getCourseDetailApi(
-        0,
-        "0"
-      );
+    delServiceDetailApi(id).then((res: any) => {
+      getServiceDetailApi(0);
     });
   } else {
     console.log("取消刪除");
@@ -209,12 +161,12 @@ function sortthreadFn(name: number) {
   let sortName = nameGroup[name];
   if (sortName)
     if (sortUpDown == sortName) {
-      courseDataList.value.sort(function (a: any, b: any) {
+      serviceDetailList.value.sort(function (a: any, b: any) {
         return a[sortName] > b[sortName] ? -1 : 1;
       });
       sortUpDown = "";
     } else {
-      courseDataList.value.sort(function (a: any, b: any) {
+      serviceDetailList.value.sort(function (a: any, b: any) {
         return a[sortName] > b[sortName] ? 1 : -1;
       });
       sortUpDown = sortName;

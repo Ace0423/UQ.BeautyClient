@@ -3,19 +3,26 @@ import {
   addServiceGroupReq,
   delCourseDetailReq,
   delCourseTypeReq,
+  deleteServiceDetailReq,
+  deleteServiceGroupReq,
   getApptDataRequest,
   getBeauticianReq,
   getCourseDetailReq,
   getCourseTypeReq,
   getOrderDetailReq,
+  getServiceDetailReq,
+  getServiceGroupReq,
   postAddApptDataReq,
   postAddUQLessonDetailReq,
   postAddUQLessonTypeReq,
   postEditApptDataReq,
   postEditApptStateReq,
   updateCourseDetailReq,
+  updateGroupOrderReq,
   updateLessonTypeOrderReq,
   updateLessonTypeReq,
+  updateServiceDetailReq,
+  updateServiceGroupReq,
 } from "@/api/apptRequest";
 import {
   addGoodsDetailReq,
@@ -35,6 +42,7 @@ import type {
   IGoodsTypeVo,
   IMemberListVo,
   IServiceDetailVo,
+  IServiceGroupVo,
   IServiceTypeVo,
 } from "@/types/IDataVo";
 import { showErrorMsg } from "@/types/IMessage";
@@ -57,9 +65,66 @@ export const useApptStore = defineStore("apptStore", () => {
   const onAlertBtn = (err: any) => {
     console.log(err, "err");
   };
-  //---------------------------------service
-
-  /**新增服務群組 */
+  //#region 服務項目Service
+  let serviceDetailList: any = ref([]);
+  /**獲取明細 */
+  const getServiceDetailApi = async (id: any = 0) => {
+    try {
+      serviceDetailList.value = [];
+      let res: any = await getServiceDetailReq(id).then((res: any) => {
+        if (res.data.data) {
+          let detailVo: IServiceDetailVo = res.data.data.table;
+          serviceDetailList.value = detailVo;
+        }
+        return res;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //更新明細
+  const updateServiceDetailApi = async (data: any) => {
+    try {
+      let res = await updateServiceDetailReq(data).then((res: any) => {
+        alertStateFn(res, "更新服務明細");
+        return res;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //刪除明細
+  const delServiceDetailApi = async (data: any) => {
+    try {
+      let res = await deleteServiceDetailReq(data).then((res: any) => {
+        alertStateFn(res, "刪除服務明細");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  let serviceGroupList: any = ref([]);
+  /**獲取群組 */
+  const getServiceGroupApi = async (id: any = 0) => {
+    try {
+      serviceGroupList.value = [];
+      let res: any = await getServiceGroupReq(id).then((res: any) => {
+        if (res.data.data) {
+          let detailVo: IServiceGroupVo = res.data.data.table;
+          serviceGroupList.value = detailVo;
+          serviceGroupList.value.sort(function (a: any, b: any) {
+            return a.order > b.order ? 1 : -1;
+          });
+        }
+        return res;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  /**新增群組 */
   const addServiceGroupApi = async (data: any) => {
     try {
       let res = await addServiceGroupReq(data).then((res: any) => {
@@ -71,8 +136,45 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+  //更新群組
+  const updateServiceGroupApi = async (data: any) => {
+    try {
+      let res = await updateServiceGroupReq(data).then((res: any) => {
+        alertStateFn(res, "更新服務明細");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //更新群組排序
+  const updateGroupOrderApi = async (data: any) => {
+    try {
+      let res = await updateGroupOrderReq(data).then((res: any) => {
+        alertStateFn(res, "更新群組排序");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //刪除群組
+  const delServiceGroupApi = async (data: any) => {
+    try {
+      let res = await deleteServiceGroupReq(data).then((res: any) => {
+        alertStateFn(res, "刪除服務群組");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //#endregion
 
-  //---------------------------------course
+  //#region 課程項目course
   const beauticianList: any = ref([{ userId: 0, nameView: "不指定" }]);
   /**獲取美容師 */
   const getBeauticianApi = async (data: any) => {
@@ -240,8 +342,9 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
-  //------------------apptt
+  //#endregion
 
+  //#region 預約
   let timeGroup: any = ref([
     "08:00",
     "08:30",
@@ -409,7 +512,10 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
-  //--------------------goods
+  //#endregion
+
+  //#region  商品
+
   /**獲取商品分類 */
   const goodsTypesListValueRef = ref(0);
   let goodsTypesListRef: any = ref([]);
@@ -582,8 +688,9 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+  //#endregion 
 
-  //-------------------------------------------------------------------
+  //#region Order
 
   let orderDetailListRef: any = ref([]);
   /**獲取訂單資料 */
@@ -606,9 +713,20 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+
+  //#endregion
   return {
     //--------------------service
     addServiceGroupApi,
+    getServiceDetailApi,
+    serviceDetailList,
+    delServiceDetailApi,
+    updateServiceDetailApi,
+    getServiceGroupApi,
+    serviceGroupList,
+    delServiceGroupApi,
+    updateServiceGroupApi,
+    updateGroupOrderApi,
     //--------------------course
     getCourseTypeApi,
     courseTypesTabs,

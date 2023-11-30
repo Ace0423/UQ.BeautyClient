@@ -11,12 +11,37 @@ export interface IServiceTypeVo {
   editNameTw: string;
 }
 
-export interface IServiceDetailVo {
+export interface IServiceDetailVo2 {
   lessonId: number;
   lessonTypeId: number;
   display: true;
   nameEn: string;
   nameTw: string;
+  servicesTime: number;
+  price: number;
+  discount: number;
+  isBonusOpen: false;
+  isEditAccounting: false;
+  dateCreate: string;
+  dateUpdate: string;
+  editUser: string;
+  serviceDiscountMaps: [];
+  couponCardMapServices: [];
+  forFreeCardMapService: [];
+  topUpCardMapService: [];
+}
+
+export interface IServiceGroupVo {
+  sgId: number;
+  sgTitle: boolean;
+  order: number;
+}
+
+export interface IServiceDetailVo {
+  sId: number;
+  display: true;
+  nameEn: string;
+  name: string;
   servicesTime: number;
   price: number;
   discount: number;

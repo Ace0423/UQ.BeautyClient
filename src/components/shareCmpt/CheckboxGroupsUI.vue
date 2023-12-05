@@ -10,30 +10,17 @@
         <div class="div-item">
           <div>
             <label class="label-group">
-              <input
-                class="input-group"
-                type="checkbox"
-                id="pgId"
-                value="item"
-                v-model="clickGoodssGroupRef"
-                @click="clickGoodssGroup"
-              />
+              <input class="input-group" type="checkbox" id="pgId" value="item" v-model="clickGoodssGroupRef"
+                @click="clickGoodssGroup" />
               <label for="pgId"></label>
               <span> 全選(商品) </span>
             </label>
           </div>
           <div v-for="item in filterGoodsTypesData" :key="item">
             <label class="label-item" :value="item">
-              <input
-                class="input-item"
-                type="checkbox"
-                :key="item.pgId"
-                :id="item.pgId"
-                :value="item"
-                v-model="formInputRef.groups"
-                @click="clickItem"
-              />
-              <label :for="item.pgId"></label>
+              <input class="input-item" type="checkbox" :key="item.pgId" :id="'CheckboxGroups_' + item.pgId" :value="item"
+                v-model="formInputRef.groups" @click="clickItem" />
+              <label :for="'CheckboxGroups_' + item.pgId"></label>
               <div>
                 <span value="{{item}}" name="{{item.pgTitle}}">{{
                   item.pgTitle
@@ -158,32 +145,40 @@ function submitBtn() {
     font-family: HeitiTC;
     color: #84715c;
     font-weight: bold;
+
     .top-content {
       display: block;
-      > p {
+
+      >p {
         display: flex;
         justify-content: center;
       }
     }
+
     .main-content {
       display: block;
-      > p {
+
+      >p {
         display: flex;
         justify-content: center;
       }
-      > input {
+
+      >input {
         width: 97%;
       }
+
       .div-item {
         width: 100%;
         height: 250px;
         overflow-y: auto;
-        > div {
+
+        >div {
           display: flex;
           align-items: center;
           height: 50px;
           border-bottom: 1px solid #fff;
           width: 100%;
+
           .label-item {
             display: flex;
             align-items: center;
@@ -193,7 +188,8 @@ function submitBtn() {
             input {
               display: none;
             }
-            > label {
+
+            >label {
               display: inline-block;
               width: 20px;
               height: 20px;
@@ -202,7 +198,8 @@ function submitBtn() {
               position: relative;
               cursor: pointer;
             }
-            > label::before {
+
+            >label::before {
               display: inline-block;
               content: " ";
               width: 12px;
@@ -216,20 +213,24 @@ function submitBtn() {
               position: absolute;
               opacity: 0;
             }
-            > input:checked + label {
+
+            >input:checked+label {
               background: #8b6f6d;
             }
-            > input:checked + label::before {
+
+            >input:checked+label::before {
               opacity: 1;
               transform: all 0.5s;
             }
 
-            > span {
+            >span {
               margin-left: 10px;
             }
-            > div {
+
+            >div {
               display: grid;
               margin-left: 10px;
+
               .timer-msg {
                 font-size: 15px;
               }
@@ -241,10 +242,12 @@ function submitBtn() {
             align-items: center;
             width: 100%;
             margin-left: 5px;
+
             input {
               display: none;
               width: 100%;
             }
+
             label {
               display: inline-block;
               width: 17px;
@@ -254,6 +257,7 @@ function submitBtn() {
               position: relative;
               cursor: pointer;
             }
+
             label::before {
               display: inline-block;
               content: " ";
@@ -268,15 +272,17 @@ function submitBtn() {
               position: absolute;
               opacity: 0;
             }
-            input:checked + label {
+
+            input:checked+label {
               background: #8b6f6d;
             }
-            input:checked + label::before {
+
+            input:checked+label::before {
               opacity: 1;
               transform: all 0.5s;
             }
 
-            > span {
+            >span {
               margin-left: 10px;
               font-size: 17px;
             }
@@ -284,10 +290,12 @@ function submitBtn() {
         }
       }
     }
+
     .bottom-content {
       display: flex;
       justify-content: center;
-      > button {
+
+      >button {
         position: relative;
         width: 100px;
         height: 45px;
@@ -298,13 +306,14 @@ function submitBtn() {
         color: #717171;
         background-color: #fff;
       }
+
       .submit-btn {
         display: block;
       }
+
       .cancle-btn {
         display: block;
       }
     }
   }
-}
-</style>
+}</style>

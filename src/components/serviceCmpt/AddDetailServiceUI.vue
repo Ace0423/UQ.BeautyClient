@@ -8,7 +8,7 @@
       </div>
       <div class="main-content">
         <div class="center-main">
-          <div class="input-item">
+          <div class="input-item" name="基本資訊">
             <span class="title-content">基本資訊</span>
             <span class="msg-content">填寫你的服務項目基本資訊。</span>
             <div>
@@ -24,7 +24,7 @@
               <textarea v-model="formInputRef.msg" placeholder="請輸入說明或注意事項"></textarea>
             </div>
           </div>
-          <div class="input-item" name="theme">
+          <div class="input-item" name="優惠主題">
             <span class="title-content">優惠券內容</span>
             <span class="msg-content">填寫任何你想表達給顧客的優惠內容。</span>
             <div>
@@ -32,143 +32,81 @@
               <input v-model="formInputRef.theme" placeholder="請輸入優惠主題" type="text" />
             </div>
           </div>
-          <div class="color-item" name="color-item">
+          <div class="input-radio" name="服務顏色">
             <span class="title-content">服務顏色</span>
             <!-- <span class="msg-content">選擇呈現於行事曆的預約顏色</span> -->
             <div>
               <RadioColorUI :selColorIndex="formInputRef.color" :updataColorFn="updataColorFn" :coloarSize="60" />
             </div>
           </div>
-          <div class="radio-item" name="radio_item">
-            <span>指定項目</span>
-            <div class="radio-main">
-              <div>
-                <div class="radio-input">
-                  <input class="radio_type" v-model="formInputRef.groupItem" type="radio" :value="0" name="type"
-                    id="radio1" />
-                </div>
-                <div class="radio-label">
-                  <label for="radio1">所有項目</label>
-                  <label for="radio1">所有服務與商品皆可使用此優惠券</label>
-                </div>
-              </div>
-              <div>
-                <div class="radio-input">
-                  <input class="radio_type" v-model="formInputRef.groupItem" type="radio" :value="1" name="type"
-                    id="radio2" />
-                </div>
-                <div class="radio-label" @click="showCGroupsUIFn(true)">
-                  <label for="radio2">指定群組</label>
-                  <label for="radio2">群組內所有項目皆可使用此優惠券</label>
-                </div>
-              </div>
-              <div>
-                <div class="radio-input">
-                  <input class="radio_type" type="radio" :value="2" name="type" id="radio3" />
-                </div>
-                <div class="radio-label" @click="showSelItemUIFn(true)">
-                  <label for="radio3">指定項目</label>
-                  <label for="radio3">僅有指定項目可使用此優惠券</label>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="input-item" name="date">
+          <div class="input-item" name="使用期限">
             <span class="title-content">使用期限</span>
             <div>
               <span>期限方式</span>
               <div class="select-content">
-                <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.ccOnDate"
+                <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.childrenType"
                   @change="changeValue()">
-                  <el-option v-for="(item, index) in content" :key="index" :value="item.id" :label="item.name">
+                  <el-option v-for="(item, index) in childrenTab" :key="index" :value="item.id" :label="item.name">
                     {{ item.name }}
                   </el-option>
                 </el-select>
               </div>
             </div>
-            <div v-if="formInputRef.ccOnDate == 2">
-              <span>可使用天數</span>
+            <div v-if="formInputRef.childrenType == 0">
+              <span>價格</span>
+              <input v-model="formInputRef.price" placeholder="請輸入價格" type="text" />
+            </div>
+            <div v-if="formInputRef.childrenType == 0">
+              <span>服務時長</span>
               <div class="select-content">
-                <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.days"
-                  placeholder="請選擇可使用天數">
-                  <el-option v-for="(item, index) in selDays" :key="index" :value="item.id" :label="item.name">
+                <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.serviceTime"
+                  placeholder="請選擇服務時數" @change="changeValue()">
+                  <el-option v-for="(item, index) in timeGroup" :key="index" :label="item" :value="item">
+                    {{ item }}
                   </el-option>
                 </el-select>
               </div>
             </div>
-            <div v-if="formInputRef.ccOnDate == 1">
-              <span>開始日期</span>
-              <input type="date" v-model="formInputRef.startDate" />
-            </div>
-            <div v-if="formInputRef.ccOnDate == 1">
-              <span>結束日期</span>
-              <input type="date" v-model="formInputRef.endDate" />
+            <div class="link-btn" v-if="formInputRef.childrenType == 1">
+              <span>新增服務子項目</span>
             </div>
           </div>
-          <div class="input-item" name="amount">
-            <span class="title-content">發送數量</span>
-            <div>
-              <span>數量方式</span>
-              <div class="select-content">
-                <el-select :popper-append-to-body="false" v-model="formInputRef.amountType" @change="changeValue()">
-                  <el-option v-for="(item, index) in amountType" :key="index" :value="item.id" :label="item.name">
-                    {{ item.name }}
-                  </el-option>
-                </el-select>
+          <div class="input-switch" name="其他設定">
+            <span class="title-switch">其他設定</span>
+            <div class="box-switch">
+              <div class="switch">
+                <input type="checkbox" id="switch" v-model="formInputRef.isBonusOpen" /><label for="switch">Toggle</label>
+              </div>
+              <div class="label-info">
+                <label>服務是否提供抽成</label>
+                <span>開啟後，系統將按人員分潤設定比例白動計算抽成金額</span>
               </div>
             </div>
-            <div v-if="formInputRef.amountType == 1">
-              <span>限制發送數</span>
-              <input v-model="formInputRef.amountTotal" placeholder="請輸入限制數量" type="text" />
+            <div class="box-switch">
+              <div class="switch">
+                <input type="checkbox" id="switch3" v-model="formInputRef.state" /><label for="switch3">Toggle2</label>
+              </div>
+              <div class="label-info">
+                <label>上架 </label>
+                <span>開啟後，你的顧客即可透過線上預約瀏覽此項目</span>
+              </div>
+            </div>
+            <div class="box-switch">
+              <div class="switch">
+                <input type="checkbox" id="switch2" v-model="formInputRef.isEditAccounting" /><label
+                  for="switch2">Toggle1</label>
+              </div>
+              <div class="label-info">
+                <label> 是否允許結帳時修改金額</label>
+                <span>開啟後，結帳時可手動調整服務金額</span>
+              </div>
             </div>
           </div>
-          <div class="input-item" name="useType">
-            <span class="title-content">使用優惠</span>
-            <div>
-              <span>優惠方式</span>
-              <div class="select-content">
-                <el-select :popper-append-to-body="false" popper-class="select" placeholder="請選擇優惠方式"
-                  v-model="formInputRef.ccDiscountType" @change="changeValue()">
-                  <el-option v-for="(item, index) in discountType" :key="index" :value="item.id" :label="item.name">
-                    {{ item.name }}
-                  </el-option>
-                </el-select>
-              </div>
-            </div>
-            <div v-if="formInputRef.ccDiscountType == 1">
-              <span>折扣比</span>
-              <input class="percent-input" v-model="formInputRef.ccDiscount" type="text" />
-              <span v-if="formInputRef.ccDiscount != 0">{{
-                (100 - formInputRef.ccDiscount) / 10 + "折"
-              }}</span>
-            </div>
-            <div v-if="formInputRef.ccDiscountType == 2">
-              <span>折讓金額</span>
-              <input v-model="formInputRef.ccDiscount" type="text" />
-            </div>
-          </div>
-          <div class="radio-item" name="checkoutType">
-            <span>折抵方式</span>
-            <div class="radio-main">
-              <div>
-                <div class="radio-input">
-                  <input class="radio_type" v-model="formInputRef.checkoutType" type="radio" :value="0" name="radioType1"
-                    id="radioType1" />
-                </div>
-                <div class="radio-label">
-                  <label for="radioType1">訂單內所有符合項目皆享有優惠</label>
-                  <label for="radioType1">所有包含於訂單內的每一項產品與服務皆享有優惠‧</label>
-                </div>
-              </div>
-              <div>
-                <div class="radio-input">
-                  <input class="radio_type" v-model="formInputRef.checkoutType" type="radio" :value="1" name="radioType1"
-                    id="radioType2" />
-                </div>
-                <div class="radio-label">
-                  <label for="radioType2">訂單內僅唯一項目使用優惠</label>
-                  <label for="radioType2">此優惠券僅能只用指定的唯一服務或產品做為優惠‧</label>
-                </div>
+          <div class="input-item" name="服務群組">
+            <div class="bottom-item">
+              <span>服務群組</span>
+              <div class="link">
+                <span @click="showCGroupsUIFn(true)">加入群組</span>
               </div>
             </div>
           </div>
@@ -179,9 +117,9 @@
   </div>
   <SelectItemUI v-if="showSelItemUIRef" :showUIFn="showSelItemUIFn">
   </SelectItemUI>
-  <CheckboxGroupsUI v-if="showSelGroupsUIRef" :selData="formInputRef.groups" :getDataFn="getCGroupsFn"
+  <CServiceGroupsUI v-if="showSelGroupsUIRef" :selData="formInputRef.groups" :getDataFn="getCGroupsFn"
     :showCGroupsUIFn="showCGroupsUIFn">
-  </CheckboxGroupsUI>
+  </CServiceGroupsUI>
 </template>
   
 <script setup lang="ts">
@@ -203,20 +141,17 @@ const props = defineProps<{
 let showSelItemUIRef = ref(false);
 let showSelGroupsUIRef = ref(false);
 
-let content = [
+let childrenTab = [
   {
     id: 0,
-    name: "不限期",
+    name: "無子項目",
   },
   {
     id: 1,
-    name: "限制日期區間",
-  },
-  {
-    id: 2,
-    name: "限制天數",
+    name: "多項子項目",
   },
 ];
+let timeGroup: any = ref(["30", "60", "90", "120", "150", "180", "210", "240"]);
 let selDays = [
   {
     id: 7,
@@ -269,7 +204,16 @@ let discountType = [
 ];
 let formInputRef: any = ref({
   name: "",
+  nickName: "",
+  msg: "",
   theme: "",
+
+  childrenType: 0,
+  price: "",
+  serviceTime: "",
+  childrenGroup: [],
+  groups: [],
+
   imgUrl: "",
   days: null,
   startDate: "",
@@ -281,7 +225,6 @@ let formInputRef: any = ref({
   ccDiscount: 0,
   groupItem: 0,
   checkoutType: 0,
-  groups: [],
   color: "",
 });
 onMounted(() => {
@@ -306,6 +249,7 @@ formInputRef.value.endDate =
 function showSelItemUIFn(state: boolean) {
   showSelItemUIRef.value = state;
 }
+
 function submitBtn() {
   let curGroupMaps = [];
   for (let i = 0; i < formInputRef.value.groups.length; i++) {
@@ -348,11 +292,12 @@ function updateImgUrl() {
   // console.log("更新圖片");
 }
 function changeValue() {
-  // console.log(formInputRef.value);
+  // console.log(formInputRef.value.childrenType);
+  // formInputRef.value.childrenType = formInputRef.value.childrenType == 0 ? 1 : 0;
 }
 function getCGroupsFn(data: any) {
-  // console.log(data, "獲取");
   formInputRef.value.groups = data;
+  showCGroupsUIFn(false)
 }
 function showCGroupsUIFn(data: boolean) {
   showSelGroupsUIRef.value = data;
@@ -435,7 +380,7 @@ function updataColorFn(params: any) {
 
     .main-content {
       display: flex;
-      height: calc(100% - 70px);
+      height: calc(100% - 70px - 20px);
       justify-content: center;
       overflow-y: auto;
 
@@ -455,15 +400,15 @@ function updataColorFn(params: any) {
 
         .input-item {
           display: grid;
-          width: 90%;
-          margin-left: 5%;
-          margin-top: 3%;
+          width: 100%;
+          // margin-left: 5%;
+          margin: 15px 0;
 
           .title-content {
             font-size: 28px;
             width: 100%;
-            // .el-select{
           }
+
 
           .msg-content {
             font-size: 20px;
@@ -497,6 +442,17 @@ function updataColorFn(params: any) {
             }
           }
 
+
+          .input-timer {
+            width: calc(100% - 180px);
+            height: 100%;
+            margin-left: 0;
+
+            .el-input__inner {
+              height: 100px;
+            }
+          }
+
           .percent-input {
             width: calc(100% - 180px - 180px);
           }
@@ -522,6 +478,16 @@ function updataColorFn(params: any) {
             width: 100%;
             border: solid 0.5px #ddd;
             box-sizing: border-box;
+
+            // margin: 15px 0;
+            .link {
+              display: flex;
+              height: 100%;
+              width: calc(100% - 180px);
+              justify-content: center;
+              align-items: center;
+              color: #87ceeb;
+            }
 
             >span {
               height: 100%;
@@ -550,13 +516,25 @@ function updataColorFn(params: any) {
               color: #c1bdb8;
             }
           }
+
+          .link-btn {
+            font-size: 28px;
+            width: 100%;
+
+            >span {
+              color: #87ceeb;
+              font-size: 28px;
+              width: 100%;
+            }
+          }
+
         }
 
 
-        .color-item {
+        .input-radio {
           display: grid;
-          width: 90%;
-          margin-left: 5%;
+          width: 100%;
+          // margin-left: 5%;
           margin-top: 3%;
 
           .title-content {
@@ -573,91 +551,111 @@ function updataColorFn(params: any) {
 
         }
 
-        .radio-item {
-          display: grid;
-          width: 90%;
-          margin-left: 5%;
-          margin-top: 3%;
 
-          >span {
+        .input-switch {
+          // padding: 0px 15px;
+          width: 100%;
+          height: 300px;
+          // border: 1px solid #000;
+
+          .title-switch {
+            display: block;
+            height: 60px;
+            width: 100%;
+            text-align: left;
             font-size: 28px;
+            text-align: left;
+            color: #877059;
+            font-weight: bold;
+            border-bottom: 1px solid #000;
           }
 
-          .radio-main {
-            display: grid;
+          .box-switch {
+            display: flex;
+            width: 100%;
+            height: calc(100% / 4);
+            align-items: center;
+            // margin-top: 15px;
 
-            >div {
+            box-sizing: border-box;
+            // border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+
+            .label-info {
+              display: grid;
+              width: 80%;
+
+              >label {
+                color: #707070;
+                font-size: 26px;
+                margin-left: 20px;
+              }
+
+              >span {
+                color: #c1bdb8;
+                font-size: 20px;
+                margin-left: 20px;
+              }
+            }
+          }
+
+          .switch {
+            align-items: center;
+            display: flex;
+            width: 80px;
+            height: 40px;
+            // object-fit: contain;
+            // aspect-ratio: 2/1;
+
+            input[type="checkbox"] {
+              height: 0;
+              width: 0;
+              visibility: hidden;
+            }
+
+            label {
+              cursor: pointer;
+              text-indent: -9999px;
+              width: 100%;
+              height: 100%;
+              background: grey;
+              display: block;
+              border-radius: 50px;
+              position: relative;
+            }
+
+            label:after {
+              content: "";
+              position: absolute;
+              top: 1px;
+              left: 1px;
+              width: calc(50% - 2px - 1px);
+              height: calc(100% - 2px - 1px);
+              background: #fff;
+              border-radius: 90px;
+              transition: 0.3s;
+            }
+
+            input:checked+label {
+              background: #877059;
+            }
+
+            input:checked+label:after {
+              left: calc(100% - 1px);
+              transform: translateX(-100%);
+            }
+
+            label:active:after {
+              width: calc(50% - 2px - 1px);
+              ;
+            }
+
+            // centering
+            body {
               display: flex;
-              height: 70px;
+              justify-content: center;
               align-items: center;
-
-              .radio-label {
-                display: grid;
-                height: 60px;
-              }
-
-              .radio-input {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 50px;
-              }
-
-              label {
-                line-height: 20px;
-                display: inline-block;
-                margin-left: 5px;
-                margin-right: 15px;
-                color: #777;
-              }
-
-              .radio_type {
-                width: 20px;
-                height: 20px;
-                appearance: none;
-                position: relative;
-              }
-
-              .radio_type:before {
-                content: "";
-                width: 20px;
-                height: 20px;
-                border: 1px solid #7d7d7d;
-                display: inline-block;
-                border-radius: 50%;
-                vertical-align: middle;
-              }
-
-              .radio_type:checked:before {
-                content: "";
-                width: 20px;
-                height: 20px;
-                border: 1px solid #c59c5a;
-                background: #c59c5a;
-                display: inline-block;
-                border-radius: 50%;
-                vertical-align: middle;
-              }
-
-              .radio_type:checked:after {
-                content: "";
-                width: 10px;
-                height: 5px;
-                border: 2px solid white;
-                border-top: transparent;
-                border-right: transparent;
-                text-align: center;
-                display: block;
-                position: absolute;
-                top: 8px;
-                left: 5px;
-                vertical-align: middle;
-                transform: rotate(-45deg);
-              }
-
-              .radio_type:checked+label {
-                color: #c59c5a;
-              }
+              height: 100vh;
             }
           }
         }
@@ -666,6 +664,7 @@ function updataColorFn(params: any) {
 
     .bottom-content {
       display: flex;
+      height: 20px;
     }
   }
 }

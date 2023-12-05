@@ -1,40 +1,39 @@
 <template>
-  <div class="popup-mask" v-on:click.self="showCGoodsUIFn(false)">
+  <div class="popup-mask" v-on:click.self="showCGroupsUIFn(false)">
     <div class="popup-content">
       <div class="top-content">
-        <p>加入商品</p>
+        <p>加入服務</p>
       </div>
       <div class="main-content">
-        <p>已選擇({{ formInputRef.goods.length }})項服務</p>
+        <p>已選擇({{ formInputRef.serviceGroups.length }})項服務</p>
         <input v-model="formInputRef.search" />
         <div class="div-item">
           <div>
             <label class="label-group">
-              <input class="input-group" type="checkbox" id="pId" value="item" v-model="clickGroupRef"
-                @click="clickGroup" />
-              <label for="pId"></label>
-              <span> 全選 </span>
+              <input class="input-group" type="checkbox" id="allCService" value="item" v-model="clickAllRef"
+                @click="clickAll" />
+              <label for="allCService"></label>
+              <span> 全選(商品) </span>
             </label>
           </div>
-          <div v-for="item in filterGoodsData" :key="item">
+
+          <div v-for="(item, key, index) in filterServiceGroups" :key="index">
             <label class="label-item" :value="item">
-              <input class="input-item" type="checkbox" :key="item" :id="'CheckboxGoods_' + item.pId" :value="item.pId"
-                v-model="formInputRef.goods" @click="clickItem(item, item.pId)" />
-              <label :for="'CheckboxGoods_' + item.pId"></label>
+              <input type="checkbox" :key="item.sgId.sgId" :id="'CServiceGroups_' + item.sgId" :value="item.sgId"
+                v-model="formInputRef.serviceGroups" />
+              <label :for="'CServiceGroups_' + item.sgId"></label>
               <div>
-                <span value="{{item}}" name="{{item.pName}}">{{
-                  item.pName
+                <span value="{{item}}" name="{{item.sgTitle}}">{{
+                  item.sgTitle
                 }}</span>
-                <span class="pCode-msg" value="{{item}}" name="{{item.pName}}">{{ item.pCode }}</span>
               </div>
             </label>
-            <!-- <input type="checkbox" name="item_001" value="1" />1 -->
           </div>
         </div>
       </div>
       <div class="bottom-content">
         <button class="submit-btn" @click="submitBtn()">確認</button>
-        <button class="cancle-btn" @click="showCGoodsUIFn(false)">取消</button>
+        <button class="cancle-btn" @click="showCGroupsUIFn(false)">取消</button>
       </div>
     </div>
   </div>
@@ -43,84 +42,69 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
-import search_ico from "@/assets/images/icon_search.png";
 
 let store = useApptStore();
-let { goodsDetailListRef } = storeToRefs(store);
-let { getGoodsDetailApi } = store;
+let { serviceGroupList } =
+  storeToRefs(store);
+let {
+  getServiceGroupApi,
+} = store;
 
 const props = defineProps<{
-  showCGoodsUIFn: Function;
+  showCGroupsUIFn: Function;
   getDataFn: Function;
   selData: any;
-  //   addDetailTypeID?: any;
 }>();
-let clickGroupRef = ref(false);
+let clickAllRef = ref(false);
 
 let formInputRef: any = ref({
   name: "",
   search: "",
-  goods: [],
+  serviceItems: [],
+  serviceGroups: [],
 });
-
 onBeforeFn();
+
 function onBeforeFn() {
-  getGoodsDetailApi(0, 0);
-  for (let i = 0; i < props.selData.length; i++) {
-    const element = props.selData[i];
-    element.pId = element.pId ? element.pId : element.pid;
-    formInputRef.value.goods.push(element.pId);
-  }
+  // getCourseTypeApi();
+  formInputRef.value.groups = [];
+  getServiceGroupApi().then((res: any) => {
+    formInputRef.value.serviceGroups = props.selData;
+  });
 }
-let filterGoodsData: any = computed(() =>
-  goodsDetailListRef.value.filter(getGoodsFn)
+
+let filterServiceGroups: any = computed(() =>
+  serviceGroupList.value.filter(getRuleFn)
 );
-function getGoodsFn(data: any) {
+function getRuleFn(data: any) {
   return (
-    data.display &&
     (!formInputRef.value.search ||
-      data.pName
+      data.sgTitle
         .toLowerCase()
         .includes(formInputRef.value.search.toLowerCase()))
   );
 }
-
-function clickGroup() {
-  let curGoods = formInputRef.value.goods;
+function clickAll() {
+  let curGoods = formInputRef.value.serviceGroups;
   if (curGoods.length > 0) {
-    formInputRef.value.goods = [];
+    formInputRef.value.serviceItems = [];
+    formInputRef.value.serviceGroups = [];
   } else {
-    for (let i = 0; i < filterGoodsData.value.length; i++) {
-      const element = filterGoodsData.value[i];
-      formInputRef.value.goods.push(element.pId);
+    for (let i = 0; i < filterServiceGroups.value.length; i++) {
+      const element = filterServiceGroups.value[i];
+      formInputRef.value.serviceGroups.push(element.sgId);
+      formInputRef.value.serviceItems.push(element);
     }
   }
 }
+
 watchEffect(() => {
-  clickGroupRef.value = formInputRef.value.goods.length > 0;
+  clickAllRef.value = formInputRef.value.serviceGroups.length > 0;
 });
 
-function clickItem(item: any, id: number) {
-  // console.log(formInputRef.value.goods);
-}
-
 function submitBtn() {
-  let curGoodsData = [];
-  for (let i = 0; i < formInputRef.value.goods.length; i++) {
-    const element = formInputRef.value.goods[i];
-    for (let j = 0; j < filterGoodsData.value.length; j++) {
-      const element2 = filterGoodsData.value[j];
-      let Lid = element2.pId;
-      if (Lid == element) {
-        element2.giftTotal = 1;
-        curGoodsData.push(element2);
-        break;
-      }
-    }
-  }
-
+  let curGoodsData = formInputRef.value.serviceGroups;
   props.getDataFn(curGoodsData);
-  props.showCGoodsUIFn(false);
 }
 </script>
 
@@ -141,8 +125,8 @@ function submitBtn() {
   .popup-content {
     width: 325px;
     height: 450px;
-    padding: 15px 50px;
     background-color: #e6e2de;
+    padding: 15px 50px;
     font-size: 20px;
     font-family: HeitiTC;
     color: #84715c;
@@ -171,7 +155,6 @@ function submitBtn() {
 
       .div-item {
         width: 100%;
-        // max-height: 300px;
         height: 250px;
         overflow-y: auto;
 
@@ -190,7 +173,6 @@ function submitBtn() {
 
             input {
               display: none;
-              width: 100%;
             }
 
             >label {
@@ -235,7 +217,7 @@ function submitBtn() {
               display: grid;
               margin-left: 10px;
 
-              .pCode-msg {
+              .timer-msg {
                 font-size: 15px;
               }
             }
@@ -249,6 +231,7 @@ function submitBtn() {
 
             input {
               display: none;
+              width: 100%;
             }
 
             label {
@@ -319,4 +302,5 @@ function submitBtn() {
       }
     }
   }
-}</style>
+}
+</style>

@@ -22,11 +22,10 @@
             <template #default="scope">
               <div class="handle-drag">
                 <div class="checked_state">
-                  <input class="checked_status" type="checkbox" name="sub" value=""
-                    :id="filterServiceData[scope.$index].sId"
+                  <input class="checked_status" type="checkbox" name="sub" value="" :id="'servicePage_' + scope.$index"
                     :checked="filterServiceData[scope.$index].display == true"
-                    v-on:click="changeStutusHdr(scope.$index, scope.row)" />
-                  <label :for="filterServiceData[scope.$index].sId"></label>
+                    @change="changeStutusHdr(scope.$index, scope.row)" />
+                  <label :for="'servicePage_' + scope.$index"></label>
                 </div>
               </div>
             </template>
@@ -48,7 +47,6 @@
     </div>
   </div>
   <AddDetailServiceUI v-if="showAddDetail" :showAddForm="showAddDetailHdr" />
-  
 </template>
 
 <script setup lang="ts">
@@ -118,17 +116,15 @@ let changeStutusHdr = (index: number, item: any) => {
   let curdata: any = {
     sId: item.sId,
     display: !item.display,
-    groupList:[],
+    groupList: [],
     name: item.name,
     servicesTime: item.servicesTime,
     price: item.price,
   };
   updateServiceDetailApi(curdata).then((res: any) => {
-    // setTimeout(() => {
-      getServiceDetailApi(0);
-    // }, 1000);
+    getServiceDetailApi(0);
   });
-};
+}
 
 let selItem: any = [];
 //刪除課程

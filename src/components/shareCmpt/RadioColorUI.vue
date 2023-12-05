@@ -64,16 +64,13 @@ const colorValues = [
   "#d8baea",
   "#e7b1e6",
 ];
-console.log(props.selColorIndex);
+
 for (let i = 0; i < colorValues.length; i++) {
   const element = colorValues[i];
   if (element == props.selColorIndex) {
     colorIndex.value = i
   }
 }
-console.log(props.selColorIndex);
-console.log(colorIndex.value);
-
 
 onMounted(() => {
   var input = <HTMLElement[]><any>document.getElementsByClassName('coloSize');

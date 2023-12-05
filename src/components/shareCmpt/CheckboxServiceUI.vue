@@ -27,12 +27,12 @@
               <input
                 class="input-item"
                 type="checkbox"
-                :id="item.lessonId"
+                :id="'CheckboxService_' +item.lessonId"
                 :value="item.lessonId"
                 v-model="formInputRef.service"
                 @click="clickItem"
               />
-              <label :for="item.lessonId"></label>
+              <label :for="'CheckboxService_' +item.lessonId"></label>
               <div>
                 <span value="{{item}}" name="{{item.nameTw}}">{{
                   item.nameTw

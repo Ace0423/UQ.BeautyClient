@@ -60,7 +60,6 @@ let { serviceGroupList } =
 let {
   getServiceGroupApi,
   delServiceGroupApi,
-  updateServiceGroupApi,
   updateGroupOrderApi,
 } = store;
 

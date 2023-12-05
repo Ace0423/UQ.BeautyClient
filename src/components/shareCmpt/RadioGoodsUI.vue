@@ -15,11 +15,11 @@
                 type="radio"
                 :key="item"
                 :value="item"
-                :id="item"
+                :id="'RadioGoods_' +item"
                 v-model="formInputRef.goods"
                 @click="clickItem(item, item.pId)"
               />
-              <label :for="item.pId"></label>
+              <label :for="'RadioGoods_' +item.pId"></label>
               <div>
                 <span value="{{item}}" name="{{item.pName}}">{{
                   item.pName

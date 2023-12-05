@@ -368,6 +368,7 @@ function getApptInfoFn(
     getApptDataApi(year, month).then((res: any) => {
       resetApptTable(year, month, date)
       tuiList = [];
+      showTuiApptRef.value = false;
       for (let i = 0; i < tuiBookingListRef.value.length; i++) {
         const element = tuiBookingListRef.value[i];
         element.serverName = getManagerName(element.serverId);
@@ -1005,6 +1006,7 @@ function getRestList() {
 }
 function setRestTimeFn(data: any) {
   let tidyRestData = [];
+  restList = [];
   for (let i = 0; i < data.length; i++) {
     const eleTable = data[i];
     for (let j = 0; j < eleTable.timeTableList.length; j++) {

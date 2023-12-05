@@ -16,7 +16,6 @@
               <span> 全選(商品) </span>
             </label>
           </div>
-
           <div v-for="(item, key, index) in filterServiceGroups" :key="index">
             <label class="label-item" :value="item">
               <input type="checkbox" :key="item.sgId.sgId" :id="'CServiceGroups_' + item.sgId" :value="item.sgId"

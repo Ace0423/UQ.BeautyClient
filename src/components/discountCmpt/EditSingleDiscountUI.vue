@@ -151,7 +151,9 @@ onBeforeFn();
 function onBeforeFn() {
   formInputRef.value.name = props.formInfo.value.title;
   formInputRef.value.dType = props.formInfo.value.dType == 3;
-  formInputRef.value.discount = props.formInfo.value.discount;
+  formInputRef.value.discount = formInputRef.value.dType
+    ? props.formInfo.value.discount
+    : props.formInfo.value.discount * 100;
   formInputRef.value.discountNo = props.formInfo.value.discountNo;
   formInputRef.value.goodsGroup = props.formInfo.value.productList
     ? props.formInfo.value.productList
@@ -402,7 +404,7 @@ const verify_all = () => {
               }
 
               .switch {
-                width: 56px;
+                width: 60px;
                 display: flex;
                 align-items: center;
                 border-radius: 5px;
@@ -426,6 +428,7 @@ const verify_all = () => {
                   transition: all 0.5s;
                   border-radius: 5px;
                   background-color: #fff;
+                  width: 30px;
                 }
 
                 .actived_Area {
@@ -433,12 +436,12 @@ const verify_all = () => {
                   border-radius: 5px;
                   z-index: 1;
                   font-weight: 60;
-                  width: 50%;
+                  width: 30px;
                 }
 
                 .actived_box {
-                  margin-left: 43%;
-                  width: 50%;
+                  margin-left: 30px;
+                  width: 30px;
                 }
               }
             }
@@ -585,5 +588,4 @@ const verify_all = () => {
       }
     }
   }
-}
-</style>
+}</style>

@@ -624,7 +624,7 @@ export default {
     var defaultView = "week"; //預設模式
     var scheduleView = ["time"]; //列表顯示訊息['allday', 'time'],
     var hourStart = 9; //
-    var hourEnd = 20; //
+    var hourEnd = 18; //
     var datePicker, selectedCalendar;
 
     cal = new Calendar("#calendar", {
@@ -1211,8 +1211,13 @@ export default {
 :deep(.tui-full-calendar-timegrid-container) {
   height: calc(100%);
 }
-
-:deep(.tui-full-calendar-layout div:nth-child(1)) {
+:deep(.tui-full-calendar-layout) {
   /* height: calc(50px) !important; */
+  overflow: auto;
+}
+
+:deep(.tui-full-calendar-layout div:nth-child(0)) {
+  /* height: calc(50px) !important; */
+  /* overflow: auto; */
 }
 </style>

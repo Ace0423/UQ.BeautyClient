@@ -219,7 +219,7 @@ const onDeleteAlertBtn = (data: any) => {
       }
 
       >tr>th:nth-child(1) {
-        width: 60%;
+        width: 55%;
       }
 
       >tr>th:nth-child(2) {
@@ -235,7 +235,7 @@ const onDeleteAlertBtn = (data: any) => {
       }
 
       >tr>th:nth-child(5) {
-        width: 10%;
+        width: 15%;
       }
     }
 
@@ -269,7 +269,7 @@ const onDeleteAlertBtn = (data: any) => {
       }
 
       >tr>td:nth-child(1) {
-        width: 60%;
+        width: 55%;
       }
 
       >tr>td:nth-child(2) {
@@ -285,7 +285,7 @@ const onDeleteAlertBtn = (data: any) => {
       }
 
       >tr>td:nth-child(5) {
-        width: 10%;
+        width: 15%;
       }
     }
   }

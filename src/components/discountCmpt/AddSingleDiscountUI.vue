@@ -405,14 +405,13 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
               }
 
               .switch {
-                width: 56px;
+                width: 60px;
                 display: flex;
                 align-items: center;
                 border-radius: 5px;
                 padding: 2px 2px;
                 background-color: #877059;
                 filter: brightness(90%);
-
                 span {
                   cursor: pointer;
                   font-size: 12px;
@@ -422,26 +421,24 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
                   color: #fff;
                   width: 50%;
                 }
-
                 .box_item {
                   position: absolute;
                   color: #fff;
                   transition: all 0.5s;
                   border-radius: 5px;
                   background-color: #fff;
+                  width: 30px;
                 }
-
                 .actived_Area {
                   color: #877059;
                   border-radius: 5px;
                   z-index: 1;
                   font-weight: 60;
-                  width: 50%;
+                  width: 30px;
                 }
-
                 .actived_box {
-                  margin-left: 43%;
-                  width: 50%;
+                  margin-left: 30px;
+                  width: 30px;
                 }
               }
             }

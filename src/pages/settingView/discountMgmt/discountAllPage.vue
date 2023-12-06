@@ -213,13 +213,13 @@ let deleteHdr = (index: number, item: any) => {
       }
 
       > tr > th:nth-child(1) {
-        width: 80%;
+        width: 70%;
       }
       > tr > th:nth-child(2) {
-        width: 10%;
+        width: 15%;
       }
       > tr > th:nth-child(3) {
-        width: 10%;
+        width: 15%;
       }
     }
 
@@ -249,13 +249,13 @@ let deleteHdr = (index: number, item: any) => {
       }
 
       > tr > td:nth-child(1) {
-        width: 80%;
+        width: 70%;
       }
       > tr > td:nth-child(2) {
-        width: 10%;
+        width: 15%;
       }
       > tr > td:nth-child(3) {
-        width: 10%;
+        width: 15%;
       }
     }
   }

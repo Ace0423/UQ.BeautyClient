@@ -19,10 +19,13 @@ onMounted(() => {});
 .content {
   position: absolute;
   top: 80px;
-  bottom: 0px;
+  // bottom: 0px;
   left: 0px;
   right: 0px;
-  margin: 2px 40px;
+  margin: 0px 40px;
+  
+  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100 - 80px  );
 
   > .nav {
     display: flex;

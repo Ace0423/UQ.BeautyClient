@@ -32,9 +32,9 @@ function onResize() {
 }
 
 const scrollListenerHandler = () => {
-  var isIpad =( navigator.userAgent.search("iPad") > -1)||(navigator.userAgent.search("Macintosh") > -1 &&
+  var isIpad = (navigator.userAgent.search("iPad") > -1) || (navigator.userAgent.search("Macintosh") > -1 &&
     navigator.userAgent.search("OS") > -1);
-    
+
   if (!isIpad) {
     document.getElementById("strLanguage")!.innerHTML =
       "不支援此設備，請換ipad";
@@ -55,9 +55,31 @@ function checkTurn() {
   // 滚动到了底部
   if (clientWidth >= clientHeight) {
     document.getElementById("MoblileR")!.style.display = "none";
+    // changeSize();
   } else {
     document.getElementById("effect")!.classList.add("pad");
     document.getElementById("MoblileR")!.style.display = "block";
+  }
+}
+
+function changeSize() {
+  const bodyW = ref(0);
+  const bodyH = ref(0);
+
+
+  const body: any = document.querySelector('.body')!;
+  const bodyHeight = body.offsetHeight;
+  const bodyWidth = body.offsetWidth;
+
+  const aspectRatio = 1280 / 768; //4:3
+  const bodyAspectRatio = Math.floor(bodyHeight / bodyWidth);
+
+  if (bodyAspectRatio > aspectRatio) {
+    bodyH.value = bodyHeight;
+    bodyW.value = Math.floor(bodyHeight / aspectRatio);
+  } else {
+    bodyW.value = bodyWidth;
+    bodyH.value = Math.floor(bodyHeight / aspectRatio);
   }
 }
 </script>
@@ -67,10 +89,7 @@ function checkTurn() {
   <main v-if="isLogin" class="main-display">
     <side-bar v-if="memuState" :handmemuStateBtn="handmemuStateBtn"></side-bar>
     <div class="wraps">
-      <RouterView
-        :memuState="memuState"
-        :handmemuStateBtn="handmemuStateBtn"
-      ></RouterView>
+      <RouterView :memuState="memuState" :handmemuStateBtn="handmemuStateBtn"></RouterView>
     </div>
   </main>
 </template>
@@ -78,7 +97,7 @@ function checkTurn() {
 html,
 body {
   display: block;
-  height: 100%;
+  height: 100vh;
   margin: auto;
   font-family: HeitiTC;
 }

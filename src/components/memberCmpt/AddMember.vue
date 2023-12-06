@@ -280,42 +280,16 @@ onMounted(() => {
       <div>
         <span>性別</span>
         <div>
-          <label
-            ><input
-              type="radio"
-              name="gender"
-              value="1"
-              v-model="newMember.sex"
-            />男</label
-          >
-          <label
-            ><input
-              type="radio"
-              name="gender"
-              value="0"
-              v-model="newMember.sex"
-            />女</label
-          >
+          <label><input type="radio" name="gender" value="1" v-model="newMember.sex" />男</label>
+          <label><input type="radio" name="gender" value="0" v-model="newMember.sex" />女</label>
         </div>
       </div>
       <div>
         <span>標籤</span>
         <div>
-          <el-select
-            v-model="newMember.groupList"
-            value-key="groupId"
-            multiple
-            collapse-tags
-            collapse-tags-tooltip
-            style="width: 100%"
-            size="large"
-          >
-            <el-option
-              v-for="item in groupListData.data"
-              :key="item.groupId"
-              :label="item.label"
-              :value="item"
-            />
+          <el-select v-model="newMember.groupList" value-key="groupId" multiple collapse-tags collapse-tags-tooltip
+            style="width: 100%" size="large">
+            <el-option v-for="item in groupListData.data" :key="item.groupId" :label="item.label" :value="item" />
           </el-select>
           <!-- <multiselect
             v-model="newMember.groupList"
@@ -358,16 +332,11 @@ onMounted(() => {
         <div><textarea v-model="newMember.memo"></textarea></div>
       </div>
 
-      <div class="btn">
-        <button type="submit" v-on:click="handSubmit()">確認</button>
-      </div>
+      <button class="sub-btn" type="submit" v-on:click="handSubmit()">確認</button>
+
     </div>
   </div>
-  <Alert
-    v-if="alertState"
-    :alert-information="alertInformation"
-    :hand-alert-view="handAlertView"
-  ></Alert>
+  <Alert v-if="alertState" :alert-information="alertInformation" :hand-alert-view="handAlertView"></Alert>
 </template>
 
 <style scoped lang="scss">
@@ -395,25 +364,30 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     justify-items: center;
-    > h1 {
+    align-items: center;
+
+    >h1 {
       text-align: center;
       font-size: 20px;
     }
 
-    > div {
+    >div {
       //   margin-top: 15px;
       display: flex;
       // justify-content: end;
       margin: 10px;
+      width: 90%;
 
-      > span {
+      >span {
         min-width: 40px;
         margin: 3px 10px;
       }
-      > div {
+
+      >div {
         position: relative;
         flex: 1;
-        > input {
+
+        >input {
           max-width: 200px;
           height: 30px;
           text-align: center;
@@ -421,16 +395,18 @@ onMounted(() => {
           border: solid 1px #707070;
         }
 
-        > label {
+        >label {
           margin: 0 10px;
         }
-        > p {
+
+        >p {
           position: absolute;
           margin: 0 0 0 0;
           font-size: 12px;
           color: red;
         }
-        > textarea {
+
+        >textarea {
           width: 200px;
           height: 100px;
           // text-align: center;
@@ -438,7 +414,7 @@ onMounted(() => {
           border: solid 1px #707070;
         }
 
-        > input::placeholder {
+        >input::placeholder {
           color: #e6e2de;
         }
 
@@ -446,12 +422,12 @@ onMounted(() => {
         //     width: 40px;
         // }
 
-        > .input-name-last {
+        >.input-name-last {
           margin: 0 5px;
           // width: 40px;
         }
 
-        > .multiselectcheckbox {
+        >.multiselectcheckbox {
           max-width: 320px;
           border-radius: 6px;
           border: solid 1px #707070;
@@ -459,20 +435,14 @@ onMounted(() => {
       }
     }
 
-    > .btn {
-      display: flex;
-      justify-content: center;
-
-      button {
-        width: 72px;
-        // height: 38px;
-        padding: 10px 10px;
-        font-size: 20px;
-        color: #84715c;
-        border-radius: 10px;
-        background-color: #faf9f8;
-        border: solid 1px #707070;
-      }
+    >.sub-btn {
+      width: 72px;
+      padding: 10px 10px;
+      font-size: 20px;
+      color: #84715c;
+      border-radius: 10px;
+      background-color: #faf9f8;
+      border: solid 1px #707070;
     }
   }
 }

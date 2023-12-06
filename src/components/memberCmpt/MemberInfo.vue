@@ -83,31 +83,34 @@ onMounted(() => {
               <img class="circle" :src="addIcon" v-on:click="handAddMemberView()" />
             </div>
           </div>
-          <div class="info-detail">
-            <p>基本資料</p>
-            <div class="content-box">
-              <div class="flex-box">
-                <img :src="addressIcon" />
-                <p v-if="props.selectMemberItem.sex == 1">男</p>
-                <p v-if="props.selectMemberItem.sex == 0">女</p>
-              </div>
-              <div class="flex-box">
-                <img :src="birthdayIcon" />
-                <p>{{ props.selectMemberItem.birthday }}</p>
-              </div>
-              <div class="flex-box">
-                <img :src="mailIcon" />
-                <p>{{ props.selectMemberItem.email }}</p>
+          <div class="detail">
+            <div class="info-detail">
+              <p>基本資料</p>
+              <div class="content-box">
+                <div class="flex-box">
+                  <img :src="addressIcon" />
+                  <p v-if="props.selectMemberItem.sex == 1">男</p>
+                  <p v-if="props.selectMemberItem.sex == 0">女</p>
+                </div>
+                <div class="flex-box">
+                  <img :src="birthdayIcon" />
+                  <p>{{ props.selectMemberItem.birthday }}</p>
+                </div>
+                <div class="flex-box">
+                  <img :src="mailIcon" />
+                  <p>{{ props.selectMemberItem.email }}</p>
+                </div>
               </div>
             </div>
+            <div class="info-memo">
+              <h4>來源</h4>
+              <p3 v-if="props.selectMemberItem.fromWhere == 0">現場</p3>
+              <p3 v-if="props.selectMemberItem.fromWhere == 1">網路</p3>
+              <h4>加入時間</h4>
+              <p3>{{ props.selectMemberItem.dateCreate }}</p3>
+            </div>
           </div>
-          <div class="info-memo">
-            <h4>來源</h4>
-            <p3 v-if="props.selectMemberItem.fromWhere == 0">現場</p3>
-            <p3 v-if="props.selectMemberItem.fromWhere == 1">網路</p3>
-            <h4>加入時間</h4>
-            <p3>{{ props.selectMemberItem.dateCreate }}</p3>
-          </div>
+
         </div>
       </div>
       <div class="consumption-frame" v-if="simpleView">
@@ -217,6 +220,7 @@ onMounted(() => {
       }
 
       >.info-content {
+        position: relative;
         border-radius: 10px;
         box-shadow: inset 0 10px 6px 0 rgba(0, 0, 0, 0.16);
         min-width: 360px;
@@ -269,51 +273,61 @@ onMounted(() => {
             position: absolute;
             top: 10px;
             right: 0px;
-            width: 50px;
-            height: 50px;
+            width: 36px;
+            height: 36px;
           }
         }
 
-        >.info-detail {
-          margin: 0 10px;
-          border-bottom: 2px #707070 solid;
-          color: #877059;
+        >.detail {
+          position: absolute;
+          top: 180px;
+          bottom: 0px;
+          left: 0px;
+          right: 0px;
+          overflow: auto;
 
-          >.content-box {
-            border: solid 1px #707070;
-            background-color: #e6e2de;
-            border-radius: 10px;
-            margin-bottom: 25px;
+          >.info-detail {
+            margin: 0 10px;
+            border-bottom: 2px #707070 solid;
+            color: #877059;
 
-            P {
-              margin: 0 0 5px 0;
-            }
+            >.content-box {
+              border: solid 1px #707070;
+              background-color: #e6e2de;
+              border-radius: 10px;
+              margin-bottom: 25px;
 
-            .flex-box {
-              display: flex;
-              height: 40px;
-              margin: 10px 10px;
-              align-items: center;
-
-              p {
-                margin: 10px;
+              P {
+                margin: 0 0 5px 0;
               }
 
-              img {
-                width: 20px;
-                height: 20px;
+              .flex-box {
+                display: flex;
+                height: 40px;
+                margin: 10px 10px;
+                align-items: center;
+
+                p {
+                  margin: 10px;
+                }
+
+                img {
+                  width: 20px;
+                  height: 20px;
+                }
               }
             }
           }
+
+          .info-memo {
+            display: flex;
+            flex-direction: column;
+            margin: 0 10px;
+            border-bottom: 2px #707070 solid;
+            color: #877059;
+          }
         }
 
-        .info-memo {
-          display: flex;
-          flex-direction: column;
-          margin: 0 10px;
-          border-bottom: 2px #707070 solid;
-          color: #877059;
-        }
       }
     }
 

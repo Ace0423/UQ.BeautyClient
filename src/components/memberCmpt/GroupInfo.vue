@@ -194,7 +194,7 @@ onMounted(() => {
       }
 
       >button {
-        height: 100%;
+        // height: 100%;
         margin: 2px 2px;
       }
     }

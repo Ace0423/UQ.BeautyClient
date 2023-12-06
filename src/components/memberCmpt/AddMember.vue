@@ -464,7 +464,7 @@ onMounted(() => {
       justify-content: center;
 
       button {
-        // width: 72px;
+        width: 72px;
         // height: 38px;
         padding: 10px 10px;
         font-size: 20px;

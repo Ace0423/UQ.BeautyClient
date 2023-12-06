@@ -15,9 +15,9 @@
       <div class="content-main">
         <el-table :data="filterServiceType" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
           :header-cell-style="headerRowStyle">
-          <el-table-column prop="sgTitle" label="群組名稱" width="800" />
-          <el-table-column prop="sgId" label="群組名稱" width="150" />
-          <el-table-column label="操作" width="150">
+          <el-table-column prop="sgTitle" label="群組名稱" min-width="60%" />
+          <el-table-column prop="sgId" label="群組名稱" min-width="20%" />
+          <el-table-column label="操作" min-width="20%">
             <template #default="scope">
               <div class="handle-drag">
                 <el-icon>

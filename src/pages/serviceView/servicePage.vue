@@ -15,10 +15,10 @@
       <div class="content-main">
         <el-table :data="filterServiceData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
           :header-cell-style="headerRowStyle" @sort-change="goclick">
-          <el-table-column prop="name" label="產品名稱" width="400" :sort-by="['name']" sortable />
-          <el-table-column prop="servicesTime" label="服務時長(Min)" width="200" sortable />
-          <el-table-column prop="price" label="售價(NT)" width="200" sortable />
-          <el-table-column prop="display" label="上架" width="150">
+          <el-table-column prop="name" label="產品名稱" min-width="30%" :sort-by="['name']" sortable />
+          <el-table-column prop="servicesTime" label="服務時長" min-width="30%" sortable />
+          <el-table-column prop="price" label="售價" min-width="20%" sortable />
+          <el-table-column prop="display" label="上架" min-width="20%">
             <template #default="scope">
               <div class="handle-drag">
                 <div class="checked_state">

@@ -624,7 +624,7 @@ export default {
     var defaultView = "week"; //預設模式
     var scheduleView = ["time"]; //列表顯示訊息['allday', 'time'],
     var hourStart = 9; //
-    var hourEnd = 18; //
+    var hourEnd = 20; //
     var datePicker, selectedCalendar;
 
     cal = new Calendar("#calendar", {

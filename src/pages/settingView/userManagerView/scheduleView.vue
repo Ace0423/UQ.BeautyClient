@@ -134,9 +134,9 @@ onMounted(() => {
             <button @click="handNextWeek()">
                 >
             </button>
-            <button class="header-btn" @click="handQuicklyscheduleView">
+            <!-- <button class="header-btn" @click="handQuicklyscheduleView">
                 快速排班
-            </button>
+            </button> -->
         </div>
         <table>
             <thead class="header-tab">

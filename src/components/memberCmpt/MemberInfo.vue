@@ -145,7 +145,8 @@ onMounted(() => {
               <p>棄單次數</p>
             </div>
           </div>
-          <div class="consumption-performance" :class="currentIndex != 1 ? 'current' : ''"></div>
+          <div class="consumption-performance" :class="currentIndex != 1 ? 'current' : ''">
+          </div>
           <div class="consumption-performance" :class="currentIndex != 2 ? 'current' : ''">
             <div>
               <h1>{{ memberDetailData.accountBalance }}</h1>

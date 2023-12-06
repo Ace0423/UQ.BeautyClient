@@ -11,13 +11,13 @@
       <div class="content">
         <div class="info-content">
           <div class="info-user">
-            <p>{{ weekDayCpt }}</p>
+            <span>{{ weekDayCpt }}</span>
             <h1>{{ dateCpt }}</h1>
             <div class="info-guest">
               <img class="head-shot" :src="Icon" />
               <div>
-                <p>{{ customerDataCpt.nameView }}</p>
-                <p>{{ customerDataCpt.phone }}</p>
+                <span>{{ customerDataCpt.nameView }}</span>
+                <span>{{ customerDataCpt.phone }}</span>
               </div>
             </div>
           </div>
@@ -34,8 +34,10 @@
                 刪除預約
               </button>
             </div>
-            <div class="grey-box">
-              <span>人數1位</span>
+            <div class="grey-guest">
+              <div class="grey-box">
+                <span>人數1位</span>
+              </div>
             </div>
             <div class="list_btn">
               <button :class="{
@@ -229,6 +231,7 @@ onMounted(() => {
             display: flex;
             width: 80%;
             justify-content: center;
+            height: 40%;
 
             // //margin: 5px 30px;
 
@@ -239,7 +242,7 @@ onMounted(() => {
             }
 
             >div {
-              >p {
+              >span {
                 justify-content: left;
                 display: flex;
                 font-family: STXihei;
@@ -256,25 +259,27 @@ onMounted(() => {
             font-size: 25px;
             color: #717171;
             text-align: left;
+            height: 20%;
           }
 
-          >p {
+          >span {
             // //margin: 5px 30px;
+            display: flex;
             font-family: STXigei;
             font-size: 20px;
             color: #717171;
             text-align: left;
+            height: 20%;
           }
         }
 
         .info-edit {
           position: relative;
           height: 30%;
-          display: contents;
 
           .list_btn {
             position: relative;
-            height: 30%;
+            height: 40%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -325,18 +330,27 @@ onMounted(() => {
             }
           }
 
-          .grey-box {
+          .grey-guest {
             align-items: center;
             justify-content: center;
             display: flex;
             height: 20%;
-            background-color: #e6e2de;
-            border-radius: 10px;
-            color: #717171;
-            font-weight: bold;
+            width: 100%;
 
-            span {
-              font-size: 18px;
+            .grey-box {
+              align-items: center;
+              justify-content: center;
+              display: flex;
+              height: 100%;
+              width: 80%;
+              background-color: #e6e2de;
+              border-radius: 10px;
+              color: #717171;
+              font-weight: bold;
+
+              span {
+                font-size: 18px;
+              }
             }
           }
         }

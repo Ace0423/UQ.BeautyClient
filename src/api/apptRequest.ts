@@ -57,11 +57,52 @@ export const delCourseTypeReq = (data: any) =>
 export const delCourseDetailReq = (data: any) =>
   deleteHttps(httpRequest, "/Lesson/Detail/" + data);
 //-----------------------------------------服務
-/**新增 */
+/**新增群組 */
 export const addServiceGroupReq = (data: any) =>
   postHttps(httpRequest, "/Service/ServiceGroup", data);
+/**獲取明細 */
+export const getServiceDetailReq = (id: any) =>
+  getHttps(httpRequest, "/Service/ServiceInfo?sid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
+/**新增服務資訊 */
+export const addServiceDetailReq = (data: any) =>
+  postHttps(httpRequest, "/Service/ServiceInfo", data);
+/**更新明細 */
+export const updateServiceDetailReq = (data: any) =>
+  putHttps(
+    httpRequest,
+    "/Service/ServiceInfo?sId=" + data.sId,
+    data
+  );
+/**刪除明細 */
+export const deleteServiceDetailReq = (id: any) =>
+  deleteHttps(httpRequest, "/Service/ServiceInfo/" + id, id);
+/**獲取群組 */
+export const getServiceGroupReq = (id: any) =>
+  getHttps(httpRequest, "/Service/ServiceGroup?sgid=" + id + "&isList=0" + "&pageIndex=" + 0 + "&count=" + 0);
+
+/**刪除群組*/
+export const deleteServiceGroupReq = (id: any) =>
+  deleteHttps(httpRequest, "/Service/ServiceGroup/" + id, id);
+/**更新群組 */
+export const updateServiceGroupReq = (data: any) =>
+  putHttps(
+    httpRequest,
+    "/Service/ServiceGroup?sgId=" + data.sgId,
+    data
+  );
+/**更新群組排序 */
+export const updateGroupOrderReq = (data: any) =>
+  postHttps(httpRequest, "Service/GroupUpdateOrder", data);
 
 //-----------------------------------------Order
 /**獲取訂單資訊 */
 export const getOrderDetailReq = (Group: any, id: any) =>
   getHttps(httpRequest, "Lesson/Detail?id=" + Group + "&lid=" + id);
+
+//-----------------------------------------管理員
+
+/**獲取明細 */
+export const getManagerListReq = (id: any) =>
+  getHttps(httpRequest, "/manager/Admin?id=" + id + "&pageIndex=" + 0 + "&count=" + 0);
+export const updateRestReq = (data: any) =>
+  postHttps(httpRequest, "/manager/WorkingHours", data);

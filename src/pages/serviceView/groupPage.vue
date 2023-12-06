@@ -15,15 +15,16 @@
       <div class="content-main">
         <el-table :data="filterServiceType" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
           :header-cell-style="headerRowStyle">
-          <el-table-column prop="nameTw" label="群組名稱" width="800" />
-          <el-table-column prop="lessonTypeId" label="群組名稱" width="150" />
+          <el-table-column prop="sgTitle" label="群組名稱" width="800" />
+          <el-table-column prop="sgId" label="群組名稱" width="150" />
           <el-table-column label="操作" width="150">
             <template #default="scope">
               <div class="handle-drag">
                 <el-icon>
                   <Sort />
                 </el-icon>
-                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;" />
+                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;"
+                  @click="selectDataFn(filterServiceType[scope.$index])" />
                 <img class="del_img" :src="Icon_del" @click="deleteHdr(scope.$index, filterServiceType[scope.$index])" />
               </div>
             </template>
@@ -40,6 +41,7 @@
     </div>
   </div>
   <AddGroupServiceUI v-if="showAddGroup" :showAddForm="showAddGroupHdr" />
+  <EditGroupServiceUI v-if="showEditGroup" :showEditForm="showEditGroupHdr" :selData="selectDataRef" />
 </template>
 
 <script setup lang="ts">
@@ -53,23 +55,21 @@ import Sortable from "sortablejs";
 import Alert from "@/components/alertCmpt";
 
 let store = useApptStore();
-let { courseTypesTabs, courseDataList, courseTypesTabsValue } =
+let { serviceGroupList } =
   storeToRefs(store);
 let {
-  getCourseTypeApi,
-  delCourseTypeApi,
-  getCourseDetailApi,
-  delCourseDetailApi,
-  updateCourseDetailApi,
-  editCourseTypeOrderApi
+  getServiceGroupApi,
+  delServiceGroupApi,
+  updateGroupOrderApi,
 } = store;
 
 let showAddGroup = ref(false);
+let showEditGroup = ref(false);
 
 
 let search = ref("");
 let filterServiceType: any = computed(() =>
-  courseTypesTabs.value.filter(getServiceFn)
+  serviceGroupList.value.filter(getServiceFn)
 );
 function getServiceFn(data: any) {
   let Sdata = (
@@ -85,8 +85,8 @@ function onBeforeFn() {
 }
 
 function getServiceGroupsFn(data: any = 0) {
-  courseTypesTabs.value = [];
-  getCourseTypeApi();
+  serviceGroupList.value = [];
+  getServiceGroupApi();
 }
 
 onMounted(() => {
@@ -112,11 +112,14 @@ function OrderGroupFn() {
     const element = filterServiceType.value[i];
     element.order = i;
     orderApiData.push({
-      lid: element.lessonTypeId,
+      sgId: element.sgId,
       order: i
     })
   }
-  editCourseTypeOrderApi(orderApiData).then((res: any) => {
+  console.log(filterServiceType.value);
+  console.log(orderApiData);
+
+  updateGroupOrderApi(orderApiData).then((res: any) => {
     getServiceGroupsFn();
   });
 }
@@ -128,22 +131,28 @@ let showAddGroupHdr = (state: boolean) => {
   if (!state)
     getServiceGroupsFn();
 };
-
-//刪除課程
-let deleteHdr = (index: number, item: number) => {
-  Alert.check("是否刪除", 1000, (data: any) => {
-    onDeleteAlertBtn(data, item)
-  });
+//新增分類-顯示
+let showEditGroupHdr = (state: boolean) => {
+  showEditGroup.value = state;
+  if (!state)
+    getServiceGroupsFn();
 };
 
-const onDeleteAlertBtn = (state: any, item: any) => {
+//刪除課程
+let deleteHdr = (index: number, item: any) => {
+  Alert.check("是否刪除", 1000, (data: any) => {
+    onDeleteAlertBtn(data, item.sgId)
+  });
+};
+let selectDataRef = ref([])
+function selectDataFn(params: any) {
+  selectDataRef = params;
+  showEditGroupHdr(true);
+}
+
+const onDeleteAlertBtn = (state: any, id: any) => {
   if (state) {
-    delCourseTypeApi(item.lessonTypeId).then((res: any) => {
-      getCourseDetailApi(
-        0,
-        "0"
-      );
-    });
+    delServiceGroupApi(id).then((res: any) => { getServiceGroupsFn(); });
   } else {
     console.log("取消刪除");
   }
@@ -188,10 +197,10 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
 
   .content {
     display: block;
-    height: calc(100%);
+    height: calc(100% - 50px);
 
     .content-topBar {
-      height: 47px;
+      height: 50px;
       width: calc(100%);
       font-weight: bold;
       display: flex;
@@ -246,7 +255,7 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
 
     .content-main {
       width: 100%;
-      height: calc(100% - 47px);
+      height: calc(100% );
 
       >table {
         // display: inline-block;

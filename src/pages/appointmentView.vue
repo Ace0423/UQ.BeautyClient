@@ -248,14 +248,14 @@ getManagerListNew({ id: 0, pageindex: 0, count: 0 }).then((res: any) => {
   })
 })
 //--------------------------------------------------tui套件設置
-let tuiList: any = reactive([
+let tuiList: any = ref([
 ]);
-let restList: any = reactive([
+let restList: any = ref([
 ]);
 
 let showTuiList = computed(() => {
   return (
-    tuiList.concat(restList));
+    tuiList.value.concat(restList.value));
 });
 
 let tuiOptions = reactive({
@@ -269,7 +269,9 @@ const tuiSetDate = (date: any) => {
   currentYear.value = parseInt(curDate[0]);
   currentMonth.value = parseInt(curDate[1]) - 1;
   currentDay.value = parseInt(curDate[2]);
-  onCheckToday();
+  // getApptInfoFn(currentYear.value, currentMonth.value+1, currentDay.value);
+      getRestList(0,currentYear.value, currentMonth.value+1, currentDay.value);
+  // onCheckToday();
 };
 //--------------------------------------------------tui套件設置
 //選擇那天 xxxx-xx-xx
@@ -367,14 +369,15 @@ function getApptInfoFn(
     //預先呼叫api獲取數據
     getApptDataApi(year, month).then((res: any) => {
       resetApptTable(year, month, date)
-      tuiList = [];
+      tuiList.value = [];
+      showTuiApptRef.value = false;
       for (let i = 0; i < tuiBookingListRef.value.length; i++) {
         const element = tuiBookingListRef.value[i];
         element.serverName = getManagerName(element.serverId);
         let courseBgColor = element.serverId == 0 ? 0 : (element.serverId % 10) + 1;
         courseBgColor = element.state == 1 ? 999 : courseBgColor;
         //顯示課程ITEM
-        tuiList.push({
+        tuiList.value.push({
           id: element.bookingNo,
           //顏色
           calendarId: courseBgColor,// "9", // (element.lessonId / 2).toString(),
@@ -396,7 +399,7 @@ function getApptInfoFn(
           raw: element,
         });
       }
-      getRestList();
+      getRestList(0,year,month,date);
     });
   });
 }
@@ -590,35 +593,33 @@ function getWeek(time: any) {
       newThings: todayThings,
     });
   }
-  //刪除合併後多餘的儲存格
-  for (let i = monthsThingsRef.value.length - 1; i > -1; i--) {
-    const element = monthsThingsRef.value[i];
-    for (let j = element.newThings.length - 1; j > -1; j--) {
-      const element2 = element.newThings[j];
-      if (element2.things.length > 1) {
-      }
-      if (element2.range > 1) {
-        // for (let l = element2.range; l > 0; l--) {
-        for (let l = 1; l < element2.range; l++) {
-          if (monthsThingsRef.value[i + l]) {
-            //同事件衝突
-            if (monthsThingsRef.value[i + l].newThings[j].id == 1) {
-              let readyDelData =
-                monthsThingsRef.value[i + l].newThings[j].things;
-              monthsThingsRef.value[i].newThings[j].range += 1;
-              for (let k = 0; k < readyDelData.length; k++) {
-                const element = readyDelData[k];
-                monthsThingsRef.value[i].newThings[j].things.push(element);
-              }
-            }
-
-            // if (monthsThingsRef.value[i + l].newThings.length == 0)
-            monthsThingsRef.value[i + l].newThings.splice(j, 1);
-          }
-        }
-      }
-    }
-  }
+  // //刪除合併後多餘的儲存格
+  // for (let i = monthsThingsRef.value.length - 1; i > -1; i--) {
+  //   const element = monthsThingsRef.value[i];
+  //   for (let j = element.newThings.length - 1; j > -1; j--) {
+  //     const element2 = element.newThings[j];
+  //     if (element2.things.length > 1) {
+  //     }
+  //     if (element2.range > 1) {
+  //       // for (let l = element2.range; l > 0; l--) {
+  //       for (let l = 1; l < element2.range; l++) {
+  //         if (monthsThingsRef.value[i + l]) {
+  //           //同事件衝突
+  //           if (monthsThingsRef.value[i + l].newThings[j].id == 1) {
+  //             let readyDelData =
+  //               monthsThingsRef.value[i + l].newThings[j].things;
+  //             monthsThingsRef.value[i].newThings[j].range += 1;
+  //             for (let k = 0; k < readyDelData.length; k++) {
+  //               const element = readyDelData[k];
+  //               monthsThingsRef.value[i].newThings[j].things.push(element);
+  //             }
+  //           }
+  //           monthsThingsRef.value[i + l].newThings.splice(j, 1);
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   delete months.value[0];
   let selWeek = months.value[7].date;
@@ -816,6 +817,8 @@ let checkToday = ref(true);
 function lastMonth() {
   // 点击上个月，若是0月则年份-1
   // 0是1月  11是12月
+  console.log(111);
+
   if (currentMonth.value == 0) {
     currentYear.value -= 1;
     currentMonth.value = 11;
@@ -914,10 +917,14 @@ function changeWeekToday(data: number) {
   tuiOptions.tuiType = data;
 }
 
+function dateBtn(btn: any, date: any) {
+
+}
+
 function selTuiListFn(data: any) {
   if (!data.raw) {
-    for (let i = 0; i < tuiList.length; i++) {
-      const element = tuiList[i];
+    for (let i = 0; i < tuiList.value.length; i++) {
+      const element = tuiList.value[i];
       if (element.id == data.id) {
         data.raw = element.raw;
         break;
@@ -980,12 +987,12 @@ let delReserveId = () => {
 };
 
 //-------------------------------------------休息日
-function getRestList() {
+function getRestList(id:any,y:any,m:any,d:any) {
   let data = {
-    managerId: 0,
-    year: 0,
-    month: 0,
-    day: 0,
+    managerId: id,
+    year: y,
+    month: m,
+    day: d,
     pageIndex: 0,
     count: 0,
   };
@@ -1004,7 +1011,9 @@ function getRestList() {
     });
 }
 function setRestTimeFn(data: any) {
+  showTuiApptRef.value = false;
   let tidyRestData = [];
+  restList.value = [];
   for (let i = 0; i < data.length; i++) {
     const eleTable = data[i];
     for (let j = 0; j < eleTable.timeTableList.length; j++) {
@@ -1022,7 +1031,7 @@ function setRestTimeFn(data: any) {
             times: eleRestTime.times,
           });
           // 顯示課程ITEM
-          restList.push({
+          restList.value.push({
             id: eleRestTime.mwrNo,
             //顏色
             calendarId: "888", // (element.lessonId / 2).toString(),

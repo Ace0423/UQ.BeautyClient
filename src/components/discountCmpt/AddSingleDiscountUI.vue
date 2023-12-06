@@ -10,11 +10,7 @@
             <div class="formname">
               <span>折扣名稱</span>
               <div>
-                <el-input
-                  class="input-name"
-                  v-model="formInputRef.name"
-                  placeholder="請輸入名稱"
-                />
+                <el-input class="input-name" v-model="formInputRef.name" placeholder="請輸入名稱" />
                 <span class="p_error" v-if="ruleItem.name.is_error">
                   {{ ruleItem.name.warn }}
                 </span>
@@ -26,30 +22,15 @@
               <span>售價(NT)</span>
               <div>
                 <div>
-                  <el-input
-                    class="input-price"
-                    v-model="formInputRef.discount"
-                    placeholder="請輸入折扣"
-                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                  >
+                  <el-input class="input-price" v-model="formInputRef.discount" placeholder="請輸入折扣"
+                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')">
                   </el-input>
                   <div class="switch">
-                    <span
-                      class="box_item"
-                      :class="{ actived_box: formInputRef.dType }"
-                    ></span>
-                    <span
-                      class="left"
-                      :class="{ actived_Area: !formInputRef.dType }"
-                      @click="formInputRef.dType = !formInputRef.dType"
-                      >%</span
-                    >
-                    <span
-                      class="right"
-                      :class="{ actived_Area: formInputRef.dType }"
-                      @click="formInputRef.dType = !formInputRef.dType"
-                      >$</span
-                    >
+                    <span class="box_item" :class="{ actived_box: formInputRef.dType }"></span>
+                    <span class="left" :class="{ actived_Area: !formInputRef.dType }"
+                      @click="formInputRef.dType = !formInputRef.dType">%</span>
+                    <span class="right" :class="{ actived_Area: formInputRef.dType }"
+                      @click="formInputRef.dType = !formInputRef.dType">$</span>
                   </div>
                 </div>
                 <span class="p_error" v-if="ruleItem.discount.is_error">
@@ -65,36 +46,27 @@
                 <table>
                   <thead>
                     <tr>
-                      <th>服務({{ 0 }})</th>
+                      <th>服務({{ selServiceGroupRef.length }})</th>
                       <th>價格</th>
                       <th></th>
                     </tr>
                   </thead>
-                  <tbody
-                    v-for="(item, index) in selServiceGroupRef"
-                    :key="item.lessonId"
-                  >
+                  <tbody v-for="(item, index) in selServiceGroupRef" :key="item.sId">
                     <tr>
                       <td>
-                        <p>{{ item.nameTw }}</p>
+                        <p>{{ item.name }}</p>
                       </td>
                       <td>
                         <p>{{ item.price }}</p>
                       </td>
                       <td>
-                        <img
-                          class="delete_img"
-                          :src="icon_cancleItem"
-                          @click="cancleServiceFn(item, index)"
-                        />
+                        <img class="delete_img" :src="icon_cancleItem" @click="cancleServiceFn(item, index)" />
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <span class="link-btn" @click="showServiceUIFn(true)"
-                >加入服務項目</span
-              >
+              <span class="link-btn" @click="showServiceUIFn(true)">加入服務項目</span>
             </div>
           </div>
           <div class="form-info">
@@ -104,15 +76,12 @@
                 <table>
                   <thead>
                     <tr>
-                      <th>服務({{ 0 }})</th>
+                      <th>商品({{ selGoodsGroupRef.length }})</th>
                       <th>價格</th>
                       <th></th>
                     </tr>
                   </thead>
-                  <tbody
-                    v-for="(item, index) in selGoodsGroupRef"
-                    :key="item.pId"
-                  >
+                  <tbody v-for="(item, index) in selGoodsGroupRef" :key="item.pId">
                     <tr>
                       <td>
                         <p>{{ item.pName }}</p>
@@ -121,19 +90,13 @@
                         <p>{{ item.price }}</p>
                       </td>
                       <td>
-                        <img
-                          class="delete_img"
-                          :src="icon_cancleItem"
-                          @click="cancleGoodsFn(item, index)"
-                        />
+                        <img class="delete_img" :src="icon_cancleItem" @click="cancleGoodsFn(item, index)" />
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <span class="link-btn" @click="showGoodsUIFn(true)"
-                >加入商品項目</span
-              >
+              <span class="link-btn" @click="showGoodsUIFn(true)">加入商品項目</span>
             </div>
           </div>
         </div>
@@ -141,31 +104,20 @@
           <button class="confirm-discountdetail-btn" @click="submitBtn()">
             確認
           </button>
-          <button
-            class="confirm-discountdetail-btn"
-            @click="showAddUIFn(false)"
-          >
+          <button class="confirm-discountdetail-btn" @click="showAddUIFn(false)">
             取消
           </button>
         </div>
       </div>
     </div>
   </div>
-  <CheckboxServiceUI
-    v-if="showServiceUIRef"
-    :selData="selServiceGroupRef"
-    :showCServiceUIFn="showServiceUIFn"
-    :getDataFn="getSelServiceFn"
-  ></CheckboxServiceUI>
-  <CheckboxGoodsUI
-    v-if="showGoodsUIRef"
-    :selData="selGoodsGroupRef"
-    :showCGoodsUIFn="showGoodsUIFn"
-    :getDataFn="getGoodsFn"
-  ></CheckboxGoodsUI>
+  <CbServiceDetailUI v-if="showServiceUIRef" :selData="selServiceGroupRef" :showCServiceUIFn="showServiceUIFn"
+    :getDataFn="getSelServiceFn"></CbServiceDetailUI>
+  <CheckboxGoodsUI v-if="showGoodsUIRef" :selData="selGoodsGroupRef" :showCGoodsUIFn="showGoodsUIFn"
+    :getDataFn="getGoodsFn"></CheckboxGoodsUI>
 </template>
 <script setup lang="ts">
-import { usePriceStore} from "@/stores/priceStore";
+import { usePriceStore } from "@/stores/priceStore";
 import type { IBackStatus } from "@/types/IData";
 import { showErrorMsg } from "@/types/IMessage";
 import { verify_methods } from "@/utils/utils";
@@ -174,7 +126,7 @@ import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
 
 // import { tr } from "element-plus/es/locale";
 let store = usePriceStore();
-let {} = storeToRefs(store);
+let { } = storeToRefs(store);
 let { addSingleDiscountApi } = store;
 
 const props = defineProps<{
@@ -208,6 +160,7 @@ function showGoodsUIFn(state: boolean) {
 function getSelServiceFn(data: any) {
   console.log(data, "獲取");
   selServiceGroupRef.value = data;
+  showServiceUIRef.value = false;
   // props.showAddUIFn(false);
 }
 function getGoodsFn(data: any) {
@@ -225,7 +178,7 @@ let submitBtn = () => {
   let curServiceMaps = [];
   for (let i = 0; i < selServiceGroupRef.value.length; i++) {
     const element = selServiceGroupRef.value[i];
-    curServiceMaps.push(element.lessonId);
+    curServiceMaps.push(element.sId);
   }
   let curGoodsMaps = [];
   for (let i = 0; i < selGoodsGroupRef.value.length; i++) {
@@ -233,6 +186,7 @@ let submitBtn = () => {
     curGoodsMaps.push(element.pId);
   }
 
+  //dType- 2:% - 3:$
   let curdata: any = {
     dType: formInputRef.value.dType ? 3 : 2,
     title: formInputRef.value.name,
@@ -243,7 +197,6 @@ let submitBtn = () => {
     serviceMaps: curServiceMaps,
     productMaps: curGoodsMaps,
   };
-
   /**新增明細 */
   addSingleDiscountApi(curdata).then((res: any) => {
     let resData = res;
@@ -355,6 +308,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
 
     .top-form {
       width: 100%;
+
       p {
         font-weight: bold;
         width: 80px;
@@ -365,14 +319,17 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
         color: #877059;
       }
     }
+
     .main-form {
       width: 100%;
+
       .form-info {
         width: 100%;
         // height: 60px;
         display: flex;
         justify-content: center;
-        > div {
+
+        >div {
           p {
             text-align: left;
             font-size: 15px;
@@ -380,6 +337,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
             color: #877059;
             height: 8px;
           }
+
           span {
             display: block;
             height: 30px;
@@ -391,7 +349,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
             font-weight: bold;
           }
 
-          > input {
+          >input {
             vertical-align: middle;
             width: 95%;
             margin: 5;
@@ -400,40 +358,48 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
             background-color: #fff;
           }
         }
+
         .formname {
           display: flex;
           justify-content: center;
           padding: 5px 10px;
-          > span {
+
+          >span {
             width: 110px;
             font-size: 20px;
           }
-          > div {
+
+          >div {
             .input-name {
               width: 210px;
               height: 40px;
             }
-            > span {
+
+            >span {
               font-size: 10px;
             }
           }
         }
+
         .formprice {
           display: flex;
           justify-content: center;
           width: 100%;
           padding: 0px 10px;
-          > span {
+
+          >span {
             width: 110px;
             font-size: 20px;
           }
 
-          > div {
-            > span {
+          >div {
+            >span {
               font-size: 10px;
             }
-            > div {
+
+            >div {
               display: flex;
+
               .input-price {
                 width: 150px;
               }
@@ -446,6 +412,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
                 padding: 2px 2px;
                 background-color: #877059;
                 filter: brightness(90%);
+
                 span {
                   cursor: pointer;
                   font-size: 12px;
@@ -455,6 +422,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
                   color: #fff;
                   width: 50%;
                 }
+
                 .box_item {
                   position: absolute;
                   color: #fff;
@@ -462,6 +430,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
                   border-radius: 5px;
                   background-color: #fff;
                 }
+
                 .actived_Area {
                   color: #877059;
                   border-radius: 5px;
@@ -469,6 +438,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
                   font-weight: 60;
                   width: 50%;
                 }
+
                 .actived_box {
                   margin-left: 43%;
                   width: 50%;
@@ -477,50 +447,62 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
             }
           }
         }
+
         .form-item {
           width: 320px;
-          > span {
+
+          >span {
             display: flex;
             width: 100%;
             justify-content: center;
             align-items: center;
             height: 40px;
           }
-          > div {
+
+          >div {
             display: flex;
             width: 100%;
             justify-content: center;
-            > table {
+
+            >table {
               // display: flex;
               width: 100%;
-              > thead {
+
+              >thead {
                 background-color: #c1bdb8;
                 color: #877059;
 
-                > tr > th:nth-child(1) {
+                >tr>th:nth-child(1) {
                   width: 70%;
                 }
-                > tr > th:nth-child(2) {
+
+                >tr>th:nth-child(2) {
                   width: 20%;
                 }
-                > tr > th:nth-child(3) {
+
+                >tr>th:nth-child(3) {
                   width: 10%;
                 }
               }
-              > tbody {
+
+              >tbody {
                 border-bottom: 1px solid #fff;
-                > tr > td:nth-child(1) {
+
+                >tr>td:nth-child(1) {
                   width: 70%;
                 }
-                > tr > td:nth-child(2) {
+
+                >tr>td:nth-child(2) {
                   width: 20%;
                 }
-                > tr > th:nth-child(3) {
+
+                >tr>th:nth-child(3) {
                   width: 10%;
                 }
               }
             }
           }
+
           .link-btn {
             color: #b89087;
           }
@@ -538,6 +520,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
         max-height: 250px;
         overflow-y: scroll;
         width: 100%;
+
         div {
           flex-wrap: wrap;
           display: flex;
@@ -556,7 +539,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
               color: #717171;
               display: flex;
 
-              > span {
+              >span {
                 margin-top: 5px;
                 width: 88%;
                 justify-content: center;
@@ -583,10 +566,12 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
         }
       }
     }
+
     .bottom-form {
       width: 100%;
       display: flex;
       justify-content: center;
+
       .confirm-discountdetail-btn {
         position: relative;
         width: 100px;

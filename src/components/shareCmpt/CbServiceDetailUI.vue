@@ -1,31 +1,48 @@
 <template>
-  <div class="popup-mask" v-on:click.self="showCGoodsUIFn(false)">
+  <div class="popup-mask" v-on:click.self="showCServiceUIFn(false)">
     <div class="popup-content">
       <div class="top-content">
-        <p>加入商品</p>
+        <p>加入服務</p>
       </div>
       <div class="main-content">
-        <p>已選擇({{ formInputRef.goods.length }})項服務</p>
+        <p>已選擇({{ formInputRef.service.length }})項服務</p>
         <input v-model="formInputRef.search" />
         <div class="div-item">
           <div>
             <label class="label-group">
-              <input class="input-group" type="checkbox" id="pId" value="item" v-model="clickGroupRef"
-                @click="clickGroup" />
-              <label for="pId"></label>
+              <input
+                class="input-group"
+                type="checkbox"
+                id="sId"
+                value="item"
+                v-model="clickGroupRef"
+                @click="clickAll"
+              />
+              <label for="sId"></label>
               <span> 全選 </span>
             </label>
           </div>
-          <div v-for="item in filterGoodsData" :key="item">
+          <div v-for="item in filterServiceData" :key="item">
             <label class="label-item" :value="item">
-              <input class="input-item" type="checkbox" :key="item" :id="'CheckboxGoods_' + item.pId" :value="item.pId"
-                v-model="formInputRef.goods" @click="clickItem(item, item.pId)" />
-              <label :for="'CheckboxGoods_' + item.pId"></label>
+              <input
+                class="input-item"
+                type="checkbox"
+                :id="'CheckboxService_' +item.sId"
+                :value="item.sId"
+                v-model="formInputRef.service"
+                @click="clickItem"
+              />
+              <label :for="'CheckboxService_' +item.sId"></label>
               <div>
-                <span value="{{item}}" name="{{item.pName}}">{{
-                  item.pName
+                <span value="{{item}}" name="{{item.name}}">{{
+                  item.name
                 }}</span>
-                <span class="pCode-msg" value="{{item}}" name="{{item.pName}}">{{ item.pCode }}</span>
+                <span
+                  class="timer-msg"
+                  value="{{item}}"
+                  name="{{item.name}}"
+                  >{{ item.servicesTime + " Min" }}</span
+                >
               </div>
             </label>
             <!-- <input type="checkbox" name="item_001" value="1" />1 -->
@@ -34,7 +51,9 @@
       </div>
       <div class="bottom-content">
         <button class="submit-btn" @click="submitBtn()">確認</button>
-        <button class="cancle-btn" @click="showCGoodsUIFn(false)">取消</button>
+        <button class="cancle-btn" @click="showCServiceUIFn(false)">
+          取消
+        </button>
       </div>
     </div>
   </div>
@@ -46,11 +65,11 @@ import { useApptStore } from "@/stores/apptStore";
 import search_ico from "@/assets/images/icon_search.png";
 
 let store = useApptStore();
-let { goodsDetailListRef } = storeToRefs(store);
-let { getGoodsDetailApi } = store;
+let { serviceDetailList } = storeToRefs(store);
+let { getServiceDetailApi } = store;
 
 const props = defineProps<{
-  showCGoodsUIFn: Function;
+  showCServiceUIFn: Function;
   getDataFn: Function;
   selData: any;
   //   addDetailTypeID?: any;
@@ -60,128 +79,122 @@ let clickGroupRef = ref(false);
 let formInputRef: any = ref({
   name: "",
   search: "",
-  goods: [],
+  service: [],
 });
-
 onBeforeFn();
 function onBeforeFn() {
-  getGoodsDetailApi(0, 0);
+  getServiceDetailApi();
   for (let i = 0; i < props.selData.length; i++) {
     const element = props.selData[i];
-    element.pId = element.pId ? element.pId : element.pid;
-    formInputRef.value.goods.push(element.pId);
+    // element.lid = element.lid ? element.lid : element.sId;
+    element.sId = element.sId ? element.sId : element.lid;
+    formInputRef.value.service.push(element.sId);
   }
 }
-let filterGoodsData: any = computed(() =>
-  goodsDetailListRef.value.filter(getGoodsFn)
+
+let filterServiceData: any = computed(() =>
+serviceDetailList.value.filter(getRuleFn)
 );
-function getGoodsFn(data: any) {
+
+function getRuleFn(data: any) {
   return (
     data.display &&
     (!formInputRef.value.search ||
-      data.pName
+      data.nameTw
         .toLowerCase()
         .includes(formInputRef.value.search.toLowerCase()))
   );
 }
 
-function clickGroup() {
-  let curGoods = formInputRef.value.goods;
-  if (curGoods.length > 0) {
-    formInputRef.value.goods = [];
+function clickAll() {
+  let curService = formInputRef.value.service;
+  
+  if (curService.length > 0) {
+    formInputRef.value.service = [];
   } else {
-    for (let i = 0; i < filterGoodsData.value.length; i++) {
-      const element = filterGoodsData.value[i];
-      formInputRef.value.goods.push(element.pId);
+    for (let i = 0; i < filterServiceData.value.length; i++) {
+      const element = filterServiceData.value[i];
+      formInputRef.value.service.push(element.sId);
     }
   }
 }
 watchEffect(() => {
-  clickGroupRef.value = formInputRef.value.goods.length > 0;
+  clickGroupRef.value = formInputRef.value.service.length > 0;
 });
 
-function clickItem(item: any, id: number) {
-  // console.log(formInputRef.value.goods);
+function clickItem() {
+  
 }
 
 function submitBtn() {
-  let curGoodsData = [];
-  for (let i = 0; i < formInputRef.value.goods.length; i++) {
-    const element = formInputRef.value.goods[i];
-    for (let j = 0; j < filterGoodsData.value.length; j++) {
-      const element2 = filterGoodsData.value[j];
-      let Lid = element2.pId;
+  let curServiceData = [];
+  for (let i = 0; i < formInputRef.value.service.length; i++) {
+    const element = formInputRef.value.service[i];
+    for (let j = 0; j < filterServiceData.value.length; j++) {
+      const element2 = filterServiceData.value[j];
+      let Lid = element2.pId ? element2.pId : element2.sId;
       if (Lid == element) {
         element2.giftTotal = 1;
-        curGoodsData.push(element2);
+        curServiceData.push(element2);
         break;
       }
     }
   }
-
-  props.getDataFn(curGoodsData);
-  props.showCGoodsUIFn(false);
+  props.getDataFn(curServiceData);
+  // props.showCServiceUIFn(false);
 }
 </script>
 
 <style scoped lang="scss">
 .popup-mask {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 3;
+  z-index: 1003;
   background: rgba(255, 255, 255, 0.5);
 
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
 
   .popup-content {
     width: 325px;
     height: 450px;
-    padding: 15px 50px;
     background-color: #e6e2de;
+    padding: 15px 50px;
     font-size: 20px;
     font-family: HeitiTC;
     color: #84715c;
     font-weight: bold;
-
     .top-content {
       display: block;
-
-      >p {
+      > p {
         display: flex;
         justify-content: center;
       }
     }
-
     .main-content {
       display: block;
-
-      >p {
+      > p {
         display: flex;
         justify-content: center;
       }
-
-      >input {
+      > input {
         width: 97%;
       }
-
       .div-item {
         width: 100%;
-        // max-height: 300px;
         height: 250px;
         overflow-y: auto;
-
-        >div {
+        overflow: hidden;
+        > div {
           display: flex;
           align-items: center;
           height: 50px;
           border-bottom: 1px solid #fff;
           width: 100%;
-
           .label-item {
             display: flex;
             align-items: center;
@@ -190,10 +203,8 @@ function submitBtn() {
 
             input {
               display: none;
-              width: 100%;
             }
-
-            >label {
+            > label {
               display: inline-block;
               width: 20px;
               height: 20px;
@@ -202,8 +213,7 @@ function submitBtn() {
               position: relative;
               cursor: pointer;
             }
-
-            >label::before {
+            > label::before {
               display: inline-block;
               content: " ";
               width: 12px;
@@ -217,25 +227,21 @@ function submitBtn() {
               position: absolute;
               opacity: 0;
             }
-
-            >input:checked+label {
+            > input:checked + label {
               background: #8b6f6d;
             }
-
-            >input:checked+label::before {
+            > input:checked + label::before {
               opacity: 1;
               transform: all 0.5s;
             }
 
-            >span {
+            > span {
               margin-left: 10px;
             }
-
-            >div {
+            > div {
               display: grid;
               margin-left: 10px;
-
-              .pCode-msg {
+              .timer-msg {
                 font-size: 15px;
               }
             }
@@ -246,11 +252,10 @@ function submitBtn() {
             align-items: center;
             width: 100%;
             margin-left: 5px;
-
             input {
               display: none;
+              width: 100%;
             }
-
             label {
               display: inline-block;
               width: 17px;
@@ -260,7 +265,6 @@ function submitBtn() {
               position: relative;
               cursor: pointer;
             }
-
             label::before {
               display: inline-block;
               content: " ";
@@ -275,17 +279,15 @@ function submitBtn() {
               position: absolute;
               opacity: 0;
             }
-
-            input:checked+label {
+            input:checked + label {
               background: #8b6f6d;
             }
-
-            input:checked+label::before {
+            input:checked + label::before {
               opacity: 1;
               transform: all 0.5s;
             }
 
-            >span {
+            > span {
               margin-left: 10px;
               font-size: 17px;
             }
@@ -293,12 +295,10 @@ function submitBtn() {
         }
       }
     }
-
     .bottom-content {
       display: flex;
       justify-content: center;
-
-      >button {
+      > button {
         position: relative;
         width: 100px;
         height: 45px;
@@ -309,14 +309,13 @@ function submitBtn() {
         color: #717171;
         background-color: #fff;
       }
-
       .submit-btn {
         display: block;
       }
-
       .cancle-btn {
         display: block;
       }
     }
   }
-}</style>
+}
+</style>

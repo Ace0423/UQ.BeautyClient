@@ -5,20 +5,10 @@
         <div class="basic_info_item name">
           <span>姓名(電話)</span>
           <div class="error-msg">
-            <el-select
-              v-model="newApptDataRef.managerId"
-              filterable
-              allow-create
-              default-first-option
-              :reserve-keyword="false"
-              placeholder=""
-            >
-              <el-option
-                v-for="item in filterManagerCpt"
-                :key="item.nameView"
-                :value="item.managerId"
-                :label="item.nameView"
-              >
+            <el-select v-model="newApptDataRef.managerId" filterable allow-create default-first-option
+              :reserve-keyword="false" placeholder="">
+              <el-option v-for="item in filterManagerCpt" :key="item.nameView" :value="item.managerId"
+                :label="item.nameView">
                 {{ item.nameView + "(" + item.phone + ")" }}
               </el-option>
             </el-select>
@@ -41,19 +31,9 @@
         <div class="basic_info_item time">
           <span>開始時段</span>
           <div class="news-filter error-msg">
-            <el-select
-              v-model="newApptDataRef.dayOn"
-              allow-create
-              default-first-option
-              :reserve-keyword="false"
-              placeholder=" "
-            >
-              <el-option
-                v-for="(item, index) in timeGroup"
-                :key="index"
-                :label="item"
-                :value="item"
-              />
+            <el-select v-model="newApptDataRef.dayOn" allow-create default-first-option :reserve-keyword="false"
+              placeholder=" ">
+              <el-option v-for="(item, index) in timeGroup" :key="index" :label="item" :value="item" />
             </el-select>
             <span class="p_error" v-if="ruleItem.dayOn.is_error">
               {{ ruleItem.dayOn.warn }}
@@ -63,19 +43,9 @@
         <div class="basic_info_item time">
           <span>結束時段</span>
           <div class="news-filter error-msg">
-            <el-select
-              v-model="newApptDataRef.dayOff"
-              allow-create
-              default-first-option
-              :reserve-keyword="false"
-              placeholder=" "
-            >
-              <el-option
-                v-for="(item, index) in timeGroup"
-                :key="index"
-                :label="item"
-                :value="item"
-              />
+            <el-select v-model="newApptDataRef.dayOff" allow-create default-first-option :reserve-keyword="false"
+              placeholder=" ">
+              <el-option v-for="(item, index) in timeGroup" :key="index" :label="item" :value="item" />
             </el-select>
             <span class="p_error" v-if="ruleItem.dayOff.is_error">
               {{ ruleItem.dayOff.warn }}
@@ -116,6 +86,68 @@ let newApptDataRef: any = ref({
   dayOn: "",
   dayOff: "",
 });
+
+let store = useApptStore();
+const { getManagerListApi, updateRestApi } = store;
+let { managerList, timeGroup } = storeToRefs(store);
+
+// const managerstore = useManagerStore();
+// const { managerList } = storeToRefs(managerstore);
+// const { getManagerList, postWorkingHours } = managerstore;
+// const counterStore = useCounterStore();
+// const { handLogOut } = counterStore;
+
+/**true:新增 false:修改 */
+onBeforeFn();
+function onBeforeFn() {
+  getManagerListApi(0).then((res) => { });
+}
+onMounted(() => {
+  newApptDataRef.value.date = getNowDay();
+});
+
+
+let filterManagerCpt: any = computed(() =>
+  managerList.value.filter(getDataFn)
+);
+
+function getDataFn(data: any) {
+  return (
+    data && data.roleList.length > 0 && data.roleList[0].roleId == 5
+  );
+}
+
+function getNowDay() {
+  let datetime = new Date();
+  let year = formatZeroDate(datetime.getFullYear());
+  let month = formatZeroDate(datetime.getMonth() + 1);
+  let date = formatZeroDate(datetime.getDate());
+  return `${year}-${month}-${date}`;
+}
+//預約--確認
+let confirmReserveForm = () => {
+  ruleLists.ruleItem.managerId.value = newApptDataRef.value.managerId;
+  ruleLists.ruleItem.date.value = newApptDataRef.value.date;
+  ruleLists.ruleItem.dayOn.value = newApptDataRef.value.dayOn;
+  ruleLists.ruleItem.dayOff.value = newApptDataRef.value.dayOff;
+
+  if (!verify_all()) return;
+
+  let apiData = {
+    mwNo: "",
+    managerId: newApptDataRef.value.managerId,
+    date: newApptDataRef.value.date,
+    dayOn: "",
+    dayOff: "",
+    restList: [
+      {
+        dayOn: newApptDataRef.value.dayOn,
+        dayOff: newApptDataRef.value.dayOff,
+      },
+    ],
+  };
+  updateRestApi(apiData).then((res) => { })
+};
 //-------------------------------------form驗證
 const ruleLists: any = reactive({
   ruleItem: {
@@ -196,91 +228,6 @@ const verify_all = () => {
   return is_valid;
 };
 //-------------------------------------------------------------------
-
-let store = useApptStore();
-const { postAddApptDataApi } = store;
-let { memberList, timeGroup } = storeToRefs(store);
-const managerstore = useManagerStore();
-const { managerList } = storeToRefs(managerstore);
-const { getManagerList, postWorkingHours } = managerstore;
-const counterStore = useCounterStore();
-const { handLogOut } = counterStore;
-/**true:新增 false:修改 */
-onBeforeFn();
-function onBeforeFn() {
-  getManagerList({ id: 0, pageindex: 0, count: 0 })
-    .then((res) => {
-      if (res.state == 2) {
-        Alert.warning(showErrorMsg(res.msg), 2000);
-      }
-    })
-    .catch((e: any) => {
-      Alert.warning(showHttpsStatus(e.response.status), 2000);
-      if (e.response.status == 401) {
-        setTimeout(() => {
-          handLogOut();
-        }, 2000);
-      }
-    });
-}
-onMounted(() => {
-  newApptDataRef.value.date = getNowDay();
-});
-
-let filterManagerCpt: any = computed(() =>
-  managerList.value.data.filter(getDataFn)
-);
-function getDataFn(data: any) {
-  return data.roleList.length > 0 && data.roleList[0].roleId == 5;
-}
-
-function getNowDay() {
-  let datetime = new Date();
-  let year = formatZeroDate(datetime.getFullYear());
-  let month = formatZeroDate(datetime.getMonth() + 1);
-  let date = formatZeroDate(datetime.getDate());
-  return `${year}-${month}-${date}`;
-}
-//預約--確認
-let confirmReserveForm = () => {
-  ruleLists.ruleItem.managerId.value = newApptDataRef.value.managerId;
-  ruleLists.ruleItem.date.value = newApptDataRef.value.date;
-  ruleLists.ruleItem.dayOn.value = newApptDataRef.value.dayOn;
-  ruleLists.ruleItem.dayOff.value = newApptDataRef.value.dayOff;
-
-  if (!verify_all()) return;
-
-  let apiData = {
-    mwNo: "",
-    managerId: newApptDataRef.value.managerId,
-    date: newApptDataRef.value.date,
-    dayOn: "",
-    dayOff: "",
-    restList: [
-      {
-        dayOn: newApptDataRef.value.dayOn,
-        dayOff: newApptDataRef.value.dayOff,
-      },
-    ],
-  };
-  postWorkingHours(apiData)
-    .then((res) => {
-      if (res.state == 1) {
-        Alert.warning("修改成功", 2000);
-        props.showAddRestUIFn(false);
-      } else {
-        Alert.warning(showErrorMsg(res.msg), 2000);
-      }
-    })
-    .catch((e: any) => {
-      Alert.warning(showHttpsStatus(e.response.status), 2000);
-      if (e.response.status == 401) {
-        setTimeout(() => {
-          handLogOut();
-        }, 2000);
-      }
-    });
-};
 </script>
 
 <style lang="scss" scoped>
@@ -308,14 +255,17 @@ let confirmReserveForm = () => {
     .basic_info_main {
       // display: flex;
       align-items: baseline;
+
       .basic_info_item {
         // padding: 8px 8px 8px 8px;
         display: flex;
         width: 100%;
         margin: 15px;
+
         .error-msg {
           display: grid;
         }
+
         span {
           text-align: left;
           font-size: 22px;
@@ -325,7 +275,7 @@ let confirmReserveForm = () => {
           // color: #875959;
         }
 
-        > input {
+        >input {
           width: 100%;
           height: 25px;
           border: solid 1px #707070;
@@ -333,7 +283,7 @@ let confirmReserveForm = () => {
           border-radius: 5px;
         }
 
-        > select {
+        >select {
           width: 300px;
           height: 30px;
           font-size: 20px;
@@ -343,26 +293,31 @@ let confirmReserveForm = () => {
         }
 
         .news-filter {
-          > select {
-            > option {
+          >select {
+            >option {
               .form_name {
                 color: #ff0000;
               }
             }
           }
         }
+
         .search_item {
           height: 100px;
+
           .search_item2 {
             height: 100px;
+
             .search_item3 {
               height: 100px;
             }
           }
-          > datalist {
+
+          >datalist {
             height: 100px;
           }
-          > input {
+
+          >input {
             width: 270px;
             height: 26px;
             font-size: 20px;
@@ -371,7 +326,7 @@ let confirmReserveForm = () => {
             border-radius: 5px;
           }
 
-          > select {
+          >select {
             width: 300px;
             height: 30px;
             font-size: 20px;
@@ -380,6 +335,7 @@ let confirmReserveForm = () => {
             border-radius: 5px;
           }
         }
+
         span {
           // display: block;
           // height: 30px;
@@ -390,22 +346,27 @@ let confirmReserveForm = () => {
           // color: #877059;
           // font-weight: bold;
         }
+
         .p_error {
           color: #fc0505;
           width: 100%;
         }
+
         .el-select {
           border: solid 1px #707070;
           background-color: #fff;
           border-radius: 5px;
         }
       }
+
       .name {
         // width: 60%;
       }
+
       .time {
         // width: 20%;
       }
+
       .beautician {
         // width: 20%;
       }
@@ -438,7 +399,8 @@ let confirmReserveForm = () => {
       font-family: HeitiTC;
       color: #84715c;
       font-weight: bold;
-      > input {
+
+      >input {
         width: 178px;
         height: 30px;
         text-align: center;
@@ -447,7 +409,7 @@ let confirmReserveForm = () => {
       }
     }
 
-    > p {
+    >p {
       font-size: 20px;
       font-weight: bold;
     }
@@ -480,7 +442,7 @@ let confirmReserveForm = () => {
       }
     }
 
-    .add-reserve-btn:checked + span {
+    .add-reserve-btn:checked+span {
       // color: yellow;
       background-color: #444;
     }
@@ -489,7 +451,7 @@ let confirmReserveForm = () => {
       display: none;
     }
 
-    .add-reserve-btn2 + span {
+    .add-reserve-btn2+span {
       width: 262px;
       line-height: 45px;
       justify-content: space-between;
@@ -509,14 +471,15 @@ let confirmReserveForm = () => {
       /* 防止文字被滑鼠選取反白 */
     }
 
-    .add-reserve-btn2 + .checkLesson {
+    .add-reserve-btn2+.checkLesson {
       background-color: #906e6c;
     }
+
     .lesson-span {
       font-weight: 500;
     }
 
-    .add-reserve-btn2:checked + span {
+    .add-reserve-btn2:checked+span {
       background-color: #906e6c;
     }
 

@@ -9,6 +9,8 @@ type Props = {
 const div = document.createElement("div");
 div.setAttribute("class", "gl-alert");
 document.body.appendChild(div);
+console.log("alert初始化");
+
 // 定时器
 let timer = ref<any>(null);
 export default function Alert({
@@ -18,6 +20,7 @@ export default function Alert({
   duration = 3000,
 }: Props) {
   const alertBtnHdr = (data: any) => {
+    console.log("按鈕");
     if (onAlertBtn) onAlertBtn(data == 1);
     onClose();
   };

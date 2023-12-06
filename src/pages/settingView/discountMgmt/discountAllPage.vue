@@ -31,7 +31,8 @@
             <p>{{ item.title }}</p>
           </td>
           <td>
-            <p>{{ item.discount }}</p>
+            <p v-if="item.dType==0">- {{ item.discount*100 }} %</p>
+            <p v-if="item.dType==1">- ${{ item.discount }}</p>
           </td>
           <td>
             <button v-on:click="showEditFormFn(index, item)">

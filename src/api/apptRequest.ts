@@ -63,6 +63,9 @@ export const addServiceGroupReq = (data: any) =>
 /**獲取明細 */
 export const getServiceDetailReq = (id: any) =>
   getHttps(httpRequest, "/Service/ServiceInfo?sid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
+/**新增服務資訊 */
+export const addServiceDetailReq = (data: any) =>
+  postHttps(httpRequest, "/Service/ServiceInfo", data);
 /**更新明細 */
 export const updateServiceDetailReq = (data: any) =>
   putHttps(
@@ -87,11 +90,19 @@ export const updateServiceGroupReq = (data: any) =>
     "/Service/ServiceGroup?sgId=" + data.sgId,
     data
   );
-  /**更新群組排序 */
-  export const updateGroupOrderReq = (data: any) =>
-  postHttps(httpRequest, "Service/GroupUpdateOrder",data);
+/**更新群組排序 */
+export const updateGroupOrderReq = (data: any) =>
+  postHttps(httpRequest, "Service/GroupUpdateOrder", data);
 
 //-----------------------------------------Order
 /**獲取訂單資訊 */
 export const getOrderDetailReq = (Group: any, id: any) =>
   getHttps(httpRequest, "Lesson/Detail?id=" + Group + "&lid=" + id);
+
+//-----------------------------------------管理員
+
+/**獲取明細 */
+export const getManagerListReq = (id: any) =>
+  getHttps(httpRequest, "/manager/Admin?id=" + id + "&pageIndex=" + 0 + "&count=" + 0);
+export const updateRestReq = (data: any) =>
+  postHttps(httpRequest, "/manager/WorkingHours", data);

@@ -1,5 +1,6 @@
 import { apiGetMemberListRequest } from "@/api";
 import {
+  addServiceDetailReq,
   addServiceGroupReq,
   delCourseDetailReq,
   delCourseTypeReq,
@@ -9,6 +10,7 @@ import {
   getBeauticianReq,
   getCourseDetailReq,
   getCourseTypeReq,
+  getManagerListReq,
   getOrderDetailReq,
   getServiceDetailReq,
   getServiceGroupReq,
@@ -21,6 +23,7 @@ import {
   updateGroupOrderReq,
   updateLessonTypeOrderReq,
   updateLessonTypeReq,
+  updateRestReq,
   updateServiceDetailReq,
   updateServiceGroupReq,
 } from "@/api/apptRequest";
@@ -78,6 +81,18 @@ export const useApptStore = defineStore("apptStore", () => {
         }
         return res;
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  /**新增群組 */
+  const addServiceDetailApi = async (data: any) => {
+    try {
+      let res = await addServiceDetailReq(data).then((res: any) => {
+        alertStateFn(res, "新增服務明細");
+        return res;
+      });
+      return res;
     } catch (error) {
       console.log(error);
     }
@@ -715,17 +730,48 @@ export const useApptStore = defineStore("apptStore", () => {
   };
 
   //#endregion
+
+  //#region 管理員
+
+  let managerList: any = ref([]);
+  const getManagerListApi = async (id: any, pageIndex: number = 0, count: number = 0) => {
+    try {
+      const res = await getManagerListReq(id).then((res: any) => {
+        if (res.data.data) {
+          managerList.value = res.data.data.table;
+        }
+        return res;
+      });
+    } catch (error) {
+      console.log(error);
+      return Promise.reject(error);
+    }
+  };
+  //更新明細
+  const updateRestApi = async (data: any) => {
+    try {
+      let res = await updateRestReq(data).then((res: any) => {
+        alertStateFn(res, "更新服務明細");
+        return res;
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //#endregion
   return {
     //--------------------service
     addServiceGroupApi,
+    addServiceDetailApi,
+    getServiceGroupApi,
     getServiceDetailApi,
+    serviceGroupList,
     serviceDetailList,
     delServiceDetailApi,
-    updateServiceDetailApi,
-    getServiceGroupApi,
-    serviceGroupList,
     delServiceGroupApi,
     updateServiceGroupApi,
+    updateServiceDetailApi,
     updateGroupOrderApi,
     //--------------------course
     getCourseTypeApi,
@@ -768,5 +814,9 @@ export const useApptStore = defineStore("apptStore", () => {
     //--------------------Order
     getOrderDetailApi,
     orderDetailListRef,
+    //--------------------管理員
+    managerList,
+    getManagerListApi,
+    updateRestApi
   };
 });

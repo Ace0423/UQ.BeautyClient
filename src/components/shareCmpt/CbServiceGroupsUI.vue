@@ -71,6 +71,7 @@ function onBeforeFn() {
     formInputRef.value.serviceGroups = props.selData;
   });
 }
+console.log(serviceGroupList.value);
 
 let filterServiceGroups: any = computed(() =>
   serviceGroupList.value.filter(getRuleFn)

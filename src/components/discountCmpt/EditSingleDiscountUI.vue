@@ -46,7 +46,7 @@
                 <table>
                   <thead>
                     <tr>
-                      <th>服務({{ 0 }})</th>
+                      <th>服務({{ formInputRef.serviceGroup.length }})</th>
                       <th>價格</th>
                       <th></th>
                     </tr>
@@ -54,7 +54,7 @@
                   <tbody v-for="(item, index) in formInputRef.serviceGroup" :key="item.lid">
                     <tr>
                       <td>
-                        <p v-if="item.nameTw">{{ item.nameTw }}</p>
+                        <p v-if="item.name">{{ item.name }}</p>
                         <p v-if="item.title">{{ item.title }}</p>
                       </td>
                       <td>
@@ -77,7 +77,7 @@
                 <table>
                   <thead>
                     <tr>
-                      <th>服務({{ 0 }})</th>
+                      <th>商品({{ formInputRef.goodsGroup.length }})</th>
                       <th>價格</th>
                       <th></th>
                     </tr>
@@ -113,8 +113,8 @@
       </div>
     </div>
   </div>
-  <CheckboxServiceUI v-if="showServiceUIRef" :selData="formInputRef.serviceGroup" :showCServiceUIFn="showServiceUIFn"
-    :getDataFn="getSelServiceFn"></CheckboxServiceUI>
+  <CbServiceDetailUI v-if="showServiceUIRef" :selData="formInputRef.serviceGroup" :showCServiceUIFn="showServiceUIFn"
+    :getDataFn="getSelServiceFn"></CbServiceDetailUI>
   <CheckboxGoodsUI v-if="showGoodsUIRef" :selData="formInputRef.goodsGroup" :showCGoodsUIFn="showGoodsUIFn"
     :getDataFn="getGoodsFn"></CheckboxGoodsUI>
 </template>
@@ -145,11 +145,12 @@ let formInputRef: any = ref({
   discountNo: null,
   goodsGroup: [],
   serviceGroup: [],
+  dType: false,//false=2=%數,true=3=金額
 });
 onBeforeFn();
 function onBeforeFn() {
   formInputRef.value.name = props.formInfo.value.title;
-  formInputRef.value.dType = props.formInfo.value.dType;
+  formInputRef.value.dType = props.formInfo.value.dType == 3;
   formInputRef.value.discount = props.formInfo.value.discount;
   formInputRef.value.discountNo = props.formInfo.value.discountNo;
   formInputRef.value.goodsGroup = props.formInfo.value.productList
@@ -172,6 +173,7 @@ function showGoodsUIFn(state: boolean) {
 function getSelServiceFn(data: any) {
   console.log(data, "獲取");
   formInputRef.value.serviceGroup = data;
+  showServiceUIRef.value = false;
   // props.showAddUIFn(false);
 }
 function getGoodsFn(data: any) {
@@ -189,8 +191,8 @@ let submitBtn = () => {
   let curServiceMaps = [];
   for (let i = 0; i < formInputRef.value.serviceGroup.length; i++) {
     const element = formInputRef.value.serviceGroup[i];
-    element.lessonId = element.lessonId ? element.lessonId : element.lid;
-    curServiceMaps.push(element.lessonId);
+    element.sId = element.sId ? element.sId : element.lid;
+    curServiceMaps.push(element.sId);
   }
   let curGoodsMaps = [];
   for (let i = 0; i < formInputRef.value.goodsGroup.length; i++) {

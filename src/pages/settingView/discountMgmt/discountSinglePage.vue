@@ -3,11 +3,7 @@
     <div class="table-topBar">
       <p class="bar-title">單品折扣(所有{{ filterListCpt.length }}種折扣)</p>
       <div>
-        <input
-          class="search-control"
-          v-model="search"
-          placeholder="搜尋折扣名稱"
-        />
+        <input class="search-control" v-model="search" placeholder="搜尋折扣名稱" />
         <button class="header-btn" @click="showAddFormFn()">新增</button>
       </div>
     </div>
@@ -37,13 +33,14 @@
             <p>{{ item.title }}</p>
           </td>
           <td>
-            <p>{{ item.discount }}</p>
+            <p>{{ item.servicesList.length }}</p>
           </td>
           <td>
-            <p>{{ item.discount }}</p>
+            <p>{{ item.productList.length }}</p>
           </td>
           <td>
-            <p>{{ item.discount }}</p>
+            <p v-if="item.dType == 2">- {{ item.discount * 100 }} %</p>
+            <p v-if="item.dType == 3">- ${{ item.discount }}</p>
           </td>
           <td>
             <button v-on:click="showEditFormFn(index, item)">
@@ -57,15 +54,8 @@
       </tbody>
     </table>
   </div>
-  <AddSingleDiscountUI
-    v-if="showAddUI"
-    :showAddUIFn="showAddUIFn"
-  ></AddSingleDiscountUI>
-  <EditSingleDiscountUI
-    v-if="showEditUI"
-    :showEditUIFn="showEditUIFn"
-    :formInfo="selData"
-  ></EditSingleDiscountUI>
+  <AddSingleDiscountUI v-if="showAddUI" :showAddUIFn="showAddUIFn"></AddSingleDiscountUI>
+  <EditSingleDiscountUI v-if="showEditUI" :showEditUIFn="showEditUIFn" :formInfo="selData"></EditSingleDiscountUI>
 </template>
 <script setup lang="ts">
 import { usePriceStore } from "@/stores/priceStore";
@@ -85,6 +75,10 @@ let search = ref("");
 let selData: any = [];
 onBeforeFn();
 function onBeforeFn() {
+  getSingleDiscountFn();
+}
+
+function getSingleDiscountFn() {
   getSingleDiscountApi();
 }
 
@@ -100,10 +94,11 @@ function getFilterListFn(data: any) {
 
 function showAddUIFn(state: boolean) {
   showAddUI.value = state;
+  getSingleDiscountFn();
 }
 function showEditUIFn(state: boolean) {
   showEditUI.value = state;
-  getSingleDiscountApi();
+  getSingleDiscountFn();
 }
 //新增
 function showAddFormFn() {
@@ -151,7 +146,7 @@ const onDeleteAlertBtn = (data: any) => {
   font-family: STXihei;
   color: #717171;
 
-  > .table-topBar {
+  >.table-topBar {
     height: 50px;
     width: calc(100%);
     border: none;
@@ -164,12 +159,14 @@ const onDeleteAlertBtn = (data: any) => {
     box-sizing: border-box;
     background-color: #e6e2de;
     font-weight: 700;
-    > div {
+
+    >div {
       display: flex;
       height: 100%;
       justify-content: right;
       align-items: center;
-      > input {
+
+      >input {
         width: auto;
         height: 60%;
         border-radius: 6px;
@@ -182,7 +179,7 @@ const onDeleteAlertBtn = (data: any) => {
         text-indent: 5px;
       }
 
-      > button {
+      >button {
         border-radius: 6px;
         min-width: 100px;
         height: 70%;
@@ -193,66 +190,76 @@ const onDeleteAlertBtn = (data: any) => {
         margin: 0 20px;
       }
     }
+
     p {
       width: 80%;
     }
   }
 
-  > table {
+  >table {
     width: 100%;
     height: calc(100% - 50px);
 
-    > .table-thead {
+    >.table-thead {
       display: block;
       height: 50px;
-      > tr {
+
+      >tr {
         display: flex;
         align-items: center;
         height: 50px;
         justify-content: space-between;
 
-        > th {
-          > p {
+        >th {
+          >p {
             min-width: 108px;
             text-align: left;
           }
         }
       }
 
-      > tr > th:nth-child(1) {
+      >tr>th:nth-child(1) {
         width: 60%;
       }
-      > tr > th:nth-child(2) {
+
+      >tr>th:nth-child(2) {
         width: 10%;
       }
-      > tr > th:nth-child(3) {
+
+      >tr>th:nth-child(3) {
         width: 10%;
       }
-      > tr > th:nth-child(4) {
+
+      >tr>th:nth-child(4) {
         width: 10%;
       }
-      > tr > th:nth-child(5) {
+
+      >tr>th:nth-child(5) {
         width: 10%;
       }
     }
 
-    > .content-tbody {
+    >.content-tbody {
       display: block;
       width: 100%;
       overflow-y: auto;
       height: calc(100% - 50px);
-      > tr {
+
+      >tr {
         display: flex;
         border-bottom: solid 1px #707070;
         align-items: center;
-        > td {
-          > button {
+
+        >td {
+          >button {
             background-color: transparent;
             border: none;
+
             .edit_img {
               width: 27px;
               height: 27px;
             }
+
             .delete_img {
               width: 21px;
               height: 27px;
@@ -261,19 +268,23 @@ const onDeleteAlertBtn = (data: any) => {
         }
       }
 
-      > tr > td:nth-child(1) {
+      >tr>td:nth-child(1) {
         width: 60%;
       }
-      > tr > td:nth-child(2) {
+
+      >tr>td:nth-child(2) {
         width: 10%;
       }
-      > tr > td:nth-child(3) {
+
+      >tr>td:nth-child(3) {
         width: 10%;
       }
-      > tr > td:nth-child(4) {
+
+      >tr>td:nth-child(4) {
         width: 10%;
       }
-      > tr > td:nth-child(5) {
+
+      >tr>td:nth-child(5) {
         width: 10%;
       }
     }

@@ -102,7 +102,7 @@ const handSubmit = (() => {
   >.content {
     position: absolute;
     top: 0px;
-    bottom: 50px;
+    bottom: 0px;
     left: 0px;
     right: 0px;
     >.content_text {

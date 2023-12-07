@@ -81,7 +81,7 @@
       <p>選擇課程</p>
       <div>
         <div v-if="false" class="add-reserve-div">
-          <template v-for="item in courseDataList" :key="item">
+          <template v-for="item in serviceDetailList" :key="item">
             <label v-if="item.display" :value="item">
               <input
                 class="add-reserve-btn2"
@@ -92,14 +92,14 @@
               <span
                 class="lesson-span"
                 value="{{item}}"
-                name="{{item.nameTw}}"
-                >{{ item.nameTw + "(" + item.servicesTime + ")" }}</span
+                name="{{item.name}}"
+                >{{ item.name + "(" + item.servicesTime + ")" }}</span
               >
             </label>
           </template>
         </div>
         <div v-else class="edit-reserve-div">
-          <template v-for="(item, index) in courseDataList" :key="item">
+          <template v-for="(item, index) in serviceDetailList" :key="item">
             <label v-if="item.display" :value="item">
               <input
                 class="add-reserve-btn2"
@@ -112,8 +112,8 @@
                   checkLesson: newApptDataRef.courses == index,
                 }"
                 value="{{item}}"
-                name="{{item.nameTw}}"
-                >{{ item.nameTw + "(" + item.servicesTime + ")" }}</span
+                name="{{item.name}}"
+                >{{ item.name + "(" + item.servicesTime + ")" }}</span
               >
             </label>
           </template>
@@ -226,8 +226,8 @@ const verify_all = () => {
 //-------------------------------------------------------------------
 
 let store = useApptStore();
-const { postEditApptDataApi } = store;
-let { memberList, timeGroup, beauticianList, courseDataList } =
+const { postEditApptDataApi,getServiceDetailApi } = store;
+let { memberList, timeGroup, beauticianList, serviceDetailList } =
   storeToRefs(store);
 const managerstore = useManagerStore();
 const { managerList } = storeToRefs(managerstore);
@@ -237,6 +237,7 @@ const { handLogOut } = counterStore;
 
 onBefore();
 function onBefore() {
+  getServiceDetailApi();
   getManagerList({ id: 0, pageindex: 0, count: 0 })
     .then((res) => {
       if (res.state == 2) {
@@ -283,7 +284,7 @@ let confirmReserveForm = () => {
   ruleLists.ruleItem.timeBooking.value = newApptDataRef.value.timeBooking;
 
   ruleLists.ruleItem.lessonItem.value = newApptDataRef.value.courses
-    ? newApptDataRef.value.courses.nameTw
+    ? newApptDataRef.value.courses.name
     : newApptDataRef.value.courses;
 
   if (!verify_all()) return;
@@ -291,7 +292,7 @@ let confirmReserveForm = () => {
   let editApptDate = {
     bookingNo: props.oldSelList.bookingNo,
     userId: newApptDataRef.value.memberId,
-    lessonId: newApptDataRef.value.courses.lessonId,
+    lessonId: newApptDataRef.value.courses.sId,
     serverId: newApptDataRef.value.beauticianId,
     dateBooking:
       newApptDataRef.value.selDate + "T" + newApptDataRef.value.timeBooking,
@@ -303,6 +304,7 @@ let confirmReserveForm = () => {
     dateCreate: props.oldSelList.dateCreate,
     bookingMemo: props.oldSelList.bookingMemo,
   };
+  
   //修改預約
   postEditApptDataApi(editApptDate).then((res: any) => {
     let resData = res;

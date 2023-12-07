@@ -45,11 +45,11 @@
               }" @click="infoBtnState(1)">
                 預約完成
               </button>
-              <button :class="{
+              <!-- <button :class="{
                 finish: selItemData.state == 1 || selItemData.state == 4,
               }" @click="infoBtnState(4)">
                 未出席
-              </button>
+              </button> -->
             </div>
           </div>
           <div class="link-bottom"></div>

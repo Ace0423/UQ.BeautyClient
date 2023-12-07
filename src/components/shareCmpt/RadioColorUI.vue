@@ -53,7 +53,7 @@ const props = defineProps<{
 
 const curColorIndex = ref(1);
 const colorValues = [
-  "0000000",
+  "#000000",
   "#fb9ea6",
   "#f7bf9a",
   "#eddb9d",
@@ -71,6 +71,7 @@ for (let i = 0; i < colorValues.length; i++) {
     colorIndex.value = i
   }
 }
+console.log(colorIndex.value);
 
 onMounted(() => {
   var input = <HTMLElement[]><any>document.getElementsByClassName('coloSize');

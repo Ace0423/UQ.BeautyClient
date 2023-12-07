@@ -45,21 +45,21 @@
       <p>選擇課程</p>
       <div>
         <div v-if="true" class="add-reserve-div">
-          <template v-for="item in courseDataList" :key="item">
+          <template v-for="item in serviceDetailList" :key="item">
             <label v-if="item.display" :value="item">
               <input class="add-reserve-btn2" type="checkbox" :value="item" v-model="newApptDataRef.courses" />
-              <span class="lesson-span" value="{{item}}" name="{{item.nameTw}}">{{ item.nameTw + "(" + item.servicesTime +
+              <span class="lesson-span" value="{{item}}" name="{{item.name}}">{{ item.name + "(" + item.servicesTime +
                 ")" }}</span>
             </label>
           </template>
         </div>
         <div v-else class="edit-reserve-div">
-          <template v-for="(item, index) in courseDataList" :key="item">
+          <template v-for="(item, index) in serviceDetailList" :key="item">
             <label v-if="item.display" :value="item">
               <input class="add-reserve-btn2" type="radio" :value="item" v-model="newApptDataRef.courses" />
               <span :class="{
                 checkLesson: newApptDataRef.courses == index,
-              }" value="{{item}}" name="{{item.nameTw}}">{{ item.nameTw + "(" + item.servicesTime + ")" }}</span>
+              }" value="{{item}}" name="{{item.name}}">{{ item.name + "(" + item.servicesTime + ")" }}</span>
             </label>
           </template>
         </div>
@@ -173,8 +173,8 @@ let { ruleItem } = toRefs(ruleLists);
 //-------------------------------------------------------------------
 
 let store = useApptStore();
-const { postAddApptDataApi, getMemberData } = store;
-let { memberList, timeGroup, beauticianList, courseDataList } =
+const { postAddApptDataApi, getMemberData, getServiceDetailApi } = store;
+let { memberList, timeGroup, serviceDetailList } =
   storeToRefs(store);
 const managerstore = useManagerStore();
 const { managerList, managerRoleList } = storeToRefs(managerstore);
@@ -189,6 +189,7 @@ onBefore();
 function onBefore() {
   getManagerListNew({ id: 0, pageindex: 0, count: 0 })
   getRestList();
+  getServiceDetailApi();
 }
 onMounted(() => {
   newApptDataRef.value.selDate = getNowDay();
@@ -225,7 +226,7 @@ let confirmReserveForm = () => {
 
   ruleLists.ruleItem.lessonItem.value =
     newApptDataRef.value.courses.length > 0
-      ? newApptDataRef.value.courses[0].nameTw
+      ? newApptDataRef.value.courses[0].name
       : null;
 
   // if (!verify_all()) return;
@@ -243,11 +244,11 @@ let confirmReserveForm = () => {
     const element = newApptDataRef.value.courses[i];
     courseListData.push({
       listNo: i + 1,
-      lid: element.lessonId,
+      lid: element.sId,
       time: element.servicesTime,
       bookingNo: "",
       price: element.price,
-      discount: element.discount,
+      discount: element.discount ? element.discount : 0,
     });
   }
 
@@ -261,6 +262,7 @@ let confirmReserveForm = () => {
     state: 0,
     bookingMemo: "string",
   };
+
   //新增預約
   postAddApptDataApi(addApptData).then((res: any) => {
     let resData = res;

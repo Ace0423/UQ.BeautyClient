@@ -168,7 +168,7 @@ import btn_msg_ico from "@/assets/images/icon_msg.png";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
-import { computeDate } from "@/utils/utils";
+import { colorValues, computeDate, getColorNum } from "@/utils/utils";
 import Alert from "@/components/alertCmpt";
 import { useManagerStore } from "@/stores/manager";
 import { useCounterStore } from "@/stores/counter";
@@ -270,7 +270,7 @@ const tuiSetDate = (date: any) => {
   currentMonth.value = parseInt(curDate[1]) - 1;
   currentDay.value = parseInt(curDate[2]);
   // getApptInfoFn(currentYear.value, currentMonth.value+1, currentDay.value);
-      getRestList(0,currentYear.value, currentMonth.value+1, currentDay.value);
+  getRestList(0, currentYear.value, currentMonth.value + 1, currentDay.value);
   // onCheckToday();
 };
 //--------------------------------------------------tui套件設置
@@ -374,8 +374,10 @@ function getApptInfoFn(
       for (let i = 0; i < tuiBookingListRef.value.length; i++) {
         const element = tuiBookingListRef.value[i];
         element.serverName = getManagerName(element.serverId);
-        let courseBgColor = element.serverId == 0 ? 0 : (element.serverId % 10) + 1;
+
+        let courseBgColor = getColorNum(element.lessonColor);
         courseBgColor = element.state == 1 ? 999 : courseBgColor;
+        
         //顯示課程ITEM
         tuiList.value.push({
           id: element.bookingNo,
@@ -399,7 +401,7 @@ function getApptInfoFn(
           raw: element,
         });
       }
-      getRestList(0,year,month,date);
+      getRestList(0, year, month, date);
     });
   });
 }
@@ -987,7 +989,7 @@ let delReserveId = () => {
 };
 
 //-------------------------------------------休息日
-function getRestList(id:any,y:any,m:any,d:any) {
+function getRestList(id: any, y: any, m: any, d: any) {
   let data = {
     managerId: id,
     year: y,

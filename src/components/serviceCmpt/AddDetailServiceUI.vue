@@ -203,6 +203,7 @@ let formInputRef: any = ref({
   isBonusOpen: false,
   isEditAccounting: false,
   color: "#fb9ea6",
+  colorIndex: 0,
   childrenType: 0,
   groups: [],
 });

@@ -1,5 +1,6 @@
 import { apiGetMemberListRequest } from "@/api";
 import {
+  addRestReq,
   addServiceDetailReq,
   addServiceGroupReq,
   delCourseDetailReq,
@@ -23,7 +24,6 @@ import {
   updateGroupOrderReq,
   updateLessonTypeOrderReq,
   updateLessonTypeReq,
-  updateRestReq,
   updateServiceDetailReq,
   updateServiceGroupReq,
 } from "@/api/apptRequest";
@@ -748,9 +748,9 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   //更新明細
-  const updateRestApi = async (data: any) => {
+  const addRestApi = async (data: any) => {
     try {
-      let res = await updateRestReq(data).then((res: any) => {
+      let res = await addRestReq(data).then((res: any) => {
         alertStateFn(res, "更新服務明細");
         return res;
       });
@@ -817,6 +817,6 @@ export const useApptStore = defineStore("apptStore", () => {
     //--------------------管理員
     managerList,
     getManagerListApi,
-    updateRestApi
+    addRestApi
   };
 });

@@ -88,7 +88,7 @@ let newApptDataRef: any = ref({
 });
 
 let store = useApptStore();
-const { getManagerListApi, updateRestApi } = store;
+const { getManagerListApi, addRestApi } = store;
 let { managerList, timeGroup } = storeToRefs(store);
 
 // const managerstore = useManagerStore();
@@ -146,15 +146,15 @@ let confirmReserveForm = () => {
       },
     ],
   };
-  updateRestApi(apiData).then((res) => { })
+  addRestApi(apiData).then((res) => {
+    props.showAddRestUIFn(false)
+  })
 };
 //-------------------------------------form驗證
 const ruleLists: any = reactive({
   ruleItem: {
     managerId: {
       label: "名稱",
-      component: "input",
-      type: "number",
       is_readonly: false,
       value: "",
       rules: {
@@ -168,8 +168,6 @@ const ruleLists: any = reactive({
     },
     date: {
       label: "時程",
-      component: "input",
-      type: "number",
       is_readonly: false,
       value: "",
       rules: {
@@ -182,9 +180,7 @@ const ruleLists: any = reactive({
       is_show: true,
     },
     dayOn: {
-      label: "課程",
-      component: "input",
-      type: "number",
+      label: "開始",
       is_readonly: false,
       value: "",
       rules: {
@@ -197,9 +193,7 @@ const ruleLists: any = reactive({
       is_show: true,
     },
     dayOff: {
-      label: "課程",
-      component: "input",
-      type: "number",
+      label: "結束",
       is_readonly: false,
       value: "",
       rules: {
@@ -502,6 +496,7 @@ const verify_all = () => {
     }
   }
 }
+
 .p_error {
   color: #fc0505 !important;
   width: 100% !important;

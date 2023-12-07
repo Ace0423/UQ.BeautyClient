@@ -105,9 +105,9 @@
             <div>
               <span>儲值卡</span>
             </div>
-            <div>
+            <!-- <div>
               <span>計次券</span>
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="right-main">

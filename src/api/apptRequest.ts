@@ -104,5 +104,5 @@ export const getOrderDetailReq = (Group: any, id: any) =>
 /**獲取明細 */
 export const getManagerListReq = (id: any) =>
   getHttps(httpRequest, "/manager/Admin?id=" + id + "&pageIndex=" + 0 + "&count=" + 0);
-export const updateRestReq = (data: any) =>
+export const addRestReq = (data: any) =>
   postHttps(httpRequest, "/manager/WorkingHours", data);

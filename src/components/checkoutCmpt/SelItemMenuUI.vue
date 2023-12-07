@@ -19,10 +19,10 @@
               <span>儲值卡</span>
               <img :src="icon_right_arrow" />
             </div>
-            <div v-on:click="showItemTypeFn(4)">
+            <!-- <div v-on:click="showItemTypeFn(4)">
               <span>計次券</span>
               <img :src="icon_right_arrow" />
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="bottom-content" v-show="false">

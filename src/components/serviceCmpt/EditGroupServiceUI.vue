@@ -136,7 +136,6 @@ const ruleLists: any = reactive({
   ruleItem: {
     groupName: {
       label: "名稱",
-      value: "",
       rules: {
         required: {
           warn: "此項為必填",

@@ -97,7 +97,7 @@ function changeSize() {
 html,
 body {
   display: block;
-  height: 100vh;
+  height: 100%;
   margin: auto;
   font-family: HeitiTC;
 }

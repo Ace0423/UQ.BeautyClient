@@ -347,11 +347,6 @@ const verify_all = () => {
           // font-weight: bold;
         }
 
-        .p_error {
-          color: #fc0505;
-          width: 100%;
-        }
-
         .el-select {
           border: solid 1px #707070;
           background-color: #fff;
@@ -506,5 +501,11 @@ const verify_all = () => {
       }
     }
   }
+}
+.p_error {
+  color: #fc0505 !important;
+  width: 100% !important;
+  font-weight: bold !important;
+  font-size: 12px !important;
 }
 </style>

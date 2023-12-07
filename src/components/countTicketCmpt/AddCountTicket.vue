@@ -385,7 +385,6 @@ const ruleLists: any = reactive({
   ruleItem: {
     ticketName: {
       label: "名稱",
-      value: "",
       rules: {
         required: {
           warn: "此項為必填",
@@ -396,7 +395,6 @@ const ruleLists: any = reactive({
     },
     ticketMsg: {
       label: "說明",
-      value: "",
       rules: {
         required: {
           warn: "此項為必填",
@@ -407,7 +405,6 @@ const ruleLists: any = reactive({
     },
     ticketItem: {
       label: "服務項目",
-      value: "",
       rules: {
         required: {
           warn: "此項為必填",

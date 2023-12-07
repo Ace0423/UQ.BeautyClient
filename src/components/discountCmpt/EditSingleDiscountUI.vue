@@ -8,7 +8,7 @@
         <div class="main-form">
           <div class="form-info">
             <div class="formname">
-              <span>折扣名稱</span>
+              <span>*折扣名稱</span>
               <div>
                 <el-input class="input-name" v-model="formInputRef.name" placeholder="請輸入名稱" />
                 <span class="p_error" v-if="ruleItem.name.is_error">
@@ -19,7 +19,7 @@
           </div>
           <div class="form-info">
             <div class="formprice">
-              <span>售價(NT)</span>
+              <span>*售價(NT)</span>
               <div>
                 <div>
                   <el-input class="input-price" v-model="formInputRef.discount" placeholder="請輸入折扣"
@@ -122,7 +122,7 @@
 import { usePriceStore } from "@/stores/priceStore";
 import type { IBackStatus } from "@/types/IData";
 import { showErrorMsg } from "@/types/IMessage";
-import { verify_methods } from "@/utils/utils";
+import { checkVerify_all } from "@/utils/utils";
 import { storeToRefs } from "pinia";
 import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
 
@@ -188,7 +188,8 @@ function getGoodsFn(data: any) {
 let submitBtn = () => {
   ruleLists.ruleItem.discount.value = formInputRef.value.discount;
   ruleLists.ruleItem.name.value = formInputRef.value.name;
-  if (!verify_all()) return;
+  // if (!verify_all()) return;
+  if (!checkVerify_all(ruleLists)) return;
 
   let curServiceMaps = [];
   for (let i = 0; i < formInputRef.value.serviceGroup.length; i++) {
@@ -236,7 +237,7 @@ function cancleGoodsFn(item: any, index: number) {
 const ruleLists: any = reactive({
   ruleItem: {
     name: {
-      type: "number",
+      label: "名稱",
       rules: {
         required: {
           warn: "此項為必填",
@@ -250,7 +251,7 @@ const ruleLists: any = reactive({
       warn: "",
     },
     discount: {
-      type: "number",
+      label: "折扣",
       rules: {
         required: {
           warn: "此項為必填",
@@ -262,19 +263,6 @@ const ruleLists: any = reactive({
   },
 });
 let { ruleItem } = toRefs(ruleLists);
-const verify_all = () => {
-  let is_valid = true;
-  for (let component in ruleLists.ruleItem) {
-    let item = ruleLists.ruleItem[component];
-    for (let rule in item.rules) {
-      if (!verify_methods[rule](item)) {
-        is_valid = false;
-        break;
-      }
-    }
-  }
-  return is_valid;
-};
 //-----------------------------------我是底部-------------------------------------------
 </script>
 
@@ -509,12 +497,6 @@ const verify_all = () => {
             color: #b89087;
           }
         }
-
-        .p_error {
-          color: #fc0505;
-          width: 100%;
-          height: 20px;
-        }
       }
 
       .add-discountdetail-btndiv {
@@ -588,4 +570,11 @@ const verify_all = () => {
       }
     }
   }
-}</style>
+}
+.p_error {
+  color: #fc0505 !important;
+  width: 100% !important;
+  font-weight: bold !important;
+  font-size: 12px !important;
+}
+</style>

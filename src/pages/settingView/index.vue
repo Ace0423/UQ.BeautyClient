@@ -120,7 +120,7 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
               <img :src="icon_right_arrow" />
             </router-link>
           </div>
-          <div class="nav-content">
+          <!-- <div class="nav-content">
             <router-link to="/settingView/countTicketMgmt/countTicketPage">
               <div>
                 <h1>計次劵</h1>
@@ -128,7 +128,7 @@ import icon_left_arrow from "@/assets/images/icon_left_arrow.png";
               </div>
               <img :src="icon_right_arrow" />
             </router-link>
-          </div>
+          </div> -->
         </div>
         <div class="nav">
           <h1>應用程式</h1>

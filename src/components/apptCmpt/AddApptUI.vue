@@ -4,18 +4,15 @@
       <div class="basic_info_main">
         <div class="basic_info_item name">
           <p>姓名(電話)</p>
-          <!-- <select v-model="newApptDataRef.memberId">
-            <option v-for="item in memberList.data" :key="item" :value="item">
-              {{ item.nameView + "(" + item.phone + ")" }}
-            </option>
-          </select> -->
-          <el-select v-model="newApptDataRef.memberId"  filterable allow-create default-first-option
+          <el-select v-model="newApptDataRef.memberId" filterable allow-create default-first-option
             :reserve-keyword="false" placeholder=" ">
             <el-option v-for="item in memberList" :key="item.nameView" :value="item.userId" :label="item.nameView">
               {{ item.nameView + "(" + item.phone + ")" }}
             </el-option>
           </el-select>
-          <!-- <SelectSearchUI :dataList="memberList.data" /> -->
+          <span class="p_error" v-if="ruleItem.name.is_error">
+            {{ ruleItem.name.warn }}
+          </span>
         </div>
         <div class="basic_info_item time">
           <p>選擇時段</p>
@@ -86,7 +83,7 @@ import { useApptStore } from "@/stores/apptStore";
 import formDeleteIcon from "@/assets/Icon course-delete.svg";
 import { storeToRefs } from "pinia";
 import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
-import { formatZeroDate, verify_methods } from "@/utils/utils";
+import { checkVerify_all, formatZeroDate } from "@/utils/utils";
 import { useManagerStore } from "@/stores/manager";
 import Alert from "../alertCmpt";
 import { useCounterStore } from "@/stores/counter";
@@ -101,7 +98,7 @@ const props = defineProps<{
 let newApptDataRef: any = ref({
   memberId: null,
   timeBooking: "",
-  beauticianId: null,
+  beauticianId: 0,
   courses: [],
   selDate: "",
 });
@@ -173,19 +170,6 @@ const ruleLists: any = reactive({
   },
 });
 let { ruleItem } = toRefs(ruleLists);
-const verify_all = () => {
-  let is_valid = true;
-  for (let component in ruleLists.ruleItem) {
-    let item = ruleLists.ruleItem[component];
-    for (let rule in item.rules) {
-      if (!verify_methods[rule](item)) {
-        is_valid = false;
-        break;
-      }
-    }
-  }
-  return is_valid;
-};
 //-------------------------------------------------------------------
 
 let store = useApptStore();
@@ -244,7 +228,8 @@ let confirmReserveForm = () => {
       ? newApptDataRef.value.courses[0].nameTw
       : null;
 
-  if (!verify_all()) return;
+  // if (!verify_all()) return;
+  if (!checkVerify_all(ruleLists)) return;
 
   //判斷是否與休息時間重疊
   for (let i = 0; i < workingHoursList.value.data.length; i++) {
@@ -458,10 +443,6 @@ function isTimeOverlap(
           font-weight: bold;
         }
 
-        .p_error {
-          color: #fc0505;
-          width: 100%;
-        }
 
         .el-select {
           border: solid 1px #707070;
@@ -531,14 +512,6 @@ function isTimeOverlap(
 
       span {
         font-weight: 500;
-      }
-    }
-
-    >div {
-      .p_error {
-        color: #fc0505;
-        width: 100%;
-        font-weight: bold;
       }
     }
 
@@ -645,5 +618,12 @@ function isTimeOverlap(
       }
     }
   }
+}
+
+.p_error {
+  color: #fc0505 !important;
+  width: 100% !important;
+  font-weight: bold !important;
+  font-size: 12px !important;
 }
 </style>

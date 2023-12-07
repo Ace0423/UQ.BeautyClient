@@ -8,7 +8,7 @@
         <div class="main-form">
           <div class="userinfo">
             <div class="formname">
-              <span>折扣名稱</span>
+              <span>*折扣名稱</span>
               <div>
                 <el-input
                   class="input-name"
@@ -23,7 +23,7 @@
           </div>
           <div class="userinfo">
             <div class="formprice">
-              <span>售價(NT)</span>
+              <span>*售價(NT)</span>
               <div>
                 <div>
                   <el-input
@@ -73,7 +73,7 @@
 </template>
 <script setup lang="ts">
 import { usePriceStore } from "@/stores/priceStore";
-import { verify_methods } from "@/utils/utils";
+import { checkVerify_all } from "@/utils/utils";
 import { storeToRefs } from "pinia";
 let store = usePriceStore();
 let {} = storeToRefs(store);
@@ -105,7 +105,8 @@ onMounted(() => {});
 let submitBtn = () => {
   ruleLists.ruleItem.discount.value = formInputRef.value.discount;
   ruleLists.ruleItem.name.value = formInputRef.value.name;
-  if (!verify_all()) return;
+  // if (!verify_all()) return;
+  if (!checkVerify_all(ruleLists)) return;
 
   let curdata: any = {
     title: formInputRef.value.name,
@@ -129,7 +130,7 @@ let submitBtn = () => {
 const ruleLists: any = reactive({
   ruleItem: {
     name: {
-      type: "number",
+      label: "名稱",
       rules: {
         required: {
           warn: "此項為必填",
@@ -143,7 +144,7 @@ const ruleLists: any = reactive({
       warn: "",
     },
     discount: {
-      type: "number",
+      label: "折扣",
       rules: {
         required: {
           warn: "此項為必填",
@@ -155,19 +156,6 @@ const ruleLists: any = reactive({
   },
 });
 let { ruleItem } = toRefs(ruleLists);
-const verify_all = () => {
-  let is_valid = true;
-  for (let component in ruleLists.ruleItem) {
-    let item = ruleLists.ruleItem[component];
-    for (let rule in item.rules) {
-      if (!verify_methods[rule](item)) {
-        is_valid = false;
-        break;
-      }
-    }
-  }
-  return is_valid;
-};
 //-----------------------------------我是底部-------------------------------------------
 </script>
 
@@ -323,12 +311,6 @@ const verify_all = () => {
             }
           }
         }
-
-        .p_error {
-          color: #fc0505;
-          width: 100%;
-          height: 20px;
-        }
       }
 
       .add-coursedetail-btndiv {
@@ -399,5 +381,11 @@ const verify_all = () => {
       }
     }
   }
+}
+.p_error {
+  color: #fc0505 !important;
+  width: 100% !important;
+  font-weight: bold !important;
+  font-size: 12px !important;
 }
 </style>

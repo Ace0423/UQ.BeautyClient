@@ -4,7 +4,7 @@
         </Header>
         <div class="content">
             <div class="nav">
-                <router-link to="/serviceView/servicePage">全部</router-link>
+                <router-link to="/serviceView/servicePage">服務</router-link>
                 <router-link to="/serviceView/groupPage">群組</router-link>
             </div>
             <router-view />

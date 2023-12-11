@@ -16,10 +16,10 @@
               <span> 全選(商品) </span>
             </label>
           </div>
-          <div v-for="(item, key, index) in filterServiceGroups" :key="index">
+          <div v-for="(item, key, index) in filterServiceGroups" :key="item">
             <label class="label-item" :value="item">
-              <input type="checkbox" :key="item.sgId.sgId" :id="'CServiceGroups_' + item.sgId" :value="item.sgId"
-                v-model="formInputRef.serviceGroups" />
+              <input type="checkbox" :id="'CServiceGroups_' + item.sgId" :value="item.sgId"
+                v-model="formInputRef.serviceGroups" @click="clickItem(item)" />
               <label :for="'CServiceGroups_' + item.sgId"></label>
               <div>
                 <span value="{{item}}" name="{{item.sgTitle}}">{{
@@ -68,10 +68,13 @@ function onBeforeFn() {
   // getCourseTypeApi();
   formInputRef.value.groups = [];
   getServiceGroupApi().then((res: any) => {
-    formInputRef.value.serviceGroups = props.selData;
+    // formInputRef.value.serviceGroups = props.selData;
   });
+  for (let i = 0; i < props.selData.length; i++) {
+    const element = props.selData[i];
+    formInputRef.value.serviceGroups.push(element.sgId);
+  }
 }
-console.log(serviceGroupList.value);
 
 let filterServiceGroups: any = computed(() =>
   serviceGroupList.value.filter(getRuleFn)
@@ -102,9 +105,23 @@ watchEffect(() => {
   clickAllRef.value = formInputRef.value.serviceGroups.length > 0;
 });
 
+function clickItem(data: any) {
+
+}
+
 function submitBtn() {
-  let curGoodsData = formInputRef.value.serviceGroups;
-  props.getDataFn(curGoodsData);
+  let curSgIdList = formInputRef.value.serviceGroups;
+  let curSgItemList = [];
+  for (let i = 0; i < formInputRef.value.serviceGroups.length; i++) {
+    const eleSel = formInputRef.value.serviceGroups[i];
+    for (let j = 0; j < filterServiceGroups.value.length; j++) {
+      const eleAll = filterServiceGroups.value[j];
+      if (eleSel == eleAll.sgId) {
+        curSgItemList.push(eleAll)
+      }
+    }
+  }
+  props.getDataFn(curSgItemList);
 }
 </script>
 

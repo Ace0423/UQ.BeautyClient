@@ -10,42 +10,24 @@
         <div class="div-item">
           <div>
             <label class="label-group">
-              <input
-                class="input-group"
-                type="checkbox"
-                id="sId"
-                value="item"
-                v-model="clickGroupRef"
-                @click="clickAll"
-              />
+              <input class="input-group" type="checkbox" id="sId" value="item" v-model="clickGroupRef"
+                @click="clickAll" />
               <label for="sId"></label>
               <span> 全選 </span>
             </label>
           </div>
           <div v-for="item in filterServiceData" :key="item">
             <label class="label-item" :value="item">
-              <input
-                class="input-item"
-                type="checkbox"
-                :id="'CheckboxService_' +item.sId"
-                :value="item.sId"
-                v-model="formInputRef.service"
-                @click="clickItem"
-              />
-              <label :for="'CheckboxService_' +item.sId"></label>
+              <input class="input-item" type="checkbox" :id="'CheckboxService_' + item.sId" :value="item.sId"
+                v-model="formInputRef.service" @click="clickItem" />
+              <label :for="'CheckboxService_' + item.sId"></label>
               <div>
                 <span value="{{item}}" name="{{item.name}}">{{
                   item.name
                 }}</span>
-                <span
-                  class="timer-msg"
-                  value="{{item}}"
-                  name="{{item.name}}"
-                  >{{ item.servicesTime + " Min" }}</span
-                >
+                <span class="timer-msg" value="{{item}}" name="{{item.name}}">{{ item.servicesTime + " Min" }}</span>
               </div>
             </label>
-            <!-- <input type="checkbox" name="item_001" value="1" />1 -->
           </div>
         </div>
       </div>
@@ -86,14 +68,13 @@ function onBeforeFn() {
   getServiceDetailApi();
   for (let i = 0; i < props.selData.length; i++) {
     const element = props.selData[i];
-    // element.lid = element.lid ? element.lid : element.sId;
     element.sId = element.sId ? element.sId : element.lid;
     formInputRef.value.service.push(element.sId);
   }
 }
 
 let filterServiceData: any = computed(() =>
-serviceDetailList.value.filter(getRuleFn)
+  serviceDetailList.value.filter(getRuleFn)
 );
 
 function getRuleFn(data: any) {
@@ -108,7 +89,7 @@ function getRuleFn(data: any) {
 
 function clickAll() {
   let curService = formInputRef.value.service;
-  
+
   if (curService.length > 0) {
     formInputRef.value.service = [];
   } else {
@@ -123,7 +104,7 @@ watchEffect(() => {
 });
 
 function clickItem() {
-  
+
 }
 
 function submitBtn() {
@@ -168,33 +149,41 @@ function submitBtn() {
     font-family: HeitiTC;
     color: #84715c;
     font-weight: bold;
+
     .top-content {
       display: block;
-      > p {
+
+      >p {
         display: flex;
         justify-content: center;
       }
     }
+
     .main-content {
       display: block;
-      > p {
+
+      >p {
         display: flex;
         justify-content: center;
       }
-      > input {
+
+      >input {
         width: 97%;
       }
+
       .div-item {
         width: 100%;
         height: 250px;
         overflow-y: auto;
-        overflow: hidden;
-        > div {
+
+        // overflow: hidden;
+        >div {
           display: flex;
           align-items: center;
           height: 50px;
           border-bottom: 1px solid #fff;
           width: 100%;
+
           .label-item {
             display: flex;
             align-items: center;
@@ -204,7 +193,8 @@ function submitBtn() {
             input {
               display: none;
             }
-            > label {
+
+            >label {
               display: inline-block;
               width: 20px;
               height: 20px;
@@ -213,7 +203,8 @@ function submitBtn() {
               position: relative;
               cursor: pointer;
             }
-            > label::before {
+
+            >label::before {
               display: inline-block;
               content: " ";
               width: 12px;
@@ -227,20 +218,24 @@ function submitBtn() {
               position: absolute;
               opacity: 0;
             }
-            > input:checked + label {
+
+            >input:checked+label {
               background: #8b6f6d;
             }
-            > input:checked + label::before {
+
+            >input:checked+label::before {
               opacity: 1;
               transform: all 0.5s;
             }
 
-            > span {
+            >span {
               margin-left: 10px;
             }
-            > div {
+
+            >div {
               display: grid;
               margin-left: 10px;
+
               .timer-msg {
                 font-size: 15px;
               }
@@ -252,10 +247,12 @@ function submitBtn() {
             align-items: center;
             width: 100%;
             margin-left: 5px;
+
             input {
               display: none;
               width: 100%;
             }
+
             label {
               display: inline-block;
               width: 17px;
@@ -265,6 +262,7 @@ function submitBtn() {
               position: relative;
               cursor: pointer;
             }
+
             label::before {
               display: inline-block;
               content: " ";
@@ -279,15 +277,17 @@ function submitBtn() {
               position: absolute;
               opacity: 0;
             }
-            input:checked + label {
+
+            input:checked+label {
               background: #8b6f6d;
             }
-            input:checked + label::before {
+
+            input:checked+label::before {
               opacity: 1;
               transform: all 0.5s;
             }
 
-            > span {
+            >span {
               margin-left: 10px;
               font-size: 17px;
             }
@@ -295,10 +295,12 @@ function submitBtn() {
         }
       }
     }
+
     .bottom-content {
       display: flex;
       justify-content: center;
-      > button {
+
+      >button {
         position: relative;
         width: 100px;
         height: 45px;
@@ -309,13 +311,14 @@ function submitBtn() {
         color: #717171;
         background-color: #fff;
       }
+
       .submit-btn {
         display: block;
       }
+
       .cancle-btn {
         display: block;
       }
     }
   }
-}
-</style>
+}</style>

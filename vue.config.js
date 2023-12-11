@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 // vue.config.js
 module.exports = {
+  publicPath: process.env.NODE_ENV === "production" ? "/DEMO/" : "/",
   // 选项...
   devServer: {
     port: 8089,
@@ -15,11 +16,11 @@ module.exports = {
   },
   configureWebpack: {//引入jquery
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin('common.js'),
-        new webpack.ProvidePlugin({
-          jQuery: "jquery",
-          $: "jquery"
-        })
+      new webpack.optimize.CommonsChunkPlugin('common.js'),
+      new webpack.ProvidePlugin({
+        jQuery: "jquery",
+        $: "jquery"
+      })
     ]
   },
 }

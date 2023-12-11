@@ -1,4 +1,5 @@
 export const colorValues = [
+  "#000000",
   "#fb9ea6",
   "#f7bf9a",
   "#eddb9d",
@@ -12,9 +13,6 @@ export const colorValues = [
 
 export const getColorNum = (data: string) => {
   let cNum = colorValues.indexOf(data) == -1 ? 0 : colorValues.indexOf(data);
-  console.log(data);
-  console.log(colorValues.indexOf(data));
-  
   return cNum
 };
 

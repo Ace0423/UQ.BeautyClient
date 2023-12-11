@@ -69,18 +69,43 @@ export const useApptStore = defineStore("apptStore", () => {
     console.log(err, "err");
   };
   //#region 服務項目Service
+  let serviceGroupList: any = ref([]);
+  /**獲取群組 */
+  const getServiceGroupApi = async (id: any = 0, isList: any = 0) => {
+    try {
+      serviceGroupList.value = [];
+      let res: any = await getServiceGroupReq(id, isList).then((res: any) => {
+        if (res.data.data && !id) {
+          let detailVo: IServiceGroupVo = res.data.data.table;
+          serviceGroupList.value = detailVo;
+          serviceGroupList.value.sort(function (a: any, b: any) {
+            return a.order > b.order ? 1 : -1;
+          });
+          return serviceGroupList.value;
+        } else {
+          return res.data.data.table;
+        }
+      });
+      return res
+    } catch (error) {
+      console.log(error);
+    }
+  };
   let serviceDetailList: any = ref([]);
   /**獲取明細 */
-  const getServiceDetailApi = async (id: any = 0) => {
+  const getServiceDetailApi = async (id: any = 0, isList: any = 0) => {
     try {
       serviceDetailList.value = [];
-      let res: any = await getServiceDetailReq(id).then((res: any) => {
-        if (res.data.data) {
+      let res: any = await getServiceDetailReq(id, isList).then((res: any) => {
+        if (res.data.data && !id) {
           let detailVo: IServiceDetailVo = res.data.data.table;
           serviceDetailList.value = detailVo;
+          return serviceDetailList.value;
+        } else {
+          return res.data.data.table;
         }
-        return res;
       });
+      return res
     } catch (error) {
       console.log(error);
     }
@@ -97,6 +122,18 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+  //更新群組
+  const updateServiceGroupApi = async (data: any) => {
+    try {
+      let res = await updateServiceGroupReq(data).then((res: any) => {
+        alertStateFn(res, "更新服務群組");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //更新明細
   const updateServiceDetailApi = async (data: any) => {
     try {
@@ -104,6 +141,7 @@ export const useApptStore = defineStore("apptStore", () => {
         alertStateFn(res, "更新服務明細");
         return res;
       });
+      return res;
     } catch (error) {
       console.log(error);
     }
@@ -120,42 +158,11 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
-  let serviceGroupList: any = ref([]);
-  /**獲取群組 */
-  const getServiceGroupApi = async (id: any = 0) => {
-    try {
-      serviceGroupList.value = [];
-      let res: any = await getServiceGroupReq(id).then((res: any) => {
-        if (res.data.data) {
-          let detailVo: IServiceGroupVo = res.data.data.table;
-          serviceGroupList.value = detailVo;
-          serviceGroupList.value.sort(function (a: any, b: any) {
-            return a.order > b.order ? 1 : -1;
-          });
-        }
-        return res;
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
   /**新增群組 */
   const addServiceGroupApi = async (data: any) => {
     try {
       let res = await addServiceGroupReq(data).then((res: any) => {
         alertStateFn(res, "新增服務群組");
-        return res;
-      });
-      return res;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  //更新群組
-  const updateServiceGroupApi = async (data: any) => {
-    try {
-      let res = await updateServiceGroupReq(data).then((res: any) => {
-        alertStateFn(res, "更新服務明細");
         return res;
       });
       return res;

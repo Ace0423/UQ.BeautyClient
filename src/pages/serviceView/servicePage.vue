@@ -4,7 +4,7 @@
     <div class="header"></div>
     <div class="content">
       <div class="content-topBar">
-        <p>商品(全部{{ filterServiceData.length }}個)</p>
+        <p>服務(全部{{ filterServiceData.length }}個)</p>
         <div>
           <input v-model="search" class="search-control" placeholder="搜尋名稱" />
           <div class="btn-open" @click="showAddDetailHdr(true)">
@@ -33,7 +33,7 @@
           <el-table-column label="操作" width="150">
             <template #default="scope">
               <div class="handle-drag">
-                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;" />
+                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;"  @click="selectDataFn(filterServiceData[scope.$index])"/>
                 <img class="del_img" :src="Icon_del" @click="deleteHdr(scope.$index, filterServiceData[scope.$index])" />
               </div>
             </template>
@@ -47,6 +47,7 @@
     </div>
   </div>
   <AddDetailServiceUI v-if="showAddDetail" :showAddForm="showAddDetailHdr" />
+  <EditDetailServiceUI v-if="showEditDetail" :showEditForm="showEditDetailHdr" :selData="selectDataRef" />
 </template>
 
 <script setup lang="ts">
@@ -104,9 +105,9 @@ let showAddDetailHdr = (state: boolean) => {
 };
 function showEditUIFn(index: number, item: any) {
   editServiceInfo.value = item;
-  showEditUI(true);
+  showEditDetailHdr(true);
 }
-function showEditUI(state: boolean) {
+function showEditDetailHdr(state: boolean) {
   showEditDetail.value = state;
   getServiceDetailApi(0);
 }
@@ -133,6 +134,12 @@ let deleteHdr = (index: number, item: any) => {
     onDeleteAlertBtn(data, item.sId)
   });
 };
+
+let selectDataRef = ref([])
+function selectDataFn(params: any) {
+  selectDataRef = params;
+  showEditDetailHdr(true);
+}
 
 const onDeleteAlertBtn = (state: any, id: number) => {
   if (state) {

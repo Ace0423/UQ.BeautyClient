@@ -64,15 +64,12 @@ const colorValues = [
   "#d8baea",
   "#e7b1e6",
 ];
-
 for (let i = 0; i < colorValues.length; i++) {
   const element = colorValues[i];
   if (element == props.selColorIndex) {
     colorIndex.value = i
   }
 }
-console.log(colorIndex.value);
-
 onMounted(() => {
   var input = <HTMLElement[]><any>document.getElementsByClassName('coloSize');
   if (props.coloarSize && input)

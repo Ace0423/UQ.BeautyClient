@@ -21,10 +21,10 @@
             <div class="check-item" name="check_item">
               <div>
                 <table>
-                  <tbody v-for="(item, index) in formInputRef.selServiceItems" :key="item.lessonId">
+                  <tbody v-for="(item, index) in formInputRef.selServiceItems" :key="item.sId">
                     <tr>
                       <td>
-                        <p>{{ item.nameTw }}</p>
+                        <p>{{ item.name }}</p>
                       </td>
                       <td>
                         <p>{{ item.servicesTime }}</p>
@@ -54,8 +54,8 @@
     </div>
   </div>
   <div v-if="showCServiceRef" style="justify-content: center;">
-    <CheckboxServiceUI :showCServiceUIFn="showGroupUIFn" :selData="formInputRef.selServiceItems"
-      :getDataFn="getCheckServiceFn"></CheckboxServiceUI>
+    <CbServiceDetailUI :showCServiceUIFn="showGroupUIFn" :selData="formInputRef.selServiceItems"
+      :getDataFn="getCheckServiceFn"></CbServiceDetailUI>
   </div>
 </template>
 <script setup lang="ts">
@@ -80,28 +80,25 @@ let formInputRef: any = ref({
   selServiceItems: [],
 });
 function cancleServiceFn(item: any, index: number) {
-  formInputRef.value.selServiceItems.value.splice(index, 1);
+  formInputRef.value.selServiceItems.splice(index, 1);
 }
 function submitBtn() {
-  console.log("提交formInputRef", formInputRef.value);
+
   ruleLists.ruleItem.groupName.value = formInputRef.value.name;
-  // if (!verify_all()) return;
   if (!checkVerify_all(ruleLists)) return;
 
-  // //整理贈送服務資料
-  // let curServicesVo = [];
-  // for (let i = 0; i < formInputRef.value.giftServices.length; i++) {
-  //   const element = formInputRef.value.giftServices[i];
-  //   giftServicesVo.push({
-  //     lid: element.lessonId,
-  //     lCount: element.giftTotal,
-  //   });
-  // }
+  let serviceNums = [];
+  for (let i = 0; i < formInputRef.value.selServiceItems.length; i++) {
+    const element = formInputRef.value.selServiceItems[i];
+    serviceNums.push(element.sId)
+  }
 
   let apiData = {
-    sgId:0,
+    sgId: 0,
     sgTitle: formInputRef.value.name,
+    sIdList: serviceNums,
   };
+
   console.log("提交apiData", apiData);
 
   /**新增 */
@@ -251,7 +248,7 @@ const ruleLists: any = reactive({
 
           >span {
             height: 100%;
-            width: 130px;
+            width: 110px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -409,5 +406,10 @@ const ruleLists: any = reactive({
     background-color: #707070;
     margin: 10px 0%;
   }
+}
+
+.p_error {
+  color: #fc0505;
+  width: 100%;
 }
 </style>

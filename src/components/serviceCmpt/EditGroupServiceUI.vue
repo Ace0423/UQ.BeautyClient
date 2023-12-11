@@ -21,10 +21,10 @@
             <div class="check-item" name="check_item">
               <div>
                 <table>
-                  <tbody v-for="(item, index) in formInputRef.selServiceItems" :key="item.lessonId">
+                  <tbody v-for="(item, index) in formInputRef.selServiceItems" :key="item.sId">
                     <tr>
                       <td>
-                        <p>{{ item.nameTw }}</p>
+                        <p>{{ item.name }}</p>
                       </td>
                       <td>
                         <p>{{ item.servicesTime }}</p>
@@ -54,8 +54,8 @@
     </div>
   </div>
   <div v-if="showCServiceRef" style="justify-content: center;">
-    <CheckboxServiceUI :showCServiceUIFn="showGroupUIFn" :selData="formInputRef.selServiceItems"
-      :getDataFn="getCheckServiceFn"></CheckboxServiceUI>
+    <CbServiceDetailUI :showCServiceUIFn="showGroupUIFn" :selData="formInputRef.selServiceItems"
+      :getDataFn="getCheckServiceFn"></CbServiceDetailUI>
   </div>
 </template>
 <script setup lang="ts">
@@ -69,8 +69,9 @@ import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 
 let apptstore = useApptStore();
-const { } = storeToRefs(apptstore);
-const { addServiceGroupApi } = apptstore;
+const { serviceGroupList } = storeToRefs(apptstore);
+const {
+  getServiceGroupApi, updateServiceGroupApi } = apptstore;
 const props = defineProps<{
   selData: any;
   showEditForm: Function;
@@ -83,15 +84,18 @@ let formInputRef: any = ref({
 
 onBefore();
 function onBefore() {
-  formInputRef.value.name=props.selData.sgTitle
+  getServiceGroupApi(props.selData.sgId, 1).then((res: any) => {
+    formInputRef.value.selServiceItems = res[0].sIdList;
+  });
 }
 
 onMounted(() => {
-  
+  formInputRef.value.name = props.selData.sgTitle
+  formInputRef.value.selServiceItems = props.selData.serviceList;
 });
 
 function cancleServiceFn(item: any, index: number) {
-  formInputRef.value.selServiceItems.value.splice(index, 1);
+  formInputRef.value.selServiceItems.splice(index, 1);
 }
 function submitBtn() {
   console.log("提交formInputRef", formInputRef.value);
@@ -99,14 +103,21 @@ function submitBtn() {
   // if (!verify_all()) return;
   if (!checkVerify_all(ruleLists)) return;
 
+  let serviceNums = [];
+  for (let i = 0; i < formInputRef.value.selServiceItems.length; i++) {
+    const element = formInputRef.value.selServiceItems[i];
+    serviceNums.push(element.sId)
+  }
+
   let apiData = {
-    sgId: 0,
+    sgId: props.selData.sgId,
     sgTitle: formInputRef.value.name,
+    sIdList: serviceNums,
   };
   console.log("提交apiData", apiData);
 
   /**新增 */
-  addServiceGroupApi(apiData).then((res: any) => {
+  updateServiceGroupApi(apiData).then((res: any) => {
     if (res.state == 1) {
       Alert.sussess("成功", 1000);
       setTimeout(() => {
@@ -252,7 +263,7 @@ const ruleLists: any = reactive({
 
           >span {
             height: 100%;
-            width: 130px;
+            width: 110px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -410,5 +421,10 @@ const ruleLists: any = reactive({
     background-color: #707070;
     margin: 10px 0%;
   }
+}
+
+.p_error {
+  color: #fc0505;
+  width: 100%;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-  <div class="popup-mask2" v-on:click.self="showAddForm(false)">
+  <div class="popup-mask2" v-on:click.self="showEditForm(false)">
     <div class="popup-content">
       <div class="top-content">
-        <img :src="icon_closeX" v-on:click="showAddForm(false)" />
+        <img :src="icon_closeX" v-on:click="showEditForm(false)" />
         <span>新增服務</span>
         <button class="otherpay-btn" v-on:click="submitBtn()">確認新增</button>
       </div>
@@ -17,18 +17,19 @@
             </div>
             <div>
               <span>簡稱</span>
-              <input v-model="formInputRef.Nickname" placeholder="最多輸入四個字簡稱" type="text" />
+              <input v-model="formInputRef.nickName" placeholder="最多輸入四個字簡稱" type="text" />
             </div>
             <div class="textMsg-content">
               <span>說明</span>
-              <textarea v-model="formInputRef.msg" placeholder="請輸入說明或注意事項"></textarea>
+              <textarea v-model="formInputRef.memo" placeholder="請輸入說明或注意事項"></textarea>
             </div>
           </div>
           <div class="input-radio" name="服務顏色">
             <span class="title-content">服務顏色</span>
             <!-- <span class="msg-content">選擇呈現於行事曆的預約顏色</span> -->
             <div>
-              <RadioColorUI :selColorIndex="formInputRef.color" :updataColorFn="updataColorFn" :coloarSize="60" />
+              <RadioColorUI v-if="showColorUIRef" :selColorIndex="formInputRef.color" :updataColorFn="updataColorFn"
+                :coloarSize="60" />
             </div>
           </div>
           <div class="input-item" name="使用期限">
@@ -75,7 +76,7 @@
             </div>
             <div class="box-switch">
               <div class="switch">
-                <input type="checkbox" id="switch3" v-model="formInputRef.state" /><label for="switch3">Toggle2</label>
+                <input type="checkbox" id="switch3" v-model="formInputRef.display" /><label for="switch3">Toggle2</label>
               </div>
               <div class="label-info">
                 <label>上架 </label>
@@ -108,7 +109,7 @@
   </div>
   <SelectItemUI v-if="showSelItemUIRef" :showUIFn="showSelItemUIFn">
   </SelectItemUI>
-  <CbServiceGroupsUI v-if="showSelGroupsUIRef" :selData="formInputRef.groups" :getDataFn="getCGroupsFn"
+  <CbServiceGroupsUI v-if="showSelGroupsUIRef" :selData="formInputRef.SGIdList" :getDataFn="getCGroupsFn"
     :showCGroupsUIFn="showCGroupsUIFn">
   </CbServiceGroupsUI>
 </template>
@@ -124,13 +125,16 @@ import { showErrorMsg } from "@/types/IMessage";
 
 let store = useApptStore();
 let { } = storeToRefs(store);
-let { addServiceDetailApi } = store;
+let { getServiceDetailApi, updateServiceDetailApi } = store;
 
 const props = defineProps<{
-  showAddForm: Function;
+  selData: any;
+  showEditForm: Function;
 }>();
 let showSelItemUIRef = ref(false);
 let showSelGroupsUIRef = ref(false);
+let showColorUIRef = ref(false);
+
 
 let childrenTab = [
   {
@@ -143,60 +147,11 @@ let childrenTab = [
   // },
 ];
 let timeGroup: any = ref(["30", "60", "90", "120", "150", "180", "210", "240"]);
-let selDays = [
-  {
-    id: 7,
-    name: "7天",
-  },
-  {
-    id: 14,
-    name: "14天",
-  },
-  {
-    id: 21,
-    name: "21天",
-  },
-  {
-    id: 30,
-    name: "30天",
-  },
-  {
-    id: 90,
-    name: "90天",
-  },
-  {
-    id: 180,
-    name: "180天",
-  },
-];
-let amountType = [
-  {
-    id: -1,
-    name: "無限制",
-  },
-  {
-    id: 1,
-    name: "限制數量",
-  },
-];
-let discountType = [
-  {
-    id: 1,
-    name: "折扣佔比(%)",
-  },
-  {
-    id: 2,
-    name: "折讓金額($)",
-  },
-  {
-    id: 3,
-    name: "免費",
-  },
-];
 let formInputRef: any = ref({
+  sId: 0,
   name: "",
-  Nickname: "",
-  msg: "",
+  nickName: "",
+  memo: "",
   display: false,
   servicesTime: 0,
   price: 0,
@@ -204,8 +159,32 @@ let formInputRef: any = ref({
   isEditAccounting: false,
   color: "#fb9ea6",
   childrenType: 0,
-  groups: [],
+  SGIdList: [],
 });
+
+
+onBefore();
+function onBefore() {
+  getServiceDetailApi(props.selData.sId, 0).then((res: any) => {
+    setInputData(res[0])
+  });
+}
+
+let curColor = ref(props.selData.color);
+function setInputData(params: any) {
+  formInputRef.value.sId = params.sId;
+  formInputRef.value.name = params.name;
+  formInputRef.value.nickName = params.nickName;
+  formInputRef.value.memo = params.memo;
+  formInputRef.value.display = params.display;
+  formInputRef.value.servicesTime = params.servicesTime;
+  formInputRef.value.price = params.price;
+  formInputRef.value.isBonusOpen = params.isBonusOpen;
+  formInputRef.value.isEditAccounting = params.isEditAccounting;
+  formInputRef.value.color = params.color;
+  formInputRef.value.SGIdList = params.sgIdList;
+  showColorUIRef.value = true;
+}
 onMounted(() => {
   // console.log('onMounted');
 });
@@ -230,32 +209,36 @@ function showSelItemUIFn(state: boolean) {
 }
 
 function submitBtn() {
+
   let curGroupMaps = [];
-  for (let i = 0; i < formInputRef.value.groups.length; i++) {
-    const element = formInputRef.value.groups[i];
-    curGroupMaps.push(element.pgId);
+  for (let i = 0; i < formInputRef.value.SGIdList.length; i++) {
+    const element = formInputRef.value.SGIdList[i];
+    curGroupMaps.push(element.sgId);
   }
   let apiData = {
-    sId: 0,
+    sId: formInputRef.value.sId,
     name: formInputRef.value.name,
-    nickName: formInputRef.value.name,
+    nickName: formInputRef.value.nickName,
+    memo: formInputRef.value.memo,
     display: formInputRef.value.display,
     servicesTime: formInputRef.value.servicesTime,
     price: formInputRef.value.price,
     discount: formInputRef.value.discount,
     isBonusOpen: formInputRef.value.isBonusOpen,
     isEditAccounting: formInputRef.value.isEditAccounting,
-    serviceGroup: formInputRef.value.serviceGroup,
+    sgIdList: curGroupMaps,
     color: formInputRef.value.color,
   };
-  console.log(apiData);
+  console.log("編輯", apiData);
 
-  /**新增 */
-  addServiceDetailApi(apiData).then((res: any) => {
+  /**編輯 */
+  updateServiceDetailApi(apiData).then((res: any) => {
+    console.log(res);
+    
     if (res.state == 1) {
       Alert.sussess("成功", 1000);
       setTimeout(() => {
-        props.showAddForm(false);
+        props.showEditForm(false);
       }, 1000);
     } else {
       Alert.warning(showErrorMsg(res.msg), 1000);
@@ -270,7 +253,9 @@ function changeValue() {
   // formInputRef.value.childrenType = formInputRef.value.childrenType == 0 ? 1 : 0;
 }
 function getCGroupsFn(data: any) {
-  formInputRef.value.groups = data;
+  console.log();
+  
+  formInputRef.value.SGIdList = data;
   showCGroupsUIFn(false)
 }
 function showCGroupsUIFn(data: boolean) {
@@ -557,7 +542,8 @@ function updataColorFn(params: any) {
 
             .label-info {
               display: grid;
-              width: 80%;
+              width: calc(100% - 80px);
+              height: 100%;
 
               >label {
                 color: #707070;

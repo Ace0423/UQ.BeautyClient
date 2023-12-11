@@ -12,16 +12,19 @@
             <span class="title-content">基本資訊</span>
             <span class="msg-content">填寫你的服務項目基本資訊。</span>
             <div>
-              <span>服務名稱</span>
+              <span>*服務名稱</span>
               <input v-model="formInputRef.name" placeholder="請輸入服務名稱" type="text" />
             </div>
+            <span class="p_error" v-if="ruleLists.ruleItem.name.is_error">
+              {{ ruleLists.ruleItem.name.warn }}
+            </span>
             <div>
               <span>簡稱</span>
-              <input v-model="formInputRef.Nickname" placeholder="最多輸入四個字簡稱" type="text" />
+              <input v-model="formInputRef.nickName" placeholder="最多輸入四個字簡稱" type="text" />
             </div>
             <div class="textMsg-content">
               <span>說明</span>
-              <textarea v-model="formInputRef.msg" placeholder="請輸入說明或注意事項"></textarea>
+              <textarea v-model="formInputRef.memo" placeholder="請輸入說明或注意事項"></textarea>
             </div>
           </div>
           <div class="input-radio" name="服務顏色">
@@ -33,7 +36,7 @@
           </div>
           <div class="input-item" name="使用期限">
             <div>
-              <span>項目類型</span>
+              <span>*項目類型</span>
               <div class="select-content">
                 <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.childrenType"
                   @change="changeValue()">
@@ -44,11 +47,14 @@
               </div>
             </div>
             <div v-if="formInputRef.childrenType == 0">
-              <span>價格</span>
+              <span>*價格</span>
               <input v-model="formInputRef.price" placeholder="請輸入價格" type="text" />
             </div>
+            <span class="p_error" v-if="ruleLists.ruleItem.price.is_error && formInputRef.childrenType == 0">
+              {{ ruleLists.ruleItem.price.warn }}
+            </span>
             <div v-if="formInputRef.childrenType == 0">
-              <span>服務時長</span>
+              <span>*服務時長</span>
               <div class="select-content">
                 <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.servicesTime"
                   placeholder="請選擇服務時數" @change="changeValue()">
@@ -58,6 +64,9 @@
                 </el-select>
               </div>
             </div>
+            <span class="p_error" v-if="ruleLists.ruleItem.servicesTime.is_error && formInputRef.childrenType == 0">
+              {{ ruleLists.ruleItem.servicesTime.warn }}
+            </span>
             <div class="link-btn" v-if="formInputRef.childrenType == 1">
               <span>新增服務子項目</span>
             </div>
@@ -75,7 +84,7 @@
             </div>
             <div class="box-switch">
               <div class="switch">
-                <input type="checkbox" id="switch3" v-model="formInputRef.state" /><label for="switch3">Toggle2</label>
+                <input type="checkbox" id="switch3" v-model="formInputRef.display" /><label for="switch3">Toggle2</label>
               </div>
               <div class="label-info">
                 <label>上架 </label>
@@ -108,7 +117,7 @@
   </div>
   <SelectItemUI v-if="showSelItemUIRef" :showUIFn="showSelItemUIFn">
   </SelectItemUI>
-  <CbServiceGroupsUI v-if="showSelGroupsUIRef" :selData="formInputRef.groups" :getDataFn="getCGroupsFn"
+  <CbServiceGroupsUI v-if="showSelGroupsUIRef" :selData="formInputRef.sgIdList" :getDataFn="getCGroupsFn"
     :showCGroupsUIFn="showCGroupsUIFn">
   </CbServiceGroupsUI>
 </template>
@@ -118,7 +127,7 @@ import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
-import { formatZeroDate } from "@/utils/utils";
+import { checkVerify_all, formatZeroDate } from "@/utils/utils";
 import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 
@@ -143,69 +152,19 @@ let childrenTab = [
   // },
 ];
 let timeGroup: any = ref(["30", "60", "90", "120", "150", "180", "210", "240"]);
-let selDays = [
-  {
-    id: 7,
-    name: "7天",
-  },
-  {
-    id: 14,
-    name: "14天",
-  },
-  {
-    id: 21,
-    name: "21天",
-  },
-  {
-    id: 30,
-    name: "30天",
-  },
-  {
-    id: 90,
-    name: "90天",
-  },
-  {
-    id: 180,
-    name: "180天",
-  },
-];
-let amountType = [
-  {
-    id: -1,
-    name: "無限制",
-  },
-  {
-    id: 1,
-    name: "限制數量",
-  },
-];
-let discountType = [
-  {
-    id: 1,
-    name: "折扣佔比(%)",
-  },
-  {
-    id: 2,
-    name: "折讓金額($)",
-  },
-  {
-    id: 3,
-    name: "免費",
-  },
-];
 let formInputRef: any = ref({
   name: "",
-  Nickname: "",
-  msg: "",
+  nickName: "",
+  memo: "",
   display: false,
-  servicesTime: 0,
-  price: 0,
+  servicesTime: null,
+  price: null,
   isBonusOpen: false,
   isEditAccounting: false,
   color: "#fb9ea6",
   colorIndex: 0,
   childrenType: 0,
-  groups: [],
+  sgIdList: [],
 });
 onMounted(() => {
   // console.log('onMounted');
@@ -231,22 +190,37 @@ function showSelItemUIFn(state: boolean) {
 }
 
 function submitBtn() {
+
+  ruleLists.ruleItem.name.value = formInputRef.value.name;
+  ruleLists.ruleItem.price.value = formInputRef.value.price;
+  ruleLists.ruleItem.servicesTime.value = formInputRef.value.servicesTime;
+
+  if (formInputRef.value.childrenType == 1) {
+    ruleLists.ruleItem.price.value = 1;
+    ruleLists.ruleItem.servicesTime.value = 1;
+  }
+  if (!checkVerify_all(ruleLists)) return;
+
+
+
+
   let curGroupMaps = [];
-  for (let i = 0; i < formInputRef.value.groups.length; i++) {
-    const element = formInputRef.value.groups[i];
+  for (let i = 0; i < formInputRef.value.sgIdList.length; i++) {
+    const element = formInputRef.value.sgIdList[i];
     curGroupMaps.push(element.pgId);
   }
   let apiData = {
     sId: 0,
     name: formInputRef.value.name,
-    nickName: formInputRef.value.name,
+    nickName: formInputRef.value.nickName,
+    memo: formInputRef.value.memo,
     display: formInputRef.value.display,
     servicesTime: formInputRef.value.servicesTime,
     price: formInputRef.value.price,
     discount: formInputRef.value.discount,
     isBonusOpen: formInputRef.value.isBonusOpen,
     isEditAccounting: formInputRef.value.isEditAccounting,
-    serviceGroup: formInputRef.value.serviceGroup,
+    sgIdList: formInputRef.value.sgIdList,
     color: formInputRef.value.color,
   };
   console.log(apiData);
@@ -271,7 +245,7 @@ function changeValue() {
   // formInputRef.value.childrenType = formInputRef.value.childrenType == 0 ? 1 : 0;
 }
 function getCGroupsFn(data: any) {
-  formInputRef.value.groups = data;
+  formInputRef.value.sgIdList = data;
   showCGroupsUIFn(false)
 }
 function showCGroupsUIFn(data: boolean) {
@@ -280,6 +254,42 @@ function showCGroupsUIFn(data: boolean) {
 function updataColorFn(params: any) {
   formInputRef.value.color = params
 }
+//#region 規則
+const ruleLists: any = reactive({
+  ruleItem: {
+    name: {
+      label: "名稱",
+      rules: {
+        required: {
+          warn: "此項為必填",
+        },
+      },
+      is_error: false,
+      warn: "",
+    },
+    price: {
+      label: "價格",
+      rules: {
+        required: {
+          warn: "此項為必填",
+        },
+      },
+      is_error: false,
+      warn: "",
+    },
+    servicesTime: {
+      label: "時長",
+      rules: {
+        required: {
+          warn: "此項為必填",
+        },
+      },
+      is_error: false,
+      warn: "",
+    },
+  },
+});
+//#endregion
 </script>
   
 <style lang="scss">
@@ -558,7 +568,8 @@ function updataColorFn(params: any) {
 
             .label-info {
               display: grid;
-              width: 80%;
+              width: calc(100% - 80px);
+              height: 100%;
 
               >label {
                 color: #707070;
@@ -642,6 +653,11 @@ function updataColorFn(params: any) {
       height: 20px;
     }
   }
+}
+
+.p_error {
+  color: #fc0505;
+  width: 100%;
 }
 
 .link-bottom {

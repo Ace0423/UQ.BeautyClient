@@ -4,7 +4,7 @@
     <div class="header"></div>
     <div class="content">
       <div class="content-topBar">
-        <p>商品(全部{{ filterServiceType.length }}個)</p>
+        <p>群組(全部{{ filterServiceType.length }}個)</p>
         <div>
           <input v-model="search" class="search-control" placeholder="搜尋名稱" />
           <div class="btn-open" @click="showAddGroupHdr(true)">
@@ -16,7 +16,7 @@
         <el-table :data="filterServiceType" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
           :header-cell-style="headerRowStyle">
           <el-table-column prop="sgTitle" label="群組名稱" min-width="60%" />
-          <el-table-column prop="sgId" label="群組名稱" min-width="20%" />
+          <el-table-column prop="sIdList.length" label="服務數量" min-width="20%" />
           <el-table-column label="操作" min-width="20%">
             <template #default="scope">
               <div class="handle-drag">

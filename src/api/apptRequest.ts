@@ -61,8 +61,8 @@ export const delCourseDetailReq = (data: any) =>
 export const addServiceGroupReq = (data: any) =>
   postHttps(httpRequest, "/Service/ServiceGroup", data);
 /**獲取明細 */
-export const getServiceDetailReq = (id: any) =>
-  getHttps(httpRequest, "/Service/ServiceInfo?sid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
+export const getServiceDetailReq = (id: any, isList: any) =>
+  getHttps(httpRequest, "/Service/ServiceInfo?sid=" + id + "&isList=" + isList + "&pageIndex=" + 0 + "&count=" + 0);
 /**新增服務資訊 */
 export const addServiceDetailReq = (data: any) =>
   postHttps(httpRequest, "/Service/ServiceInfo", data);
@@ -77,8 +77,8 @@ export const updateServiceDetailReq = (data: any) =>
 export const deleteServiceDetailReq = (id: any) =>
   deleteHttps(httpRequest, "/Service/ServiceInfo/" + id, id);
 /**獲取群組 */
-export const getServiceGroupReq = (id: any) =>
-  getHttps(httpRequest, "/Service/ServiceGroup?sgid=" + id + "&isList=0" + "&pageIndex=" + 0 + "&count=" + 0);
+export const getServiceGroupReq = (id: any, isList: any) =>
+  getHttps(httpRequest, "/Service/ServiceGroup?sgid=" + id + "&isList=" + isList + "&pageIndex=" + 0 + "&count=" + 0);
 
 /**刪除群組*/
 export const deleteServiceGroupReq = (id: any) =>

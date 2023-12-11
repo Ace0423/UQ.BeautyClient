@@ -11,6 +11,13 @@ const { userInfo } = storeToRefs(counterStore);
 const companyStore = useCompanyStore();
 const { getCompanyInfo, putCompanyInfo } = companyStore;
 const { companyInfoList } = storeToRefs(companyStore);
+const cropperImgUI = ref(false);
+const cropperData: any = reactive({
+    type: "",
+    width: 200,
+    height: 200,
+    imgResult: ''
+})
 const companyInfoData = reactive({
     cId: 0,
     cName: "",
@@ -24,6 +31,17 @@ const companyInfoData = reactive({
     companyGroup: [
     ]
 })
+const dataURLtoFile = ((dataurl: any, filename: any) => {
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+})
 const fileImageSmall = ((e: any) => {
     const file = e.target.files.item(0);
     let suffixName = file.name.substring(file.name.lastIndexOf('.') + 1);
@@ -33,9 +51,12 @@ const fileImageSmall = ((e: any) => {
     }
     const reader = new FileReader();
     reader.addEventListener('load', (e: any) => {
-        
-    console.log(e.target)
-        companyInfoData.imageSmall = e.target.result;
+        let file: any = dataURLtoFile(e.target.result, suffixName);
+        cropperData.type = 'small'
+        cropperData.width = 200;
+        cropperData.height = 200;
+        cropperData.imgResult = e.target.result;
+        handCropperImgView();
     });
     reader.readAsDataURL(file);
 })
@@ -48,7 +69,12 @@ const fileImageBig = ((e: any) => {
     }
     const reader = new FileReader();
     reader.addEventListener('load', (e: any) => {
-        companyInfoData.imageBig = e.target.result;
+        let file: any = dataURLtoFile(e.target.result, suffixName);
+        cropperData.type = 'big'
+        cropperData.width = 800;
+        cropperData.height = 800;
+        cropperData.imgResult = e.target.result;
+        handCropperImgView();
     });
     reader.readAsDataURL(file);
 })
@@ -67,6 +93,27 @@ const filterCompanyInfo = computed(() => {
     companyInfoData.imageSmall = companyInfoList.value.data.imageSmall;
     companyInfoData.companyGroup = companyInfoList.value.data.companyGroup;
     return companyInfoData;
+})
+
+const companyInfo = () => {
+    getCompanyInfo()
+        .then((res) => {
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        })
+}
+
+onMounted(() => {
+    companyInfo();
 })
 const handReturn = (() => {
     companyInfoData.cId = companyInfoList.value.data.cId;
@@ -98,26 +145,19 @@ const handSubmit = (() => {
             }
         })
 })
-const companyInfo = () => {
-    getCompanyInfo()
-        .then((res) => {
-            if (res.state == 2) {
-                Alert.warning(showErrorMsg(res.msg), 2000);
-            }
-        })
-        .catch((e: any) => {
-            Alert.warning(showHttpsStatus(e.response.status), 2000);
-            if (e.response.status == 401) {
-                setTimeout(() => {
-                    handLogOut();
-                }, 2000);
-            }
-        })
-}
-
-onMounted(() => {
-    companyInfo();
+const handCropperImgView = (() => {
+    cropperImgUI.value = !cropperImgUI.value;
 })
+
+const resImgCropper = ((res: any) => {
+    if (res.type == "small") {
+        companyInfoData.imageSmall = res.res
+    } else if (res.type == "big") {
+        companyInfoData.imageBig = res.res
+    }
+    handCropperImgView();
+})
+
 </script>
 <template>
     <div class="info-content">
@@ -167,14 +207,24 @@ onMounted(() => {
                             <img v-if="companyInfoData.imageSmall" :src="companyInfoData.imageSmall" width="200"
                                 height="200" />
                         </div>
+                        <!-- <label class="button"
+                            @click="fileImageSmall"><span>上傳圖片</span></label> -->
                         <label class="button"><span>上傳圖片</span><input class="file-input" type="file"
                                 @change="fileImageSmall"></label>
+                        <!-- <el-upload class="button" :auto-upload="false" action="" @change="fileImageSmall"
+                            :show-file-list="false">
+                                <el-button type="primary">选择图片</el-button>
+                        </el-upload> -->
                     </div>
                 </div>
                 <div class="background-content">
                     <h1>商店Logo</h1>
                     <p>商店Logo，建議尺寸800px*800px</p>
                     <div class="photo-box">
+                        <div>
+                            <img v-if="companyInfoData.imageBig" :src="companyInfoData.imageBig" width="400"
+                                height="400" />
+                        </div>
                         <label class="button"><span>上傳圖片</span><input class="file-input" type="file"
                                 @change="fileImageBig"></label>
                         <div>
@@ -188,6 +238,8 @@ onMounted(() => {
             <button @click="handSubmit()">確認儲存</button>
         </div>
     </div>
+    <CropperImg-UI v-if="cropperImgUI" :cropperData="cropperData" :handCropperImgView="handCropperImgView"
+        @handCropperSubmit="resImgCropper" />
 </template>
 
 <style lang="scss" scoped>

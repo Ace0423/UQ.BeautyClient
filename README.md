@@ -50,6 +50,7 @@ npm install --save @fullcalendar/interaction
 npm install jquery --save
 npm install vue-i18n@9
 npm install @daypilot/daypilot-lite-vue
+npm install vue-cropper@next -d --save
 ```
 
 

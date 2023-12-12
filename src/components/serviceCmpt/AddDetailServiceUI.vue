@@ -38,7 +38,7 @@
             <div>
               <span>*項目類型</span>
               <div class="select-content">
-                <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.childrenType"
+                <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.subType"
                   @change="changeValue()">
                   <el-option v-for="(item, index) in childrenTab" :key="index" :value="item.id" :label="item.name">
                     {{ item.name }}
@@ -46,14 +46,14 @@
                 </el-select>
               </div>
             </div>
-            <div v-if="formInputRef.childrenType == 0">
+            <div v-if="formInputRef.subType == 0">
               <span>*價格</span>
               <input v-model="formInputRef.price" placeholder="請輸入價格" type="text" />
             </div>
-            <span class="p_error" v-if="ruleLists.ruleItem.price.is_error && formInputRef.childrenType == 0">
+            <span class="p_error" v-if="ruleLists.ruleItem.price.is_error && formInputRef.subType == 0">
               {{ ruleLists.ruleItem.price.warn }}
             </span>
-            <div v-if="formInputRef.childrenType == 0">
+            <div v-if="formInputRef.subType == 0">
               <span>*服務時長</span>
               <div class="select-content">
                 <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.servicesTime"
@@ -64,10 +64,10 @@
                 </el-select>
               </div>
             </div>
-            <span class="p_error" v-if="ruleLists.ruleItem.servicesTime.is_error && formInputRef.childrenType == 0">
+            <span class="p_error" v-if="ruleLists.ruleItem.servicesTime.is_error && formInputRef.subType == 0">
               {{ ruleLists.ruleItem.servicesTime.warn }}
             </span>
-            <div class="link-btn" v-if="formInputRef.childrenType == 1">
+            <div class="link-btn" v-if="formInputRef.subType == 1">
               <span>新增服務子項目</span>
             </div>
           </div>
@@ -163,7 +163,7 @@ let formInputRef: any = ref({
   isEditAccounting: false,
   color: "#fb9ea6",
   colorIndex: 0,
-  childrenType: 0,
+  subType: 0,
   sgIdList: [],
 });
 onMounted(() => {
@@ -195,7 +195,7 @@ function submitBtn() {
   ruleLists.ruleItem.price.value = formInputRef.value.price;
   ruleLists.ruleItem.servicesTime.value = formInputRef.value.servicesTime;
 
-  if (formInputRef.value.childrenType == 1) {
+  if (formInputRef.value.subType == 1) {
     ruleLists.ruleItem.price.value = 1;
     ruleLists.ruleItem.servicesTime.value = 1;
   }
@@ -241,8 +241,8 @@ function updateImgUrl() {
   // console.log("更新圖片");
 }
 function changeValue() {
-  // console.log(formInputRef.value.childrenType);
-  // formInputRef.value.childrenType = formInputRef.value.childrenType == 0 ? 1 : 0;
+  // console.log(formInputRef.value.subType);
+  // formInputRef.value.subType = formInputRef.value.subType == 0 ? 1 : 0;
 }
 function getCGroupsFn(data: any) {
   formInputRef.value.sgIdList = data;

@@ -48,7 +48,7 @@
       <div class="footer">
         <div class="link-bottom"></div>
         <div class="box-footer">
-          <button class="otherpay-btn" v-on:click="submitBtn()">確認新增</button>
+          <button class="otherpay-btn" v-on:click="submitBtn()">確認編輯</button>
         </div>
       </div>
     </div>

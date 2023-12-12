@@ -4,7 +4,7 @@
       <div class="top-content">
         <img :src="icon_closeX" v-on:click="showEditForm(false)" />
         <span>新增服務</span>
-        <button class="otherpay-btn" v-on:click="submitBtn()">確認新增</button>
+        <button class="otherpay-btn" v-on:click="submitBtn()">確認編輯</button>
       </div>
       <div class="main-content">
         <div class="center-main">

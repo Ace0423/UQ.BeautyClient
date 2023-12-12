@@ -23,7 +23,7 @@
 	width: 128px;
 	height: 194px;
 	/*background: url(../images/hengping.png 0 0 no-repeat);*/
-	background: url(./hengping.png);
+	background: url(hengping.png);
 	background-size: 128px 194px;
 	animation: mobileR 1.5s ease infinite alternate;
 	-webkit-animation: mobileR 1.5s ease infinite alternate;

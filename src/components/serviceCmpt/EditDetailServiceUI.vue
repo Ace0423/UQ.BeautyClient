@@ -36,7 +36,7 @@
             <div>
               <span>項目類型</span>
               <div class="select-content">
-                <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.childrenType"
+                <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.subType"
                   @change="changeValue()">
                   <el-option v-for="(item, index) in childrenTab" :key="index" :value="item.id" :label="item.name">
                     {{ item.name }}
@@ -44,11 +44,11 @@
                 </el-select>
               </div>
             </div>
-            <div v-if="formInputRef.childrenType == 0">
+            <div v-if="formInputRef.subType == 0">
               <span>價格</span>
               <input v-model="formInputRef.price" placeholder="請輸入價格" type="text" />
             </div>
-            <div v-if="formInputRef.childrenType == 0">
+            <div v-if="formInputRef.subType == 0">
               <span>服務時長</span>
               <div class="select-content">
                 <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.servicesTime"
@@ -59,7 +59,7 @@
                 </el-select>
               </div>
             </div>
-            <div class="link-btn" v-if="formInputRef.childrenType == 1">
+            <div class="link-btn" v-if="formInputRef.subType == 1">
               <span>新增服務子項目</span>
             </div>
           </div>
@@ -158,7 +158,7 @@ let formInputRef: any = ref({
   isBonusOpen: false,
   isEditAccounting: false,
   color: "#fb9ea6",
-  childrenType: 0,
+  subType: 0,
   SGIdList: [],
 });
 
@@ -249,8 +249,8 @@ function updateImgUrl() {
   // console.log("更新圖片");
 }
 function changeValue() {
-  // console.log(formInputRef.value.childrenType);
-  // formInputRef.value.childrenType = formInputRef.value.childrenType == 0 ? 1 : 0;
+  // console.log(formInputRef.value.subType);
+  // formInputRef.value.subType = formInputRef.value.subType == 0 ? 1 : 0;
 }
 function getCGroupsFn(data: any) {
   console.log();

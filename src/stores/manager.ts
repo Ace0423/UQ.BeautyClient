@@ -1,5 +1,21 @@
 import { defineStore } from "pinia";
-import { apiGetAdminListRequest, apiPostAdminDataRequest, apiPutAdminDataRequest, apiGetRoleListRequest, apiPostRoleDataRequest, apiPutRoleDataRequest, apiGetRoleInfoRequest, apiDeleteRoleManagerRequest, apiPostRoleManagerDataRequest, apiGetWorkingHoursRequest, apiPostWorkingHoursRequest, apiGetWorkingDefaultRequest, apiPostWorkingDefaultRequest, apiPutWorkingDefaultRequest } from "@/api/index";
+import {
+    apiGetAdminListRequest,
+    apiPostAdminDataRequest,
+    apiPutAdminDataRequest,
+    apiGetRoleListRequest,
+    apiPostRoleDataRequest,
+    apiPutRoleDataRequest,
+    apiGetRoleInfoRequest,
+    apiDeleteRoleManagerRequest,
+    apiPostRoleManagerDataRequest,
+    apiGetWorkingHoursRequest,
+    apiPostWorkingHoursRequest,
+    apiGetWorkingDefaultRequest,
+    apiPostWorkingDefaultRequest,
+    apiPutWorkingDefaultRequest,
+
+} from "@/api/index";
 export const useManagerStore = defineStore("manager", () => {
     const managerList: any = reactive({ data: [] });
     const roleList: any = reactive({ data: [] });
@@ -162,7 +178,7 @@ export const useManagerStore = defineStore("manager", () => {
 
     const getWorkingHours = async (data: any) => {
         try {
-            const res = await apiGetWorkingHoursRequest(data).then((res: any)=> {
+            const res = await apiGetWorkingHoursRequest(data).then((res: any) => {
                 if (res.data.data.table) {
                     workingHoursList.data = res.data.data.table;
                 }
@@ -213,6 +229,7 @@ export const useManagerStore = defineStore("manager", () => {
             console.log(error);
         }
     };
+    
     return {
         managerList,
         getManagerList,

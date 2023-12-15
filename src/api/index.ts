@@ -2,7 +2,7 @@ import { postLoginRequest, getUserNameRequest } from "./authRequest";
 import { getMemberListRequest, postMemberDataRequest, postUpdateMemberDataRequest, getGroupDataRequest, putGroupDataRequest, postGroupDataRequest, getGroupInfoRequest, postGroupInfoRequest, deleteGroupInfoRequest, } from "./memberRequest";
 import { getMemberBankListRequest, postMemberBankRequest, getMemberBankInfoListRequest, getMemberBankDetailRequest, putMemberBankInfoRequest } from "./memberBankRequest";
 import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest, getWorkingHoursRequest, postWorkingHoursRequest, getWorkingDefaultRequest, postWorkingDefaultRequest, putWorkingDefaultRequest } from "./managerRequest";
-import { getPermissionsListRequest, putOptionRoleRequest } from "./settingRequest";
+import { getPermissionsListRequest, putOptionRoleRequest,getApiPermissionsListRequest,postApiPermissionsListRequest,updateApiPermissionsListRequest } from "./settingRequest";
 import { getTimeTablesRequest,postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest,getCompanyInfoRequest,putCompanyInfoRequest,getMessagesRequest,insertMessagesRequest,updateMessagesRequest,getBlackListSetRequest,putBlackListSetRequest } from "./companyRequest";
 import { getTopUpCardListRequest,addTopUpCardInfoRequest,editTopUpCardInfoRequest } from "./topUpCardRequest";
 
@@ -42,9 +42,15 @@ export const apiGetWorkingDefaultRequest = getWorkingDefaultRequest;
 export const apiPostWorkingDefaultRequest = postWorkingDefaultRequest;
 export const apiPutWorkingDefaultRequest = putWorkingDefaultRequest;
 
+
+
 export const apiGetRoleInfoRequest = getRoleInfoRequest;
 export const apiPostRoleManagerDataRequest = postRoleManagerDataRequest;
 export const apiDeleteRoleManagerRequest = deleteRoleManagerRequest;
+export const apiGetApiPermissionsListRequest = getApiPermissionsListRequest;
+export const apiPostApiPermissionsListRequest = postApiPermissionsListRequest;
+export const apiUpdateApiPermissionsListRequest = updateApiPermissionsListRequest;
+
 
 export const apiGetTimeTablesRequest = getTimeTablesRequest;
 export const apiPostTimeTablesRequest = postTimeTablesRequest;

@@ -18,3 +18,12 @@ export const getToken = (name: string) => {
 export const delToken = (name: any) => {
     Cookies.remove(name);
 }
+
+export const getRole = (name: string) => {
+    const val: any = Cookies.get(name);
+    try {
+        return JSON.parse(val).roleMgrMappings[0].roleName;
+    } catch (err) {
+        return undefined;
+    }
+}

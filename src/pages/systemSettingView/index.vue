@@ -21,9 +21,9 @@ onMounted(() => {
 <template>
     <div class="content">
         <div class="nav">
-            <router-link to="" :class="{ active: idx == 0 }">系統管理員</router-link>
-            <router-link to="" :class="{ active: idx == 1 }">腳色名稱</router-link>
-            <router-link to="/systemSettingView/apiPermissionList" :class="{ active: idx == 2 }">API權限列表</router-link>
+            <router-link to="/systemSettingView/managerAdmin" >系統管理員</router-link>
+            <!-- <router-link to="" >腳色名稱</router-link> -->
+            <router-link to="/systemSettingView/apiPermissionList" >API權限列表</router-link>
         </div>
         <router-view />
     </div>
@@ -67,27 +67,27 @@ onMounted(() => {
                 background-color: #faf9f8;
             }
 
-            // a:link {
-            //     color: #717171;
-            // }
+            a:link {
+                color: #717171;
+            }
 
-            // a:visited {
-            //     color: #717171;
-            // }
+            a:visited {
+                color: #717171;
+            }
 
-            // a:hover {
-            //     color: #717171;
-            // }
+            a:hover {
+                color: #717171;
+            }
 
-            // >.router-link-exact-active {
-            //     background-color: #faf9f8;
-            // }
+            >.router-link-exact-active {
+                background-color: #faf9f8;
+            }
         }
 
-        // >.router-link-exact-active {
-        //     color: #000000;
-        //     background-color: #faf9f8;
-        // }
+        >.router-link-exact-active {
+            color: #000000;
+            background-color: #faf9f8;
+        }
 
     }
 }

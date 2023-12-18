@@ -8,6 +8,7 @@ import bankImg from "@/assets/Icon awesome-money-check-alt.svg";
 import orderImg from "@/assets/images/ico_order.png";
 
 import closeIcon from "@/assets/Group32.svg";
+import { getRole } from "@/plugins/js-cookie";
 import { useCounterStore } from "@/stores/counter";
 import { storeToRefs } from "pinia";
 const store = useCounterStore();
@@ -40,14 +41,10 @@ onMounted(() => {
       <div class="nav">
         <ul @click="handmemuStateBtn()">
           <li>
-            <img :src="appointmentImg" /><router-link to="/appointmentView"
-              >預約紀錄</router-link
-            >
+            <img :src="appointmentImg" /><router-link to="/appointmentView">預約紀錄</router-link>
           </li>
           <li>
-            <img :src="customerImg" /><router-link to="/memberManagerView/memberView"
-              >顧客管理</router-link
-            >
+            <img :src="customerImg" /><router-link to="/memberManagerView/memberView">顧客管理</router-link>
           </li>
           <!-- <li>
             <img :src="courseImg" /><router-link to="/courseView"
@@ -55,24 +52,16 @@ onMounted(() => {
             >
           </li> -->
           <li>
-            <img :src="courseImg" /><router-link to="/serviceView/servicePage"
-              >服務管理</router-link
-            >
+            <img :src="courseImg" /><router-link to="/serviceView/servicePage">服務管理</router-link>
           </li>
           <li>
-            <img :src="bankImg" /><router-link to="/memberBankView/memberBankView"
-              >儲值金</router-link
-            >
+            <img :src="bankImg" /><router-link to="/memberBankView/memberBankView">儲值金</router-link>
           </li>
           <li>
-            <img :src="settingImg" /><router-link to="/settingView"
-              >設定</router-link
-            >
+            <img :src="settingImg" /><router-link to="/settingView">設定</router-link>
           </li>
-          <li>
-            <img :src="settingImg" /><router-link to="/systemSettingView"
-              >系統設定</router-link
-            >
+          <li v-if="getRole('userData') == 'Admin'">
+            <img :src="settingImg" /><router-link to="/systemSettingView/managerAdmin">系統設定</router-link>
           </li>
           <!-- <li v-show="showTestUI">
             <img :src="settingImg" /><router-link to="/testView"
@@ -118,24 +107,24 @@ onMounted(() => {
     box-sizing: border-box;
     position: relative;
 
-    > img {
+    >img {
       width: 100%;
     }
 
-    > .nav {
+    >.nav {
       // padding-left: 15px;
       display: flex;
       flex-direction: column;
       align-items: center;
 
-      > ul {
+      >ul {
         padding: 0 0;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         width: 100%;
 
-        > li {
+        >li {
           font-family: STXihei;
           font-size: 20px;
           color: #707070;
@@ -143,32 +132,32 @@ onMounted(() => {
           align-items: center;
           padding-left: 15px;
 
-          > img {
+          >img {
             padding: 15px;
             width: 30px;
             height: 30px;
           }
 
-          > a {
+          >a {
             text-decoration: none;
             color: #707070;
           }
 
-          > .router-link-active {
+          >.router-link-active {
             font-weight: bold;
           }
         }
       }
     }
 
-    > .user-info {
+    >.user-info {
       position: absolute;
       bottom: 0px;
       left: 0px;
       width: 100%;
       border-top: solid 2px #707070;
 
-      > .user-name {
+      >.user-name {
         width: 100%;
         display: flex;
         font-family: STXihei;
@@ -178,14 +167,14 @@ onMounted(() => {
         border: none;
         justify-content: center;
 
-        > button {
+        >button {
           background-color: transparent;
           border: none;
           margin: 0 0px 0 20px;
         }
       }
 
-      > .user-menu {
+      >.user-menu {
         display: flex;
         flex-direction: column;
         z-index: 10;
@@ -198,7 +187,7 @@ onMounted(() => {
         border: solid 1px #707070;
         background-color: rgb(255, 255, 255);
 
-        > button {
+        >button {
           margin: 5px 2px;
           background-color: transparent;
           border: none;

@@ -15,12 +15,14 @@ const { getManagerList } = managerstore;
 const addManagerView = ref(false);
 const selectManagerItem = ref();
 const keyWord = ref("");
+const roleType = 1;
 const handAddManagerView = (item: any) => {
     selectManagerItem.value = item;
     addManagerView.value = !addManagerView.value;
 };
 const filterManagerListData = computed(() => {
-    const filter = managerList.value.data.filter(getManagerListFn);
+    let data: any = managerList.value.data.filter((e: any) => e.roleList[0].roleId != 1);
+    const filter = data.filter(getManagerListFn);
     return filter;
 });
 const getManagerListFn = (data: any) => {
@@ -103,14 +105,14 @@ onMounted(() => {
                     </td>
                     <td class="content-btn">
                         <button class="header-btn" v-on:click="handAddManagerView(item)">
-                           >
+                            >
                         </button>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <AddManager v-if="addManagerView" :hand-add-manager-view="handAddManagerView" :select-manager-item="selectManagerItem">
+    <AddManager v-if="addManagerView" :hand-add-manager-view="handAddManagerView" :select-manager-item="selectManagerItem" :role-type="roleType">
     </AddManager>
 </template>
 
@@ -179,7 +181,7 @@ div {
                 // justify-content: space-between;
 
                 >th {
-                    width:23.75%;
+                    width: 23.75%;
 
                     >p {
                         min-width: 108px;

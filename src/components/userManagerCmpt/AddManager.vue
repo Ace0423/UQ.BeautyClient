@@ -3,6 +3,7 @@ import { storeToRefs } from "pinia";
 import { useManagerStore } from "@/stores/manager";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
 import Alert from "../alertCmpt";
+import { roleTypes } from "element-plus";
 
 const managerStore = useManagerStore();
 const { createManagerData, editManagerData, getRoleList } = managerStore;
@@ -25,7 +26,8 @@ const newManager: any = reactive({
 });
 
 const props = defineProps<{
-    selectManagerItem: any
+    selectManagerItem: any;
+    roleType: number;
     handAddManagerView: Function;
 }>();
 const state: any = reactive({
@@ -267,7 +269,11 @@ const getRoleName = () => {
             Alert.warning(showHttpsStatus(e.response.status), 2000);
         })
 }
-
+const filterRoleLis = computed(() => {
+    const filter: any = props.roleType != 0 ? roleList.value.data.filter((e: any) => e.roleId != 1) : roleList.value.data;
+    console.log(filter)
+    return filter;
+});
 onMounted(() => {
     if (props.selectManagerItem) {
         form_items.value.name.value = props.selectManagerItem.nameView;
@@ -347,7 +353,7 @@ onMounted(() => {
                 <span>權限</span>
                 <select v-model="roleActive">
                     <option disabled value="">請選擇權限職等</option>
-                    <option v-for="item in roleList.data" :key="item.roleId" :value="item.roleId">{{ item.memo }}</option>
+                    <option v-for="item in filterRoleLis" :key="item.roleId" :value="item.roleId">{{ item.memo }}</option>
                 </select>
             </div>
             <div>

@@ -9,10 +9,13 @@ const { apiPermissionsList } = storeToRefs(settingStore);
 const { addApiPermissionsList, editApiPermissionsList } = settingStore;
 const title = ref("");
 const submitNameBtn = ref('確認');
-const controllerType: any = ['Auth', 'Company', 'Discount', 'Manager', 'Member', 'Product','Option']
+const optionType: any = [{ option: 0, optionText: '預約' }, { option: 1, optionText: '結帳' }, { option: 2, optionText: '訂單紀錄' }, { option: 3, optionText: '預約' }, { option: 4, optionText: '顧客管理' }, { option: 5, optionText: '訊息管理' }, { option: 6, optionText: '人員管理' }, { option: 7, optionText: '報表' }, { option: 8, optionText: '項目管理' }, { option: 9, optionText: '商店設定' }, { option: 10, optionText: '票卷管理' }, { option: 11, optionText: '應用程式' }, { option: 12, optionText: '問卷管理' },]
+const controllerType: any = [{ controller: "Auth", controllerText: '認證控制器' }, { controller: "Company", controllerText: '商店管理控制器' }, { controller: "Discount", controllerText: '折扣優惠控制器' }, { controller: "Manager", controllerText: '管理者控制器' }, { controller: "Member", controllerText: '顧客控制器' }, { controller: "Product", controllerText: '產品管理控制器' }, { controller: "Option", controllerText: '功能管理控制器' }]
 const targetType: any = ['Get', 'POST', 'PUT', 'DELETE']
 const apiData = reactive({
     olid: 0,
+    olOption: 0,
+    olOptionText: '',
     olController: '',
     olControllerText: '',
     olAction: '',
@@ -32,6 +35,8 @@ const props = defineProps<{
 onMounted(() => {
     if (props.selectItem) {
         apiData.olid = props.selectItem.olid,
+            apiData.olOption = props.selectItem.olOption,
+            apiData.olOptionText = props.selectItem.olOptionText,
             apiData.olController = props.selectItem.olController,
             apiData.olControllerText = props.selectItem.olControllerText,
             apiData.olAction = props.selectItem.olAction,
@@ -44,6 +49,9 @@ onMounted(() => {
 });
 
 const handSubmit = () => {
+    apiData.olOptionText = (optionType.find((item: any) => item.option == apiData.olOption)).optionText;
+    apiData.olControllerText = (controllerType.find((item: any) => item.controller == apiData.olController)).controllerText;
+    console.log(apiData.olControllerText)
     if (apiData.olid == 0) {
         addApiPermissionsList(apiData)
             .then((res) => {
@@ -64,7 +72,6 @@ const handSubmit = () => {
     } else {
         editApiPermissionsList(apiData)
             .then((res) => {
-                console.log(res)
                 if (res.state == 1) {
                     Alert.warning("修改成功", 1500);
                     setTimeout(() => {
@@ -103,15 +110,18 @@ const handSubmit = () => {
             </div>
             <div class="content">
                 <div class="promotion-select">
-                    <p>*Controller</p>
-                    <select v-model="apiData.olController">
-                        <option v-for="item in controllerType" :key="item" :value="item">
-                            {{ item }}</option>
+                    <p>*功能</p>
+                    <select v-model="apiData.olOption">
+                        <option v-for="item in optionType" :key="item.option" :value="item.option">
+                            {{ item.optionText }}</option>
                     </select>
                 </div>
-                <div class="input-content">
-                    <p>*ControllerText</p>
-                    <input placeholder="請輸入 ControllerText" v-model="apiData.olControllerText" />
+                <div class="promotion-select">
+                    <p>*控制器</p>
+                    <select v-model="apiData.olController">
+                        <option v-for="item in controllerType" :key="item.controller" :value="item.controller">
+                            {{ item.controllerText }}</option>
+                    </select>
                 </div>
                 <div class="input-content">
                     <p>*Action</p>
@@ -122,7 +132,7 @@ const handSubmit = () => {
                     <input placeholder="請輸入 ActionText" v-model="apiData.olActionText" />
                 </div>
                 <div class="promotion-select">
-                    <p>*Controller</p>
+                    <p>*Target</p>
                     <select v-model="apiData.olTarget">
                         <option disabled value="">請選擇觸發方式</option>
                         <option v-for="item in targetType" :key="item" :value="item">

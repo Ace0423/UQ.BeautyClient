@@ -39,7 +39,6 @@ export const useSettingStore = defineStore("setting", () => {
             const res = await apiGetApiPermissionsListRequest(dataRequest);
             if (res.data.data.table) {
                 apiPermissionsList.data = res.data.data.table.sort();
-                console.log(  JSON.stringify(apiPermissionsList.data, null ," "))
             }
         } catch (error) {
             console.log(error);

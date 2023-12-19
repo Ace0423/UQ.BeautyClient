@@ -118,7 +118,7 @@ onMounted(() => {
             </thead>
             <tbody class="content-tab">
                 <tr class="permissionsList" v-for="items, index in permissions" :key="index">
-                    <td class="content-function">{{ items.actionText }}</td>
+                    <td class="content-function">{{ items.optionText }}</td>
                     <td class="content-describe">
                         <div v-for="item in items.optionRoleLists" :key="item.olId">
                             <p class="target-text">{{ item.targetText }}</p>
@@ -230,7 +230,7 @@ onMounted(() => {
                 }
 
                 >.header-function {
-                    margin-left: 5px;
+                    margin-left: 15px;
                     text-align: left;
                     width: 20%;
                 }
@@ -274,7 +274,7 @@ onMounted(() => {
                 }
 
                 >.content-function {
-                    margin-left: 5px;
+                    margin-left: 15px;
                     width: 20%;
                     display: flex;
                     justify-content: left;

@@ -24,7 +24,7 @@ const handEditRoleNameView = () => {
 };
 const roleNameList = computed(() => {
     if (roleList.value.data) {
-        return roleList.value.data;
+        return roleList.value.data.filter((e: any) => e.roleId != 1);
     }
 });
 const permissions = computed(() => {
@@ -111,16 +111,20 @@ onMounted(() => {
         <table>
             <thead class="header-tab">
                 <tr>
-                    <th>功能</th>
-                    <th>權限描述</th>
+                    <th class="header-function">功能</th>
+                    <th class="header-describe">權限描述</th>
                     <th v-for="item in roleNameList" :key="item.roleId">{{ item.memo }} </th>
                 </tr>
             </thead>
             <tbody class="content-tab">
                 <tr class="permissionsList" v-for="items, index in permissions" :key="index">
-                    <td :style="{ '--width': width }" class="a">{{ items.controllerText }}</td>
-                    <td :style="{ '--width': width }" class="a">
-                        <p v-for="item in items.optionRoleLists" :key="item.olId">{{ item.actionText }}</p>
+                    <td class="content-function">{{ items.actionText }}</td>
+                    <td class="content-describe">
+                        <div v-for="item in items.optionRoleLists" :key="item.olId">
+                            <p class="target-text">{{ item.targetText }}</p>
+                            <p class="memo-text">{{ item.memo }}</p>
+                        </div>
+
                     </td>
                     <td class="roleList" :key="componentKey">
                         <div class="inputItem" v-for="item in items.optionRoleLists" :key="item.roleId">
@@ -203,13 +207,13 @@ onMounted(() => {
                 display: flex;
                 align-items: center;
                 height: 50px;
-                justify-content: space-around;
+                // justify-content: space-around;
 
                 >th {
                     align-items: center;
                     justify-content: center;
-                    width: var(--width);
-                    // width: calc(100%/8);
+                    // width: var(--width);
+                    width: calc(50%/5);
 
                     >.fixed-th {
                         width: 10%;
@@ -223,6 +227,17 @@ onMounted(() => {
                     >.nameview {
                         padding-left: 10px;
                     }
+                }
+
+                >.header-function {
+                    margin-left: 5px;
+                    text-align: left;
+                    width: 20%;
+                }
+
+                >.header-describe {
+                    text-align: left;
+                    width: 30%;
                 }
             }
         }
@@ -256,6 +271,28 @@ onMounted(() => {
                     background: #ddd;
                     left: 50%;
                     transform: translateX(-50%);
+                }
+
+                >.content-function {
+                    margin-left: 5px;
+                    width: 20%;
+                    display: flex;
+                    justify-content: left;
+                    align-items: center;
+                    font-weight:bold;
+                    color: #000000;
+                }
+
+                >.content-describe {
+                    width: 30%;
+
+                    .target-text {
+                        font-weight:bold;
+                    }
+                    .memo-text {
+                        font-size: 16px;
+                        color: #9e9e9e;
+                    }
                 }
 
                 .a {

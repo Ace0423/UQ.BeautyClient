@@ -11,6 +11,8 @@ const handmemuStateBtn = () => {
 };
 
 onMounted(() => {
+  let vh = window.innerHeight * 0.01;
+  document.documentElement.style.setProperty("--vh", `${vh}px`);
   setIsLogin(false);
   if (getToken("token")) {
     setIsLogin(true);
@@ -100,6 +102,12 @@ body {
   height: 100%;
   margin: auto;
   font-family: HeitiTC;
+
+  .main-display {
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    position: relative;
+  }
 }
 
 #app {

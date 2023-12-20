@@ -23,7 +23,7 @@
     </div>
     <div class="appt_main">
       <div>
-        <div class="item-tab"  name="預約排程">
+        <div class="item-tab" name="上選單">
           <div>
             <button :class="mainTabIndexRef == index ? 'active' : ''" v-for="(item, index) in mainTypeDataRef"
               :key="item.id" v-on:click="changeMainTab(index)">
@@ -53,8 +53,8 @@
 
           </div>
         </div>
-        <div class="appt_box" name="預約列表">
-          <div class="appt_calendar"  name="日期小工具" v-show="mainTabIndexRef == 0">
+        <div class="appt_box" name="預約">
+          <div class="appt_calendar" name="預約排程" v-show="mainTabIndexRef == 0">
             <div v-show="false">
               <div class="little_date" v-show="showWeekBoxRef == 2">
                 <div>
@@ -75,11 +75,16 @@
                         active: currentDay == index + 1 && checkYM,
                         todayEff: new Date().getDate() == item && checkToday,
                       }" v-for="(item, index) in currentDays" :key="item" v-on:click="onSelect(index + 1)">{{ item
-                          }}</span>
+}}</span>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+            <div :class="tuiOptions.tuiType == 2 ? ' Tui_calendar_date' : 'Tui_calendar_main'
+              " class="Tui_calendar_main" v-if="mainTabIndexRef == 0 && showWeekBoxRef != 3">
+              <Tui_calendar v-if="showTuiApptRef" :tuiList="showTuiList" :tuiOptions="tuiOptions" :selectDate="selectDate"
+                :selTuiListFn="selTuiListFn" :tuiSetDate="tuiSetDate"></Tui_calendar>
             </div>
           </div>
 
@@ -147,11 +152,11 @@
     :selLittleDateFn="selLittleDateFn" />
   <ApptInfoUI v-if="showApptInfoRef" :showUIHdr="updataShowApptInfoRef" :selItemData="oldSelList"
     :infoBtnState="infoBtnState" />
-  <div :class="tuiOptions.tuiType == 2 ? ' Tui_calendar_date' : 'Tui_calendar_main'
+  <!-- <div :class="tuiOptions.tuiType == 2 ? ' Tui_calendar_date' : 'Tui_calendar_main'
     " class="Tui_calendar_main" v-if="mainTabIndexRef == 0 && showWeekBoxRef != 3">
     <Tui_calendar v-if="showTuiApptRef" :tuiList="showTuiList" :tuiOptions="tuiOptions" :selectDate="selectDate"
       :selTuiListFn="selTuiListFn" :tuiSetDate="tuiSetDate"></Tui_calendar>
-  </div>
+  </div> -->
 
   <div v-if="mainTabIndexRef == 0 && showWeekBoxRef == 3">
 
@@ -376,7 +381,7 @@ function getApptInfoFn(
       let courseBgColor = getColorNum(element.serviceInfo[0].color);
       courseBgColor = element.state == 1 ? 999 : courseBgColor;
       let curTimer = element.timer == 0 ? element.subList.servicesTime : element.timer;
-      
+
       //顯示課程ITEM
       tuiList.value.push({
         id: element.bookingNo,
@@ -420,8 +425,6 @@ let filterApptData: any = computed(() => {
   curAptData.sort(function (a: any, b: any) {
     return a.dateBooking > b.dateBooking ? 1 : -1;
   });
-console.log(555,curAptData);
-
   return curAptData;
 });
 
@@ -728,7 +731,7 @@ function handleDetail(row: any) {
   } else {
     oldSelList = row;
   }
-  
+
   if (row.serviceInfo[0]) {
     onWeekSeldate(row.dateBooking.split("T")[0]);
     updataShowApptInfoRef(true);
@@ -1063,19 +1066,21 @@ function setRestTimeFn(data: any) {
 $borderCoder: #eaedf2;
 
 .container {
+  height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
   position: relative;
-  width: 100%;
+  // width: 100%;
 
   .top_box {
     display: flex;
     width: 100%;
+    height: 70px;
 
     .top_menu {
       display: flex;
       width: calc(100%);
       justify-content: right;
-      height: 80px;
+      height: 70px;
 
       >div {
         height: 29px;
@@ -1095,7 +1100,7 @@ $borderCoder: #eaedf2;
   .appt_main {
     position: absolute;
     top: 80px;
-    bottom: 10px;
+    bottom: 0px;
     left: 0px;
     right: 0px;
 
@@ -1178,407 +1183,410 @@ $borderCoder: #eaedf2;
       }
 
       .appt_box {
-        position: relative;
+        position: absolute;
         display: flex;
-        height: calc(100% - 45px);
         width: 94%;
         margin-left: 3%;
+        // height: calc(100% - 45px);
+        top: 45px;
+        bottom: 10px;
 
         .appt_calendar {
           position: relative;
           width: 100%;
           height: 100%;
           border: 1px solid #ddd;
+          box-sizing: border-box;
           // min-width: 900px;
 
-          >div {
-            position: relative;
-            top: 0px;
-            display: flex;
-            align-items: center;
-            top: 1%;
-            width: 98%;
-            height: 98%;
-            border-radius: 15px;
-            // background: #e6e2de;
-            margin: 0 auto;
-            border: 1px solid #707070;
-            justify-content: right;
+          // >div {
+          //   position: relative;
+          //   top: 0px;
+          //   display: flex;
+          //   align-items: center;
+          //   top: 1%;
+          //   width: 98%;
+          //   height: 98%;
+          //   border-radius: 15px;
+          //   // background: #e6e2de;
+          //   margin: 0 auto;
+          //   border: 1px solid #707070;
+          //   justify-content: right;
 
-            .appointment_date {
-              width: 70%;
-              // min-width: 600px;
-              height: 100%;
-              padding: 1%;
-              box-sizing: border-box;
+          //   .appointment_date {
+          //     width: 70%;
+          //     // min-width: 600px;
+          //     height: 100%;
+          //     padding: 1%;
+          //     box-sizing: border-box;
 
-              .date_top {
-                display: flex;
-                width: 100%;
-                // justify-content: space-between;
-                align-items: center;
-                height: 10%;
-                // padding: 0 1%;
+          //     .date_top {
+          //       display: flex;
+          //       width: 100%;
+          //       // justify-content: space-between;
+          //       align-items: center;
+          //       height: 10%;
+          //       // padding: 0 1%;
 
-                span {
-                  display: flex;
-                  // width: 10%;
-                  height: 100%;
-                  text-align: center;
-                  display: flex;
-                  font-family: ArialBlack;
-                  font-size: 30px;
-                  font-weight: bold;
-                  color: #906e6c;
-                }
+          //       span {
+          //         display: flex;
+          //         // width: 10%;
+          //         height: 100%;
+          //         text-align: center;
+          //         display: flex;
+          //         font-family: ArialBlack;
+          //         font-size: 30px;
+          //         font-weight: bold;
+          //         color: #906e6c;
+          //       }
 
-                .todayDate {
-                  display: flex;
-                  height: 100%;
-                  text-align: center;
-                  font-family: ArialBlack;
-                  font-size: 20px;
-                  font-weight: normal;
-                  color: #906e6c;
-                  margin-left: 10px;
-                }
-              }
+          //       .todayDate {
+          //         display: flex;
+          //         height: 100%;
+          //         text-align: center;
+          //         font-family: ArialBlack;
+          //         font-size: 20px;
+          //         font-weight: normal;
+          //         color: #906e6c;
+          //         margin-left: 10px;
+          //       }
+          //     }
 
-              .date_table {
-                height: 90%;
-                display: flex;
-                flex-direction: column;
+          //     .date_table {
+          //       height: 90%;
+          //       display: flex;
+          //       flex-direction: column;
 
-                .date_timePeriodList {
-                  width: 100%;
-                  overflow: auto;
-                  padding-bottom: 0%;
-                  position: relative;
-                  display: flex;
-                  height: 100%;
+          //       .date_timePeriodList {
+          //         width: 100%;
+          //         overflow: auto;
+          //         padding-bottom: 0%;
+          //         position: relative;
+          //         display: flex;
+          //         height: 100%;
 
-                  .date_Listinfotbody {
-                    width: 100%;
+          //         .date_Listinfotbody {
+          //           width: 100%;
 
-                    .date_timePeriod_col2 {
-                      border-bottom: 1px solid #906e6c;
-                      // height: 10%;
+          //           .date_timePeriod_col2 {
+          //             border-bottom: 1px solid #906e6c;
+          //             // height: 10%;
 
-                      >td {
-                        height: 39px;
-                        width: 1px;
-                        color: #906e6c;
-                      }
+          //             >td {
+          //               height: 39px;
+          //               width: 1px;
+          //               color: #906e6c;
+          //             }
 
-                      .time_row {
-                        width: 20%;
-                      }
+          //             .time_row {
+          //               width: 20%;
+          //             }
 
-                      .thing_group {
-                        // height: 100%;
-                        height: 0px;
+          //             .thing_group {
+          //               // height: 100%;
+          //               height: 0px;
 
-                        >div {
-                          display: flex;
-                          height: 100%;
+          //               >div {
+          //                 display: flex;
+          //                 height: 100%;
 
-                          .more_things {
-                            display: flex;
-                            width: 100%;
-                            height: 100%;
-                          }
+          //                 .more_things {
+          //                   display: flex;
+          //                   width: 100%;
+          //                   height: 100%;
+          //                 }
 
-                          .one_things {
-                            // display: contents;
-                            display: flex;
-                            height: 100%;
-                          }
+          //                 .one_things {
+          //                   // display: contents;
+          //                   display: flex;
+          //                   height: 100%;
+          //                 }
 
-                          .thing_item {
-                            height: 100%;
-                            flex: 1;
-                            display: flex;
-                            font-size: 14px;
-                            flex-direction: column;
-                            color: #906e6c;
-                            background: #ffffff;
-                            border-radius: 10px;
-                            cursor: pointer;
-                            box-sizing: border-box;
-                            border: 1px solid #000000;
+          //                 .thing_item {
+          //                   height: 100%;
+          //                   flex: 1;
+          //                   display: flex;
+          //                   font-size: 14px;
+          //                   flex-direction: column;
+          //                   color: #906e6c;
+          //                   background: #ffffff;
+          //                   border-radius: 10px;
+          //                   cursor: pointer;
+          //                   box-sizing: border-box;
+          //                   border: 1px solid #000000;
 
-                            >span {
-                              overflow: hidden;
-                            }
-                          }
+          //                   >span {
+          //                     overflow: hidden;
+          //                   }
+          //                 }
 
-                          .waiting {
-                            background: #ffffff;
-                          }
+          //                 .waiting {
+          //                   background: #ffffff;
+          //                 }
 
-                          .finish {
-                            color: #906e6c;
-                            background: #ecdbd3;
-                          }
+          //                 .finish {
+          //                   color: #906e6c;
+          //                   background: #ecdbd3;
+          //                 }
 
-                          .seldated {
-                            background: #79baff;
-                          }
+          //                 .seldated {
+          //                   background: #79baff;
+          //                 }
 
-                          .oneitem_size {
-                            width: 50%;
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
+          //                 .oneitem_size {
+          //                   width: 50%;
+          //                 }
+          //               }
+          //             }
+          //           }
+          //         }
+          //       }
+          //     }
+          //   }
 
-            .little_date {
-              position: relative;
-              top: 12px;
-              right: 2px;
-              border-radius: 15px;
-              background: #ffffff;
-              // height: 528px;
-              height: 86%;
-              width: 28%;
-              border: 1px solid #707070;
-              z-index: 1;
+          //   .little_date {
+          //     position: relative;
+          //     top: 12px;
+          //     right: 2px;
+          //     border-radius: 15px;
+          //     background: #ffffff;
+          //     // height: 528px;
+          //     height: 86%;
+          //     width: 28%;
+          //     border: 1px solid #707070;
+          //     z-index: 1;
 
-              >div {
-                width: 100%;
-                height: 68%;
+          //     >div {
+          //       width: 100%;
+          //       height: 68%;
 
-                .dateBox_title {
-                  display: flex;
-                  width: 100%;
-                  height: 40px;
-                  line-height: 40px;
-                  text-align: center;
-                  justify-content: center;
-                  cursor: pointer;
+          //       .dateBox_title {
+          //         display: flex;
+          //         width: 100%;
+          //         height: 40px;
+          //         line-height: 40px;
+          //         text-align: center;
+          //         justify-content: center;
+          //         cursor: pointer;
 
-                  .arrow {
-                    width: 30%;
-                    height: 35%;
-                    color: #b89087;
-                    margin-top: 10px;
-                  }
+          //         .arrow {
+          //           width: 30%;
+          //           height: 35%;
+          //           color: #b89087;
+          //           margin-top: 10px;
+          //         }
 
-                  .arrow-right {
-                    color: #b89087;
-                    text-align: right;
-                  }
+          //         .arrow-right {
+          //           color: #b89087;
+          //           text-align: right;
+          //         }
 
-                  .arrow-left {
-                    color: #b89087;
-                    text-align: left;
-                  }
+          //         .arrow-left {
+          //           color: #b89087;
+          //           text-align: left;
+          //         }
 
-                  .data {
-                    justify-content: center;
-                    font-size: 20px;
-                    width: 100%;
-                    color: #b89087;
-                    cursor: default;
-                  }
-                }
+          //         .data {
+          //           justify-content: center;
+          //           font-size: 20px;
+          //           width: 100%;
+          //           color: #b89087;
+          //           cursor: default;
+          //         }
+          //       }
 
-                .dateBox_content {
-                  width: 100%;
-                  height: 250px;
+          //       .dateBox_content {
+          //         width: 100%;
+          //         height: 250px;
 
-                  .row_title {
-                    width: 100%;
-                    display: flex;
-                    justify-content: space-between;
-                    height: 40px;
-                    line-height: 40px;
-                    color: #b89087;
+          //         .row_title {
+          //           width: 100%;
+          //           display: flex;
+          //           justify-content: space-between;
+          //           height: 40px;
+          //           line-height: 40px;
+          //           color: #b89087;
 
-                    span {
-                      width: calc(14.285714285714286%);
-                      text-align: center;
-                    }
-                  }
+          //           span {
+          //             width: calc(14.285714285714286%);
+          //             text-align: center;
+          //           }
+          //         }
 
-                  .row_content {
-                    width: 100%;
-                    display: flex;
-                    justify-content: space-between;
+          //         .row_content {
+          //           width: 100%;
+          //           display: flex;
+          //           justify-content: space-between;
 
-                    -webkit-box-pack: start;
-                    -ms-flex-pack: start;
-                    justify-content: flex-start;
-                    -ms-flex-wrap: wrap;
-                    flex-wrap: wrap;
+          //           -webkit-box-pack: start;
+          //           -ms-flex-pack: start;
+          //           justify-content: flex-start;
+          //           -ms-flex-wrap: wrap;
+          //           flex-wrap: wrap;
 
-                    span {
-                      width: calc(14.285714285714286%);
-                      height: 30px;
-                      line-height: 30px;
-                      text-align: center;
-                    }
+          //           span {
+          //             width: calc(14.285714285714286%);
+          //             height: 30px;
+          //             line-height: 30px;
+          //             text-align: center;
+          //           }
 
-                    .prevDay {
-                      color: #fff;
-                      background-color: #fff;
-                      // background-color: #eee;
-                    }
+          //           .prevDay {
+          //             color: #fff;
+          //             background-color: #fff;
+          //             // background-color: #eee;
+          //           }
 
-                    .thisDay {
-                      width: calc(14.285714285714286%);
-                      height: 30px;
-                      line-height: 30px;
-                      text-align: center;
-                      border-radius: 5px;
-                      color: #b89087;
+          //           .thisDay {
+          //             width: calc(14.285714285714286%);
+          //             height: 30px;
+          //             line-height: 30px;
+          //             text-align: center;
+          //             border-radius: 5px;
+          //             color: #b89087;
 
-                      &:active {
-                        // transition: all 0.2s;
-                        background: #b89087;
-                        color: #fff;
-                      }
+          //             &:active {
+          //               // transition: all 0.2s;
+          //               background: #b89087;
+          //               color: #fff;
+          //             }
 
-                      &:hover {
-                        transition: all 0.2s;
-                        cursor: pointer;
-                        background: #b89087;
-                        color: #fff;
-                      }
+          //             &:hover {
+          //               transition: all 0.2s;
+          //               cursor: pointer;
+          //               background: #b89087;
+          //               color: #fff;
+          //             }
 
-                      &.current {
-                        transition: all 0.2s;
-                        background: #b89087;
-                        color: #fff;
-                      }
+          //             &.current {
+          //               transition: all 0.2s;
+          //               background: #b89087;
+          //               color: #fff;
+          //             }
 
-                      &.grey {
-                        color: #999;
-                      }
-                    }
+          //             &.grey {
+          //               color: #999;
+          //             }
+          //           }
 
-                    .todayEff {
-                      color: #ff0000;
-                    }
+          //           .todayEff {
+          //             color: #ff0000;
+          //           }
 
-                    .thisDay.active {
-                      background-color: #b89087;
-                      color: #fff;
-                    }
-                  }
+          //           .thisDay.active {
+          //             background-color: #b89087;
+          //             color: #fff;
+          //           }
+          //         }
 
-                  .row {
-                    width: 100%;
-                    display: flex;
-                    justify-content: space-between;
-                  }
+          //         .row {
+          //           width: 100%;
+          //           display: flex;
+          //           justify-content: space-between;
+          //         }
 
-                  .title {
-                    height: 40px;
-                    line-height: 40px;
-                    color: #b89087;
-                  }
+          //         .title {
+          //           height: 40px;
+          //           line-height: 40px;
+          //           color: #b89087;
+          //         }
 
-                  .title span {
-                    width: calc(14.285714285714286%);
-                    text-align: center;
-                  }
+          //         .title span {
+          //           width: calc(14.285714285714286%);
+          //           text-align: center;
+          //         }
 
-                  .content {
-                    -webkit-box-pack: start;
-                    -ms-flex-pack: start;
-                    justify-content: flex-start;
-                    -ms-flex-wrap: wrap;
-                    flex-wrap: wrap;
+          //         .content {
+          //           -webkit-box-pack: start;
+          //           -ms-flex-pack: start;
+          //           justify-content: flex-start;
+          //           -ms-flex-wrap: wrap;
+          //           flex-wrap: wrap;
 
-                    span {
-                      width: calc(14.285714285714286%);
-                      height: 30px;
-                      line-height: 30px;
-                      text-align: center;
-                    }
+          //           span {
+          //             width: calc(14.285714285714286%);
+          //             height: 30px;
+          //             line-height: 30px;
+          //             text-align: center;
+          //           }
 
-                    .prevDay {
-                      color: #fff;
-                      background-color: #fff;
-                      // background-color: #eee;
-                    }
+          //           .prevDay {
+          //             color: #fff;
+          //             background-color: #fff;
+          //             // background-color: #eee;
+          //           }
 
-                    .thisDay {
-                      width: calc(14.285714285714286%);
-                      height: 30px;
-                      line-height: 30px;
-                      text-align: center;
-                      border-radius: 5px;
-                      color: #b89087;
+          //           .thisDay {
+          //             width: calc(14.285714285714286%);
+          //             height: 30px;
+          //             line-height: 30px;
+          //             text-align: center;
+          //             border-radius: 5px;
+          //             color: #b89087;
 
-                      &:active {
-                        // transition: all 0.2s;
-                        background: #b89087;
-                        color: #fff;
-                      }
+          //             &:active {
+          //               // transition: all 0.2s;
+          //               background: #b89087;
+          //               color: #fff;
+          //             }
 
-                      &:hover {
-                        transition: all 0.2s;
-                        cursor: pointer;
-                        background: #b89087;
-                        color: #fff;
-                      }
+          //             &:hover {
+          //               transition: all 0.2s;
+          //               cursor: pointer;
+          //               background: #b89087;
+          //               color: #fff;
+          //             }
 
-                      &.current {
-                        transition: all 0.2s;
-                        background: #b89087;
-                        color: #fff;
-                      }
+          //             &.current {
+          //               transition: all 0.2s;
+          //               background: #b89087;
+          //               color: #fff;
+          //             }
 
-                      &.grey {
-                        color: #999;
-                      }
-                    }
+          //             &.grey {
+          //               color: #999;
+          //             }
+          //           }
 
-                    .todayEff {
-                      color: #ff0000;
-                    }
+          //           .todayEff {
+          //             color: #ff0000;
+          //           }
 
-                    .thisDay.active {
-                      background-color: #b89087;
-                      color: #fff;
-                    }
-                  }
-                }
-              }
+          //           .thisDay.active {
+          //             background-color: #b89087;
+          //             color: #fff;
+          //           }
+          //         }
+          //       }
+          //     }
 
-              .list_btn {
-                position: relative;
-                width: 100%;
-                margin: 0px;
-                display: grid;
-                justify-content: center;
+          //     .list_btn {
+          //       position: relative;
+          //       width: 100%;
+          //       margin: 0px;
+          //       display: grid;
+          //       justify-content: center;
 
-                .btn_add {
-                  width: 120px;
-                  height: 40px;
-                  margin: 0;
-                  align-items: center;
-                  justify-content: center;
-                  font-weight: bold;
-                  display: flex;
-                  // padding: 5px ;
-                  border-radius: 8px;
-                  border: solid 1px #707070;
-                  background-color: #ffffff;
-                  color: #906e6c;
-                  cursor: pointer;
-                  margin-top: 5px;
-                  font-size: 18px;
-                }
-              }
-            }
-          }
+          //       .btn_add {
+          //         width: 120px;
+          //         height: 40px;
+          //         margin: 0;
+          //         align-items: center;
+          //         justify-content: center;
+          //         font-weight: bold;
+          //         display: flex;
+          //         // padding: 5px ;
+          //         border-radius: 8px;
+          //         border: solid 1px #707070;
+          //         background-color: #ffffff;
+          //         color: #906e6c;
+          //         cursor: pointer;
+          //         margin-top: 5px;
+          //         font-size: 18px;
+          //       }
+          //     }
+          //   }
+          // }
         }
 
         .appt_list {
@@ -1903,24 +1911,47 @@ li {
   box-sizing: border-box;
 }
 
+
 .Tui_calendar_main {
-  border-radius: 15px; // 99em;
-  border: 1px solid #707070;
-  position: absolute;
-  top: 133px;
-  bottom: 18px;
-  left: 47px;
-  right: 47px;
+  height: 100%;
+  width: 100%;
+
+  >div {
+    border-radius: 15px; // 99em;
+    border: 1px solid #707070;
+    position: absolute;
+    height: 98%;
+    width: 98%;
+    top: 1%;
+    left: 1%;
+  }
 }
 
 .Tui_calendar_date {
-  border-radius: 15px; // 99em;
-  border: 1px solid #707070;
-  position: absolute;
-  top: 133px;
-  bottom: 18px;
-  left: 47px;
-  right: 47px;
-  // right: 350px;
+  height: 100%;
+  width: 100%;
+
+  >div {
+    border-radius: 15px; // 99em;
+    border: 1px solid #707070;
+    position: absolute;
+    height: 98%;
+    width: 98%;
+    top: 1%;
+    left: 1%;
+  }
+}
+
+.border-box {
+  /* 常规 */
+  box-sizing: border-box;
+  /* firefox */
+  -moz-box-sizing: border-box;
+  /* chrome */
+  -webkit-box-sizing: border-box;
+  /* IE8以下 */
+  -ms-box-sizing: border-box;
+  /* opera */
+  -o-box-sizing: border-box;
 }
 </style>

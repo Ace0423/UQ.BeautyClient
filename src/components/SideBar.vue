@@ -23,11 +23,7 @@ const handUserMenuView = () => {
   userMenuState.value = !userMenuState.value;
 };
 var url = window.location.href;
-if (url.indexOf("127.0.0.1") > -1) {
-  showTestUI.value = true;
-} else {
-  showTestUI.value = false;
-}
+showTestUI.value = false;
 onMounted(() => {
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty("--vh", `${vh}px`);
@@ -63,11 +59,9 @@ onMounted(() => {
           <li v-if="getRole('userData') == 'Admin'">
             <img :src="settingImg" /><router-link to="/systemSettingView/managerAdmin">系統設定</router-link>
           </li>
-          <!-- <li v-show="showTestUI">
-            <img :src="settingImg" /><router-link to="/testView"
-              >Api測試</router-link
-            >
-          </li> -->
+          <li v-show="showTestUI">
+            <img :src="settingImg" /><router-link to="/testView">Api測試</router-link>
+          </li>
         </ul>
       </div>
       <div class="user-info">

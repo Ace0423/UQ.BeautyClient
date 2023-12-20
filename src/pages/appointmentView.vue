@@ -23,7 +23,7 @@
     </div>
     <div class="appt_main">
       <div>
-        <div class="item-tab">
+        <div class="item-tab"  name="預約排程">
           <div>
             <button :class="mainTabIndexRef == index ? 'active' : ''" v-for="(item, index) in mainTypeDataRef"
               :key="item.id" v-on:click="changeMainTab(index)">
@@ -53,8 +53,8 @@
 
           </div>
         </div>
-        <div class="appt_box">
-          <div class="appt_calendar" v-show="mainTabIndexRef == 0">
+        <div class="appt_box" name="預約列表">
+          <div class="appt_calendar"  name="日期小工具" v-show="mainTabIndexRef == 0">
             <div v-show="false">
               <div class="little_date" v-show="showWeekBoxRef == 2">
                 <div>
@@ -75,7 +75,7 @@
                         active: currentDay == index + 1 && checkYM,
                         todayEff: new Date().getDate() == item && checkToday,
                       }" v-for="(item, index) in currentDays" :key="item" v-on:click="onSelect(index + 1)">{{ item
-}}</span>
+                          }}</span>
                     </div>
                   </div>
                 </div>
@@ -83,12 +83,13 @@
             </div>
           </div>
 
-          <div class="appt_list" v-show="mainTabIndexRef == 1">
+          <div class="appt_list" name="預約列表" v-show="mainTabIndexRef == 1">
             <div>
               <table>
                 <thead align="left">
                   <tr>
                     <th v-for="item in aptTitle" :key="item">
+
                       <p>{{ item }}</p>
                     </th>
                     <input v-model="searchList" class="search-control" placeholder="搜尋顧客" />
@@ -111,10 +112,10 @@
                       <p>{{ item.timePeriod }}</p>
                     </td>
                     <td>
-                      <p>{{ item.lesson }}</p>
+                      <p>{{ item.serviceInfo[0].name }}</p>
                     </td>
                     <td>
-                      <p>{{ item.customer }}</p>
+                      <p>{{ item.memberInfo.nameView }}</p>
                     </td>
                     <td>
                       <div class="checked_state">
@@ -419,6 +420,7 @@ let filterApptData: any = computed(() => {
   curAptData.sort(function (a: any, b: any) {
     return a.dateBooking > b.dateBooking ? 1 : -1;
   });
+console.log(555,curAptData);
 
   return curAptData;
 });

@@ -8,7 +8,7 @@ import bankImg from "@/assets/Icon awesome-money-check-alt.svg";
 import orderImg from "@/assets/images/ico_order.png";
 
 import closeIcon from "@/assets/Group32.svg";
-import { getRole } from "@/plugins/js-cookie";
+import { getRole, getshowMap } from "@/plugins/js-cookie";
 import { useCounterStore } from "@/stores/counter";
 import { storeToRefs } from "pinia";
 const store = useCounterStore();
@@ -43,7 +43,7 @@ onMounted(() => {
           <li>
             <img :src="appointmentImg" /><router-link to="/appointmentView">預約紀錄</router-link>
           </li>
-          <li>
+          <li v-if="getshowMap('顧客管理', 'MemberData')">
             <img :src="customerImg" /><router-link to="/memberManagerView/memberView">顧客管理</router-link>
           </li>
           <!-- <li>

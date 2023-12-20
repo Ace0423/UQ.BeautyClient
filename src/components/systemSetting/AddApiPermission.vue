@@ -10,7 +10,7 @@ const { addApiPermissionsList, editApiPermissionsList } = settingStore;
 const title = ref("");
 const submitNameBtn = ref('確認');
 const optionType: any = [{ option: 0, optionText: '預約' }, { option: 1, optionText: '結帳' }, { option: 2, optionText: '訂單紀錄' }, { option: 3, optionText: '預約' }, { option: 4, optionText: '顧客管理' }, { option: 5, optionText: '訊息管理' }, { option: 6, optionText: '人員管理' }, { option: 7, optionText: '報表' }, { option: 8, optionText: '項目管理' }, { option: 9, optionText: '商店設定' }, { option: 10, optionText: '票卷管理' }, { option: 11, optionText: '應用程式' }, { option: 12, optionText: '問卷管理' },]
-const controllerType: any = [{ controller: "Auth", controllerText: '認證控制器' }, { controller: "Company", controllerText: '商店管理控制器' }, { controller: "Discount", controllerText: '折扣優惠控制器' }, { controller: "Manager", controllerText: '管理者控制器' }, { controller: "Member", controllerText: '顧客控制器' }, { controller: "Product", controllerText: '產品管理控制器' }, { controller: "Option", controllerText: '功能管理控制器' }]
+const controllerType: any = [{ controller: "Auth", controllerText: '認證控制器' }, { controller: "Company", controllerText: '商店管理控制器' }, { controller: "Discounts", controllerText: '折扣優惠控制器' }, { controller: "Manager", controllerText: '管理者控制器' }, { controller: "Member", controllerText: '顧客控制器' }, { controller: "Product", controllerText: '產品管理控制器' }, { controller: "Option", controllerText: '功能管理控制器' } ,{ controller: "Service", controllerText: '服務控制器' }]
 const targetType: any = ['Get', 'POST', 'PUT', 'DELETE']
 const apiData = reactive({
     olid: 0,

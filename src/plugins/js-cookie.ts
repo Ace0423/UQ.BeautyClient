@@ -27,3 +27,12 @@ export const getRole = (name: string) => {
         return undefined;
     }
 }
+export const getshowMap = (option: string, action: string) => {
+    const val: any = Cookies.get('userData');
+    try {
+        let filterData: any = (JSON.parse(val).showMappings).filter((e: any) => e.optionText == option && e.action == action);
+        return filterData.length <= 0 ? true : filterData[0].open;
+    } catch (err) {
+        return undefined;
+    }
+}

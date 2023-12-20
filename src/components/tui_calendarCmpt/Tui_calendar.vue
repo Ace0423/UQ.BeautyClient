@@ -743,15 +743,15 @@ export default {
     function getTimeTemplate(schedule, isAllDay) {
       var html = [];
       var start = moment(schedule.start.toUTCString());
-      var serverMsg = schedule.raw.memberInfo.nameView;
+      var managerName = schedule.raw.managerInfo.nameView;
       if (!isAllDay) {
         html.push("<strong>" + start.format("HH:mm") + "</strong> ");
         if (this_.proptuiOptions.tuiType != 0)
           if (schedule.raw.serverId == 0) {
-            html.push("<strong  style='float:right; background-color:#5B5B5B; border-radius:20%;'>" + serverMsg + "</strong> ");
+            html.push("<strong  style='float:right; background-color:#5B5B5B; border-radius:20%;'>" + managerName + "</strong> ");
           }
           else {
-            html.push("<strong  style='float:right;  border-radius:20%;'>" + serverMsg + "</strong> ");
+            html.push("<strong  style='float:right;  border-radius:20%;'>" + managerName + "</strong> ");
           }
       }
       if (schedule.isPrivate) {

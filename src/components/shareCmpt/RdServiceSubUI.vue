@@ -1,8 +1,8 @@
 <template>
-  <div class="popup-detailService" v-on:click.self="showServiceUIFn(0)">
+  <div class="popup-subService" v-on:click.self="showRdSubFn(false)">
     <div class="popup-content">
       <div class="top-content">
-        <img :src="icon_closeX" v-on:click="showServiceUIFn(0)" />
+        <img :src="icon_closeX" v-on:click="showRdSubFn(false)" />
         <span>服務</span>
       </div>
       <div class="main-content">
@@ -11,8 +11,8 @@
           <div v-for="item in filterCourseData" :key="item">
             <label class="label-item" :value="item">
               <input class="input-item" type="radio" :key="item" :value="item" :id="'RadioServicesUI_' + item"
-                v-model="formInputRef.courses" @click="clickItem(item, item.SId)" />
-              <!-- <label :for="'RadioServicesUI_' + item.SId"></label> -->
+                v-model="formInputRef.courses" @click="clickItem(item, item.SubId)" />
+              <!-- <label :for="'RadioServicesUI_' + item.SubId"></label> -->
               <div class="title-input">
                 <span value="{{item}}" name="{{item.name}}">{{
                   item.name
@@ -23,15 +23,16 @@
                 <span>{{ "$" + item.price }}</span>
               </div>
             </label>
+            <!-- <input type="checkbox" name="item_001" value="1" />1 -->
           </div>
         </div>
       </div>
       <div class="bottom-content">
+        <!-- <button class="submit-btn" @click="submitBtn()">確認</button>
+        <button class="cancle-btn" @click="showServiceUIFn(0)">取消</button> -->
       </div>
     </div>
   </div>
-  <RdServiceSubUI v-if="showRdServiceSubUIRef" :selData="formInputRef.courses" :getDataFn="getRdSubIdFn"
-    :showRdSubFn="showRdSubFn"></RdServiceSubUI>
 </template>
 
 <script setup lang="ts">
@@ -40,14 +41,13 @@ import { useApptStore } from "@/stores/apptStore";
 import search_ico from "@/assets/images/icon_search.png";
 import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
 import icon_closeX from "@/assets/images/icon_closeX.png";
-import { RFC_2822 } from "moment";
 
-let store = useApptStore();
-let { serviceDetailList } = storeToRefs(store);
-let { getServiceDetailApi } = store;
+// let store = useApptStore();
+// let { serviceDetailList } = storeToRefs(store);
+// let { getServiceDetailApi } = store;
 
 const props = defineProps<{
-  showServiceUIFn: Function;
+  showRdSubFn: Function;
   getDataFn: Function;
   selData: any;
 }>();
@@ -55,13 +55,11 @@ let formInputRef: any = ref({
   name: "",
   search: "",
   courses: null,
-  serviceSub: null,
 });
-let showRdServiceSubUIRef = ref(false);
 
 onBeforeFn();
 function onBeforeFn() {
-  getServiceDetailApi();
+  console.log(props.selData.subList);
 }
 onMounted(() => {
   // console.log('onMounted');
@@ -70,11 +68,10 @@ if (props.selData) {
   formInputRef.value.courses = props.selData;
 }
 let filterCourseData: any = computed(() =>
-  serviceDetailList.value.filter(getCourseFn)
+  props.selData.subList.filter(getCourseFn)
 );
 function getCourseFn(data: any) {
   return (
-    data.display &&
     (!formInputRef.value.search ||
       data.name
         .toLowerCase()
@@ -84,41 +81,17 @@ function getCourseFn(data: any) {
 
 function submitBtn() {
   props.getDataFn(formInputRef.value.courses);
-  props.showServiceUIFn(0)
+  props.showRdSubFn(false)
 }
 
 function clickItem(item: any, id: number) {
-  formInputRef.value.courses = item;
-  console.log(formInputRef.value.courses);
-  
-  if (formInputRef.value.courses.subList.length > 0) {
-    showRdSubFn(true);
-  } else {
-    props.getDataFn(formInputRef.value.courses);
-    // props.showServiceUIFn(0)
-  }
+  props.getDataFn(item);
+  // props.showRdSubFn(false)
 }
-
-function getRdSubIdFn(data: any) {
-  showRdSubFn(false);
-  formInputRef.value.serviceSub = data;
-  formInputRef.value.courses.SubList = data
-  props.getDataFn(formInputRef.value.courses);
-
-}
-
-function showRdSubFn(type: boolean) {
-  showRdServiceSubUIRef.value = type;
-
-  if (!type) {
-    // formInputRef.value.courses.SubList = formInputRef.value.courses.SubList.length ? formInputRef.value.courses.SubList : null;
-  }
-}
-
 </script>
 
 <style scoped lang="scss">
-.popup-detailService {
+.popup-subService {
   position: absolute;
   top: 0;
   left: 0;
@@ -126,10 +99,6 @@ function showRdSubFn(type: boolean) {
   right: 0;
   z-index: 3;
   background: rgba(255, 255, 255, 0.5);
-
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
 
   .popup-content {
     width: 400px;
@@ -140,10 +109,10 @@ function showRdSubFn(type: boolean) {
     font-family: HeitiTC;
     color: #84715c;
     font-weight: bold;
-    // position: absolute;
-    // top: 50%;
-    // left: 50%;
-    // transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
 
     .top-content {
       display: flex;

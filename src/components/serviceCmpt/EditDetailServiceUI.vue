@@ -12,9 +12,12 @@
             <span class="title-content">基本資訊</span>
             <span class="msg-content">填寫你的服務項目基本資訊。</span>
             <div>
-              <span>服務名稱</span>
+              <span>*服務名稱</span>
               <input v-model="formInputRef.name" placeholder="請輸入服務名稱" type="text" />
             </div>
+            <span class="p_error" v-if="ruleLists.ruleItem.name.is_error">
+              {{ ruleLists.ruleItem.name.warn }}
+            </span>
             <div>
               <span>簡稱</span>
               <input v-model="formInputRef.nickName" placeholder="最多輸入四個字簡稱" type="text" />
@@ -26,19 +29,18 @@
           </div>
           <div class="input-radio" name="服務顏色">
             <span class="title-content">服務顏色</span>
-            <!-- <span class="msg-content">選擇呈現於行事曆的預約顏色</span> -->
             <div>
               <RadioColorUI v-if="showColorUIRef" :selColorIndex="formInputRef.color" :updataColorFn="updataColorFn"
                 :coloarSize="60" />
             </div>
           </div>
-          <div class="input-item" name="使用期限">
+          <div class="input-item" name="項目類型">
             <div>
               <span>項目類型</span>
               <div class="select-content">
                 <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.subType"
                   @change="changeValue()">
-                  <el-option v-for="(item, index) in childrenTab" :key="index" :value="item.id" :label="item.name">
+                  <el-option v-for="(item, index) in subTab" :key="index" :value="item.id" :label="item.name">
                     {{ item.name }}
                   </el-option>
                 </el-select>
@@ -48,6 +50,9 @@
               <span>價格</span>
               <input v-model="formInputRef.price" placeholder="請輸入價格" type="text" />
             </div>
+            <span class="p_error" v-if="ruleLists.ruleItem.price.is_error && formInputRef.subType == 0">
+              {{ ruleLists.ruleItem.price.warn }}
+            </span>
             <div v-if="formInputRef.subType == 0">
               <span>服務時長</span>
               <div class="select-content">
@@ -59,8 +64,43 @@
                 </el-select>
               </div>
             </div>
+            <span class="p_error" v-if="ruleLists.ruleItem.servicesTime.is_error && formInputRef.subType == 0">
+              {{ ruleLists.ruleItem.servicesTime.warn }}
+            </span>
             <div class="link-btn" v-if="formInputRef.subType == 1">
-              <span>新增服務子項目</span>
+              <span @click="showAddSubUIFn(true)">新增服務子項目</span>
+            </div>
+            <div class="form-info" v-if="formInputRef.subType == 1">
+              <div class="form-item">
+                <div v-if="formInputRef.subList.length > 0">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th align="left">子項目({{ formInputRef.subList.length }})</th>
+                        <th align="left">時長</th>
+                        <th align="left">價格</th>
+                        <th align="left">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody v-for="(item, index) in formInputRef.subList" :key="item.sId">
+                      <tr>
+                        <td>
+                          <span>{{ item.name }}</span>
+                        </td>
+                        <td>
+                          <span>{{ item.servicesTime }}</span>
+                        </td>
+                        <td>
+                          <span>{{ item.price }}</span>
+                        </td>
+                        <td>
+                          <img class="delete_img" :src="icon_cancleItem" @click="cancleSubListFn(item, index)" />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
           <div class="input-switch" name="其他設定">
@@ -112,6 +152,8 @@
   <CbServiceGroupsUI v-if="showSelGroupsUIRef" :selData="formInputRef.SGIdList" :getDataFn="getCGroupsFn"
     :showCGroupsUIFn="showCGroupsUIFn">
   </CbServiceGroupsUI>
+  <AddSubDetailUI v-if="showSubDetailUIRef" :showAddSubUIFn="showAddSubUIFn" :getSubDetailFn="getSubDetailFn">
+  </AddSubDetailUI>
 </template>
   
 <script setup lang="ts">
@@ -119,9 +161,10 @@ import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
-import { formatZeroDate } from "@/utils/utils";
+import { checkVerify_all, formatZeroDate } from "@/utils/utils";
 import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
+import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
 
 let store = useApptStore();
 let { } = storeToRefs(store);
@@ -134,17 +177,19 @@ const props = defineProps<{
 let showSelItemUIRef = ref(false);
 let showSelGroupsUIRef = ref(false);
 let showColorUIRef = ref(false);
+let showSubDetailUIRef = ref(false);
 
 
-let childrenTab = [
+
+let subTab = [
   {
     id: 0,
     name: "無子項目",
   },
-  // {
-  //   id: 1,
-  //   name: "多項子項目",
-  // },
+  {
+    id: 1,
+    name: "多項子項目",
+  },
 ];
 let timeGroup: any = ref(["30", "60", "90", "120", "150", "180", "210", "240"]);
 let formInputRef: any = ref({
@@ -160,6 +205,7 @@ let formInputRef: any = ref({
   color: "#fb9ea6",
   subType: 0,
   SGIdList: [],
+  subList: [],
 });
 
 
@@ -183,6 +229,8 @@ function setInputData(params: any) {
   formInputRef.value.isEditAccounting = params.isEditAccounting;
   formInputRef.value.color = params.color;
   formInputRef.value.SGIdList = params.sgIdList;
+  formInputRef.value.subType = params.subType;
+  formInputRef.value.subList = params.subList;
   showColorUIRef.value = true;
 }
 onMounted(() => {
@@ -207,8 +255,31 @@ formInputRef.value.endDate =
 function showSelItemUIFn(state: boolean) {
   showSelItemUIRef.value = state;
 }
+function showAddSubUIFn(state: boolean) {
+  console.log(111, state);
+
+  showSubDetailUIRef.value = state;
+}
+function getSubDetailFn(data: any) {
+  formInputRef.value.subList.push(data);
+  showAddSubUIFn(false)
+}
+function cancleSubListFn(item: any, index: number) {
+  formInputRef.value.subList.splice(index, 1);
+}
 
 function submitBtn() {
+
+  ruleLists.ruleItem.name.value = formInputRef.value.name;
+  ruleLists.ruleItem.price.value = formInputRef.value.price;
+  ruleLists.ruleItem.servicesTime.value = formInputRef.value.servicesTime;
+
+  if (formInputRef.value.subType == 1) {
+    ruleLists.ruleItem.price.value = 1;
+    ruleLists.ruleItem.servicesTime.value = 1;
+  }
+  if (!checkVerify_all(ruleLists)) return;
+
 
   let curGroupMaps = [];
   for (let i = 0; i < formInputRef.value.SGIdList.length; i++) {
@@ -228,13 +299,11 @@ function submitBtn() {
     isEditAccounting: formInputRef.value.isEditAccounting,
     sgIdList: curGroupMaps,
     color: formInputRef.value.color,
+    subType: formInputRef.value.subType,
+    subList: formInputRef.value.subList,
   };
-  console.log("編輯", apiData);
-
   /**編輯 */
   updateServiceDetailApi(apiData).then((res: any) => {
-    console.log(res);
-    
     if (res.state == 1) {
       Alert.sussess("成功", 1000);
       setTimeout(() => {
@@ -253,17 +322,52 @@ function changeValue() {
   // formInputRef.value.subType = formInputRef.value.subType == 0 ? 1 : 0;
 }
 function getCGroupsFn(data: any) {
-  console.log();
-  
   formInputRef.value.SGIdList = data;
   showCGroupsUIFn(false)
 }
+
 function showCGroupsUIFn(data: boolean) {
   showSelGroupsUIRef.value = data;
 }
 function updataColorFn(params: any) {
   formInputRef.value.color = params
 }
+//#region 規則
+const ruleLists: any = reactive({
+  ruleItem: {
+    name: {
+      label: "名稱",
+      rules: {
+        required: {
+          warn: "此項為必填",
+        },
+      },
+      is_error: false,
+      warn: "",
+    },
+    price: {
+      label: "價格",
+      rules: {
+        required: {
+          warn: "此項為必填",
+        },
+      },
+      is_error: false,
+      warn: "",
+    },
+    servicesTime: {
+      label: "時長",
+      rules: {
+        required: {
+          warn: "此項為必填",
+        },
+      },
+      is_error: false,
+      warn: "",
+    },
+  },
+});
+//#endregion
 </script>
   
 <style lang="scss">
@@ -487,6 +591,133 @@ function updataColorFn(params: any) {
             }
           }
 
+          .form-info {
+            width: 100%;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            border: solid 0px #ddd;
+
+            >div {
+              p {
+                text-align: left;
+                font-size: 18px;
+                text-align: left;
+                color: #877059;
+                height: 8px;
+              }
+
+              span {
+                display: block;
+                height: 30px;
+                width: 95%;
+                text-align: left;
+                font-size: 22px;
+                text-align: left;
+                color: #877059;
+                font-weight: bold;
+              }
+
+              >input {
+                vertical-align: middle;
+                width: 95%;
+                margin: 5;
+                height: 30px;
+                border: solid 1px #707070;
+                background-color: #fff;
+              }
+            }
+
+            .form-item {
+              width: 100%;
+              border-bottom: 0px solid #fff;
+
+              >span {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+                height: 40px;
+              }
+
+              >div {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                // max-height: 100px;
+                // overflow-y: auto;
+
+                >table {
+                  // display: flex;
+                  width: 100%;
+
+                  >thead {
+                    background-color: #c1bdb8;
+                    color: #797979;
+                    width: 100%;
+                    border-bottom: 2px;
+
+                    >tr>th {
+                      font-size: 16px;
+                      color: #636363;
+                      font-weight: bold;
+                    }
+
+                    >tr>th:nth-child(1) {
+                      width: 50%;
+                    }
+
+                    >tr>th:nth-child(2) {
+                      width: 15%;
+                    }
+
+                    >tr>th:nth-child(3) {
+                      width: 15%;
+                    }
+
+                    >tr>th:nth-child(4) {
+                      width: 20%;
+                    }
+                  }
+
+                  >tbody {
+                    border-bottom: 2px solid #dadada;
+
+                    >tr>td>span {
+                      display: block;
+                      text-align: left;
+                      font-size: 22px;
+                      color: #877059;
+                      font-weight: bold;
+                      margin: 10px 0px;
+                    }
+
+                    >tr>td:nth-child(1) {
+                      width: 50%;
+                    }
+
+                    >tr>td:nth-child(2) {
+                      width: 15%;
+                    }
+
+                    >tr>th:nth-child(3) {
+                      width: 15%;
+                    }
+
+                    >tr>th:nth-child(4) {
+                      width: 20%;
+                    }
+                  }
+                }
+              }
+
+              .link-btn {
+                color: #b89087;
+              }
+            }
+          }
+
+
         }
 
 
@@ -512,10 +743,8 @@ function updataColorFn(params: any) {
 
 
         .input-switch {
-          // padding: 0px 15px;
           width: 100%;
           height: 300px;
-          // border: 1px solid #000;
 
           .title-switch {
             display: block;
@@ -636,6 +865,12 @@ function updataColorFn(params: any) {
   width: 80%;
   height: 2px;
   background-color: #707070;
+}
+
+.p_error {
+  color: #fc0505;
+  width: 100%;
+  font-size: 16px;
 }
 </style>
   

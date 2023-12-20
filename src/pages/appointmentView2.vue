@@ -424,7 +424,7 @@ let { bookingList, courseDataList, timeGroup, tuiBookingListRef } =
   storeToRefs(store);
 let {
   getApptDataApi,
-  getMemberData,
+  getMemberListApi,
   getCourseDetailApi,
   postEditApptDataApi,
   getBeauticianApi,
@@ -462,9 +462,9 @@ function getApptInfoFn(
 ) {
   getCourseDetailApi(0, 0);
   //先取得會員清單
-  getMemberData().then((res: any) => {
+  getMemberListApi().then((res: any) => {
     //預先呼叫api獲取數據
-    getApptDataApi(year, month).then((res: any) => {
+    getApptDataApi(0,year, month).then((res: any) => {
       resetApptTable(year, month, date);
       tuiList = [];
       for (let i = 0; i < tuiBookingListRef.value.length; i++) {

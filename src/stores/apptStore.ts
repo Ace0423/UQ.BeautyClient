@@ -401,12 +401,14 @@ export const useApptStore = defineStore("apptStore", () => {
   let tuiBookingListRef: any = ref([]);
   const memberList: any = ref([]);
   /**獲取會員資料 */
-  const getMemberData = async () => {
+  const getMemberListApi = async (id: any = 0,
+    pageindex: any = 0,
+    count: any = 0,) => {
     try {
       const dataRequest = reactive({
-        id: 0,
-        pageindex: 0,
-        count: 0,
+        id: id,
+        pageindex: pageindex,
+        count: count,
       });
       const res = await apiGetMemberListRequest(dataRequest).then(
         (res: any) => {
@@ -423,11 +425,12 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   /**獲取預約資料 */
-  const getApptDataApi = async (year: any, month: any) => {
+  const getApptDataApi = async (bNo: any = "", year: any = 0, month: any = 0) => {
     try {
       bookingList.value = [];
       //重製預約
       for (let i = 0; i < timeGroup.value.length; i++) {
+
         const element = timeGroup.value[i];
         bookingList.value.push({
           timeView: timeGroup.value[i],
@@ -436,58 +439,38 @@ export const useApptStore = defineStore("apptStore", () => {
           things: [],
         });
       }
-      let data = "?year=" + year + "&month=" + month + "&pageIndex=0&count=0";
+
+      let data = "?bNo=" + bNo + "&year=" + year + "&month=" + month + "&pageIndex=0&count=0";
       let res: any = await getApptDataRequest(data).then((res: any) => {
         //插入預約
         if (res.data.data) {
-          let DetailVo: IApptDetailVo = res.data.data.table;
-          tuiBookingListRef.value = res.data.data.table.filter(function (
-            value: any,
-            index: any,
-            arr: any
-          ) {
-            return value.state != 3;
-          });
-
-          for (let i = 0; i < res.data.data.table.length; i++) {
-            const bookingListEmt = res.data.data.table[i];
-            if (bookingListEmt.state == 3) {
-              continue;
-            }
-            for (let j = 0; j < bookingList.value.length; j++) {
-              const timeEmt = bookingList.value[j];
-              let curDateTime = bookingListEmt.dateBooking.split("T");
-              let curTime =
-                curDateTime[1].split(":")[0] +
-                ":" +
-                curDateTime[1].split(":")[1];
-              if (curTime == timeEmt.timePeriod && bookingListEmt.lesson) {
-                let bookingData: IBookingVo = {
-                  id: bookingListEmt.bookingNo,
-                  timePeriod: curTime, //hh:mm
-                  date: curDateTime[0], //yyyy-mm-dd
-                  range:
-                    bookingListEmt.timer > 30 ? bookingListEmt.timer / 30 : 1,
-                  userId: bookingListEmt.userId,
-                  bookingNo: bookingListEmt.bookingNo,
-                  beautyTherapist: bookingListEmt.beautyTherapist,
-                  bookingMemo: bookingListEmt.bookingMemo,
-                  customer: bookingListEmt.customer,
-                  dateBooking: bookingListEmt.dateBooking,
-                  dateCreate: bookingListEmt.dateCreate,
-                  discount: bookingListEmt.discount,
-                  lesson: bookingListEmt.lesson,
-                  lessonId: bookingListEmt.lessonId,
-                  price: bookingListEmt.price,
-                  serverId: bookingListEmt.serverId,
-                  state: bookingListEmt.state,
-                  timer: bookingListEmt.timer,
-                  tradeDone: bookingListEmt.tradeDone,
-                };
-
-                bookingList.value[j].things.push(bookingData);
+          if (bNo == "") {// 指定時間
+            tuiBookingListRef.value = res.data.data.table.filter(function (
+              item: any,
+              index: any,
+              arr: any
+            ) {
+              //處理數據
+              if (item.serverId == 0) {
+                item.managerInfo = { managerId: 0, nameView: "不指定" }
               }
+              item.serviceInfo[0].subList = [];
+              if (item.subList)
+                item.serviceInfo[0].subList.push(item.subList);
+              item.serverName = item.managerInfo.nameView;
+              return item.state != 3
+            });
+            return res.data.data.table;
+          } else {//  指定編號
+            let curItem = res.data.data.table[0];
+            if (curItem.serverId == 0) {
+              curItem.managerInfo = { managerId: 0, nameView: "不指定" }
+              curItem.serverName = curItem.managerInfo.nameView;
             }
+            curItem.serviceInfo[0].subList = [];
+            if (curItem.subList)
+              curItem.serviceInfo[0].subList.push(curItem.subList);
+            return curItem
           }
         }
         return res;
@@ -741,14 +724,18 @@ export const useApptStore = defineStore("apptStore", () => {
   //#region 管理員
 
   let managerList: any = ref([]);
-  const getManagerListApi = async (id: any, pageIndex: number = 0, count: number = 0) => {
+  const getManagerListApi = async (id: any = 0, level: any = 0, pageIndex: number = 0, count: number = 0) => {
     try {
       const res = await getManagerListReq(id).then((res: any) => {
         if (res.data.data) {
-          managerList.value = res.data.data.table;
+          if (level == 0)
+            managerList.value = res.data.data.table
+          else
+            managerList.value = res.data.data.table.filter((item: any) => item.roleList[0].roleId == level);
         }
         return res;
       });
+      return res;
     } catch (error) {
       console.log(error);
       return Promise.reject(error);
@@ -794,7 +781,6 @@ export const useApptStore = defineStore("apptStore", () => {
     editCourseTypeApi,
     editCourseTypeOrderApi,
     //--------------------appt
-    getMemberData,
     getApptDataApi,
     postAddApptDataApi,
     postEditApptDataApi,
@@ -803,7 +789,6 @@ export const useApptStore = defineStore("apptStore", () => {
     bookingList,
     tuiBookingListRef,
     beauticianList,
-    memberList,
     timeGroup,
     //--------------------goods
     goodsTypesListValueRef,
@@ -824,6 +809,9 @@ export const useApptStore = defineStore("apptStore", () => {
     //--------------------管理員
     managerList,
     getManagerListApi,
-    addRestApi
+    addRestApi,
+    //--------------------會員
+    memberList,
+    getMemberListApi,
   };
 });

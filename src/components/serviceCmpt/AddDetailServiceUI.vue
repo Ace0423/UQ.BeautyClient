@@ -34,13 +34,13 @@
               <RadioColorUI :selColorIndex="formInputRef.color" :updataColorFn="updataColorFn" :coloarSize="60" />
             </div>
           </div>
-          <div class="input-item" name="使用期限">
+          <div class="input-item" name="項目類型">
             <div>
               <span>*項目類型</span>
               <div class="select-content">
                 <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.subType"
                   @change="changeValue()">
-                  <el-option v-for="(item, index) in childrenTab" :key="index" :value="item.id" :label="item.name">
+                  <el-option v-for="(item, index) in subTab" :key="index" :value="item.id" :label="item.name">
                     {{ item.name }}
                   </el-option>
                 </el-select>
@@ -68,8 +68,43 @@
               {{ ruleLists.ruleItem.servicesTime.warn }}
             </span>
             <div class="link-btn" v-if="formInputRef.subType == 1">
-              <span>新增服務子項目</span>
+              <span @click="showAddSubUIFn(true)">新增服務子項目</span>
             </div>
+            <div class="form-info" v-if="formInputRef.subType == 1">
+              <div class="form-item">
+                <div v-if="formInputRef.subList.length > 0">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th align="left">子項目({{ formInputRef.subList.length }})</th>
+                        <th align="left">時長</th>
+                        <th align="left">價格</th>
+                        <th align="left">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody v-for="(item, index) in formInputRef.subList" :key="item.sId">
+                      <tr>
+                        <td>
+                          <span>{{ item.name }}</span>
+                        </td>
+                        <td>
+                          <span>{{ item.servicesTime }}</span>
+                        </td>
+                        <td>
+                          <span>{{ item.price }}</span>
+                        </td>
+                        <td>
+                          <img class="delete_img" :src="icon_cancleItem" @click="cancleSubListFn(item, index)" />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <span class="p_error" v-if="ruleLists.ruleItem.subListTotal.is_error && formInputRef.subType == 1">
+              {{ ruleLists.ruleItem.subListTotal.warn }}
+            </span>
           </div>
           <div class="input-switch" name="其他設定">
             <span class="title-switch">其他設定</span>
@@ -117,9 +152,11 @@
   </div>
   <SelectItemUI v-if="showSelItemUIRef" :showUIFn="showSelItemUIFn">
   </SelectItemUI>
-  <CbServiceGroupsUI v-if="showSelGroupsUIRef" :selData="formInputRef.sgIdList" :getDataFn="getCGroupsFn"
+  <CbServiceGroupsUI v-if="showSelGroupsUIRef" :selData="formInputRef.sgList" :getDataFn="getCGroupsFn"
     :showCGroupsUIFn="showCGroupsUIFn">
   </CbServiceGroupsUI>
+  <AddSubDetailUI v-if="showSubDetailUIRef" :showAddSubUIFn="showAddSubUIFn" :getSubDetailFn="getSubDetailFn">
+  </AddSubDetailUI>
 </template>
   
 <script setup lang="ts">
@@ -130,6 +167,7 @@ import icon_ticket from "@/assets/images/icon_cancle.png";
 import { checkVerify_all, formatZeroDate } from "@/utils/utils";
 import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
+import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
 
 let store = useApptStore();
 let { } = storeToRefs(store);
@@ -140,16 +178,17 @@ const props = defineProps<{
 }>();
 let showSelItemUIRef = ref(false);
 let showSelGroupsUIRef = ref(false);
+let showSubDetailUIRef = ref(false);
 
-let childrenTab = [
+let subTab = [
   {
     id: 0,
     name: "無子項目",
   },
-  // {
-  //   id: 1,
-  //   name: "多項子項目",
-  // },
+  {
+    id: 1,
+    name: "多項子項目",
+  },
 ];
 let timeGroup: any = ref(["30", "60", "90", "120", "150", "180", "210", "240"]);
 let formInputRef: any = ref({
@@ -164,7 +203,8 @@ let formInputRef: any = ref({
   color: "#fb9ea6",
   colorIndex: 0,
   subType: 0,
-  sgIdList: [],
+  sgList: [],
+  subList: [],
 });
 onMounted(() => {
   // console.log('onMounted');
@@ -188,43 +228,58 @@ formInputRef.value.endDate =
 function showSelItemUIFn(state: boolean) {
   showSelItemUIRef.value = state;
 }
+function showAddSubUIFn(state: boolean) {
+  showSubDetailUIRef.value = state;
+}
+function getSubDetailFn(data: any) {
+  formInputRef.value.subList.push(data);
+  showAddSubUIFn(false)
+}
+function cancleSubListFn(item: any, index: number) {
+  formInputRef.value.subList.splice(index, 1);
+}
 
 function submitBtn() {
+console.log(formInputRef.value.sgList);
 
   ruleLists.ruleItem.name.value = formInputRef.value.name;
   ruleLists.ruleItem.price.value = formInputRef.value.price;
   ruleLists.ruleItem.servicesTime.value = formInputRef.value.servicesTime;
+  ruleLists.ruleItem.subListTotal.value = formInputRef.value.subList.length;
 
   if (formInputRef.value.subType == 1) {
     ruleLists.ruleItem.price.value = 1;
     ruleLists.ruleItem.servicesTime.value = 1;
+  } else {
+    ruleLists.ruleItem.subListTotal.value = 1;
   }
   if (!checkVerify_all(ruleLists)) return;
 
 
 
 
-  let curGroupMaps = [];
-  for (let i = 0; i < formInputRef.value.sgIdList.length; i++) {
-    const element = formInputRef.value.sgIdList[i];
-    curGroupMaps.push(element.pgId);
+  let groupIdMaps = [];
+  for (let i = 0; i < formInputRef.value.sgList.length; i++) {
+    const element = formInputRef.value.sgList[i];
+    groupIdMaps.push(element.sgId);
   }
+
   let apiData = {
     sId: 0,
     name: formInputRef.value.name,
     nickName: formInputRef.value.nickName,
     memo: formInputRef.value.memo,
     display: formInputRef.value.display,
-    servicesTime: formInputRef.value.servicesTime,
-    price: formInputRef.value.price,
+    servicesTime: formInputRef.value.subType == 1 ? 0 : formInputRef.value.servicesTime,
+    price: formInputRef.value.subType == 1 ? 0 : formInputRef.value.price,
     discount: formInputRef.value.discount,
     isBonusOpen: formInputRef.value.isBonusOpen,
     isEditAccounting: formInputRef.value.isEditAccounting,
-    sgIdList: formInputRef.value.sgIdList,
+    sgIdList: groupIdMaps,
     color: formInputRef.value.color,
+    subType: formInputRef.value.subType,
+    subList: formInputRef.value.subList,
   };
-  console.log(apiData);
-
   /**新增 */
   addServiceDetailApi(apiData).then((res: any) => {
     if (res.state == 1) {
@@ -245,7 +300,7 @@ function changeValue() {
   // formInputRef.value.subType = formInputRef.value.subType == 0 ? 1 : 0;
 }
 function getCGroupsFn(data: any) {
-  formInputRef.value.sgIdList = data;
+  formInputRef.value.sgList = data;
   showCGroupsUIFn(false)
 }
 function showCGroupsUIFn(data: boolean) {
@@ -287,6 +342,17 @@ const ruleLists: any = reactive({
       is_error: false,
       warn: "",
     },
+    subListTotal: {
+      label: "子項目",
+      rules: {
+        required: {
+          warn: "此項為必填",
+        },
+      },
+      is_error: false,
+      warn: "",
+    },
+
   },
 });
 //#endregion
@@ -510,6 +576,132 @@ const ruleLists: any = reactive({
               color: #87ceeb;
               font-size: 28px;
               width: 100%;
+            }
+          }
+
+          .form-info {
+            width: 100%;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            border: solid 0px #ddd;
+
+            >div {
+              p {
+                text-align: left;
+                font-size: 18px;
+                text-align: left;
+                color: #877059;
+                height: 8px;
+              }
+
+              span {
+                display: block;
+                height: 30px;
+                width: 95%;
+                text-align: left;
+                font-size: 22px;
+                text-align: left;
+                color: #877059;
+                font-weight: bold;
+              }
+
+              >input {
+                vertical-align: middle;
+                width: 95%;
+                margin: 5;
+                height: 30px;
+                border: solid 1px #707070;
+                background-color: #fff;
+              }
+            }
+
+            .form-item {
+              width: 100%;
+              border-bottom: 0px solid #fff;
+
+              >span {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                align-items: center;
+                height: 40px;
+              }
+
+              >div {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                // max-height: 100px;
+                // overflow-y: auto;
+
+                >table {
+                  // display: flex;
+                  width: 100%;
+
+                  >thead {
+                    background-color: #c1bdb8;
+                    color: #797979;
+                    width: 100%;
+                    border-bottom: 2px;
+
+                    >tr>th {
+                      font-size: 16px;
+                      color: #636363;
+                      font-weight: bold;
+                    }
+
+                    >tr>th:nth-child(1) {
+                      width: 50%;
+                    }
+
+                    >tr>th:nth-child(2) {
+                      width: 15%;
+                    }
+
+                    >tr>th:nth-child(3) {
+                      width: 15%;
+                    }
+
+                    >tr>th:nth-child(4) {
+                      width: 20%;
+                    }
+                  }
+
+                  >tbody {
+                    border-bottom: 2px solid #dadada;
+
+                    >tr>td>span {
+                      display: block;
+                      text-align: left;
+                      font-size: 22px;
+                      color: #877059;
+                      font-weight: bold;
+                      margin: 10px 0px;
+                    }
+
+                    >tr>td:nth-child(1) {
+                      width: 50%;
+                    }
+
+                    >tr>td:nth-child(2) {
+                      width: 15%;
+                    }
+
+                    >tr>th:nth-child(3) {
+                      width: 15%;
+                    }
+
+                    >tr>th:nth-child(4) {
+                      width: 20%;
+                    }
+                  }
+                }
+              }
+
+              .link-btn {
+                color: #b89087;
+              }
             }
           }
 

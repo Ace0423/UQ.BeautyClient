@@ -636,7 +636,7 @@ export default {
       defaultView: defaultView,
       taskView: taskView,
       scheduleView: scheduleView,
-      timezonesCollapsed:true,
+      timezonesCollapsed: true,
       // customStyle: {'fontSize': '20px'},
       day: {
         // daynames: ["週日", "週一", "週二", "週三", "週四", "週五", "週六"],
@@ -743,7 +743,7 @@ export default {
     function getTimeTemplate(schedule, isAllDay) {
       var html = [];
       var start = moment(schedule.start.toUTCString());
-      var serverMsg = schedule.raw.serverName;
+      var serverMsg = schedule.raw.memberInfo.nameView;
       if (!isAllDay) {
         html.push("<strong>" + start.format("HH:mm") + "</strong> ");
         if (this_.proptuiOptions.tuiType != 0)
@@ -768,18 +768,20 @@ export default {
           //icon
           // html.push('<span class="calendar-font-icon ic-location-b"></span>');
         }
-        // html.push(" " + schedule.title);
+        
         if (this_.proptuiOptions.tuiType == 0) {
+          //月曆
           html.push(" " + schedule.title);
         } else {
+          //週曆-日曆
           html.push("<br>" + "<span>" +
-            schedule.raw.customer +
+            schedule.raw.memberInfo.nameView +
             "<br>" +
-            schedule.raw.lesson
-            //+ "(" +
-            // schedule.raw.timer +
-            // " Min)" + "</span> "
+            schedule.raw.serviceInfo[0].name 
           );
+          if (schedule.raw.subList) {
+            html.push("(" + schedule.raw.subList.name+")" );
+          }
         }
 
       }
@@ -1211,6 +1213,7 @@ export default {
 :deep(.tui-full-calendar-timegrid-container) {
   height: calc(100%);
 }
+
 :deep(.tui-full-calendar-layout) {
   /* height: calc(50px) !important; */
   overflow: auto;

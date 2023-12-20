@@ -16,8 +16,8 @@
             <div class="info-guest">
               <img class="head-shot" :src="Icon" />
               <div>
-                <span>{{ customerDataCpt.nameView }}</span>
-                <span>{{ customerDataCpt.phone }}</span>
+                <span>{{ memberDataCpt.nameView }}</span>
+                <span>{{ memberDataCpt.phone }}</span>
               </div>
             </div>
           </div>
@@ -56,18 +56,18 @@
           <div class="info-list">
             <div class="content-box">
               <p>{{ props.selItemData.timePeriod }}</p>
-              <div class="info-guest">
+              <div class="info-service">
                 <img class="head-shot" :src="Icon" />
                 <div>
-                  <p>{{ props.selItemData.lesson }}</p>
-                  <p>
+                  <span>{{ props.selItemData.serviceInfo[0].name }}</span>
+                  <span>
                     {{
-                      beauticianCpt.nameView +
+                      managerCpt.nameView +
                       "," +
                       props.selItemData.timer +
                       "分"
                     }}
-                  </p>
+                  </span>
                 </div>
               </div>
             </div>
@@ -104,7 +104,6 @@ const props = defineProps<{
   showUIHdr: Function;
   infoBtnState: Function;
 }>();
-
 let dateCpt: any = computed(() => {
   return (
     props.selItemData.dateBooking.split("T")[0].split("-")[1] +
@@ -113,30 +112,32 @@ let dateCpt: any = computed(() => {
     "日"
   );
 });
-let customerDataCpt: any = computed(() => {
-  let customerData = [];
-  for (let i = 0; i < memberList.value.length; i++) {
-    const element = memberList.value[i];
-    if (element.userId == props.selItemData.userId) {
-      customerData = element;
-    }
-  }
-  return customerData;
+let memberDataCpt: any = computed(() => {
+  // let customerData = [];
+  // for (let i = 0; i < memberList.value.length; i++) {
+  //   const element = memberList.value[i];
+  //   if (element.userId == props.selItemData.userId) {
+  //     customerData = element;
+  //   }
+  // }
+  // return customerData;
+  return props.selItemData.memberInfo
 });
 getManagerListNew({ id: 0, pageindex: 0, count: 0 })
-let beauticianCpt: any = computed(() => {
-  let beauticianData = {};
-  if (props.selItemData.serverId == 0) {
-    beauticianData = { "nameView": "不指定" }
-  } else {
-    for (let i = 0; i < managerRoleList.value.length; i++) {
-      const element = managerRoleList.value[i];
-      if (element.managerId == props.selItemData.serverId) {
-        beauticianData = element;
-      }
-    }
-  }
-  return beauticianData;
+let managerCpt: any = computed(() => {
+  // let beauticianData = {};
+  // if (props.selItemData.serverId == 0) {
+  //   beauticianData = { "nameView": "不指定" }
+  // } else {
+  //   for (let i = 0; i < managerRoleList.value.length; i++) {
+  //     const element = managerRoleList.value[i];
+  //     if (element.managerId == props.selItemData.serverId) {
+  //       beauticianData = element;
+  //     }
+  //   }
+  // }
+  // return beauticianData;
+  return props.selItemData.managerInfo
 });
 
 let weekDayCpt: any = computed(() => {
@@ -242,8 +243,13 @@ onMounted(() => {
             }
 
             >div {
+              height: 100%;
+              padding-left: 10px;
+
               >span {
+                height: 50%;
                 justify-content: left;
+                align-items: center;
                 display: flex;
                 font-family: STXihei;
                 font-size: 20px;
@@ -384,21 +390,23 @@ onMounted(() => {
               }
             }
 
-            .info-guest {
+            .info-service {
               display: flex;
               width: 80%;
+              height: 80px;
               justify-content: center;
-
-              // //margin: 5px 30px;
+              align-items: center;
 
               .head-shot {
-                //margin: 5px 30px;
                 position: relative;
                 width: 15%;
               }
 
               >div {
-                >p {
+                height: 80%;
+                padding-left: 10px;
+                >span {
+                  height: 50%;
                   justify-content: left;
                   display: flex;
                   font-family: STXihei;

@@ -1,125 +1,298 @@
 <template>
-  <div id="add_form" class="form_bg" @click.self="showAddReserveForm(false)">
-    <div class="add-reserve-form">
-      <div class="basic_info_main">
-        <div class="basic_info_item name">
-          <p>姓名(電話)</p>
-          <el-select v-model="newApptDataRef.memberId" filterable allow-create default-first-option
-            :reserve-keyword="false" placeholder=" ">
-            <el-option v-for="item in memberList" :key="item.nameView" :value="item.userId" :label="item.nameView">
-              {{ item.nameView + "(" + item.phone + ")" }}
-            </el-option>
-          </el-select>
+  <div class="popup-mask" v-on:click.self="showAddApptFn(false)">
+    <div class="popup-content">
+      <div class="header-content">
+        <img :src="icon_closeX" v-on:click="showAddApptFn(false)" />
+        <span>新預約</span>
+      </div>
+      <div class="main-content">
+        <div class="left-main">
+          <div class="input-box">
+            <div class="input-date" name="日期">
+              <input type="date" v-model="formInputRef.selDate" />
+            </div>
+            <div class="link-bottom"></div>
+            <div class="input-service" name="服務">
+              <input type="time" v-model="formInputRef.timeBooking" />
+              <span class="p_error" v-if="ruleItem.timeBooking.is_error">
+                {{ ruleItem.timeBooking.warn }}
+              </span>
+              <div class="service-item" v-for="(item, index) in formInputRef.courses" :key="item">
+                <!-- <img class="service-img" :src="icon_customer" /> -->
+                <div>
+                  <div class="title-main">
+                    <span>{{ item.name }}</span>
+                    <span class="service-price" v-if="item.subList.length > 0">{{ " $ " + item.subList[0].price }}</span>
+                    <span class="service-price" v-else>{{ " $ " + item.price }}</span>
+                  </div>
+                  <div class="time-main" v-if="item.subList.length > 0">
+                    <span>{{
+                      item.subList[0].servicesTime + " 分 "
+                    }}</span>
+                    <span>{{
+                      " , " + item.subList[0].name
+                    }}</span>
+                  </div>
+                  <div class="time-main" v-else>
+                    <span>{{
+                      item.servicesTime + " 分 "
+                    }}</span>
+                  </div>
+                </div>
+                <img class="delete_img" :src="icon_cancleItem" @click="cancleServiceFn(item, index)" />
+              </div>
+            </div>
+            <div class="bill-add" name="新增服務" v-on:click="showItemTypeFn(1)">
+              <span>&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新增結帳項目</span>
+            </div>
+            <span class="p_error" v-if="ruleItem.lessonItem.is_error">
+              {{ ruleItem.lessonItem.warn }}
+            </span>
+            <div class="link-bottom"></div>
+            <div class="msg-add" name="備註">
+              <el-input v-model="formInputRef.bookingMemo" maxlength="1000" placeholder="請輸入備註" show-word-limit type="text" />
+            </div>
+            <div class="link-bottom"></div>
+          </div>
+
+        </div>
+        <div class="right-main">
+          <div class="customer-btn" name="芳療師" v-on:click="showManagerUIFn(true)">
+            <img class="customer-img" :src="icon_customer" />
+            <div>
+              <span>{{ formInputRef.managerInfo.nameView }}</span>
+              <span class="customer-phone">{{
+                formInputRef.managerInfo.phone
+              }}</span>
+            </div>
+            <img :src="icon_right_arrow" />
+          </div>
+          <div class="customer-btn" name="顧客" v-on:click="showMemberUIFn(true)">
+            <img class="customer-img" :src="icon_customer" />
+            <div>
+              <span>{{ formInputRef.memberInfo.nameView }}</span>
+              <span class="customer-phone">{{
+                formInputRef.memberInfo.phone
+              }}</span>
+            </div>
+            <img :src="icon_right_arrow" />
+          </div>
           <span class="p_error" v-if="ruleItem.name.is_error">
             {{ ruleItem.name.warn }}
           </span>
-        </div>
-        <div class="basic_info_item time">
-          <p>選擇時段</p>
-          <div class="news-filter">
-            <el-select v-model="newApptDataRef.timeBooking" allow-create default-first-option :reserve-keyword="false"
-              placeholder=" ">
-              <el-option v-for="(item, index) in timeGroup" :key="index" :label="item" :value="item" />
-            </el-select>
-            <span class="p_error" v-if="ruleItem.timeBooking.is_error">
-              {{ ruleItem.timeBooking.warn }}
-            </span>
+          <div class="customer-total">
+            <span v-on:click="countCoustomerFn(-1)">-</span>
+            <span class="customer-headcount">人數 {{ formInputRef.customerTotal }} 位</span>
+            <span v-on:click="countCoustomerFn(+1)">+</span>
           </div>
-        </div>
-        <div class="basic_info_item beautician">
-          <p>美容師</p>
-          <div class="news-filter">
-            <el-select v-model="newApptDataRef.beauticianId" allow-create default-first-option :reserve-keyword="false"
-              placeholder=" ">
-              <el-option v-for="item in beauticianRef" :key="item.managerId" :value="item.managerId"
-                :label="item.nameView">
-                <span class="form_name"> {{ item.nameView }}</span>
-              </el-option>
-            </el-select>
+          <div class="link-bottom"></div>
+          <div class="customer-msg">
+            <div>
+              <!-- <span>總計</span>
+              <span>{{ formInputRef.priceTotal }}</span> -->
+            </div>
+          </div>
+          <div class="customer-submit">
+            <button class="submit-btn" @click="submitBtn()">確認新增</button>
           </div>
         </div>
       </div>
-      <div class="add_seldate">
-        <input type="date" v-model="newApptDataRef.selDate" />
-      </div>
-      <p>選擇課程</p>
-      <div>
-        <div v-if="true" class="add-reserve-div">
-          <template v-for="item in serviceDetailList" :key="item">
-            <label v-if="item.display" :value="item">
-              <input class="add-reserve-btn2" type="checkbox" :value="item" v-model="newApptDataRef.courses" />
-              <span class="lesson-span" value="{{item}}" name="{{item.name}}">{{ item.name + "(" + item.servicesTime +
-                ")" }}</span>
-            </label>
-          </template>
-        </div>
-        <div v-else class="edit-reserve-div">
-          <template v-for="(item, index) in serviceDetailList" :key="item">
-            <label v-if="item.display" :value="item">
-              <input class="add-reserve-btn2" type="radio" :value="item" v-model="newApptDataRef.courses" />
-              <span :class="{
-                checkLesson: newApptDataRef.courses == index,
-              }" value="{{item}}" name="{{item.name}}">{{ item.name + "(" + item.servicesTime + ")" }}</span>
-            </label>
-          </template>
-        </div>
-        <span class="p_error" v-if="ruleItem.lessonItem.is_error">
-          {{ ruleItem.lessonItem.warn }}
-        </span>
-      </div>
-      <div class="row">
-        <button class="confirm-reserve-btn" @click="confirmReserveForm()">
-          新增
-        </button>
-        <button class="confirm-reserve-btn" @click="showAddReserveForm(false)">
-          取消
-        </button>
-      </div>
+      <div class="footer-content"></div>
     </div>
   </div>
+  <!-- <MemberRadioUI v-if="showMemberUIRef" :selData="formInputRef.memberInfo" :showUIFn="showMemberUIFn"
+    :getDataFn="getMembersFn" /> -->
+  <SelItemMenuUI v-if="showAddItemMenuUIRef" :selData="formInputRef" :showUIFn="showItemMenuUIFn"
+    :getDataFn="getItemInfoFn" />
+  <RadioServicesUI v-if="showRServicesRef" :selData="formInputRef.selSId" :getDataFn="getRadioSListFn"
+    :showServiceUIFn="showItemTypeFn">
+  </RadioServicesUI>
+  <RdManagerUI v-if="showRdManagerRef" :selData="formInputRef.managerInfo" :getDataFn="getRdManagerFn"
+    :showManagerUIFn="showManagerUIFn">
+  </RdManagerUI>
+  <RdMemberUI v-if="showMemberUIRef" :selData="formInputRef.memberInfo" :showUIFn="showMemberUIFn"
+    :getDataFn="getMembersFn" />
 </template>
+
 <script setup lang="ts">
-import { useApptStore } from "@/stores/apptStore";
-import formDeleteIcon from "@/assets/Icon course-delete.svg";
-import { storeToRefs } from "pinia";
-import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
+import icon_closeX from "@/assets/images/icon_closeX.png";
+import icon_customer from "@/assets/images/icon_customer.png";
+import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
+import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
 import { checkVerify_all, formatZeroDate } from "@/utils/utils";
 import { useManagerStore } from "@/stores/manager";
-import Alert from "../alertCmpt";
-import { useCounterStore } from "@/stores/counter";
-let addCourseTypesName = ref("");
-
-let aptTitle = reactive(["預約時間", "預約項目", "顧客", "已完成"]);
-
+import { storeToRefs } from "pinia";
+import { useApptStore } from "@/stores/apptStore";
 const props = defineProps<{
-  showAddReserveForm: Function;
+  showAddApptFn: Function;
+  //   formInfo: any;
+  //   addDetailTypeID?: any;
 }>();
+let showMemberUIRef = ref(false);
+let showAddItemMenuUIRef = ref(false);
+let showRServicesRef = ref(false);
+let showRdManagerRef = ref(false);
 
-let newApptDataRef: any = ref({
+const managerStore = useManagerStore();
+const { getWorkingHours } = managerStore;
+const { workingHoursList } = storeToRefs(managerStore);
+
+let store = useApptStore();
+const { postAddApptDataApi, getMemberListApi, getServiceDetailApi } = store;
+let { memberList, timeGroup, serviceDetailList } =
+  storeToRefs(store);
+
+let formInputRef: any = ref({
   memberId: null,
   timeBooking: "",
-  beauticianId: 0,
   courses: [],
   selDate: "",
+  selSId: 0,
+  memberInfo: { userId: 0, nameView: "顧客", phone: "請選擇顧客" },
+  managerInfo: { managerId: 0, nameView: "芳療師", phone: "請選擇芳療師" },
+  customerTotal: 1,
+  bookingMemo: "",
+  priceTotal: 0,
+
+  buyServicesGroup: [],
+  buyGoodsGroup: [],
 });
 
-let options: [{
-  value: '选项1',
-  label: '黄金糕'
-}, {
-  value: '选项2',
-  label: '双皮奶'
-}, {
-  value: '选项3',
-  label: '蚵仔煎'
-}, {
-  value: '选项4',
-  label: '龙须面'
-}, {
-  value: '选项5',
-  label: '北京烤鸭'
-}]
-//-------------------------------------form驗證
+onBefore();
+function onBefore() {
+  formInputRef.value.selDate = getNowDay();
+}
+onMounted(() => {
+  // console.log('onMounted');
+});
+
+function getNowDay() {
+  let datetime = new Date();
+  let year = formatZeroDate(datetime.getFullYear());
+  let month = formatZeroDate(datetime.getMonth() + 1);
+  let date = formatZeroDate(datetime.getDate());
+  return `${year}-${month}-${date}`;
+}
+
+function showMemberUIFn(state: boolean) {
+  showMemberUIRef.value = state;
+}
+function showItemMenuUIFn(state: boolean) {
+  showAddItemMenuUIRef.value = state;
+}
+function getMembersFn(data: any) {
+  formInputRef.value.memberInfo = data;
+  showMemberUIFn(false);
+}
+function countCoustomerFn(data: number) {
+  if (formInputRef.value.customerTotal + data > 0)
+    formInputRef.value.customerTotal += data;
+}
+function submitBtn() {
+  console.log(333, formInputRef.value);
+
+  ruleLists.ruleItem.name.value = formInputRef.value.memberInfo.userId;
+  ruleLists.ruleItem.timeBooking.value = formInputRef.value.timeBooking;
+
+  ruleLists.ruleItem.lessonItem.value =
+    formInputRef.value.courses.length > 0
+      ? formInputRef.value.courses[0].name
+      : null;
+
+  // if (!verify_all()) return;
+  if (!checkVerify_all(ruleLists)) return;
+
+  console.log(workingHoursList.value);
+
+  //判斷是否與休息時間重疊
+  for (let i = 0; i < workingHoursList.value.data.length; i++) {
+    const element = workingHoursList.value.data[i];
+    if (element.managerId == formInputRef.value.memberId) {
+    }
+  }
+console.log(888,formInputRef.value.courses);
+
+  let courseListData = [];
+  for (let i = 0; i < formInputRef.value.courses.length; i++) {
+    const element = formInputRef.value.courses[i];
+    courseListData.push({
+      listNo: i + 1,
+      lid: element.sId,
+      time: element.servicesTime,
+      bookingNo: "",
+      price: element.price,
+      discount: element.discount ? element.discount : 0,
+      subId: element.subList[0].subId,
+    });
+  }
+
+  let addApiData = {
+    userId: formInputRef.value.memberInfo.userId,
+    lessonlist: courseListData,
+    serverId: formInputRef.value.managerInfo.managerId,
+    dateBooking:
+      formInputRef.value.selDate + "  " + formInputRef.value.timeBooking, //"2023-04-20T07:25:10.372Z",
+    tradeDone: true,
+    state: 0,
+    bookingMemo: formInputRef.value.bookingMemo,
+  };
+  console.log("新增", addApiData);
+  //新增預約
+  postAddApptDataApi(addApiData).then((res: any) => {
+    let resData = res;
+    if (resData.state == 1) {
+      props.showAddApptFn(false);
+    }
+  });
+}
+
+function getItemInfoFn(data: any) {
+  console.log("獲取", data);
+  if (data.selectGood) {
+    formInputRef.value.buyGoodsGroup = data.selectGood;
+  }
+  if (data.selectService) {
+    formInputRef.value.buyServicesGroup = data.selectService;
+  }
+  console.log(data.selectGood);
+  console.log(data.selectService);
+
+  let priceTotal = 0;
+  for (let i = 0; i < data.selectGood.length; i++) {
+    const element = data.selectGood[i];
+    priceTotal += element.price;
+  }
+  for (let i = 0; i < data.selectService.length; i++) {
+    const element = data.selectService[i];
+    priceTotal += element.price;
+  }
+  formInputRef.value.priceTotal = priceTotal;
+  console.log("選擇", formInputRef.value);
+}
+function cancleServiceFn(item: any, index: number) {
+  formInputRef.value.courses.splice(index, 1);
+}
+function getRadioSListFn(data: any) {
+  console.log(data, "獲取getRadioSListFn");
+  showItemTypeFn(0);
+  formInputRef.value.courses.push(data);
+}
+
+function showItemTypeFn(type: number) {
+  showRServicesRef.value = type == 1;
+}
+function showManagerUIFn(type: boolean) {
+  showRdManagerRef.value = type;
+}
+function getRdManagerFn(data: any) {
+  console.log(data, "獲取getRadioSListFn");
+  showManagerUIFn(false);
+  formInputRef.value.managerInfo = data;
+}
+
+
+//#region 規則
+
 const ruleLists: any = reactive({
   ruleItem: {
     name: {
@@ -170,462 +343,378 @@ const ruleLists: any = reactive({
   },
 });
 let { ruleItem } = toRefs(ruleLists);
-//-------------------------------------------------------------------
-
-let store = useApptStore();
-const { postAddApptDataApi, getMemberData, getServiceDetailApi } = store;
-let { memberList, timeGroup, serviceDetailList } =
-  storeToRefs(store);
-const managerstore = useManagerStore();
-const { managerList, managerRoleList } = storeToRefs(managerstore);
-const { getManagerListNew } = managerstore;
-const counterStore = useCounterStore();
-const { handLogOut } = counterStore;
-const managerStore = useManagerStore();
-const { getWorkingHours } = managerStore;
-const { workingHoursList } = storeToRefs(managerStore);
-/**true:新增 false:修改 */
-onBefore();
-function onBefore() {
-  getManagerListNew({ id: 0, pageindex: 0, count: 0 })
-  getRestList();
-  getServiceDetailApi();
-}
-onMounted(() => {
-  newApptDataRef.value.selDate = getNowDay();
-});
-let beauticianRef: any = ref([]);
-getManagerListNew({ id: 0, pageindex: 0, count: 0 }).then((res: any) => {
-  beauticianRef.value = managerRoleList.value
-  beauticianRef.value.unshift({
-    managerId: 0,
-    nameView: "不指定",
-    phone: "0000000000",
-    roleList: [
-      {
-        roleId: 5,
-        mgrId: 4,
-        label: "Expert",
-        nameView: "CCCAdmin",
-      },
-    ],
-  })
-})
-
-function getNowDay() {
-  let datetime = new Date();
-  let year = formatZeroDate(datetime.getFullYear());
-  let month = formatZeroDate(datetime.getMonth() + 1);
-  let date = formatZeroDate(datetime.getDate());
-  return `${year}-${month}-${date}`;
-}
-//預約--確認
-let confirmReserveForm = () => {
-  ruleLists.ruleItem.name.value = newApptDataRef.value.memberId;
-  ruleLists.ruleItem.timeBooking.value = newApptDataRef.value.timeBooking;
-
-  ruleLists.ruleItem.lessonItem.value =
-    newApptDataRef.value.courses.length > 0
-      ? newApptDataRef.value.courses[0].name
-      : null;
-
-  // if (!verify_all()) return;
-  if (!checkVerify_all(ruleLists)) return;
-
-  //判斷是否與休息時間重疊
-  for (let i = 0; i < workingHoursList.value.data.length; i++) {
-    const element = workingHoursList.value.data[i];
-    if (element.managerId == newApptDataRef.value.memberId) {
-    }
-  }
-
-  let courseListData = [];
-  for (let i = 0; i < newApptDataRef.value.courses.length; i++) {
-    const element = newApptDataRef.value.courses[i];
-    courseListData.push({
-      listNo: i + 1,
-      lid: element.sId,
-      time: element.servicesTime,
-      bookingNo: "",
-      price: element.price,
-      discount: element.discount ? element.discount : 0,
-    });
-  }
-
-  let addApptData = {
-    userId: newApptDataRef.value.memberId,
-    lessonlist: courseListData,
-    serverId: newApptDataRef.value.beauticianId,
-    dateBooking:
-      newApptDataRef.value.selDate + "  " + newApptDataRef.value.timeBooking, //"2023-04-20T07:25:10.372Z",
-    tradeDone: true,
-    state: 0,
-    bookingMemo: "string",
-  };
-
-  //新增預約
-  postAddApptDataApi(addApptData).then((res: any) => {
-    let resData = res;
-    if (resData.state == 1) {
-      props.showAddReserveForm(false);
-    }
-  });
-};
-
-function getRestList() {
-  let data = {
-    managerId: 0,
-    year: 0,
-    month: 0,
-    day: 0,
-    pageIndex: 0,
-    count: 0,
-  };
-
-  getWorkingHours(data)
-    .then(() => {
-      // setRestTimeFn(workingHoursList.value.data);
-    })
-    .catch((e: any) => {
-      Alert.warning(showHttpsStatus(e.response.status), 2000);
-      if (e.response.status == 401) {
-        setTimeout(() => {
-          handLogOut();
-        }, 2000);
-      }
-    });
-}
-/**
- * 判断两个时间段是否有重叠,时间 （20:30）
- */
-function isTimeOverlap(
-  startTime: any,
-  endTime: any,
-  startTime2: any,
-  endTime2: any
-) {
-  startTime = startTime.split(":")[0] + startTime.split(":")[1];
-  endTime = endTime.split(":")[0] + endTime.split(":")[1];
-  startTime2 = startTime2.split(":")[0] + startTime2.split(":")[1];
-  endTime2 = endTime2.split(":")[0] + endTime2.split(":")[1];
-  if (endTime2 <= startTime) {
-    //如果跨天了
-    if (endTime < startTime) {
-      if (endTime > startTime2) {
-        // 重叠
-        return true;
-      }
-    }
-    console.log("isTimeOverlap: `` 不重叠");
-  } else if (endTime <= startTime2) {
-    //如果跨天了
-    if (endTime2 < startTime2) {
-      if (endTime2 > startTime) {
-        // 重叠
-        return true;
-      }
-    }
-    console.log("isTimeOverlap: `` 不重叠");
-  } else {
-    // 重叠
-    return true;
-  }
-  return false;
-}
+//#endregion
 </script>
 
-<style lang="scss" scoped>
-.form_bg {
+<style scoped lang="scss">
+.popup-mask {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.5);
   z-index: 3;
+  background: rgba(255, 255, 255, 0.5);
 
-  .add-reserve-form {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    // width: 54%;
-    width: 600px;
-    // min-width: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 
-    background-color: #faf9f8;
-    border-radius: 10px;
-    padding: 15px 15px 15px 15px;
-    border: solid 1px #000000;
+  .popup-content {
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    font-size: 20px;
+    font-family: HeitiTC;
+    color: #84715c;
+    font-weight: bold;
 
-    .basic_info_main {
+    .header-content {
       display: flex;
-      align-items: baseline;
+      height: 70px;
+      border: solid 1px #ddd;
+      box-sizing: border-box;
 
-      .basic_info_item {
-        padding: 8px 8px 8px 8px;
-        display: grid;
-
-        p {
-          text-align: left;
-          font-size: 20px;
-          font-weight: bold;
-          // color: #875959;
-        }
-
-        >input {
-          width: 100%;
-          height: 25px;
-          border: solid 1px #707070;
-          background-color: #fff;
-          border-radius: 5px;
-        }
-
-        >select {
-          width: 300px;
-          height: 30px;
-          font-size: 20px;
-          border: solid 1px #707070;
-          background-color: #fff;
-          border-radius: 5px;
-        }
-
-        .news-filter {
-          >select {
-            >option {
-              .form_name {
-                color: #ff0000;
-              }
-            }
-          }
-        }
-
-        .search_item {
-          height: 100px;
-
-          .search_item2 {
-            height: 100px;
-
-            .search_item3 {
-              height: 100px;
-            }
-          }
-
-          >datalist {
-            height: 100px;
-          }
-
-          >input {
-            width: 270px;
-            height: 26px;
-            font-size: 20px;
-            border: solid 1px #707070;
-            background-color: #fff;
-            border-radius: 5px;
-          }
-
-          >select {
-            width: 300px;
-            height: 30px;
-            font-size: 20px;
-            border: solid 1px #707070;
-            background-color: #fff;
-            border-radius: 5px;
-          }
-        }
-
-        span {
-          display: block;
-          height: 30px;
-          width: 95%;
-          text-align: left;
-          font-size: 15px;
-          text-align: left;
-          color: #877059;
-          font-weight: bold;
-        }
-
-
-        .el-select {
-          border: solid 1px #707070;
-          background-color: #fff;
-          border-radius: 5px;
-        }
-      }
-
-      .name {
-        width: 60%;
-      }
-
-      .time {
-        width: 20%;
-      }
-
-      .beautician {
-        width: 20%;
-      }
-
-      .news-filter select {
-        height: 30px;
-        width: 100%;
-        font-size: 20px;
-        // padding: 7px 7.7px 6px 9px;
-        border-radius: 5px;
-        border: solid 1px #707070;
-        background-color: var(--white);
-        background-color: #ffffff;
-        color: #707070;
-      }
-
-      option {
-        appearance: none;
-        background: #fff;
-        position: absolute;
-        color: #707070;
-      }
-    }
-
-    .add_seldate {
-      display: flex;
-      width: 99%;
-      justify-content: right;
-      font-size: 20px;
-      font-family: HeitiTC;
-      color: #84715c;
-      font-weight: bold;
-
-      >input {
-        width: 178px;
-        height: 30px;
-        text-align: center;
-        border-radius: 6px;
-        border: solid 1px #707070;
-      }
-    }
-
-    .add-reserve-div {
-      max-height: 200px;
-      overflow-y: scroll;
-    }
-
-    .edit-reserve-div {
-      max-height: 200px;
-      overflow-y: scroll;
-
-      span {
-        font-weight: 500;
-      }
-    }
-
-    >p {
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    .Column {
-      // width: 100%;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-
-    // .add-reserve-bg {
-    //     padding: 15px 15px 15px 15px;
-    //     justify-content: space-between;
-    //     display: flex;
-    //     flex-wrap: wrap;
-
-    .add-reserve-btn {
-      width: 262px;
-      height: 45px;
-      justify-content: space-between;
-      margin: 5px 5px 5px 5px;
-      // padding: 5px 5px 5px 5px;
-      text-align: center;
-      border-radius: 10px;
-
-      font-size: 20px;
-      background-color: #fff;
-      color: #d8cac8;
-
-      .add-reserve-ico {
-        // margin: -2px;
+      >span {
+        display: flex;
+        width: calc(100%);
         justify-content: center;
-        flex: 1;
-        text-align: right;
+        align-items: center;
+        font-size: 30px;
+        height: 70px;
+        // height: 100px;
+        justify-content: center;
+      }
+
+      >img {
+        position: absolute;
+        width: 41px;
+        height: 38px;
+        top: 15px;
+        left: 15px;
       }
     }
 
-    .add-reserve-btn:checked+span {
-      // color: yellow;
-      background-color: #444;
-    }
-
-    .add-reserve-btn2 {
-      display: none;
-    }
-
-    .add-reserve-btn2+span {
-      width: 262px;
-      line-height: 45px;
-      justify-content: space-between;
-      margin: 5px 5px 5px 5px;
-      text-align: center;
-      vertical-align: middle;
-      border-radius: 10px;
-
-      font-size: 20px;
-      background-color: #fff;
-      color: #d8cac8;
-      cursor: pointer;
-
-      display: inline-block;
-      border: 2px solid #707070;
-      user-select: none;
-      /* 防止文字被滑鼠選取反白 */
-    }
-
-    .add-reserve-btn2+.checkLesson {
-      background-color: #906e6c;
-    }
-
-    .lesson-span {
-      font-weight: 500;
-    }
-
-    .add-reserve-btn2:checked+span {
-      background-color: #906e6c;
-    }
-
-    // }
-
-    .row {
-      position: relative;
+    .main-content {
       display: flex;
-      // width: 100%;
-      justify-content: center;
+      height: calc(100% - 70px);
 
-      // flex-wrap: wrap;
-      .confirm-reserve-btn {
-        position: relative;
-        width: 100px;
-        height: 45px;
-        margin: 10px;
-        // padding: 9px 16px;
-        border-radius: 10px;
-        font-size: 20px;
-        font-weight: bold;
-        color: #717171;
-        background-color: #fff;
+      .left-main {
+        width: 60%;
+        height: 100%;
+        border-right: solid 0.5px #ddd;
+        box-sizing: border-box;
+        overflow-y: auto;
+
+        .input-box {
+          width: 90%;
+          margin-left: 5%;
+          margin-top: 15px;
+
+          >div {
+            // padding: 5px;
+          }
+
+          .form-item {
+            width: 90%;
+
+            >span {
+              display: flex;
+              width: 100%;
+              justify-content: center;
+              align-items: center;
+              height: 40px;
+            }
+
+            >div {
+              display: flex;
+              width: 100%;
+              justify-content: center;
+            }
+
+            .link-btn {
+              color: #b89087;
+            }
+          }
+
+
+          .input-service {
+            >input {
+              width: 178px;
+              height: 30px;
+              text-align: center;
+              border-radius: 6px;
+              border: solid 1px #707070;
+            }
+
+            .service-item {
+              display: flex;
+              width: calc(100% - 20px);
+              height: 80px;
+              background-color: #faf9f8;
+              align-items: center;
+              border-radius: 5px;
+              padding: 10px;
+              margin-bottom: 10px;
+
+              >div {
+                width: calc(100% - 20px);
+                height: 100%;
+                margin-left: 10%;
+
+                >span {
+                  display: flex;
+                  height: 70%;
+                  align-items: center;
+                  font-size: 24px;
+                }
+
+                .time-main {
+                  height: 40%;
+                  display: flex;
+
+                  >span {
+                    color: #8a8a8a;
+                    font-size: 18px;
+                    font-size: 20px;
+                  }
+                }
+
+                .title-main {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  height: 60%;
+
+                  >span {
+                    display: flex;
+                    height: 70%;
+                    align-items: center;
+                    font-size: 24px;
+                  }
+
+                  .service-price {
+
+                    font-size: 20px;
+                    color: #8a8a8a;
+                  }
+                }
+
+              }
+
+              >img {
+                width: 20px;
+                height: 20px;
+                margin: 10px;
+              }
+
+              .service-img {
+                width: 33px;
+                height: 39px;
+              }
+
+            }
+          }
+
+          .input-date {
+            display: flex;
+            width: 99%;
+            height: 40px;
+            justify-content: left;
+            font-size: 20px;
+            font-family: HeitiTC;
+            color: #84715c;
+            font-weight: bold;
+            margin-bottom: 10px;
+            // border-bottom: solid 2px #707070;
+
+
+            >input {
+              width: 178px;
+              height: 30px;
+              text-align: center;
+              border-radius: 6px;
+              border: solid 1px #707070;
+            }
+          }
+
+          .bill-add {
+            height: 60px;
+            background-color: #faf9f8;
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            // border-bottom: solid 2px #707070;
+          }
+
+          .msg-add {
+            height: 40px;
+            margin-bottom: 10px;
+            // border-bottom: solid 2px #707070;
+
+            // background-color: #faf9f8;
+            :deep(.el-input__inner) {
+              background-color: #ffffff;
+              font-size: 18px;
+            }
+
+          }
+        }
+
+
+
       }
+
+      .right-main {
+        // display: block;
+        display: flex;
+        flex-flow: column;
+        width: 40%;
+        height: 100%;
+        // justify-content: center;
+        margin: 0;
+
+        >div {
+          width: 90%;
+          margin-left: 5%;
+          margin-top: 5%;
+        }
+
+        .customer-btn {
+          display: flex;
+          width: 90%;
+          height: 80px;
+          background-color: #faf9f8;
+          align-items: center;
+          border-radius: 5px;
+
+          >div {
+            width: calc(100% - 50px);
+            height: 100%;
+
+            >span {
+              display: flex;
+              height: 50%;
+              // justify-content: center;
+              margin-left: 10%;
+              align-items: center;
+              font-size: 28px;
+            }
+
+            .customer-phone {
+              color: #c1bdb8;
+              font-size: 18px;
+              font-size: 20px;
+            }
+          }
+
+          >img {
+            margin-left: 10%;
+            width: 20px;
+            height: 20px;
+          }
+
+          .customer-img {
+            width: 33px;
+            height: 39px;
+          }
+        }
+
+        >span {
+          margin-left: 5%;
+          width: 90%;
+        }
+
+        .customer-total {
+          display: flex;
+          height: 60px;
+          background-color: #faf9f8;
+          justify-content: center;
+          align-items: center;
+          border-radius: 5px;
+
+          >span {
+            display: flex;
+            justify-content: center;
+            font-weight: bold;
+            width: 20%;
+            font-size: 30px;
+          }
+
+          .customer-headcount {
+            display: flex;
+            width: 60%;
+            justify-content: center;
+            font-size: 20px;
+          }
+        }
+
+        .customer-msg {
+          flex-grow: 1;
+          // border-top: solid 0.5px #ddd;
+          box-sizing: border-box;
+
+          >div {
+            display: block;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2%;
+          }
+        }
+
+        .customer-submit {
+          height: 70px;
+          display: flex;
+          justify-content: center;
+          border-top: solid 0.5px #ddd;
+          box-sizing: border-box;
+
+          .otherpay-btn {
+            position: relative;
+            width: 200px;
+            height: 50px;
+            margin: 10px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #717171;
+            background-color: #fff;
+          }
+
+          .submit-btn {
+            position: relative;
+            width: 80%;
+            height: 50px;
+            margin: 10px;
+            border-radius: 8px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #717171;
+            background-color: #fff;
+          }
+        }
+      }
+    }
+
+    .footer-content {
+      display: flex;
     }
   }
 }
 
+.link-bottom {
+  // padding: 0 5px;
+  opacity: 0.5;
+  margin: auto;
+  width: 100%;
+  height: 2px;
+  background-color: #707070;
+  margin: 10px 0;
+}
+
 .p_error {
-  color: #fc0505 !important;
-  width: 100% !important;
-  font-weight: bold !important;
-  font-size: 12px !important;
+  color: #fc0505;
+  width: 100%;
+  font-size: 16px;
 }
 </style>

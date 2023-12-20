@@ -117,10 +117,17 @@ let changeStutusHdr = (index: number, item: any) => {
   let curdata: any = {
     sId: item.sId,
     display: !item.display,
-    groupList: [],
+    color:item.color,
+    isBonusOpen:item.isBonusOpen,
+    isEditAccounting:item.isEditAccounting,
+    memo:item.memo,
+    nickName:item.nickName,
+    sgIdList:item.sgIdList,
+    subType:item.subType,
     name: item.name,
     servicesTime: item.servicesTime,
     price: item.price,
+    subList:item.subList,
   };
   updateServiceDetailApi(curdata).then((res: any) => {
     getServiceDetailApi(0);

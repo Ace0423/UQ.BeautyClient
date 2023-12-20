@@ -95,17 +95,17 @@
                   </tr>
                 </thead>
                 <tbody id="content">
-                  <tr v-for="(item, index) in filterAptData" :v-if="item.state < 2" :key="item.id">
+                  <tr v-for="(item, index) in filterApptData" :v-if="item.state < 2" :key="item.id">
                     <td class="td_time">
                       <div class="dateBox">
                         <span class="p_month">
-                          {{ item.date.split("-")[1] + "月" }}
+                          {{ item.dateBooking.split("-")[1] + "月" }}
                         </span>
                         <span class="p_date">{{
-                          item.date.split("-")[2]
+                          item.dateBooking.split("-")[2].split("T")[0]
                         }}</span>
                         <span class="p_year">{{
-                          item.date.split("-")[0]
+                          item.dateBooking.split("-")[0]
                         }}</span>
                       </div>
                       <p>{{ item.timePeriod }}</p>
@@ -137,12 +137,11 @@
       </div>
     </div>
   </div>
-  <AddApptUI v-if="showAddReserveFormRef" :showAddReserveForm="showAddReserveForm"></AddApptUI>
+  <AddApptUI v-if="showAddRef" :showAddApptFn="showAddApptFn"></AddApptUI>
   <AddRestTimeUI v-if="showAddRestUIRef" :showAddRestUIFn="showAddRestUIFn"></AddRestTimeUI>
   <FastCheckOutUI v-if="showFastCheckOutRef" :showUIFn="showFastCheckOutUIHdr" />
 
-  <EditApptUI v-if="showEditReserveFormRef" :showAddReserveForm="showEditReserveForm" :curApptDataRef="newApptDataRef"
-    :showOkBtnRef="showOkBtnRef" :oldSelList="oldSelList"></EditApptUI>
+  <EditApptUI v-if="showEditReserveFormRef" :showEditApptFn="showEditReserveForm" :oldSelList="oldSelList"></EditApptUI>
   <LittleDateUI v-if="showLittleDateRef" :showUIFn="updataShowLittleDate" :selDate="selDate"
     :selLittleDateFn="selLittleDateFn" />
   <ApptInfoUI v-if="showApptInfoRef" :showUIHdr="updataShowApptInfoRef" :selItemData="oldSelList"
@@ -203,7 +202,7 @@ let curDate: any = ref();
 let monthsThingsRef: any = ref([]);
 let todayThingsRef: any = ref([]);
 
-let showAddReserveFormRef = ref(false);
+let showAddRef = ref(false);
 let showEditReserveFormRef = ref(false);
 let showAddRestUIRef = ref(false);
 let showApptInfoRef = ref(false);
@@ -316,7 +315,7 @@ let { bookingList, courseDataList, timeGroup, tuiBookingListRef } =
   storeToRefs(store);
 let {
   getApptDataApi,
-  getMemberData,
+  getMemberListApi,
   getCourseDetailApi,
   postEditApptDataApi,
   postEditApptStateApi,
@@ -363,77 +362,57 @@ function getApptInfoFn(
   month: number,
   date: number = currentDay.value
 ) {
-  getCourseDetailApi(0, 0);
+  // getCourseDetailApi(0, 0);
   //先取得會員清單
-  getMemberData().then((res: any) => {
-    //預先呼叫api獲取數據
-    getApptDataApi(year, month).then((res: any) => {
-      resetApptTable(year, month, date)
-      tuiList.value = [];
-      showTuiApptRef.value = false;
-      for (let i = 0; i < tuiBookingListRef.value.length; i++) {
-        const element = tuiBookingListRef.value[i];
-        element.serverName = getManagerName(element.serverId);
-
-        let courseBgColor = getColorNum(element.lessonColor);
-        courseBgColor = element.state == 1 ? 999 : courseBgColor;
-        
-        //顯示課程ITEM
-        tuiList.value.push({
-          id: element.bookingNo,
-          //顏色
-          calendarId: courseBgColor,// "9", // (element.lessonId / 2).toString(),
-          //顯示內容
-          title:
-            "<br>" +
-            element.customer +
-            "<br>" +
-            element.lesson +
-            "(" +
-            element.timer +
-            " Min)",
-          titleMonth: "" + element.customer + " - " + element.lesson,
-          category: "time",
-          dueDateClass: "",
-          serverId: element.serverId,
-          start: element.dateBooking,
-          end: computeDate(element.dateBooking, "add", 0, 0, element.timer),
-          raw: element,
-        });
-      }
-      getRestList(0, year, month, date);
-    });
-  });
-}
-
-function getManagerName(params: number) {
-  let beauticianData = ""
-  if (params == 0) {
-    beauticianData = "不指定"
-  } else {
-    for (let i = 0; i < managerRoleList.value.length; i++) {
-      const element = managerRoleList.value[i];
-      if (element.managerId == params) {
-        beauticianData = element.nameView;
-      }
+  // getMemberListApi().then((res: any) => {
+  //預先呼叫api獲取數據
+  getApptDataApi("", year = 0, month = 0).then((res: any) => {
+    resetApptTable(year, month, date)
+    tuiList.value = [];
+    showTuiApptRef.value = false;
+    for (let i = 0; i < tuiBookingListRef.value.length; i++) {
+      const element = tuiBookingListRef.value[i];
+      let courseBgColor = getColorNum(element.serviceInfo[0].color);
+      courseBgColor = element.state == 1 ? 999 : courseBgColor;
+      let curTimer = element.timer == 0 ? element.subList.servicesTime : element.timer;
+      
+      //顯示課程ITEM
+      tuiList.value.push({
+        id: element.bookingNo,
+        //顏色
+        calendarId: courseBgColor,
+        //顯示內容
+        title:
+          "<br>" +
+          element.memberInfo.nameView +
+          "<br>" +
+          element.serviceInfo[0].name +
+          "(" +
+          curTimer +
+          " Min)",
+        titleMonth: "" + element.memberInfo.nameView + " - " + element.serviceInfo[0].name,
+        category: "time",
+        dueDateClass: "",
+        serverId: element.serviceId,
+        start: element.dateBooking,
+        end: computeDate(element.dateBooking, "add", 0, 0, curTimer),
+        raw: element,
+      });
     }
-  }
-  return beauticianData
+    getRestList(0, year, month, date);
+  });
+  // });
 }
 
-
-let filterAptData: any = computed(() => {
+let filterApptData: any = computed(() => {
   let curAptData: any = [];
-  for (let i = 0; i < bookingList.value.length; i++) {
-    let element = bookingList.value[i];
-    for (let j = 0; j < element.things.length; j++) {
-      let element2 = element.things[j];
-      if (
-        !searchList.value ||
-        element2.customer.toLowerCase().includes(searchList.value.toLowerCase())
-      ) {
-        curAptData.push(element2);
-      }
+  for (let i = 0; i < tuiBookingListRef.value.length; i++) {
+    let element = tuiBookingListRef.value[i];
+    if (
+      !searchList.value ||
+      element.customer.toLowerCase().includes(searchList.value.toLowerCase())
+    ) {
+      curAptData.push(element);
     }
   }
 
@@ -747,7 +726,8 @@ function handleDetail(row: any) {
   } else {
     oldSelList = row;
   }
-  if (row.lessonId) {
+  
+  if (row.serviceInfo[0]) {
     onWeekSeldate(row.dateBooking.split("T")[0]);
     updataShowApptInfoRef(true);
   }
@@ -885,8 +865,8 @@ function onWeekSeldate(data: any) {
   checkYM.value = true;
 }
 //新增預約表單-顯示
-let showAddReserveForm = (state: boolean) => {
-  showAddReserveFormRef.value = state;
+let showAddApptFn = (state: boolean) => {
+  showAddRef.value = state;
   if (!state) getApptInfoFn(currentYear.value, currentMonth.value + 1);
 };
 //修改預約表單-顯示
@@ -911,7 +891,7 @@ function resetAddReserveForm() {
 function addAddReserveBtn() {
   showOkBtnRef.value = false;
   resetAddReserveForm();
-  showAddReserveForm(true);
+  showAddApptFn(true);
 }
 
 function changeWeekToday(data: number) {

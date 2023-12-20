@@ -1,7 +1,7 @@
 <template>
   <div class="popup-mask" v-on:click.self="showUIFn(false)">
     <div class="popup-content">
-      <div class="top-content">
+      <div class="header-content">
         <img :src="icon_closeX" v-on:click="showUIFn(false)" />
         <span>結帳</span>
       </div>
@@ -141,7 +141,7 @@
           </div>
         </div>
       </div>
-      <div class="bottom-content"></div>
+      <div class="footer-content"></div>
     </div>
   </div>
   <MemberRadioUI
@@ -253,7 +253,7 @@ function cancleGoodsFn(item: any, index: number) {
     font-family: HeitiTC;
     color: #84715c;
     font-weight: bold;
-    .top-content {
+    .header-content {
       display: flex;
       height: 70px;
       border: solid 1px #ddd;
@@ -475,7 +475,7 @@ function cancleGoodsFn(item: any, index: number) {
         }
       }
     }
-    .bottom-content {
+    .footer-content {
       display: flex;
     }
   }

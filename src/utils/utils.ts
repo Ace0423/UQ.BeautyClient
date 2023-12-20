@@ -11,6 +11,10 @@ export const colorValues = [
   "#e7b1e6",
 ];
 
+export const serviceTimer = [
+  "30", "60", "90", "120", "150", "180", "210", "240"
+];
+
 export const getColorNum = (data: string) => {
   let cNum = colorValues.indexOf(data) == -1 ? 0 : colorValues.indexOf(data);
   return cNum

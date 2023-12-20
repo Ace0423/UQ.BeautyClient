@@ -12,7 +12,7 @@
               <img class="customer-img" :src="icon_customer" />
               <div>
                 <span>{{ item.nameView }}</span>
-                <span>{{ item.phone }}</span>
+                <span >{{ item.phone }}</span>
               </div>
             </div>
           </div>

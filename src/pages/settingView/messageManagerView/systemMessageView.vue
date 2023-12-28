@@ -11,6 +11,7 @@ const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
 const companyStore = useCompanyStore();
 const { getMessages } = companyStore;
+const { messagesList } = storeToRefs(companyStore);
 const editMessageView = ref(false);
 const selectMessageItem = ref();
 
@@ -45,7 +46,10 @@ onMounted(() => {
 })
 </script>
 <template>
-    <div>
+    <div class="wrap">
+        <div class="function-area">
+            <!-- <button class="otherpay-btn" v-on:click="handEditMessageView('')">新增系統訊息</button> -->
+        </div>
         <table>
             <thead class="header-tab">
                 <tr>
@@ -64,56 +68,47 @@ onMounted(() => {
                 </tr>
             </thead>
             <tbody class="content-tab">
-                <!-- <tr v-for="item in " :key="item.managerId">
+                <tr v-for="item in messagesList.data " :key="item.managerId">
                     <td class="col-5-th">
-                        <p>{{ item.mTheme }}</p>
+                        <p>{{ item.mTitle }}</p>
                     </td>
                     <td class="col-2-th">
-                        <input type="radio" disabled :checked="item.mAuto" />
+                        <input type="radio" disabled :checked="item.mEnabledLine" />
                     </td>
                     <td class="col-2-th">
-                        <input type="radio" disabled :checked="item.mAuto" />
+                        <input type="radio" disabled :checked="item.mEnabledMessage" />
                     </td>
                     <td class="col-1-th">
                         <button class="header-btn" @click="handEditMessageView(item)">
                             >
                         </button>
                     </td>
-                </tr> -->
+                </tr>
             </tbody>
         </table>
     </div>
-    <edit-system-message v-if="editMessageView" :handEditMessageView="handEditMessageView"
+    <add-system-message v-if="editMessageView" :handEditMessageView="handEditMessageView"
         :selectMessageItem="selectMessageItem" />
 </template>
 
 <style lang="scss" scoped>
-div {
-    position: absolute;
-    top: 45px;
-    bottom: 10px;
-    left: 0px;
-    right: 0px;
+.wrap {
+    position: relative;
     width: 100%;
-    background-color: #faf9f8;
-    border: solid 0.5px #ddd;
+    margin: 0 5px;
     font-family: STXihei;
     color: #717171;
 
-    p {
-        margin: 16px;
-    }
-
     >.function-area {
-        height: 50px;
-        position: absolute;
-        top: -50px;
+        // height: 50px;
+        // position: absolute;
+        // top: -50px;
         border: none;
         background-color: transparent;
         display: flex;
-        // justify-content: end;
+        justify-content: end;
         align-items: center;
-        left: auto;
+        right: 0px;
         width: auto;
 
         >input {
@@ -136,25 +131,56 @@ div {
             margin: 0 5px;
         }
 
-        >.header-auto-btn {
+        .header-auto-btn {
+            border-radius: 6px;
+            min-width: 100px;
+            height: 55%;
             border: solid 2px #84715c;
             background-color: transparent;
+
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 10px;
+
+            span {
+                color: #84715c;
+            }
+        }
+
+        .header-btn {
+            border-radius: 6px;
+            // min-width: 100px;
+            padding: 0 10px;
+            height: 60%;
             color: #84715c;
             font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: solid 1px #707070;
+            background-color: #84715c;
+            margin: 0 5px;
+
+            span {
+                color: #fff;
+            }
         }
     }
 
     >table {
+        position: absolute;
+        top: 10px;
         width: 100%;
-        height: 100%;
+        height: calc(100% - 50px);
 
         >.header-tab {
             display: block;
-            // height: 50px;
             color: #717171;
-            border: solid 1px #707070;
             background-color: #e6e2de;
             box-sizing: border-box;
+            border-radius: 6px 6px 0px 0px;
 
             >tr {
                 display: flex;
@@ -162,26 +188,25 @@ div {
                 height: 50px;
                 justify-content: space-between;
 
-                >.col-1-th {
-                    width: 10%;
-                }
-
-                >.col-2-th {
-                    width: 25%;
-                }
-
-                >.col-5-th {
-                    width: 40%;
-                }
-
                 >th {
+                    width: 30%;
+
                     >p {
-                        min-width: 108px;
+                        // min-width: 108px;
+                        padding: 0 0;
                         text-align: left;
                     }
 
-
+                    .controllerTxt {
+                        padding-left: 15px;
+                    }
                 }
+            }
+
+            .header-btn {
+                justify-content: end;
+                width: 5%;
+                padding: 0 5px;
             }
         }
 
@@ -200,7 +225,7 @@ div {
                 position: relative;
 
                 &::after {
-                    content: '';
+                    content: "";
                     display: block;
                     position: absolute;
                     bottom: 0;
@@ -211,21 +236,9 @@ div {
                     transform: translateX(-50%);
                 }
 
-                >.col-1-th {
-                    width: 10%;
-                }
-
-                >.col-2-th {
-                    width: 25%;
-                }
-
-                >.col-5-th {
-                    width: 40%;
-                }
-
                 >td {
-                    display: flex;
-                    width: calc(100%/4);
+                    // display: flex
+                    width: 30%;
 
                     >button {
                         height: 100%;
@@ -242,18 +255,17 @@ div {
                         }
                     }
 
-                    >input {
-                        margin: 0px 25px;
-                    }
+
+                }
+
+                .content-btn {
+                    // justify-content: end;
+                    width: 5%;
+                    padding: 0 15px;
                 }
 
                 .content-name {
-                    // padding-left: 10px;
-                    display: flex;
-
-                    img {
-                        margin: 0 15px;
-                    }
+                    padding-left: 15px;
                 }
             }
         }

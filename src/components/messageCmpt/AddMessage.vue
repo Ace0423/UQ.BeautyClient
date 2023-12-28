@@ -562,7 +562,6 @@ onMounted(() => {
   messageData.mType = props.selectMessageItem.type;
 });
 const handSubmit = () => {
-  // }
   switch (messageData.mSendTimer) {
     case 2:
       let yy = new Date().getFullYear();
@@ -646,11 +645,7 @@ const handCancelTicketBtn = () => {
       <div class="news-wrap" v-if="props.selectMessageItem.type == 1">
         <div class="message-info">
           <div class="switch" v-if="props.selectMessageItem.auto == 1">
-            <el-switch
-              size="large"
-              v-model="messageData.mEnabled"
-              style="--el-switch-on-color: #84715c"
-            ></el-switch>
+            <el-switch size="large" v-model="messageData.mEnabled" style="--el-switch-on-color: #84715c"></el-switch>
             <div class="switch-content">
               <p><strong>啟用此自動化訊息</strong></p>
               <p>關閉橫將不再自動執行訊息發送，可以隨時關閉或啟用</p>
@@ -679,10 +674,7 @@ const handCancelTicketBtn = () => {
             <p>請輸入訊息主題</p>
             <div class="auto-message">
               <p>訊息主題</p>
-              <input
-                placeholder="請輸入訊息主題"
-                v-model="messageData.mTheme"
-              />
+              <input placeholder="請輸入訊息主題" v-model="messageData.mTheme" />
             </div>
           </div>
           <div class="news">
@@ -690,27 +682,16 @@ const handCancelTicketBtn = () => {
             <p>填寫任何您想發送給顧客的簡訊內容</p>
             <div class="news-content">
               <p>內容</p>
-              <input
-                placeholder="請輸入訊息內容"
-                v-model="messageData.mContext"
-              />
+              <input placeholder="請輸入訊息內容" v-model="messageData.mContext" />
             </div>
             <div class="news-ref">
               <p>按鈕網址</p>
-              <input
-                placeholder="請輸入網址(例:https://xxxxx.com)"
-                v-model="messageData.mUrl"
-              />
+              <input placeholder="請輸入網址(例:https://xxxxx.com)" v-model="messageData.mUrl" />
             </div>
             <div class="news-img">
               <p>附加圖片</p>
-              <input
-                class="updata-input"
-                type="file"
-                ref="img"
-                accept="image/gif,image/jpeg,image/jpg,image/png"
-                @change="handkeFileChange"
-              />
+              <input class="updata-input" type="file" ref="img" accept="image/gif,image/jpeg,image/jpg,image/png"
+                @change="handkeFileChange" />
               <div class="updata-btn">
                 <button @click="choiceImg">上傳圖片</button>
               </div>
@@ -721,38 +702,24 @@ const handCancelTicketBtn = () => {
             <p>系統將自動發送訊息給符合特定條件的顧客</p>
             <div class="receiver">
               <p>對象</p>
-              <div
-                class="receiver-select"
-                v-if="props.selectMessageItem.auto == 1"
-              >
+              <div class="receiver-select" v-if="props.selectMessageItem.auto == 1">
                 <select v-model="messageData.mTarget">
                   <option disabled value="">請選擇人員</option>
-                  <option
-                    v-for="item in mTarget"
-                    :key="item.value"
-                    :value="item.value"
-                  >
+                  <option v-for="item in mTarget" :key="item.value" :value="item.value">
                     {{ item.label }}
                   </option>
                 </select>
               </div>
-              <div
-                class="receiver-select"
-                v-if="props.selectMessageItem.auto == 0"
-              >
+              <div class="receiver-select" v-if="props.selectMessageItem.auto == 0">
                 <div>
-                  <u class="add-coupon-btn" @click="handAddReceiverView"
-                    >請選擇加入對象</u
-                  >
+                  <u class="add-coupon-btn" @click="handAddReceiverView">請選擇加入對象</u>
                 </div>
               </div>
             </div>
             <div class="specific" v-if="messageData.mTarget == 1">
               <p>特定條件</p>
               <div class="specific-select">
-                <u class="add-coupon-btn" @click="handAddFilterView"
-                  >加入特定條件</u
-                >
+                <u class="add-coupon-btn" @click="handAddFilterView">加入特定條件</u>
               </div>
             </div>
           </div>
@@ -763,11 +730,7 @@ const handCancelTicketBtn = () => {
               <div class="time-select">
                 <select v-model="messageData.mSendTimer">
                   <option disabled value="">請選擇發送時機</option>
-                  <option
-                    v-for="item in mSendMethod"
-                    :key="item.value"
-                    :value="item.value"
-                  >
+                  <option v-for="item in mSendMethod" :key="item.value" :value="item.value">
                     {{ item.label }}
                   </option>
                 </select>
@@ -786,11 +749,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendDateT">
                     <option disabled value="">請選擇指定時段</option>
-                    <option
-                      v-for="item in periodTime"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -806,11 +765,7 @@ const handCancelTicketBtn = () => {
               <div class="time-select">
                 <select v-model="messageData.mSendTimer">
                   <option disabled value="">請選擇發送時機</option>
-                  <option
-                    v-for="item in mSendTimer"
-                    :key="item.value"
-                    :value="item.value"
-                  >
+                  <option v-for="item in mSendTimer" :key="item.value" :value="item.value">
                     {{ item.label }}
                   </option>
                 </select>
@@ -823,11 +778,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendTimeing">
                     <option disabled value="">請選擇固定時間</option>
-                    <option
-                      v-for="item in fixedDate"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in fixedDate" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -838,11 +789,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select" v-if="messageData.mSendTimeing == 1">
                   <select v-model="messageData.mSendDateD">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in weekDate"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in weekDate" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -850,11 +797,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select" v-if="messageData.mSendTimeing == 2">
                   <select v-model="messageData.mSendDateD">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in dateDate"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in dateDate" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -862,11 +805,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select" v-if="messageData.mSendTimeing == 3">
                   <select v-model="mSend">
                     <option disabled value="">請選擇月份</option>
-                    <option
-                      v-for="item in monthDate"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in monthDate" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -874,11 +813,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select" v-if="messageData.mSendTimeing == 3">
                   <select v-model="dSend">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in dateDate"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in dateDate" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -889,11 +824,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendDateT">
                     <option disabled value="">請選擇指定時段</option>
-                    <option
-                      v-for="item in periodTime"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -907,11 +838,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendTimeing">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in birData"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in birData" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -922,11 +849,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendDateT">
                     <option disabled value="">請選擇指定時段</option>
-                    <option
-                      v-for="item in periodTime"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -940,11 +863,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendTimeing">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in dayData"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in dayData" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -955,11 +874,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendDateT">
                     <option disabled value="">請選擇指定時段</option>
-                    <option
-                      v-for="item in periodTime"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -973,11 +888,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendTimeing">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in dayData"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in dayData" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -988,11 +899,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendDateT">
                     <option disabled value="">請選擇指定時段</option>
-                    <option
-                      v-for="item in periodTime"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1006,11 +913,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendTimeing">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in dayData"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in dayData" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1021,11 +924,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendDateT">
                     <option disabled value="">請選擇指定時段</option>
-                    <option
-                      v-for="item in periodTime"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1067,11 +966,7 @@ const handCancelTicketBtn = () => {
       <div class="line-wrap" v-if="props.selectMessageItem.type == 0">
         <div class="message-info">
           <div class="switch" v-if="props.selectMessageItem.auto == 1">
-            <el-switch
-              size="large"
-              v-model="messageData.mEnabled"
-              style="--el-switch-on-color: #84715c"
-            ></el-switch>
+            <el-switch size="large" v-model="messageData.mEnabled" style="--el-switch-on-color: #84715c"></el-switch>
             <div class="switch-content">
               <p><strong>啟用此自動化訊息</strong></p>
               <p>關閉橫將不再自動執行訊息發送，可以隨時關閉或啟用</p>
@@ -1100,10 +995,7 @@ const handCancelTicketBtn = () => {
             <p>請輸入訊息主題</p>
             <div class="auto-message">
               <p>訊息主題</p>
-              <input
-                placeholder="請輸入訊息主題"
-                v-model="messageData.mTheme"
-              />
+              <input placeholder="請輸入訊息主題" v-model="messageData.mTheme" />
             </div>
           </div>
           <div class="line">
@@ -1111,44 +1003,27 @@ const handCancelTicketBtn = () => {
             <p>填寫任何您想發送給顧客的訊息內容</p>
             <div class="line-title">
               <p>標題</p>
-              <input
-                placeholder="請輸入訊息標題"
-                v-model="messageData.mTitle"
-              />
+              <input placeholder="請輸入訊息標題" v-model="messageData.mTitle" />
             </div>
             <div class="line-content">
               <p>內容</p>
-              <input
-                placeholder="請輸入訊息內容"
-                v-model="messageData.mContext"
-              />
+              <input placeholder="請輸入訊息內容" v-model="messageData.mContext" />
             </div>
             <div class="line-img">
               <p>附加圖片</p>
-              <input
-                class="updata-input"
-                type="file"
-                ref="img"
-                accept="image/gif,image/jpeg,image/jpg,image/png"
-                @change="handkeFileChange"
-              />
+              <input class="updata-input" type="file" ref="img" accept="image/gif,image/jpeg,image/jpg,image/png"
+                @change="handkeFileChange" />
               <div class="updata-btn">
                 <button @click="choiceImg">上傳圖片</button>
               </div>
             </div>
             <div class="line-btn-name">
               <p>按鈕名稱</p>
-              <input
-                placeholder="請輸入按鈕名稱"
-                v-model="messageData.mButtonText"
-              />
+              <input placeholder="請輸入按鈕名稱" v-model="messageData.mButtonText" />
             </div>
             <div class="line-btn-ref">
               <p>按鈕網址</p>
-              <input
-                placeholder="請輸入網址(例:https://xxxxx.com)"
-                v-model="messageData.mUrl"
-              />
+              <input placeholder="請輸入網址(例:https://xxxxx.com)" v-model="messageData.mUrl" />
             </div>
           </div>
           <div class="take-over">
@@ -1156,38 +1031,24 @@ const handCancelTicketBtn = () => {
             <p>系統將自動發送訊息給符合特定條件的顧客</p>
             <div class="receiver">
               <p>對象</p>
-              <div
-                class="receiver-select"
-                v-if="props.selectMessageItem.auto == 1"
-              >
+              <div class="receiver-select" v-if="props.selectMessageItem.auto == 1">
                 <select v-model="messageData.mTarget">
                   <option disabled value="">請選擇人員</option>
-                  <option
-                    v-for="item in mTarget"
-                    :key="item.value"
-                    :value="item.value"
-                  >
+                  <option v-for="item in mTarget" :key="item.value" :value="item.value">
                     {{ item.label }}
                   </option>
                 </select>
               </div>
-              <div
-                class="receiver-select"
-                v-if="props.selectMessageItem.auto == 0"
-              >
+              <div class="receiver-select" v-if="props.selectMessageItem.auto == 0">
                 <div>
-                  <u class="add-coupon-btn" @click="handAddReceiverView"
-                    >請選擇加入對象</u
-                  >
+                  <u class="add-coupon-btn" @click="handAddReceiverView">請選擇加入對象</u>
                 </div>
               </div>
             </div>
             <div class="specific" v-if="messageData.mTarget == 1">
               <p>特定條件</p>
               <div class="specific-select">
-                <u class="add-coupon-btn" @click="handAddFilterView"
-                  >加入特定條件</u
-                >
+                <u class="add-coupon-btn" @click="handAddFilterView">加入特定條件</u>
               </div>
             </div>
           </div>
@@ -1198,11 +1059,7 @@ const handCancelTicketBtn = () => {
               <div class="time-select">
                 <select v-model="messageData.mSendTimer">
                   <option disabled value="">請選擇發送時機</option>
-                  <option
-                    v-for="item in mSendMethod"
-                    :key="item.value"
-                    :value="item.value"
-                  >
+                  <option v-for="item in mSendMethod" :key="item.value" :value="item.value">
                     {{ item.label }}
                   </option>
                 </select>
@@ -1221,11 +1078,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendDateT">
                     <option disabled value="">請選擇指定時段</option>
-                    <option
-                      v-for="item in periodTime"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1241,11 +1094,7 @@ const handCancelTicketBtn = () => {
               <div class="time-select">
                 <select v-model="messageData.mSendTimer">
                   <option disabled value="">請選擇發送時機</option>
-                  <option
-                    v-for="item in mSendTimer"
-                    :key="item.value"
-                    :value="item.value"
-                  >
+                  <option v-for="item in mSendTimer" :key="item.value" :value="item.value">
                     {{ item.label }}
                   </option>
                 </select>
@@ -1258,11 +1107,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendTimeing">
                     <option disabled value="">請選擇固定時間</option>
-                    <option
-                      v-for="item in fixedDate"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in fixedDate" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1273,11 +1118,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select" v-if="messageData.mSendTimeing == 1">
                   <select v-model="messageData.mSendDateD">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in weekDate"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in weekDate" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1285,11 +1126,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select" v-if="messageData.mSendTimeing == 2">
                   <select v-model="messageData.mSendDateD">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in dateDate"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in dateDate" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1297,11 +1134,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select" v-if="messageData.mSendTimeing == 3">
                   <select v-model="mSend">
                     <option disabled value="">請選擇月份</option>
-                    <option
-                      v-for="item in monthDate"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in monthDate" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1309,11 +1142,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select" v-if="messageData.mSendTimeing == 3">
                   <select v-model="dSend">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in dateDate"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in dateDate" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1324,11 +1153,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendDateT">
                     <option disabled value="">請選擇指定時段</option>
-                    <option
-                      v-for="item in periodTime"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1342,11 +1167,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendTimeing">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in birData"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in birData" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1357,11 +1178,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendDateT">
                     <option disabled value="">請選擇指定時段</option>
-                    <option
-                      v-for="item in periodTime"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1375,11 +1192,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendTimeing">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in dayData"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in dayData" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1390,11 +1203,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendDateT">
                     <option disabled value="">請選擇指定時段</option>
-                    <option
-                      v-for="item in periodTime"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1408,11 +1217,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendTimeing">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in dayData"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in dayData" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1423,11 +1228,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendDateT">
                     <option disabled value="">請選擇指定時段</option>
-                    <option
-                      v-for="item in periodTime"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1441,11 +1242,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendTimeing">
                     <option disabled value="">請選擇日期</option>
-                    <option
-                      v-for="item in dayData"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in dayData" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1456,11 +1253,7 @@ const handCancelTicketBtn = () => {
                 <div class="time-select">
                   <select v-model="messageData.mSendDateT">
                     <option disabled value="">請選擇指定時段</option>
-                    <option
-                      v-for="item in periodTime"
-                      :key="item.value"
-                      :value="item.value"
-                    >
+                    <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
                     </option>
                   </select>
@@ -1501,24 +1294,12 @@ const handCancelTicketBtn = () => {
       </div>
     </div>
   </div>
-  <AddCoupon
-    v-if="addCouponView"
-    :handAddCouponView="handAddCouponView"
-    :mMapCouponCards="messageData.mMapCouponCards"
-    @handSubmit="handAddCouponSubmit"
-  />
-  <AddFilter
-    v-if="addFilterView"
-    :handAddFilterView="handAddFilterView"
-    :mFilter="messageData.mFilter"
-    @handSubmit="handAddFilterSubmit"
-  />
-  <AddReceiver
-    v-if="addReceiverView"
-    :handAddReceiverView="handAddReceiverView"
-    :mFilter="messageData.mFilter"
-    @handSubmit="handAddReceiverSubmit"
-  />
+  <AddCoupon v-if="addCouponView" :handAddCouponView="handAddCouponView" :mMapCouponCards="messageData.mMapCouponCards"
+    @handSubmit="handAddCouponSubmit" />
+  <AddFilter v-if="addFilterView" :handAddFilterView="handAddFilterView" :mFilter="messageData.mFilter"
+    @handSubmit="handAddFilterSubmit" />
+  <AddReceiver v-if="addReceiverView" :handAddReceiverView="handAddReceiverView" :mFilter="messageData.mFilter"
+    @handSubmit="handAddReceiverSubmit" />
 </template>
 
 <style scoped lang="scss">
@@ -1554,7 +1335,7 @@ const handCancelTicketBtn = () => {
       border: solid 1px #ddd;
       box-sizing: border-box;
 
-      > span {
+      >span {
         display: flex;
         width: calc(100%);
         justify-content: center;
@@ -1565,7 +1346,7 @@ const handCancelTicketBtn = () => {
         justify-content: center;
       }
 
-      > img {
+      >img {
         position: absolute;
         width: 41px;
         height: 38px;
@@ -1573,7 +1354,7 @@ const handCancelTicketBtn = () => {
         left: 15px;
       }
 
-      > button {
+      >button {
         position: absolute;
         width: 150px;
         height: 50px;
@@ -1586,30 +1367,30 @@ const handCancelTicketBtn = () => {
       }
     }
 
-    > .news-wrap {
+    >.news-wrap {
       height: calc(100% - 70px);
       color: #717171;
       display: flex;
 
-      > .message-info {
+      >.message-info {
         width: 60%;
         border-right: solid 1px #929090;
         height: 100%;
         overflow: auto;
 
-        > .switch {
+        >.switch {
           display: flex;
           align-items: center;
           margin: 0 10px;
           border-bottom: solid 1px #929090;
 
-          > .switch-content {
+          >.switch-content {
             margin: 0 15px;
             text-align: left;
           }
         }
 
-        > .coupon {
+        >.coupon {
           margin: 25px 10px;
           padding: 0px 0px;
           border: solid 0.5px #a19f9f;
@@ -1620,13 +1401,13 @@ const handCancelTicketBtn = () => {
           text-align: left;
           background: #ffffff;
 
-          > .link-txt {
+          >.link-txt {
             display: flex;
             justify-content: center;
             align-items: center;
           }
 
-          > .coupon-ticket {
+          >.coupon-ticket {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1643,12 +1424,12 @@ const handCancelTicketBtn = () => {
           }
         }
 
-        > .auto {
+        >.auto {
           text-align: left;
           margin: 25px 10px;
           padding: 5px 5px;
 
-          > .auto-message {
+          >.auto-message {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -1670,12 +1451,12 @@ const handCancelTicketBtn = () => {
           }
         }
 
-        > .news {
+        >.news {
           text-align: left;
           margin: 25px 10px;
           padding: 5px 5px;
 
-          > .news-content {
+          >.news-content {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -1697,7 +1478,7 @@ const handCancelTicketBtn = () => {
             }
           }
 
-          > .news-img {
+          >.news-img {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -1709,7 +1490,7 @@ const handCancelTicketBtn = () => {
               width: 20%;
             }
 
-            > .updata-input {
+            >.updata-input {
               text-align: center;
               border: transparent;
               display: none;
@@ -1719,7 +1500,7 @@ const handCancelTicketBtn = () => {
               border-radius: 0 5px 5px 0;
             }
 
-            > .updata-btn {
+            >.updata-btn {
               text-align: center;
               border: transparent;
               border-left: solid 0.5px #a19f9f;
@@ -1729,7 +1510,7 @@ const handCancelTicketBtn = () => {
               justify-content: center;
               align-items: center;
 
-              > button {
+              >button {
                 height: 50%;
                 margin: 0 20px;
                 border: transparent;
@@ -1738,7 +1519,7 @@ const handCancelTicketBtn = () => {
             }
           }
 
-          > .news-ref {
+          >.news-ref {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -1761,11 +1542,11 @@ const handCancelTicketBtn = () => {
           }
         }
 
-        > .take-over {
+        >.take-over {
           text-align: left;
           margin: 25px 10px;
 
-          > .receiver {
+          >.receiver {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -1777,14 +1558,14 @@ const handCancelTicketBtn = () => {
               width: 20%;
             }
 
-            > .receiver-select {
+            >.receiver-select {
               // width: 100%;
               position: relative;
               border-left: solid 0.5px #a19f9f;
               flex: 1;
               align-content: center;
 
-              > select {
+              >select {
                 position: absolute;
                 top: 1px;
                 left: 1px;
@@ -1794,7 +1575,7 @@ const handCancelTicketBtn = () => {
                 text-align: center;
               }
 
-              > div {
+              >div {
                 display: flex;
                 height: 100%;
                 align-items: center;
@@ -1803,7 +1584,7 @@ const handCancelTicketBtn = () => {
             }
           }
 
-          > .specific {
+          >.specific {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -1815,14 +1596,14 @@ const handCancelTicketBtn = () => {
               width: 20%;
             }
 
-            > .specific-select {
+            >.specific-select {
               display: flex;
               justify-content: center;
               align-content: center;
               border-left: solid 0.5px #a19f9f;
               flex: 1;
 
-              > u {
+              >u {
                 display: flex;
                 align-items: center;
               }
@@ -1830,7 +1611,7 @@ const handCancelTicketBtn = () => {
           }
         }
 
-        > .send-time {
+        >.send-time {
           text-align: left;
           margin: 25px 10px;
 
@@ -1846,14 +1627,14 @@ const handCancelTicketBtn = () => {
               width: 20%;
             }
 
-            > .time-select {
+            >.time-select {
               // width: 100%;
               position: relative;
               border-left: solid 0.5px #a19f9f;
               flex: 1;
               margin: 0 0;
 
-              > input {
+              >input {
                 width: auto;
                 height: 100%;
                 border: transparent;
@@ -1863,7 +1644,7 @@ const handCancelTicketBtn = () => {
                 outline: transparent;
               }
 
-              > select {
+              >select {
                 position: absolute;
                 top: 1px;
                 left: 1px;
@@ -1876,12 +1657,12 @@ const handCancelTicketBtn = () => {
           }
         }
 
-        > .send-result {
+        >.send-result {
           text-align: left;
           padding: 0 0 10px 0;
           margin: 25px 10px;
 
-          > p {
+          >p {
             padding: 20px 10px;
             border: solid 0.5px #a19f9f;
             border-radius: 5px 5px 5px 5px;
@@ -1889,14 +1670,15 @@ const handCancelTicketBtn = () => {
           }
         }
       }
-      > .example-img {
+
+      >.example-img {
         display: flex;
         flex-direction: column;
         align-items: center;
         width: 40%;
         text-align: center;
 
-        > .example-bg {
+        >.example-bg {
           display: flex;
           justify-items: center;
           height: 370px;
@@ -1904,7 +1686,8 @@ const handCancelTicketBtn = () => {
           border-radius: 50px 50px 0px 0px;
           background: #f6f6f6;
           position: relative;
-          > div {
+
+          >div {
             border-radius: 50px 50px 0px 0px;
             background: #e6e6e6;
             position: absolute;
@@ -1912,7 +1695,8 @@ const handCancelTicketBtn = () => {
             left: 5px;
             right: 5px;
             bottom: 0px;
-            > div {
+
+            >div {
               border-radius: 30px 30px 0px 0px;
               background: #ffffff;
               position: absolute;
@@ -1920,7 +1704,8 @@ const handCancelTicketBtn = () => {
               left: 20px;
               right: 20px;
               bottom: 0px;
-              > .top-block {
+
+              >.top-block {
                 height: 90px;
                 border-radius: 30px 30px 0px 0px;
                 background: #f6f6f6;
@@ -1928,26 +1713,31 @@ const handCancelTicketBtn = () => {
                 justify-content: center;
                 align-items: center;
               }
-              > .now-time {
+
+              >.now-time {
                 display: flex;
                 justify-content: center;
-                > p {
+
+                >p {
                   font-size: 14px;
                   padding: 4px 12px;
                   color: #717171;
                   border-radius: 30px 30px;
                 }
               }
-              > .example-content {
+
+              >.example-content {
                 display: flex;
                 margin: 0 10px;
-                > .msg-content {
+
+                >.msg-content {
                   width: 70%;
                   min-height: 100px;
                   margin: 0 10px;
                   border-radius: 15px 15px;
                   background: #f6f6f6;
-                  > .p-content {
+
+                  >.p-content {
                     font-size: 18px;
                     text-align: justify;
                     margin: 12px 15px;
@@ -1958,10 +1748,12 @@ const handCancelTicketBtn = () => {
             }
           }
         }
-        > .hint-content {
+
+        >.hint-content {
           margin: 0 30px;
         }
-        > .test-content {
+
+        >.test-content {
           width: 90%;
           border-radius: 15px 15px;
           //   margin: 10px 10px;
@@ -1969,7 +1761,8 @@ const handCancelTicketBtn = () => {
           border: solid 1px #929090;
           display: flex;
           flex-direction: column;
-          > input {
+
+          >input {
             border: transparent;
             border-radius: 5px 5px;
             background: #f6f6f6;
@@ -1977,7 +1770,8 @@ const handCancelTicketBtn = () => {
             font-size: 22px;
             padding: 20px 20px;
           }
-          > button {
+
+          >button {
             border: transparent;
             border-radius: 5px 5px;
             background: #f6f6f6;
@@ -1989,24 +1783,24 @@ const handCancelTicketBtn = () => {
       }
     }
 
-    > .line-wrap {
+    >.line-wrap {
       height: calc(100% - 70px);
       color: #717171;
       display: flex;
 
-      > .message-info {
+      >.message-info {
         width: 60%;
         border-right: solid 1px #929090;
         height: 100%;
         overflow: auto;
 
-        > .switch {
+        >.switch {
           display: flex;
           align-items: center;
           margin: 0 10px;
           border-bottom: solid 1px #929090;
 
-          > .switch-content {
+          >.switch-content {
             margin: 0 15px;
             text-align: left;
           }
@@ -2058,7 +1852,7 @@ const handCancelTicketBtn = () => {
           }
         }
 
-        > .coupon {
+        >.coupon {
           margin: 25px 10px;
           padding: 0px 0px;
           border: solid 0.5px #a19f9f;
@@ -2069,13 +1863,13 @@ const handCancelTicketBtn = () => {
           text-align: left;
           background: #ffffff;
 
-          > .link-txt {
+          >.link-txt {
             display: flex;
             justify-content: center;
             align-items: center;
           }
 
-          > .coupon-ticket {
+          >.coupon-ticket {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -2092,12 +1886,12 @@ const handCancelTicketBtn = () => {
           }
         }
 
-        > .auto {
+        >.auto {
           text-align: left;
           margin: 25px 10px;
           padding: 5px 5px;
 
-          > .auto-message {
+          >.auto-message {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -2119,12 +1913,12 @@ const handCancelTicketBtn = () => {
           }
         }
 
-        > .line {
+        >.line {
           text-align: left;
           margin: 25px 10px;
           padding: 5px 5px;
 
-          > .line-title {
+          >.line-title {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -2146,7 +1940,7 @@ const handCancelTicketBtn = () => {
             }
           }
 
-          > .line-content {
+          >.line-content {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -2168,7 +1962,7 @@ const handCancelTicketBtn = () => {
             }
           }
 
-          > .line-img {
+          >.line-img {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -2180,7 +1974,7 @@ const handCancelTicketBtn = () => {
               width: 20%;
             }
 
-            > .updata-input {
+            >.updata-input {
               text-align: center;
               border: transparent;
               display: none;
@@ -2190,7 +1984,7 @@ const handCancelTicketBtn = () => {
               border-radius: 0 5px 5px 0;
             }
 
-            > .updata-btn {
+            >.updata-btn {
               text-align: center;
               border: transparent;
               border-left: solid 0.5px #a19f9f;
@@ -2200,7 +1994,7 @@ const handCancelTicketBtn = () => {
               justify-content: center;
               align-items: center;
 
-              > button {
+              >button {
                 height: 50%;
                 margin: 0 20px;
                 border: transparent;
@@ -2209,7 +2003,7 @@ const handCancelTicketBtn = () => {
             }
           }
 
-          > .line-btn-name {
+          >.line-btn-name {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -2231,7 +2025,7 @@ const handCancelTicketBtn = () => {
             }
           }
 
-          > .line-btn-ref {
+          >.line-btn-ref {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -2254,11 +2048,11 @@ const handCancelTicketBtn = () => {
           }
         }
 
-        > .take-over {
+        >.take-over {
           text-align: left;
           margin: 25px 10px;
 
-          > .receiver {
+          >.receiver {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -2270,13 +2064,13 @@ const handCancelTicketBtn = () => {
               width: 20%;
             }
 
-            > .receiver-select {
+            >.receiver-select {
               // width: 100%;
               position: relative;
               border-left: solid 0.5px #a19f9f;
               flex: 1;
 
-              > select {
+              >select {
                 position: absolute;
                 top: 1px;
                 left: 1px;
@@ -2286,7 +2080,7 @@ const handCancelTicketBtn = () => {
                 text-align: center;
               }
 
-              > div {
+              >div {
                 display: flex;
                 height: 100%;
                 align-items: center;
@@ -2295,7 +2089,7 @@ const handCancelTicketBtn = () => {
             }
           }
 
-          > .specific {
+          >.specific {
             display: flex;
             text-align: center;
             border: solid 0.5px #a19f9f;
@@ -2307,14 +2101,14 @@ const handCancelTicketBtn = () => {
               width: 20%;
             }
 
-            > .specific-select {
+            >.specific-select {
               display: flex;
               justify-content: center;
               align-content: center;
               border-left: solid 0.5px #a19f9f;
               flex: 1;
 
-              > u {
+              >u {
                 display: flex;
                 align-items: center;
               }
@@ -2322,7 +2116,7 @@ const handCancelTicketBtn = () => {
           }
         }
 
-        > .send-time {
+        >.send-time {
           text-align: left;
           margin: 25px 10px;
 
@@ -2338,14 +2132,14 @@ const handCancelTicketBtn = () => {
               width: 20%;
             }
 
-            > .time-select {
+            >.time-select {
               // width: 100%;
               position: relative;
               border-left: solid 0.5px #a19f9f;
               flex: 1;
               margin: 0 0;
 
-              > input {
+              >input {
                 width: auto;
                 height: 100%;
                 border: transparent;
@@ -2355,7 +2149,7 @@ const handCancelTicketBtn = () => {
                 outline: transparent;
               }
 
-              > select {
+              >select {
                 position: absolute;
                 top: 1px;
                 left: 1px;
@@ -2368,12 +2162,12 @@ const handCancelTicketBtn = () => {
           }
         }
 
-        > .send-result {
+        >.send-result {
           text-align: left;
           padding: 0 0 10px 0;
           margin: 25px 10px;
 
-          > p {
+          >p {
             padding: 20px 10px;
             border: solid 0.5px #a19f9f;
             border-radius: 5px 5px 5px 5px;
@@ -2381,14 +2175,15 @@ const handCancelTicketBtn = () => {
           }
         }
       }
-      > .example-img {
+
+      >.example-img {
         display: flex;
         flex-direction: column;
         align-items: center;
         width: 40%;
         text-align: center;
 
-        > .example-bg {
+        >.example-bg {
           display: flex;
           justify-items: center;
           height: 370px;
@@ -2396,7 +2191,8 @@ const handCancelTicketBtn = () => {
           border-radius: 50px 50px 0px 0px;
           background: #f6f6f6;
           position: relative;
-          > div {
+
+          >div {
             border-radius: 50px 50px 0px 0px;
             background: #e6e6e6;
             position: absolute;
@@ -2404,7 +2200,8 @@ const handCancelTicketBtn = () => {
             left: 5px;
             right: 5px;
             bottom: 0px;
-            > div {
+
+            >div {
               border-radius: 30px 30px 0px 0px;
               background: #7294c2;
               position: absolute;
@@ -2412,7 +2209,8 @@ const handCancelTicketBtn = () => {
               left: 20px;
               right: 20px;
               bottom: 0px;
-              > .top-block {
+
+              >.top-block {
                 height: 55px;
                 border-radius: 30px 30px 0px 0px;
                 background: rgba(0, 0, 0, 0.7);
@@ -2421,10 +2219,12 @@ const handCancelTicketBtn = () => {
                 // left: 0px;
                 // right: 0px;
               }
-              > .now-time {
+
+              >.now-time {
                 display: flex;
                 justify-content: center;
-                > p {
+
+                >p {
                   font-size: 14px;
                   padding: 4px 12px;
                   background: rgba(0, 0, 0, 0.3);
@@ -2432,16 +2232,19 @@ const handCancelTicketBtn = () => {
                   border-radius: 30px 30px;
                 }
               }
-              > .example-content {
+
+              >.example-content {
                 display: flex;
                 margin: 0 10px;
-                > .msg-content {
+
+                >.msg-content {
                   width: 70%;
                   height: 70px;
                   margin: 0 10px;
                   border-radius: 15px 15px;
                   background: #ffffff;
-                  > .p-content {
+
+                  >.p-content {
                     font-size: 14px;
                     text-align: justify;
                     margin: 12px 15px;
@@ -2451,7 +2254,8 @@ const handCancelTicketBtn = () => {
             }
           }
         }
-        > .hint-content {
+
+        >.hint-content {
           margin: 0 70px;
         }
       }
@@ -2461,7 +2265,7 @@ const handCancelTicketBtn = () => {
       display: none;
     }
 
-    > .sub-btn {
+    >.sub-btn {
       position: absolute;
       height: 67px;
       left: 0px;
@@ -2469,7 +2273,7 @@ const handCancelTicketBtn = () => {
       bottom: 0px;
       border-top: solid 0.5px#a19f9f;
 
-      > .btn {
+      >.btn {
         padding: 10px 10px;
         margin: 10px 10px;
         font-size: 18px;

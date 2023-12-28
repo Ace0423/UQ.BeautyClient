@@ -8,7 +8,7 @@ import { getshowMap } from "@/plugins/js-cookie";
       <el-scrollbar>
         <div class="nav">
           <h1>我的商店</h1>
-          <div v-if="getshowMap('商店設定','CompanyInfo')" class="nav-content">
+          <div v-if="getshowMap('商店設定', 'CompanyInfo')" class="nav-content">
             <router-link to="/settingView/storeSettingsView/storeInformationView">
               <div>
                 <h1>商店設定</h1>
@@ -17,7 +17,7 @@ import { getshowMap } from "@/plugins/js-cookie";
               <img :src="icon_right_arrow" />
             </router-link>
           </div>
-          <div v-if="getshowMap('人員管理','ManagerData')" class="nav-content">
+          <div v-if="getshowMap('人員管理', 'ManagerData')" class="nav-content">
             <router-link to="/settingView/userManagerView/managerView">
               <div>
                 <h1>人員管理</h1>
@@ -26,7 +26,7 @@ import { getshowMap } from "@/plugins/js-cookie";
               <img :src="icon_right_arrow" />
             </router-link>
           </div>
-          <div v-if="getshowMap('線上網站設定','')" class="nav-content">
+          <div v-if="getshowMap('線上網站設定', '')" class="nav-content">
             <router-link to="/settingView/onlineWebSettingsView/exclWebSiteView/storeWebsiteView">
               <div>
                 <h1>線上網站設定</h1>
@@ -44,7 +44,7 @@ import { getshowMap } from "@/plugins/js-cookie";
               <img :src="icon_right_arrow" />
             </router-link>
           </div> -->
-          <div v-if="getshowMap('訊息管理','Messages')" class="nav-content">
+          <div v-if="getshowMap('訊息管理', 'Messages')" class="nav-content">
             <router-link to="/settingView/messageManagerView/myMessageView">
               <div>
                 <h1>訊息管理</h1>
@@ -72,7 +72,7 @@ import { getshowMap } from "@/plugins/js-cookie";
       <el-scrollbar>
         <div class="nav">
           <h1>項目管理</h1>
-          <div v-if="getshowMap('項目管理','ServiceInfo')" class="nav-content">
+          <div v-if="getshowMap('項目管理', 'ServiceInfo')" class="nav-content">
             <router-link to="/serviceView/servicePage">
               <div>
                 <h1>服務管理</h1>
@@ -81,7 +81,7 @@ import { getshowMap } from "@/plugins/js-cookie";
               <img :src="icon_right_arrow" />
             </router-link>
           </div>
-          <div v-if="getshowMap('項目管理','ProductInfo')" class="nav-content">
+          <div v-if="getshowMap('項目管理', 'ProductInfo')" class="nav-content">
             <router-link to="/settingView/goodsMgmt/goodsPage">
               <div>
                 <h1>{{ $t("goodsMgmt") }}</h1>
@@ -90,7 +90,7 @@ import { getshowMap } from "@/plugins/js-cookie";
               <img :src="icon_right_arrow" />
             </router-link>
           </div>
-          <div v-if="getshowMap('項目管理','Discount')" class="nav-content">
+          <div v-if="getshowMap('項目管理', 'Discount')" class="nav-content">
             <router-link to="/settingView/discountMgmt/discountAllPage">
               <div>
                 <h1>折扣</h1>
@@ -102,7 +102,7 @@ import { getshowMap } from "@/plugins/js-cookie";
         </div>
         <div class="nav">
           <h1>票劵管理</h1>
-          <div v-if="getshowMap('票卷管理','CouponCard')" class="nav-content">
+          <div v-if="getshowMap('票卷管理', 'CouponCard')" class="nav-content">
             <router-link to="/settingView/couponMgmt/couponPage">
               <div>
                 <h1>優惠劵</h1>
@@ -111,7 +111,7 @@ import { getshowMap } from "@/plugins/js-cookie";
               <img :src="icon_right_arrow" />
             </router-link>
           </div>
-          <div v-if="getshowMap('票卷管理','TopUpCard')" class="nav-content">
+          <div v-if="getshowMap('票卷管理', 'TopUpCard')" class="nav-content">
             <router-link to="/settingView/storedValueCardView">
               <div>
                 <h1>儲值卡</h1>
@@ -132,7 +132,7 @@ import { getshowMap } from "@/plugins/js-cookie";
         </div>
         <div class="nav">
           <h1>應用程式</h1>
-          <div v-if="getshowMap('LINEOA串接','')" class="nav-content">
+          <div v-if="getshowMap('LINEOA串接', '')" class="nav-content">
             <router-link to="/settingView/connectionLineOA/connection">
               <div>
                 <h1>LINE OA 串接</h1>
@@ -141,7 +141,7 @@ import { getshowMap } from "@/plugins/js-cookie";
               <img :src="icon_right_arrow" />
             </router-link>
           </div>
-          <div v-if="getshowMap('LINEPay串接','')" class="nav-content">
+          <div v-if="getshowMap('LINEPay串接', '')" class="nav-content">
             <router-link to="/settingView/connectionLinePay/connection">
               <div>
                 <h1>LINE Pay 串接</h1>

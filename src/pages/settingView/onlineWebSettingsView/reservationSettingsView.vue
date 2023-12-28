@@ -23,10 +23,10 @@ onMounted(() => {
   width: 100%;
 
   >.item-tab {
-    // position: absolute;
-    top: 112px;
+    position: absolute;
+    top: 0px;
     right: 0px;
-    left: 15px;
+    left: 0px;
     bottom: 0px;
     // border-bottom: solid 1px #c1bdb8;
 

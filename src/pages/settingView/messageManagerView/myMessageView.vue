@@ -59,7 +59,7 @@ const handMessageBtn = (command: any) => {
 }
 </script>
 <template>
-    <div class="group">
+    <div class="wrap">
         <div class="function-area">
             <input placeholder="🔍搜尋" v-model="keyWord" />
             <div class="header-auto-btn">
@@ -126,8 +126,8 @@ const handMessageBtn = (command: any) => {
                         <p>{{ item.mSendDate }}</p>
                     </td>
                     <td class="col-1-th">
-                        <button class="header-btn">
-                            <img :src="editIcon" @click="handAddMessageView(item.mAuto, item.mType, item)" />
+                        <button class="header-btn" @click="handAddMessageView(item.mAuto, item.mType, item)">
+                            >
                         </button>
                     </td>
                 </tr>
@@ -139,26 +139,24 @@ const handMessageBtn = (command: any) => {
 </template>
 
 <style lang="scss" scoped>
-div.group {
-    position: absolute;
-    top: 45px;
-    bottom: 10px;
-    left: 0px;
-    right: 0px;
+.wrap {
+    //   position: absolute;
+    //   top: 45px;
+    //   bottom: 10px;
+    //   left: 0px;
+    //   right: 0px;
+    position: relative;
     width: 100%;
-    background-color: #faf9f8;
-    border: solid 0.5px #ddd;
+    margin: 0 5px;
+    // background-color: #faf9f8;
+    // border: solid 0.5px #ddd;
     font-family: STXihei;
     color: #717171;
 
-    p {
-        margin: 16px;
-    }
-
     >.function-area {
         height: 50px;
-        position: absolute;
-        top: -50px;
+        // position: absolute;
+        // top: -50px;
         border: none;
         background-color: transparent;
         display: flex;
@@ -226,16 +224,17 @@ div.group {
     }
 
     >table {
+        position: absolute;
+        top: 50px;
         width: 100%;
-        height: 100%;
+        height: calc(100% - 50px);
 
         >.header-tab {
             display: block;
-            // height: 50px;
             color: #717171;
-            border: solid 1px #707070;
             background-color: #e6e2de;
             box-sizing: border-box;
+            border-radius: 6px 6px 0px 0px;
 
             >tr {
                 display: flex;
@@ -243,30 +242,25 @@ div.group {
                 height: 50px;
                 justify-content: space-between;
 
-                >.col-1-th {
-                    width: 10%;
-                }
-
-                >.col-2-th {
-                    width: 20%;
-                }
-
-                >.col-3-th {
-                    width: 30%;
-                }
-
                 >th {
+                    width: 30%;
+
                     >p {
-                        min-width: 108px;
+                        // min-width: 108px;
+                        padding: 0 0;
                         text-align: left;
                     }
 
-                    >.nameview {
-                        padding-left: 10px;
+                    .controllerTxt {
+                        padding-left: 15px;
                     }
                 }
+            }
 
-
+            .header-btn {
+                justify-content: end;
+                width: 5%;
+                padding: 0 5px;
             }
         }
 
@@ -285,7 +279,7 @@ div.group {
                 position: relative;
 
                 &::after {
-                    content: '';
+                    content: "";
                     display: block;
                     position: absolute;
                     bottom: 0;
@@ -296,24 +290,9 @@ div.group {
                     transform: translateX(-50%);
                 }
 
-                >.col-1-th {
-                    width: 10%;
-                }
-
-                >.col-2-th {
-                    width: 20%;
-                }
-
-                >.col-3-th {
-                    width: 30%;
-                }
-
                 >td {
-                    display: flex;
-
-                    >input {
-                        margin: 0 40px;
-                    }
+                    // display: flex
+                    width: 30%;
 
                     >button {
                         height: 100%;
@@ -329,6 +308,18 @@ div.group {
                             vertical-align: middle;
                         }
                     }
+
+
+                }
+
+                .content-btn {
+                    // justify-content: end;
+                    width: 5%;
+                    padding: 0 15px;
+                }
+
+                .content-name {
+                    padding-left: 15px;
                 }
             }
         }

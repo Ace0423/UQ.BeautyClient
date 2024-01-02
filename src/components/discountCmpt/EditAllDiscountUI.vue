@@ -10,11 +10,7 @@
             <div class="formname">
               <span>*折扣名稱</span>
               <div>
-                <el-input
-                  class="input-name"
-                  v-model="formInputRef.name"
-                  placeholder="請輸入名稱"
-                />
+                <el-input class="input-name" v-model="formInputRef.name" placeholder="請輸入名稱" />
                 <span class="p_error" v-if="ruleItem.name.is_error">
                   {{ ruleItem.name.warn }}
                 </span>
@@ -26,30 +22,15 @@
               <span>*售價(NT)</span>
               <div>
                 <div>
-                  <el-input
-                    class="input-price"
-                    v-model="formInputRef.discount"
-                    placeholder="請輸入折扣"
-                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                  >
+                  <el-input class="input-price" v-model="formInputRef.discount" placeholder="請輸入折扣"
+                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')">
                   </el-input>
                   <div class="switch">
-                    <span
-                      class="box_item"
-                      :class="{ actived_box: formInputRef.dType }"
-                    ></span>
-                    <span
-                      class="left"
-                      :class="{ actived_Area: !formInputRef.dType }"
-                      @click="formInputRef.dType = !formInputRef.dType"
-                      >%</span
-                    >
-                    <span
-                      class="right"
-                      :class="{ actived_Area: formInputRef.dType }"
-                      @click="formInputRef.dType = !formInputRef.dType"
-                      >$</span
-                    >
+                    <span class="box_item" :class="{ actived_box: formInputRef.dType }"></span>
+                    <span class="left" :class="{ actived_Area: !formInputRef.dType }"
+                      @click="formInputRef.dType = !formInputRef.dType">%</span>
+                    <span class="right" :class="{ actived_Area: formInputRef.dType }"
+                      @click="formInputRef.dType = !formInputRef.dType">$</span>
                   </div>
                 </div>
                 <span class="p_error" v-if="ruleItem.discount.is_error">
@@ -76,7 +57,7 @@ import { usePriceStore } from "@/stores/priceStore";
 import { checkVerify_all } from "@/utils/utils";
 import { storeToRefs } from "pinia";
 let store = usePriceStore();
-let {} = storeToRefs(store);
+let { } = storeToRefs(store);
 let { updateAllDiscountApi } = store;
 
 const props = defineProps<{
@@ -94,12 +75,12 @@ onBeforeFn();
 function onBeforeFn() {
   formInputRef.value.discountNo = props.formInfo.value.discountNo;
   formInputRef.value.name = props.formInfo.value.title;
-  formInputRef.value.dType = props.formInfo.value.dType ? true : false;
+  formInputRef.value.dType = props.formInfo.value.dType == 2;
   formInputRef.value.discount = props.formInfo.value.dType
     ? props.formInfo.value.discount
     : props.formInfo.value.discount * 100;
 }
-onMounted(() => {});
+onMounted(() => { });
 
 //新增課程-確認
 let submitBtn = () => {
@@ -113,7 +94,7 @@ let submitBtn = () => {
     discount: formInputRef.value.dType
       ? formInputRef.value.discount
       : formInputRef.value.discount / 100,
-    dType: formInputRef.value.dType ? 1 : 0,
+    dType: formInputRef.value.dType ? 2 : 1,
     discountNo: formInputRef.value.discountNo,
   };
   /**新增明細 */
@@ -188,6 +169,7 @@ let { ruleItem } = toRefs(ruleLists);
 
     .top-form {
       width: 100%;
+
       p {
         font-weight: bold;
         width: 80px;
@@ -198,14 +180,17 @@ let { ruleItem } = toRefs(ruleLists);
         color: #877059;
       }
     }
+
     .main-form {
       width: 100%;
+
       .userinfo {
         width: 100%;
         // height: 60px;
         display: flex;
         justify-content: center;
-        > div {
+
+        >div {
           p {
             text-align: left;
             font-size: 15px;
@@ -213,6 +198,7 @@ let { ruleItem } = toRefs(ruleLists);
             color: #877059;
             height: 8px;
           }
+
           span {
             display: block;
             height: 30px;
@@ -224,7 +210,7 @@ let { ruleItem } = toRefs(ruleLists);
             font-weight: bold;
           }
 
-          > input {
+          >input {
             vertical-align: middle;
             width: 95%;
             margin: 5;
@@ -233,40 +219,48 @@ let { ruleItem } = toRefs(ruleLists);
             background-color: #fff;
           }
         }
+
         .formname {
           display: flex;
           justify-content: center;
           padding: 5px 10px;
-          > span {
+
+          >span {
             width: 110px;
             font-size: 20px;
           }
-          > div {
+
+          >div {
             .input-name {
               width: 210px;
               height: 40px;
             }
-            > span {
+
+            >span {
               font-size: 10px;
             }
           }
         }
+
         .formprice {
           display: flex;
           justify-content: center;
           width: 100%;
           padding: 0px 10px;
-          > span {
+
+          >span {
             width: 110px;
             font-size: 20px;
           }
 
-          > div {
-            > span {
+          >div {
+            >span {
               font-size: 10px;
             }
-            > div {
+
+            >div {
               display: flex;
+
               .input-price {
                 width: 150px;
               }
@@ -279,6 +273,7 @@ let { ruleItem } = toRefs(ruleLists);
                 padding: 2px 2px;
                 background-color: #877059;
                 filter: brightness(90%);
+
                 span {
                   cursor: pointer;
                   font-size: 12px;
@@ -288,6 +283,7 @@ let { ruleItem } = toRefs(ruleLists);
                   color: #fff;
                   width: 50%;
                 }
+
                 .box_item {
                   position: absolute;
                   color: #fff;
@@ -296,6 +292,7 @@ let { ruleItem } = toRefs(ruleLists);
                   background-color: #fff;
                   width: 30px;
                 }
+
                 .actived_Area {
                   color: #877059;
                   border-radius: 5px;
@@ -303,6 +300,7 @@ let { ruleItem } = toRefs(ruleLists);
                   font-weight: 60;
                   width: 30px;
                 }
+
                 .actived_box {
                   margin-left: 30px;
                   width: 30px;
@@ -318,6 +316,7 @@ let { ruleItem } = toRefs(ruleLists);
         max-height: 250px;
         overflow-y: scroll;
         width: 100%;
+
         div {
           flex-wrap: wrap;
           display: flex;
@@ -336,7 +335,7 @@ let { ruleItem } = toRefs(ruleLists);
               color: #717171;
               display: flex;
 
-              > span {
+              >span {
                 margin-top: 5px;
                 width: 88%;
                 justify-content: center;
@@ -363,10 +362,12 @@ let { ruleItem } = toRefs(ruleLists);
         }
       }
     }
+
     .bottom-form {
       width: 100%;
       display: flex;
       justify-content: center;
+
       .confirm-coursedetail-btn {
         position: relative;
         width: 100px;
@@ -382,6 +383,7 @@ let { ruleItem } = toRefs(ruleLists);
     }
   }
 }
+
 .p_error {
   color: #fc0505 !important;
   width: 100% !important;

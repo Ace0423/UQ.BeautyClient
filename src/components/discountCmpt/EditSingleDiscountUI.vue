@@ -150,7 +150,7 @@ let formInputRef: any = ref({
 onBeforeFn();
 function onBeforeFn() {
   formInputRef.value.name = props.formInfo.value.title;
-  formInputRef.value.dType = props.formInfo.value.dType == 3;
+  formInputRef.value.dType = props.formInfo.value.dType == 4;
   formInputRef.value.discount = formInputRef.value.dType
     ? props.formInfo.value.discount
     : props.formInfo.value.discount * 100;
@@ -206,7 +206,7 @@ let submitBtn = () => {
 
   let curdata: any = {
     discountNo: formInputRef.value.discountNo,
-    dType: formInputRef.value.dType ? 3 : 2,
+    dType: formInputRef.value.dType ? 4 : 3,
     title: formInputRef.value.name,
     discount: formInputRef.value.dType
       ? formInputRef.value.discount

@@ -189,7 +189,7 @@ let submitBtn = () => {
 
   //dType- 2:% - 3:$
   let curdata: any = {
-    dType: formInputRef.value.dType ? 3 : 2,
+    dType: formInputRef.value.dType ? 4 : 3,
     title: formInputRef.value.name,
     discount: formInputRef.value.dType
       ? formInputRef.value.discount

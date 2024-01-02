@@ -1,44 +1,34 @@
 <template>
-  <div class="popup-mask" v-on:click.self="showGoodsUIFn(0)">
+  <div class="popup-radioGoodsUI" v-on:click.self="showGoodsUIFn(0)">
     <div class="popup-content">
-      <div class="top-content">
-        <img :src="icon_closeX" v-on:click="showGoodsUIFn(0)" />
+      <div class="header-content">
         <span>商品</span>
+        <img :src="icon_closeX" v-on:click="showGoodsUIFn(0)" />
       </div>
       <div class="main-content">
         <input placeholder="搜尋" v-model="formInputRef.search" />
-        <div class="group-content">
+        <div class="list-content">
           <div v-for="item in filterGoodsData" :key="item">
             <label class="label-item" :value="item">
-              <input
-                class="input-item"
-                type="radio"
-                :key="item"
-                :value="item"
-                :id="'RadioGoods_' +item"
-                v-model="formInputRef.goods"
-                @click="clickItem(item, item.pId)"
-              />
-              <label :for="'RadioGoods_' +item.pId"></label>
-              <div>
+              <input class="input-item" type="radio" :key="item" :value="item" :id="'RadioGoods_' + item"
+                v-model="formInputRef.courses" @click="clickItem(item, item.pId)" />
+              <!-- <label :for="'RadioGoods_' + item.SId"></label> -->
+              <div class="title-input">
                 <span value="{{item}}" name="{{item.pName}}">{{
                   item.pName
                 }}</span>
-                <span
-                  class="pCode-msg"
-                  value="{{item}}"
-                  name="{{item.pName}}"
-                  >{{ item.pCode }}</span
-                >
+                <span class="pCode-msg" value="{{item}}" name="{{item.pCode}}">{{ item.pCode }}</span>
+              </div>
+              <div class="price-input">
+                <span>{{ "$" + item.price }}</span>
               </div>
             </label>
-            <!-- <input type="checkbox" name="item_001" value="1" />1 -->
           </div>
         </div>
       </div>
       <div class="bottom-content">
-        <button class="submit-btn" @click="submitBtn()">確認</button>
-        <button class="cancle-btn" @click="showGoodsUIFn(0)">取消</button>
+        <!-- <button class="submit-btn" @click="submitBtn()">確認</button>
+        <button class="cancle-btn" @click="showGoodsUIFn(0)">取消</button> -->
       </div>
     </div>
   </div>
@@ -91,7 +81,9 @@ function getGoodsFn(data: any) {
 }
 
 function clickItem(item: any, id: number) {
-  // console.log(formInputRef.value.goods);
+  formInputRef.value.goods = item;
+  console.log("rdGoods", formInputRef.value.goods);
+  props.getDataFn(formInputRef.value.goods);
 }
 function submitBtn() {
   console.log("提交", formInputRef);
@@ -100,81 +92,113 @@ function submitBtn() {
 </script>
 
 <style scoped lang="scss">
-.popup-mask {
-  position: absolute;
+.popup-radioGoodsUI {
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   z-index: 3;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(80, 80, 80, 0.8);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
   .popup-content {
-    width: 400px;
-    height: 450px;
-    background-color: #e6e2de;
-    padding: 15px;
+    width: 500px;
+    height: 70%;
+    background-color: #ffffff;
+    // padding: 15px 50px;
     font-size: 20px;
     font-family: HeitiTC;
     color: #84715c;
     font-weight: bold;
-    .top-content {
+    border-radius: 12px;
+
+    .header-content {
       display: flex;
-      height: 50px;
-      width: 100%;
-      border: solid 1px #ddd;
+      height: 70px;
+      width: calc(100%);
+      border-bottom: solid 1px #ddd;
       box-sizing: border-box;
-      > span {
-        display: flex;
-        // width: 200px;
-        align-items: center;
-        font-size: 30px;
-        height: 40px;
+
+      >span {
         position: absolute;
-        left: calc(50% - 41px);
+        display: flex;
+        width: calc(100%);
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        height: 70px;
+        justify-content: center;
+        left: 0;
+        right: 0;
+
       }
-      > img {
+
+      >img {
         position: relative;
         width: 41px;
         height: 38px;
-        top: 0px;
-        left: 0px;
+        top: 15px;
+        left: 15px;
       }
+
+
+      >button {
+        position: relative;
+        width: 41px;
+        height: 38px;
+        top: 15px;
+        right: 15px;
+      }
+
     }
+
     .main-content {
       display: block;
       height: calc(100% - 40px - 65px);
-      > input {
+      width: 90%;
+      margin-left: 5%;
+
+      >input {
         box-sizing: border-box;
         width: 100%;
-        height: 35px;
+        height: 45px;
 
         border-radius: 6px;
         border: solid 1px #707070;
         box-sizing: border-box;
-        margin-right: 10px;
+        margin-top: 10px;
         background: #fff url("@/assets/images/icon_search.png") no-repeat;
-        background-position: 3%;
+        background-position: 97%;
         background-origin: content-box;
         text-indent: 5px;
       }
-      > input::placeholder {
+
+      >input::placeholder {
         position: relative;
-        left: 33px;
+        left: 0px;
         top: 1px;
       }
-      .group-content {
+
+      .list-content {
         height: calc(100% - 35px);
-        // border: solid 1px #ff0000;
         box-sizing: border-box;
-        > div {
+        overflow-y: auto;
+
+        >div {
           .label-group {
             display: flex;
             align-items: center;
             width: 100%;
             margin-left: 5px;
+
             input {
               display: none;
             }
+
             label {
               display: inline-block;
               width: 17px;
@@ -184,6 +208,7 @@ function submitBtn() {
               position: relative;
               cursor: pointer;
             }
+
             label::before {
               display: inline-block;
               content: " ";
@@ -198,15 +223,17 @@ function submitBtn() {
               position: absolute;
               opacity: 0;
             }
-            input:checked + label {
+
+            input:checked+label {
               background: #8b6f6d;
             }
-            input:checked + label::before {
+
+            input:checked+label::before {
               opacity: 1;
               transform: all 0.5s;
             }
 
-            > span {
+            >span {
               margin-left: 10px;
               font-size: 17px;
             }
@@ -218,11 +245,14 @@ function submitBtn() {
             width: calc(100% - 15px - 15px);
             margin-left: 15px;
             border-bottom: solid 1px #8b6f6d;
+            box-sizing: border-box;
+            padding: 5px;
 
             input {
               display: none;
             }
-            > label {
+
+            >label {
               display: inline-block;
               width: 20px;
               height: 20px;
@@ -231,7 +261,8 @@ function submitBtn() {
               position: relative;
               cursor: pointer;
             }
-            > label::before {
+
+            >label::before {
               display: inline-block;
               content: " ";
               width: 12px;
@@ -245,35 +276,49 @@ function submitBtn() {
               position: absolute;
               opacity: 0;
             }
-            > input:checked + label {
+
+            >input:checked+label {
               background: #8b6f6d;
             }
-            > input:checked + label::before {
+
+            >input:checked+label::before {
               opacity: 1;
               transform: all 0.5s;
             }
 
-            > span {
+            >span {
               margin-left: 10px;
             }
-            > div {
+
+            >div {
               display: grid;
               margin-left: 10px;
+
               .pCode-msg {
                 font-size: 15px;
               }
+            }
+
+            .title-input {
+              flex: 1;
+            }
+
+            .price-input {
+              width: 50px;
             }
           }
         }
       }
     }
+
     .bottom-content {
       display: flex;
       align-items: end;
       justify-content: center;
+
       // height: calc(65px);
       // width: 100px;
-      > button {
+      >button {
         position: relative;
         width: 100px;
         height: 45px;
@@ -284,10 +329,12 @@ function submitBtn() {
         color: #717171;
         background-color: #fff;
       }
+
       .submit-btn {
         display: block;
         width: 100px;
       }
+
       .cancle-btn {
         display: block;
         width: 100px;

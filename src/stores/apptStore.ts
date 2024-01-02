@@ -1,5 +1,6 @@
 import { apiGetMemberListRequest } from "@/api";
 import {
+  addCheckOutReq,
   addRestReq,
   addServiceDetailReq,
   addServiceGroupReq,
@@ -754,6 +755,23 @@ export const useApptStore = defineStore("apptStore", () => {
   };
 
   //#endregion
+
+  //#region 結帳
+
+  /**新增群組 */
+  const addCheckOutApi = async (data: any) => {
+    try {
+      let res = await addCheckOutReq(data).then((res: any) => {
+        alertStateFn(res, "新增服務明細");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //#endregion
+
   return {
     //--------------------service
     addServiceGroupApi,
@@ -813,5 +831,7 @@ export const useApptStore = defineStore("apptStore", () => {
     //--------------------會員
     memberList,
     getMemberListApi,
+    //--------------------結帳
+    addCheckOutApi,
   };
 });

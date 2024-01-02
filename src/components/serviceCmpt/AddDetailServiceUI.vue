@@ -11,23 +11,39 @@
           <div class="input-item" name="基本資訊">
             <span class="title-content">基本資訊</span>
             <span class="msg-content">填寫你的服務項目基本資訊。</span>
-            <div>
-              <span>*服務名稱</span>
-              <input v-model="formInputRef.name" placeholder="請輸入服務名稱" type="text" />
-            </div>
-            <span class="p_error" v-if="ruleLists.ruleItem.name.is_error">
-              {{ ruleLists.ruleItem.name.warn }}
-            </span>
-            <div>
-              <span>簡稱</span>
-              <input v-model="formInputRef.nickName" placeholder="最多輸入四個字簡稱" type="text" />
-            </div>
-            <div class="textMsg-content">
-              <span>說明</span>
-              <textarea v-model="formInputRef.memo" placeholder="請輸入說明或注意事項"></textarea>
+            <div class="name-content">
+              <div class="name-info">
+                <div>
+                  <span>*服務名稱</span>
+                  <input v-model="formInputRef.name" placeholder="請輸入服務名稱" type="text" />
+                </div>
+                <span class="p_error" v-if="ruleLists.ruleItem.name.is_error">
+                  {{ ruleLists.ruleItem.name.warn }}
+                </span>
+                <div>
+                  <span>簡稱</span>
+                  <input v-model="formInputRef.nickName" placeholder="最多輸入四個字簡稱" type="text" />
+                </div>
+                <div class="textMsg-content">
+                  <span>說明</span>
+                  <textarea v-model="formInputRef.memo" placeholder="請輸入說明或注意事項"></textarea>
+                </div>
+              </div>
+              <div class="img-info">
+                <div :style="{ '--color': formInputRef.color }" class="img-bg">
+                  <div v-if="formInputRef.nickName == ''">
+                    <span>{{ formInputRef.name.substr(0, 2) }}</span>
+                    <span>{{ formInputRef.name.substr(2, 2) }}</span>
+                  </div>
+                  <div v-else>
+                    <span>{{ formInputRef.nickName.substr(0, 2) }}</span>
+                    <span>{{ formInputRef.nickName.substr(2, 2) }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="input-radio" name="服務顏色">
+          <div class=" input-radio" name="服務顏色">
             <span class="title-content">服務顏色</span>
             <!-- <span class="msg-content">選擇呈現於行事曆的預約顏色</span> -->
             <div>
@@ -240,7 +256,7 @@ function cancleSubListFn(item: any, index: number) {
 }
 
 function submitBtn() {
-console.log(formInputRef.value.sgList);
+  console.log(formInputRef.value.sgList);
 
   ruleLists.ruleItem.name.value = formInputRef.value.name;
   ruleLists.ruleItem.price.value = formInputRef.value.price;
@@ -442,7 +458,7 @@ const ruleLists: any = reactive({
       /* IE 10+ */
 
       .center-main {
-        width: 60%;
+        width: 70%;
         height: 100%;
         // border-right: solid 0.5px #ddd;
         box-sizing: border-box;
@@ -452,14 +468,145 @@ const ruleLists: any = reactive({
         .input-item {
           display: grid;
           width: 100%;
-          // margin-left: 5%;
           margin: 15px 0;
+
+          >div {
+            display: flex;
+            height: 80px;
+            width: 100%;
+            border: solid 0.5px #ddd;
+            box-sizing: border-box;
+
+            // margin: 15px 0;
+            .link {
+              display: flex;
+              height: 100%;
+              width: calc(100% - 180px);
+              justify-content: center;
+              align-items: center;
+              color: #87ceeb;
+            }
+
+            >span {
+              height: 100%;
+              width: 180px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              background-color: #faf9f8;
+              font-size: 24px;
+            }
+
+            >input {
+              border: solid 0px #c1bdb8;
+              box-sizing: border-box;
+              height: 100%;
+              width: calc(100% - 180px);
+              font-size: 22px;
+            }
+
+            >p {
+              color: #87ceeb;
+              width: calc(100% - 180px);
+            }
+
+            ::placeholder {
+              color: #c1bdb8;
+            }
+          }
 
           .title-content {
             font-size: 28px;
             width: 100%;
           }
 
+          .name-content {
+            display: flex;
+            width: 100%;
+            margin: 15px 0;
+            height: 240px;
+
+            .name-info {
+              width: calc(100% - 160px);
+
+              >div {
+                display: flex;
+                height: 80px;
+                width: calc(100%);
+                border: solid 0.5px #ddd;
+                box-sizing: border-box;
+
+                // margin: 15px 0;
+                .link {
+                  display: flex;
+                  height: 100%;
+                  width: calc(100% - 180px);
+                  justify-content: center;
+                  align-items: center;
+                  color: #87ceeb;
+                }
+
+                >span {
+                  height: 100%;
+                  width: 180px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  background-color: #faf9f8;
+                  font-size: 24px;
+                }
+
+                >input {
+                  border: solid 0px #c1bdb8;
+                  box-sizing: border-box;
+                  height: 100%;
+                  width: calc(100% - 180px);
+                  font-size: 22px;
+                }
+
+                >p {
+                  color: #87ceeb;
+                  width: calc(100% - 180px);
+                }
+
+                ::placeholder {
+                  color: #c1bdb8;
+                }
+              }
+            }
+
+            .img-info {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 160px;
+              height: 160px;
+              background-color: #f5f5f5;
+
+              .img-bg {
+                display: grid;
+                width: 100px;
+                height: 100px;
+                background: var(--color);
+                border-radius: 12px;
+
+                >div {
+                  width: 100px;
+                  height: 100px;
+
+                  >span {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100px;
+                    height: 50px;
+                    font-size: 40px;
+                    color: #ffffff;
+                  }
+                }
+              }
+            }
+          }
 
           .msg-content {
             font-size: 20px;
@@ -523,50 +670,6 @@ const ruleLists: any = reactive({
             }
           }
 
-          >div {
-            display: flex;
-            height: 80px;
-            width: 100%;
-            border: solid 0.5px #ddd;
-            box-sizing: border-box;
-
-            // margin: 15px 0;
-            .link {
-              display: flex;
-              height: 100%;
-              width: calc(100% - 180px);
-              justify-content: center;
-              align-items: center;
-              color: #87ceeb;
-            }
-
-            >span {
-              height: 100%;
-              width: 180px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              background-color: #faf9f8;
-              font-size: 24px;
-            }
-
-            >input {
-              border: solid 0px #c1bdb8;
-              box-sizing: border-box;
-              height: 100%;
-              width: calc(100% - 180px);
-              font-size: 22px;
-            }
-
-            >p {
-              color: #87ceeb;
-              width: calc(100% - 180px);
-            }
-
-            ::placeholder {
-              color: #c1bdb8;
-            }
-          }
 
           .link-btn {
             font-size: 28px;

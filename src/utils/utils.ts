@@ -233,3 +233,8 @@ let upperChars = [
   "Y",
   "Z",
 ];
+
+
+export const mathDiscount = (data: any) => {
+  return (100 - parseInt(data)).toString().replace("0", "")
+};

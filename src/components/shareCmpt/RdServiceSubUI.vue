@@ -3,7 +3,7 @@
     <div class="popup-content">
       <div class="top-content">
         <img :src="icon_closeX" v-on:click="showRdSubFn(false)" />
-        <span>服務</span>
+        <span>子項目</span>
       </div>
       <div class="main-content">
         <input placeholder="搜尋" v-model="formInputRef.search" />

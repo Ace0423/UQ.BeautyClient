@@ -39,8 +39,8 @@
             <p>{{ item.productList.length }}</p>
           </td>
           <td>
-            <p v-if="item.dType == 2">- {{ item.discount * 100 }} %</p>
-            <p v-if="item.dType == 3">- ${{ item.discount }}</p>
+            <p v-if="item.dType == 3">- {{ item.discount * 100 }} %</p>
+            <p v-if="item.dType == 4">- ${{ item.discount }}</p>
           </td>
           <td>
             <button v-on:click="showEditFormFn(index, item)">

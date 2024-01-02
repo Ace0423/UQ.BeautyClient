@@ -106,3 +106,23 @@ export const getManagerListReq = (id: any) =>
   getHttps(httpRequest, "/manager/Admin?id=" + id + "&pageIndex=" + 0 + "&count=" + 0);
 export const addRestReq = (data: any) =>
   postHttps(httpRequest, "/manager/WorkingHours", data);
+
+  
+//-----------------------------------------結帳
+
+/**新增服務資訊 */
+export const addCheckOutReq = (data: any) =>
+  postHttps(httpRequest, "/CheckOut/CheckOutInfo", data);
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,13 +1,13 @@
 <template>
   <div class="popup-detailService" v-on:click.self="showServiceUIFn(0)">
     <div class="popup-content">
-      <div class="top-content">
-        <img :src="icon_closeX" v-on:click="showServiceUIFn(0)" />
+      <div class="header-content">
         <span>服務</span>
+        <img :src="icon_closeX" v-on:click="showServiceUIFn(0)" />
       </div>
       <div class="main-content">
         <input placeholder="搜尋" v-model="formInputRef.search" />
-        <div class="group-content">
+        <div class="list-content">
           <div v-for="item in filterCourseData" :key="item">
             <label class="label-item" :value="item">
               <input class="input-item" type="radio" :key="item" :value="item" :id="'RadioServicesUI_' + item"
@@ -89,8 +89,8 @@ function submitBtn() {
 
 function clickItem(item: any, id: number) {
   formInputRef.value.courses = item;
-  console.log(formInputRef.value.courses);
-  
+  console.log("rdService", formInputRef.value.courses);
+
   if (formInputRef.value.courses.subList.length > 0) {
     showRdSubFn(true);
   } else {
@@ -119,71 +119,84 @@ function showRdSubFn(type: boolean) {
 
 <style scoped lang="scss">
 .popup-detailService {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
   z-index: 3;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(80, 80, 80, 0.8);
 
   display: flex;
   align-items: center;
   justify-content: space-around;
 
   .popup-content {
-    width: 400px;
-    height: 450px;
-    background-color: #e6e2de;
-    padding: 15px;
+    width: 500px;
+    height: 70%;
+    background-color: #ffffff;
+    // padding: 15px 50px;
     font-size: 20px;
     font-family: HeitiTC;
     color: #84715c;
     font-weight: bold;
-    // position: absolute;
-    // top: 50%;
-    // left: 50%;
-    // transform: translate(-50%, -50%);
+    border-radius: 12px;
 
-    .top-content {
+    .header-content {
       display: flex;
-      height: 50px;
-      width: 100%;
-      border: solid 1px #ddd;
+      height: 70px;
+      width: calc(100%);
+      border-bottom: solid 1px #ddd;
       box-sizing: border-box;
 
       >span {
-        display: flex;
-        // width: 200px;
-        align-items: center;
-        font-size: 30px;
-        height: 40px;
         position: absolute;
-        left: calc(50% - 41px);
+        display: flex;
+        width: calc(100%);
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        height: 70px;
+        justify-content: center;
+        left: 0;
+        right: 0;
+
       }
 
       >img {
         position: relative;
         width: 41px;
         height: 38px;
-        top: 0px;
-        left: 0px;
+        top: 15px;
+        left: 15px;
       }
+
+
+      >button {
+        position: relative;
+        width: 41px;
+        height: 38px;
+        top: 15px;
+        right: 15px;
+      }
+
     }
 
     .main-content {
       display: block;
-      height: calc(450px - 40px - 65px);
+      height: calc(100% - 40px - 65px);
+      width: 90%;
+      margin-left: 5%;
 
       >input {
         box-sizing: border-box;
         width: 100%;
-        height: 35px;
+        height: 45px;
 
         border-radius: 6px;
         border: solid 1px #707070;
         box-sizing: border-box;
-        margin-right: 10px;
+        margin-top: 10px;
         background: #fff url("@/assets/images/icon_search.png") no-repeat;
         background-position: 97%;
         background-origin: content-box;
@@ -196,8 +209,8 @@ function showRdSubFn(type: boolean) {
         top: 1px;
       }
 
-      .group-content {
-        height: calc(100% - 35px);
+      .list-content {
+        height: calc(100% - 45px);
         box-sizing: border-box;
         overflow-y: auto;
 

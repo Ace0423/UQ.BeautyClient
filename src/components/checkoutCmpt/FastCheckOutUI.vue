@@ -21,16 +21,17 @@
                       <div class="info-img"></div>
                       <div class="info-name">
                         <span class="fontBlack">{{ bItem.name }}</span>
-                        <span v-if="bItem.subList.length > 0">
+                        <!-- <span v-if="bItem.subList.length > 0">
                           <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , " }}</span>
                           {{ bItem.subList[0].servicesTime +
                             "分 ," +
                             bItem.subList[0].name
-                          }}</span>
-                        <span v-else> <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , " }}</span>
-                          {{
-                            bItem.timer + "分"
-                          }}</span>
+                          }}</span> -->
+                        <span>
+                          <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , " }}</span>
+                          {{ bItem.timer + "分" }}
+                          <span v-if="bItem.subList.length > 0"> {{ " ," + bItem.subList[0].name }}</span>
+                        </span>
                       </div>
                       <div class="info-price"><span v-if="bItem.subList.length > 0">{{ "$" +
                         bItem.subList[0].price
@@ -99,44 +100,49 @@
           </div>
         </div>
         <div class="right-main">
-          <div class="customer-btn" v-on:click="showMemberUIFn(true)">
-            <img class="customer-img" :src="icon_customer" />
-            <div>
-              <span>{{ formInputRef.memberInfo.nameView }}</span>
-              <span class="customer-phone">{{
-                formInputRef.memberInfo.phone
-              }}</span>
+          <div>
+            <div class="customer-btn" v-on:click="showMemberUIFn(true)">
+              <img class="customer-img" :src="icon_customer" />
+              <div>
+                <span>{{ formInputRef.memberInfo.nameView }}</span>
+                <span class="customer-phone">{{
+                  formInputRef.memberInfo.phone
+                }}</span>
+              </div>
+              <img :src="icon_right_arrow" />
             </div>
-            <img :src="icon_right_arrow" />
-          </div>
-          <div class="customer-total">
-            <span v-on:click="countCoustomerFn(-1)">-</span>
-            <span class="customer-headcount">人數 {{ formInputRef.customerCount }} 位</span>
-            <span v-on:click="countCoustomerFn(+1)">+</span>
-          </div>
-          <div class="link-bottom"></div>
-          <div class="customer-msg">
-            <div>
-              <span>銷售總計</span>
-              <span>{{ "$" + formInputRef.priceTotal }}</span>
+            <span class="p_error" v-if="ruleItem.name.is_error">
+              {{ ruleItem.name.warn }}
+            </span>
+            <div class="customer-total">
+              <span v-on:click="countCoustomerFn(-1)">-</span>
+              <span class="customer-headcount">人數 {{ formInputRef.customerCount }} 位</span>
+              <span v-on:click="countCoustomerFn(+1)">+</span>
             </div>
-            <div v-if="formInputRef.percentAllDC">
-              <span>{{ formInputRef.percentAllDC.title }}</span>
-              <span>{{ "($ - " + (formInputRef.percentAllDC.discount * formInputRef.priceTotal) + ")" }}</span>
+            <div class="link-bottom"></div>
+            <div class="customer-msg">
+              <div>
+                <span>銷售總計</span>
+                <span>{{ "$" + formInputRef.priceTotal }}</span>
+              </div>
+              <div v-if="formInputRef.percentAllDC">
+                <span>{{ formInputRef.percentAllDC.title }}</span>
+                <span>{{ "($ - " + percentPriceCpt + ")" }}</span>
+              </div>
+              <div v-if="formInputRef.priceAllDC">
+                <span>{{ formInputRef.priceAllDC.title }}</span>
+                <span>{{ "($ - " + pricePriceCpt + ")" }}</span>
+              </div>
             </div>
-            <div v-if="formInputRef.priceAllDC">
-              <span>{{ formInputRef.priceAllDC.title }}</span>
-              <span>{{ "($ - " + formInputRef.priceAllDC.discount + ")" }}</span>
+            <div class="link-bottom"></div>
+            <div v-if="payPriceCpt > 0" class="pay-msg">
+              <span>應收金額</span>
+              <span class="price-msg"> ${{ payPriceCpt }}</span>
             </div>
-          </div>
-          <div class="link-bottom"></div>
-          <div class="pay-msg">
-            <span>應收金額</span>
-            <span>$$$$</span>
-          </div>
-          <div class="customer-submit">
-            <!-- <button class="otherpay-btn">其他收款方式</button> -->
-            <button class="cash-btn" @click="submitBtn()">現金收款</button>
+            <div class="customer-submit">
+              <!-- <button class="otherpay-btn">其他收款方式</button> -->
+              <button class="cash-btn" @click="submitBtn()">現金收款</button>
+            </div>
           </div>
         </div>
       </div>
@@ -162,6 +168,7 @@ import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
 import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
 import { useApptStore } from "@/stores/apptStore";
 import { storeToRefs } from "pinia";
+import { checkVerify_all } from "@/utils/utils";
 const props = defineProps<{
   showUIFn: Function;
   //   formInfo: any;
@@ -186,11 +193,29 @@ let formInputRef: any = ref({
   percentAllDC: null,
   priceAllDC: null,
   buyItemsList: [],
+  allDiscount: [],
 });
 
 onMounted(() => {
   // console.log('onMounted');
 });
+
+let payPriceCpt = computed(() => {
+  return (
+    formInputRef.value.priceTotal - percentPriceCpt.value - pricePriceCpt.value
+  )
+});
+let percentPriceCpt = computed(() => {
+  let curpercent = formInputRef.value.percentAllDC ? formInputRef.value.percentAllDC.discount : 0;
+  return Math.round(curpercent * formInputRef.value.priceTotal)
+});
+let pricePriceCpt = computed(() => {
+  let curprice = formInputRef.value.priceAllDC ? formInputRef.value.priceAllDC.discount : 0;
+  return (
+    curprice
+  )
+});
+
 function showMemberUIFn(state: boolean) {
   showMemberUIRef.value = state;
 }
@@ -201,12 +226,23 @@ function showRdAllDiscountFn(state: boolean) {
   showRdAllDiscountUIRef.value = state;
 }
 function getRdDiscountFn(data: any) {
-  if (data.dType) {
-    formInputRef.value.priceAllDC = data;
-  } else {
+  //折扣1:% 2:$$
+  if (data.dType == 1) {
     formInputRef.value.percentAllDC = data;
+  } else if (data.dType == 2) {
+    formInputRef.value.priceAllDC = data;
   }
 
+  // let curAllDiscount = [];
+  // for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
+  //   const element = formInputRef.value.allDiscount[i];
+  //   if (element.dType != data.dType) {
+  //     curAllDiscount.push(element)
+  //   }
+  // }
+  // curAllDiscount.push(data);
+  // formInputRef.value.allDiscount = curAllDiscount;
+  // console.log(111, formInputRef.value.allDiscount);
   showRdAllDiscountFn(false);
 }
 function delDiscount(type: any) {
@@ -226,6 +262,9 @@ function countCoustomerFn(data: number) {
 }
 function submitBtn() {
   // console.log("現金收款", formInputRef.value);
+
+  ruleLists.ruleItem.name.value = formInputRef.value.memberInfo.userId;
+  if (!checkVerify_all(ruleLists)) return;
 
   let formData: any = formInputRef.value;
   let apiData: any = {};
@@ -256,31 +295,40 @@ function getItemInfoFn(data: any) {
   if (data.selectService) {
     curItemData = data.selectService
 
+    odDetail.ItemType = 1;
     odDetail.Id = curItemData.sId;
-    odDetail.subId = curItemData.subList.length > 0 ? curItemData.subList[0].subId : 0;
-    odDetail.color = curItemData.color;
     odDetail.name = curItemData.name;
     odDetail.nickName = curItemData.nickName;
     odDetail.price = curItemData.price;
     odDetail.timer = curItemData.servicesTime;
+    if (curItemData.subList.length > 0) {
+      odDetail.subId = curItemData.subList[0].subId
+      odDetail.price = curItemData.subList[0].price;
+      odDetail.timer = curItemData.subList[0].servicesTime;
+    } else {
+      odDetail.subId = 0;
+      odDetail.price = curItemData.price;
+      odDetail.timer = curItemData.servicesTime;
+    }
+    // odDetail.subId = curItemData.subList.length > 0 ? curItemData.subList[0].subId : 0;
     odDetail.subList = curItemData.subList;
-    odDetail.showDetail = curItemData;
-    odDetail.ItemType = 1;
+    odDetail.color = curItemData.color;
+    // odDetail.showDetail = curItemData;
   }
   if (data.selectGood) {
     curItemData = data.selectGood
 
+    odDetail.ItemType = 2;
     odDetail.Id = curItemData.pId;
     odDetail.name = curItemData.pName;
     odDetail.nickName = curItemData.pCode;
     odDetail.price = curItemData.price;
-    odDetail.stock = curItemData.stock;
-    odDetail.showDetail = curItemData;
-    odDetail.color = null;
+    // odDetail.showDetail = curItemData;
     odDetail.timer = 0;
-    odDetail.subList = [];
     odDetail.subId = 0;
-    odDetail.ItemType = 2;
+    odDetail.subList = [];
+    odDetail.stock = curItemData.stock;
+    odDetail.color = "";
   }
   odDetail.stock = 0;
   odDetail.managerInfo = null;
@@ -297,11 +345,12 @@ function getItemInfoFn(data: any) {
     if (element.ItemType == 2) {
       priceTotal += element.price;
     } else if (element.ItemType == 1) {
-      if (element.subList.length > 0) {
-        priceTotal += element.subList[0].price;
-      } else {
-        priceTotal += element.price;
-      }
+      // if (element.subList.length > 0) {
+      //   priceTotal += element.subList[0].price;
+      // } else {
+      //   priceTotal += element.price;
+      // }
+      priceTotal += element.price;
     }
   }
   formInputRef.value.priceTotal = priceTotal;
@@ -379,6 +428,32 @@ function cancleServiceFn(item: any, index: number) {
 function cancleGoodsFn(item: any, index: number) {
   formInputRef.value.buyGoodsGroup.splice(index, 1);
 }
+
+//#region 規則
+
+const ruleLists: any = reactive({
+  ruleItem: {
+    name: {
+      label: "名稱",
+      component: "input",
+      type: "number",
+      is_readonly: false,
+      value: "",
+      rules: {
+        required: {
+          warn: "此項為必填",
+        },
+      },
+      is_error: false,
+      warn: "",
+      is_show: true,
+    },
+  },
+});
+let { ruleItem } = toRefs(ruleLists);
+//#endregion
+
+
 </script>
 
 <style scoped lang="scss">
@@ -678,132 +753,144 @@ function cancleGoodsFn(item: any, index: number) {
       }
 
       .right-main {
-        // display: block;
         display: flex;
         flex-flow: column;
         width: 40%;
         height: 100%;
-        // justify-content: center;
         margin: 0;
 
         >div {
+          display: flex;
+          height: 100%;
           width: 90%;
           margin-left: 5%;
-          margin-top: 5%;
-        }
-
-        .customer-btn {
-          display: flex;
-          width: 90%;
-          height: 80px;
-          background-color: #faf9f8;
-          align-items: center;
-          border-radius: 5px;
+          // margin-top: 5%;
+          flex-flow: column;
 
           >div {
-            width: calc(100% - 50px);
-            height: 100%;
+            // height: 100%;
+            width: 100%;
+            // width: 90%;
+            // margin-left: 5%;
+            margin-top: 3%;
+          }
+
+          .customer-btn {
+            display: flex;
+            width: 100%;
+            height: 80px;
+            background-color: #faf9f8;
+            align-items: center;
+            border-radius: 5px;
+
+            >div {
+              width: calc(100% - 50px);
+              height: 100%;
+
+              >span {
+                display: flex;
+                height: 50%;
+                margin-left: 10%;
+                align-items: center;
+                font-size: 28px;
+              }
+
+              .customer-phone {
+                color: #c1bdb8;
+                font-size: 18px;
+                font-size: 20px;
+              }
+            }
+
+            >img {
+              margin-left: 10%;
+              width: 20px;
+              height: 20px;
+            }
+
+            .customer-img {
+              width: 33px;
+              height: 39px;
+            }
+          }
+
+          .customer-total {
+            display: flex;
+            height: 60px;
+            background-color: #faf9f8;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
 
             >span {
               display: flex;
-              height: 50%;
-              // justify-content: center;
-              margin-left: 10%;
-              align-items: center;
-              font-size: 28px;
+              justify-content: center;
+              font-weight: bold;
+              width: 20%;
+              font-size: 30px;
             }
 
-            .customer-phone {
-              color: #c1bdb8;
-              font-size: 18px;
+            .customer-headcount {
+              display: flex;
+              width: 60%;
+              justify-content: center;
               font-size: 20px;
             }
           }
 
-          >img {
-            margin-left: 10%;
-            width: 20px;
-            height: 20px;
+          .customer-msg {
+            flex-grow: 1;
+            box-sizing: border-box;
+
+            >div {
+              display: block;
+              display: flex;
+              justify-content: space-between;
+              margin-top: 2%;
+            }
           }
 
-          .customer-img {
-            width: 33px;
-            height: 39px;
-          }
-        }
-
-        .customer-total {
-          display: flex;
-          height: 60px;
-          background-color: #faf9f8;
-          justify-content: center;
-          align-items: center;
-          border-radius: 5px;
-
-          >span {
-            display: flex;
-            justify-content: center;
-            font-weight: bold;
-            width: 20%;
-            font-size: 30px;
-          }
-
-          .customer-headcount {
-            display: flex;
-            width: 60%;
-            justify-content: center;
-            font-size: 20px;
-          }
-        }
-
-        .customer-msg {
-          flex-grow: 1;
-          // border-top: solid 0.5px #ddd;
-          box-sizing: border-box;
-
-          >div {
-            display: block;
+          .pay-msg {
             display: flex;
             justify-content: space-between;
-            margin-top: 2%;
-          }
-        }
+            // height: 60px;
 
-        .pay-msg {
-          display: flex;
-          justify-content: space-between;
+            .price-msg {
+              font-size: 35px;
+            }
 
-        }
-
-        .customer-submit {
-          height: 70px;
-          display: flex;
-          justify-content: center;
-          border-top: solid 0.5px #ddd;
-          box-sizing: border-box;
-
-          .otherpay-btn {
-            position: relative;
-            width: 200px;
-            height: 50px;
-            margin: 10px;
-            border-radius: 8px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #717171;
-            background-color: #fff;
           }
 
-          .cash-btn {
-            position: relative;
-            width: 150px;
-            height: 50px;
-            margin: 10px;
-            border-radius: 8px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #717171;
-            background-color: #fff;
+          .customer-submit {
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            border-top: solid 0.5px #ddd;
+            box-sizing: border-box;
+
+            .otherpay-btn {
+              position: relative;
+              width: 200px;
+              height: 50px;
+              margin: 10px;
+              border-radius: 8px;
+              font-size: 20px;
+              font-weight: bold;
+              color: #717171;
+              background-color: #fff;
+            }
+
+            .cash-btn {
+              position: relative;
+              width: 150px;
+              height: 50px;
+              margin: 10px;
+              border-radius: 8px;
+              font-size: 20px;
+              font-weight: bold;
+              color: #717171;
+              background-color: #fff;
+            }
           }
         }
       }

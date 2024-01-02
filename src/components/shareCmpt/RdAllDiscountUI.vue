@@ -136,7 +136,7 @@ let formInputRef: any = ref({
 let inputDiscount = ref("0");
 onBeforeFn();
 function onBeforeFn() {
-  console.log(props.selData);
+  // console.log(props.selData);
   getAllDiscountFn();
 }
 function getAllDiscountFn() {
@@ -166,13 +166,13 @@ function _handleKeyPress(params: any) {
   // }
   switch (num) {
     case "S":
-      console.log("鍵盤S", num);
+      // console.log("鍵盤S", num);
       break;
     case "C":
       inputDiscount.value = "0";
       break;
     case "D":
-      console.log("鍵盤D", num);
+      // console.log("鍵盤D", num);
       if (inputDiscount.value != "0") {
         inputDiscount.value = inputDiscount.value.slice(0, -1);
       }
@@ -181,7 +181,7 @@ function _handleKeyPress(params: any) {
       }
       break;
     default:
-      console.log("鍵盤", num);
+      // console.log("鍵盤", num);
       if (inputDiscount.value == "0") {
         inputDiscount.value = "";
       }
@@ -195,16 +195,16 @@ function _handleKeyPress(params: any) {
 }
 
 function resetSwitchFn() {
-  console.log("switch");
+  // console.log("switch");
   inputDiscount.value = "0";
 }
 
 function submitBtn() {
   let curDiscount: any = {}
   curDiscount.isManual = true;
-  curDiscount.dType = formInputRef.value.dType;
+  curDiscount.dType = formInputRef.value.dType ? 2 : 1;
 
-  if (formInputRef.value.dType) {
+  if (curDiscount.dType == 2) {
     curDiscount.discount = parseInt(inputDiscount.value);
     curDiscount.title = "自訂折扣 " + inputDiscount.value + " 元 ";
   } else {

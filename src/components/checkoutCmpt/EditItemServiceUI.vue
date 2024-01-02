@@ -7,7 +7,7 @@
             </div>
             <div class="main-content">
                 <div class="input-item" name="項目類型">
-                    <div>
+                    <div v-if="formInputRef.subName">
                         <span>子項目名稱</span>
                         <input v-model="formInputRef.subName" placeholder="" type="text" disabled />
                     </div>

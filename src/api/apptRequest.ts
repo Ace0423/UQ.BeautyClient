@@ -10,6 +10,12 @@ const httpRequest = axios.create({
     // "Content-Type": "multipart/form-data",
   },
 });
+//-----------------------------------------會員
+/**獲取會員 */
+export const  getMemberListReq = (data: any) =>
+  getHttps(httpRequest, "/member/user", data);
+//-----------------------------------------預約
+//#region 預約
 /**獲取預約 */
 export const getApptDataRequest = (data: any) =>
   getHttps(httpRequest, "/Booking" + data, data);
@@ -22,7 +28,9 @@ export const postEditApptDataReq = (data: any) =>
 /**更新預約狀態 */
 export const postEditApptStateReq = (data: any) =>
   postHttps(httpRequest, "/Booking/UpdateState", data);
-//-----------------------------------------
+  //#endregion
+//-----------------------------------------課程
+//#region 課程
 /**獲取課程資料 */
 export const getCourseDetailReq = (Group: any, id: any) =>
   getHttps(httpRequest, "Lesson/Detail?id=" + Group + "&lid=" + id);
@@ -56,7 +64,9 @@ export const delCourseTypeReq = (data: any) =>
 /**刪除服務資訊 */
 export const delCourseDetailReq = (data: any) =>
   deleteHttps(httpRequest, "/Lesson/Detail/" + data);
+  //#endregion
 //-----------------------------------------服務
+//#region 服務
 /**新增群組 */
 export const addServiceGroupReq = (data: any) =>
   postHttps(httpRequest, "/Service/ServiceGroup", data);
@@ -93,7 +103,7 @@ export const updateServiceGroupReq = (data: any) =>
 /**更新群組排序 */
 export const updateGroupOrderReq = (data: any) =>
   postHttps(httpRequest, "Service/GroupUpdateOrder", data);
-
+//#endregion
 //-----------------------------------------Order
 /**獲取訂單資訊 */
 export const getOrderDetailReq = (Group: any, id: any) =>

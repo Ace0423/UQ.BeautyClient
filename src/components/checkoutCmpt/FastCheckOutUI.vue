@@ -21,12 +21,6 @@
                       <div class="info-img"></div>
                       <div class="info-name">
                         <span class="fontBlack">{{ bItem.name }}</span>
-                        <!-- <span v-if="bItem.subList.length > 0">
-                          <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , " }}</span>
-                          {{ bItem.subList[0].servicesTime +
-                            "分 ," +
-                            bItem.subList[0].name
-                          }}</span> -->
                         <span>
                           <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , " }}</span>
                           {{ bItem.timer + "分" }}
@@ -80,12 +74,9 @@
                   <span class="a-link" v-on:click="showRdAllDiscountFn(true)">新增折扣</span>
                 </div>
                 <div class="discount-btn">
-                  <button v-if="formInputRef.percentAllDC" @click="delDiscount(0)">
-                    <span>{{ formInputRef.percentAllDC.title }}</span>
-                    <img :src="icon_closeX" />
-                  </button>
-                  <button v-if="formInputRef.priceAllDC" @click="delDiscount(1)">
-                    <span>{{ formInputRef.priceAllDC.title }}</span>
+                  <button v-for="(dItem, index) in formInputRef.allDiscount" :key="dItem"
+                    @click="delDiscount(dItem.dType)">
+                    <span>{{ dItem.title }}</span>
                     <img :src="icon_closeX" />
                   </button>
                 </div>
@@ -125,19 +116,16 @@
                 <span>銷售總計</span>
                 <span>{{ "$" + formInputRef.priceTotal }}</span>
               </div>
-              <div v-if="formInputRef.percentAllDC">
-                <span>{{ formInputRef.percentAllDC.title }}</span>
-                <span>{{ "($ - " + percentPriceCpt + ")" }}</span>
-              </div>
-              <div v-if="formInputRef.priceAllDC">
-                <span>{{ formInputRef.priceAllDC.title }}</span>
-                <span>{{ "($ - " + pricePriceCpt + ")" }}</span>
+              <div v-for="(dItem, index) in allDCListCpt" :key="dItem">
+                <span>{{ dItem.title }}</span>
+                <span v-if="dItem.dType == 1">{{ "($ - " + (dItem.discount * formInputRef.priceTotal) + ")" }}</span>
+                <span v-if="dItem.dType == 2">{{ "($ - " + (dItem.discount) + ")" }}</span>
               </div>
             </div>
             <div class="link-bottom"></div>
-            <div v-if="payPriceCpt > 0" class="pay-msg">
+            <div v-if="payAmountCpt > 0" class="pay-msg">
               <span>應收金額</span>
-              <span class="price-msg"> ${{ payPriceCpt }}</span>
+              <span class="price-msg"> ${{ payAmountCpt }}</span>
             </div>
             <div class="customer-submit">
               <!-- <button class="otherpay-btn">其他收款方式</button> -->
@@ -200,14 +188,23 @@ onMounted(() => {
   // console.log('onMounted');
 });
 
-let payPriceCpt = computed(() => {
-  return (
-    formInputRef.value.priceTotal - percentPriceCpt.value - pricePriceCpt.value
-  )
+let payAmountCpt = computed(() => {
+  let curPrice = formInputRef.value.priceTotal;
+  let dcPrice = 0;
+  for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
+    const element = formInputRef.value.allDiscount[i];
+    if (element.dType == 1) {
+      dcPrice += element.discount * curPrice
+    } else {
+      dcPrice += element.discount
+    }
+  }
+  return (curPrice - dcPrice)
 });
-let percentPriceCpt = computed(() => {
-  let curpercent = formInputRef.value.percentAllDC ? formInputRef.value.percentAllDC.discount : 0;
-  return Math.round(curpercent * formInputRef.value.priceTotal)
+let allDCListCpt = computed(() => {
+  // let curpercent = formInputRef.value.percentAllDC ? formInputRef.value.percentAllDC.discount : 0;
+  // Math.round(curpercent * formInputRef.value.priceTotal)
+  return formInputRef.value.allDiscount
 });
 let pricePriceCpt = computed(() => {
   let curprice = formInputRef.value.priceAllDC ? formInputRef.value.priceAllDC.discount : 0;
@@ -226,31 +223,40 @@ function showRdAllDiscountFn(state: boolean) {
   showRdAllDiscountUIRef.value = state;
 }
 function getRdDiscountFn(data: any) {
-  //折扣1:% 2:$$
-  if (data.dType == 1) {
-    formInputRef.value.percentAllDC = data;
-  } else if (data.dType == 2) {
-    formInputRef.value.priceAllDC = data;
-  }
-
-  // let curAllDiscount = [];
-  // for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
-  //   const element = formInputRef.value.allDiscount[i];
-  //   if (element.dType != data.dType) {
-  //     curAllDiscount.push(element)
-  //   }
+  // // 折扣1:% 2:$$
+  // if (data.dType == 1) {
+  //   formInputRef.value.percentAllDC = data;
+  // } else if (data.dType == 2) {
+  //   formInputRef.value.priceAllDC = data;
   // }
-  // curAllDiscount.push(data);
-  // formInputRef.value.allDiscount = curAllDiscount;
-  // console.log(111, formInputRef.value.allDiscount);
+
+  let curAllDiscount = [];
+  for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
+    const element = formInputRef.value.allDiscount[i];
+    if (element.dType != data.dType) {
+      curAllDiscount.push(element)
+    }
+  }
+  curAllDiscount.push(data);
+  formInputRef.value.allDiscount = curAllDiscount;
+  console.log(111, formInputRef.value.allDiscount);
   showRdAllDiscountFn(false);
 }
 function delDiscount(type: any) {
-  if (type) {
-    formInputRef.value.priceAllDC = null;
-  } else {
-    formInputRef.value.percentAllDC = null;
+  // if (type) {
+  //   formInputRef.value.priceAllDC = null;
+  // } else {
+  //   formInputRef.value.percentAllDC = null;
+  // }
+
+  let curAllDiscount = [];
+  for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
+    const element = formInputRef.value.allDiscount[i];
+    if (element.dType != type) {
+      curAllDiscount.push(element)
+    }
   }
+  formInputRef.value.allDiscount = curAllDiscount;
 }
 function getMembersFn(data: any) {
   formInputRef.value.memberInfo = data;
@@ -273,19 +279,19 @@ function submitBtn() {
   apiData.COMemberId = formData.memberInfo.userId;
   apiData.COMemo = formData.memo;
   apiData.COTotalPrice = formData.priceTotal;
-  apiData.percentAllDC = formData.percentAllDC;
-  apiData.priceAllDC = formData.priceAllDC;
+  apiData.COAllDCList = formInputRef.value.allDiscount;
+  apiData.COAmount = payAmountCpt.value;
 
   console.log("現金收款", apiData);
 
-  // /**新增結帳 */
-  // addCheckOutApi(apiData).then((res: any) => {
-  //   if (res.state == 1) {
-  //     setTimeout(() => {
-  //       props.showUIFn(false);
-  //     }, 1000);
-  //   }
-  // });
+  /**新增結帳 */
+  addCheckOutApi(apiData).then((res: any) => {
+    if (res.state == 1) {
+      setTimeout(() => {
+        props.showUIFn(false);
+      }, 1000);
+    }
+  });
 }
 
 function getItemInfoFn(data: any) {
@@ -338,8 +344,10 @@ function getItemInfoFn(data: any) {
   odDetail.priceSgDC = null;
 
   formInputRef.value.buyItemsList.push(odDetail);
+  updataPrice();
+}
+function updataPrice() {
   let priceTotal = 0;
-
   for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
     const element = formInputRef.value.buyItemsList[i];
     if (element.ItemType == 2) {
@@ -380,6 +388,7 @@ function delItemGdFn(data: any) {
       break;
     }
   }
+  updataPrice();
   showEditGdInfoUIFn(false);
 }
 
@@ -406,6 +415,7 @@ function delItemFn(data: any) {
       break;
     }
   }
+  updataPrice();
   showEditSVInfoUIFn(false);
 }
 function clickSvItem(params: any, id: any) {

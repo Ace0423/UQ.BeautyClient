@@ -200,8 +200,10 @@ function resetSwitchFn() {
 }
 
 function submitBtn() {
+  //自訂折扣確認
   let curDiscount: any = {}
-  curDiscount.isManual = true;
+  // curDiscount.isManual = true;
+  curDiscount.discountNo = "0";
   curDiscount.dType = formInputRef.value.dType ? 2 : 1;
 
   if (curDiscount.dType == 2) {
@@ -493,17 +495,18 @@ function clickItem(item: any, id: number) {
               justify-content: space-between;
 
               .switch-box {
-                width: 60px;
+                display: flex;
+                width: 68px;
+                height: 34px;
 
                 .switch {
-                  width: 60px;
+                  width: calc(100% - 8px);
                   display: flex;
                   align-items: center;
                   border-radius: 5px;
-                  padding: 2px 2px;
+                  padding: 2px;
                   background-color: #877059;
                   filter: brightness(90%);
-                  height: 30px;
 
 
                   span {
@@ -522,8 +525,8 @@ function clickItem(item: any, id: number) {
                     transition: all 0.5s;
                     border-radius: 5px;
                     background-color: #fff;
-                    width: 30px;
-                    height: calc(90%);
+                    width: calc(100% / 2 - 2px);
+                    height: calc(100% - 4px);
                   }
 
                   .actived_Area {
@@ -531,12 +534,12 @@ function clickItem(item: any, id: number) {
                     border-radius: 5px;
                     z-index: 1;
                     font-weight: 60;
-                    width: 30px;
+                    width: calc(100% / 2 );
                   }
 
                   .actived_box {
                     margin-left: 30px;
-                    width: 30px;
+                    width: calc(100% / 2 - 2px);
                   }
                 }
               }

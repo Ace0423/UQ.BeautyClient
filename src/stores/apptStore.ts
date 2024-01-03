@@ -13,6 +13,7 @@ import {
   getCourseDetailReq,
   getCourseTypeReq,
   getManagerListReq,
+  getMemberListReq,
   getOrderDetailReq,
   getServiceDetailReq,
   getServiceGroupReq,
@@ -411,7 +412,7 @@ export const useApptStore = defineStore("apptStore", () => {
         pageindex: pageindex,
         count: count,
       });
-      const res = await apiGetMemberListRequest(dataRequest).then(
+      const res = await getMemberListReq(dataRequest).then(
         (res: any) => {
           if (res.data.data) {
             let listVo: IMemberListVo[] = res.data.data.table;

@@ -516,7 +516,7 @@ function clickItem(item: any, id: number) {
                     justify-content: center;
                     align-items: center;
                     color: #fff;
-                    width: 50%;
+                    width: 30px;
                   }
 
                   .box_item {
@@ -525,8 +525,8 @@ function clickItem(item: any, id: number) {
                     transition: all 0.5s;
                     border-radius: 5px;
                     background-color: #fff;
-                    width: calc(100% / 2 - 2px);
-                    height: calc(100% - 4px);
+                    width: 30px;
+                    height: 30px;
                   }
 
                   .actived_Area {
@@ -534,12 +534,12 @@ function clickItem(item: any, id: number) {
                     border-radius: 5px;
                     z-index: 1;
                     font-weight: 60;
-                    width: calc(100% / 2 );
+                    width: 30px;
                   }
 
                   .actived_box {
                     margin-left: 30px;
-                    width: calc(100% / 2 - 2px);
+                    width: 30px;
                   }
                 }
               }

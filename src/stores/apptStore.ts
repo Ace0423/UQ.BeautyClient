@@ -773,6 +773,29 @@ export const useApptStore = defineStore("apptStore", () => {
   };
   //#endregion
 
+
+  //#region  訂單
+
+  let orderList: any = ref([]);
+  /**獲取明細 */
+  const getOrderListApi = async (id: any = 0, isList: any = 0) => {
+    try {
+      orderList.value = [];
+      let res: any = await getOrderListReq(id, isList).then((res: any) => {
+        if (res.data.data && !id) {
+          let detailVo: IServiceDetailVo = res.data.data.table;
+          orderList.value = detailVo;
+          return orderList.value;
+        } else {
+          return res.data.data.table;
+        }
+      });
+      return res
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //#endregion
   return {
     //--------------------service
     addServiceGroupApi,
@@ -834,5 +857,8 @@ export const useApptStore = defineStore("apptStore", () => {
     getMemberListApi,
     //--------------------結帳
     addCheckOutApi,
+    //--------------------訂單
+    getOrderListApi
+
   };
 });

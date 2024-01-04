@@ -61,6 +61,9 @@
             <div class="bill-add" name="按鈕" v-on:click="showItemMenuUIFn(true)">
               <span>&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新增結帳項目</span>
             </div>
+            <span class="p_error" v-if="ruleItem.buyItem.is_error">
+              {{ ruleItem.buyItem.warn }}
+            </span>
             <div class="link-bottom"></div>
             <div class="msg-add" name="備註">
               <el-input v-model="formInputRef.memo" maxlength="1000" placeholder="請輸入備註" show-word-limit type="text" />
@@ -266,33 +269,6 @@ function countCoustomerFn(data: number) {
   if (formInputRef.value.customerCount + data > 0)
     formInputRef.value.customerCount += data;
 }
-function submitBtn() {
-  // console.log("現金收款", formInputRef.value);
-
-  ruleLists.ruleItem.name.value = formInputRef.value.memberInfo.userId;
-  if (!checkVerify_all(ruleLists)) return;
-
-  let formData: any = formInputRef.value;
-  let apiData: any = {};
-  apiData.COCustomerCount = formData.customerCount;
-  apiData.COBuyItemsList = formData.buyItemsList;
-  apiData.COMemberId = formData.memberInfo.userId;
-  apiData.COMemo = formData.memo;
-  apiData.COTotalPrice = formData.priceTotal;
-  apiData.COAllDCList = formInputRef.value.allDiscount;
-  apiData.COAmount = payAmountCpt.value;
-
-  console.log("現金收款", apiData);
-
-  /**新增結帳 */
-  addCheckOutApi(apiData).then((res: any) => {
-    if (res.state == 1) {
-      setTimeout(() => {
-        props.showUIFn(false);
-      }, 1000);
-    }
-  });
-}
 
 function getItemInfoFn(data: any) {
   //itemType  -   1:服務 2:商品 3:儲值卡
@@ -439,12 +415,79 @@ function cancleGoodsFn(item: any, index: number) {
   formInputRef.value.buyGoodsGroup.splice(index, 1);
 }
 
+function submitBtn() {
+  // console.log("現金收款", formInputRef.value);
+
+  ruleLists.ruleItem.name.value = formInputRef.value.memberInfo.userId;
+  ruleLists.ruleItem.buyItem.value = formInputRef.value.buyItemsList.length;
+
+  let checkManager = true;
+  for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
+    const element = formInputRef.value.buyItemsList[i];
+    if (!element.managerInfo)
+      checkManager = false;
+  }
+  ruleLists.ruleItem.buyItemManager.value = checkManager;
+
+  if (!checkVerify_all(ruleLists)) return;
+
+  let formData: any = formInputRef.value;
+  let apiData: any = {};
+  apiData.COCustomerCount = formData.customerCount;
+  apiData.COBuyItemsList = formData.buyItemsList;
+  apiData.COMemberId = formData.memberInfo.userId;
+  apiData.COMemo = formData.memo;
+  apiData.COTotalPrice = formData.priceTotal;
+  apiData.COAllDCList = formInputRef.value.allDiscount;
+  apiData.COAmount = payAmountCpt.value;
+
+  console.log("現金收款", apiData);
+
+  /**新增結帳 */
+  addCheckOutApi(apiData).then((res: any) => {
+    if (res.state == 1) {
+      setTimeout(() => {
+        props.showUIFn(false);
+      }, 1000);
+    }
+  });
+}
 //#region 規則
 
 const ruleLists: any = reactive({
   ruleItem: {
     name: {
       label: "名稱",
+      component: "input",
+      type: "number",
+      is_readonly: false,
+      value: "",
+      rules: {
+        required: {
+          warn: "此項為必填",
+        },
+      },
+      is_error: false,
+      warn: "",
+      is_show: true,
+    },
+    buyItem: {
+      label: "購買項目",
+      component: "input",
+      type: "number",
+      is_readonly: false,
+      value: "",
+      rules: {
+        required: {
+          warn: "此項為必填",
+        },
+      },
+      is_error: false,
+      warn: "",
+      is_show: true,
+    },
+    buyItemManager: {
+      label: "購買項目服務人員",
       component: "input",
       type: "number",
       is_readonly: false,

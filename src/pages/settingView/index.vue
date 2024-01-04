@@ -102,7 +102,7 @@ import { getshowMap } from "@/plugins/js-cookie";
         </div>
         <div class="nav">
           <h1>票劵管理</h1>
-          <div v-if="getshowMap('票卷管理', 'CouponCard')" class="nav-content">
+          <!-- <div v-if="getshowMap('票卷管理', 'CouponCard')" class="nav-content">
             <router-link to="/settingView/couponMgmt/couponPage">
               <div>
                 <h1>優惠劵</h1>
@@ -110,7 +110,7 @@ import { getshowMap } from "@/plugins/js-cookie";
               </div>
               <img :src="icon_right_arrow" />
             </router-link>
-          </div>
+          </div> -->
           <div v-if="getshowMap('票卷管理', 'TopUpCard')" class="nav-content">
             <router-link to="/settingView/storedValueCardView">
               <div>

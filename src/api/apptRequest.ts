@@ -125,7 +125,11 @@ export const addCheckOutReq = (data: any) =>
   postHttps(httpRequest, "/CheckOut/CheckOutInfo", data);
 
 
-
+//-----------------------------------------訂單
+/**獲取群組 */
+export const getOrderListReq = (id: any, isList: any) =>
+  getHttps(httpRequest, "/Order/OrderList?oid=" + id + "&isList=" + isList + "&pageIndex=" + 0 + "&count=" + 0);
+  
 
 
 

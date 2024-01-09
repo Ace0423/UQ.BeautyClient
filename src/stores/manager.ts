@@ -14,14 +14,15 @@ import {
     apiGetWorkingDefaultRequest,
     apiPostWorkingDefaultRequest,
     apiPutWorkingDefaultRequest,
-
+    apiGetLineOAListRequest,
+    apiPutLineOAListRequest
 } from "@/api/index";
 export const useManagerStore = defineStore("manager", () => {
     const managerList: any = reactive({ data: [] });
     const roleList: any = reactive({ data: [] });
     const roleInfoList: any = reactive({ data: [] });
     const workingHoursList: any = reactive({ data: [] });
-
+    const LineOAList: any = reactive({ data: [] });
     const managerRoleList: any = ref([]);
 
     const getManagerList = async (data: any) => {
@@ -229,7 +230,31 @@ export const useManagerStore = defineStore("manager", () => {
             console.log(error);
         }
     };
-    
+    const getLineOAList = async (data: any) => {
+        try {
+            const res = await apiGetLineOAListRequest(data);
+            if (res.data.data.table) {
+                LineOAList.data = res.data.data.table[0];
+            }
+            return res.data
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const editLineOAList = async (data: any) => {
+        try {
+            const res = await apiPutLineOAListRequest(data);
+            updataLineOAList(res.data.data)
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const updataLineOAList = async (data: any) => {
+        LineOAList.data = data;
+    };
     return {
         managerList,
         getManagerList,
@@ -250,7 +275,8 @@ export const useManagerStore = defineStore("manager", () => {
         postWorkingHours,
         getWorkingDefault,
         submitWorkingDefault,
-
-
+        LineOAList,
+        getLineOAList,
+        editLineOAList
     }
 })

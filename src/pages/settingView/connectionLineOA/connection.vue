@@ -4,86 +4,52 @@ import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
 import { useCounterStore } from "@/stores/counter";
-import { useCompanyStore } from "@/stores/company";
+import { getCompany } from "@/plugins/js-cookie";
+import { useManagerStore } from "@/stores/manager";
+
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
-const { userInfo } = storeToRefs(counterStore);
-const companyStore = useCompanyStore();
-const { getCompanyInfo, putCompanyInfo } = companyStore;
-const { companyInfoList } = storeToRefs(companyStore);
-const image = ref("");
-const companyInfoData = reactive({
-    cId: 0,
-    cName: "",
-    cAddress: "",
-    cPhone: "",
-    cWebSite: "",
-    cEmail: "",
-    cPhoneOwner: "",
-    imageBig: "",
-    imageSmall: "",
-    companyGroup: [
-    ]
+const managerstore = useManagerStore();
+const { getLineOAList, editLineOAList } = useManagerStore();
+const { LineOAList } = storeToRefs(managerstore);
+const OAData: any = reactive({ data: [] });
+
+const LineOAListData = computed(() => {
+    OAData.data = JSON.parse(JSON.stringify(LineOAList.value.data));
+    return OAData.data;
 })
-const fileSelected = ((e: any) => {
-    const file = e.target.files.item(0);
-    const reader = new FileReader();
-    reader.addEventListener('load', imageLoaded);
-    reader.readAsDataURL(file);
+onMounted(() => {
+    let allManager = {
+        cid: getCompany("userData"),
+        pageindex: 0,
+        count: 0,
+    };
+
+    getLineOAList(allManager)
+        .then((res) => {
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        });
 })
-const imageLoaded = ((e: any) => {
-    image.value = e.target.result;
-})
-const disabled = computed(() => {
-    return userInfo.value.roleMgrMappings[0].roleName == "Admin" ? false : true;
-})
-const filterCompanyInfo = computed(() => {
-    companyInfoData.cId = companyInfoList.value.data.cId;
-    companyInfoData.cName = companyInfoList.value.data.cName;
-    companyInfoData.cAddress = companyInfoList.value.data.cAddress;
-    companyInfoData.cPhone = companyInfoList.value.data.cPhone;
-    companyInfoData.cWebSite = companyInfoList.value.data.cWebSite;
-    companyInfoData.cEmail = companyInfoList.value.data.cEmail;
-    companyInfoData.cPhoneOwner = companyInfoList.value.data.cPhoneOwner;
-    companyInfoData.imageBig = companyInfoList.value.data.imageBig;
-    companyInfoData.imageSmall = companyInfoList.value.data.imageSmall;
-    companyInfoData.companyGroup = companyInfoList.value.data.companyGroup;
-    return companyInfoData;
-})
+
 const handReturn = (() => {
-    companyInfoData.cId = companyInfoList.value.data.cId;
-    companyInfoData.cName = companyInfoList.value.data.cName;
-    companyInfoData.cAddress = companyInfoList.value.data.cAddress;
-    companyInfoData.cPhone = companyInfoList.value.data.cPhone;
-    companyInfoData.cWebSite = companyInfoList.value.data.cWebSite;
-    companyInfoData.cEmail = companyInfoList.value.data.cEmail;
-    companyInfoData.cPhoneOwner = companyInfoList.value.data.cPhoneOwner;
-    companyInfoData.imageBig = companyInfoList.value.data.imageBig;
-    companyInfoData.imageSmall = companyInfoList.value.data.imageSmall;
-    companyInfoData.companyGroup = companyInfoList.value.data.companyGroup;
+    OAData.data = JSON.parse(JSON.stringify(LineOAList.value.data));
 })
 const handSubmit = (() => {
-    putCompanyInfo(companyInfoData)
+    editLineOAList(OAData.data)
         .then((res) => {
-            if (res.state == 2) {
-                Alert.warning(showErrorMsg(res.msg), 2000);
-            } else if (res.state == 1) {
-                Alert.warning("修改成功", 2000);
-            }
-        })
-        .catch((e: any) => {
-            Alert.warning(showHttpsStatus(e.response.status), 2000);
-            if (e.response.status == 401) {
-                setTimeout(() => {
-                    handLogOut();
-                }, 2000);
-            }
-        })
-})
-const companyInfo = () => {
-    getCompanyInfo()
-        .then((res) => {
-            if (res.state == 2) {
+            if (res.state == 1) {
+                Alert.warning('修改成功', 2000);
+            } else {
                 Alert.warning(showErrorMsg(res.msg), 2000);
             }
         })
@@ -95,10 +61,6 @@ const companyInfo = () => {
                 }, 2000);
             }
         })
-}
-
-onMounted(() => {
-    companyInfo();
 })
 </script>
 <template>
@@ -107,31 +69,33 @@ onMounted(() => {
             <h1>LINE OA 串接欄位回填</h1>
             <div class="input-content">
                 <p>*Bot basic ID</p>
-                <input placeholder="請輸入Bot basic ID" />
+                <input placeholder="請輸入Bot basic ID" v-model="LineOAListData.loBotBasicId" />
             </div>
             <div class="input-content">
                 <p>*Messaging API Channel Access ID</p>
-                <input placeholder="請輸入 Messaging API Channel Access ID" />
+                <input placeholder="請輸入 Messaging API Channel Access ID" v-model="LineOAListData.loMsgApiChannelAccessId" />
             </div>
             <div class="input-content">
                 <p>*Messaging API Channel Access Secret</p>
-                <input placeholder="請輸入 Messaging API Channel Access Secret" />
+                <input placeholder="請輸入 Messaging API Channel Access Secret"
+                    v-model="LineOAListData.loMsgApiChannelAccessSecret" />
             </div>
             <div class="input-content">
                 <p>*Messaging API Channel Access Token</p>
-                <input placeholder="請輸入 Messaging API Channel Access Token" />
+                <input placeholder="請輸入 Messaging API Channel Access Token"
+                    v-model="LineOAListData.loMsgApiChannelAccessToken" />
             </div>
             <div class="input-content">
                 <p>*Login Channel ID</p>
-                <input placeholder="請輸入 Login Channel ID" />
+                <input placeholder="請輸入 Login Channel ID" v-model="LineOAListData.loLoginChannelId" />
             </div>
             <div class="input-content">
                 <p>*Login Channel Secret</p>
-                <input placeholder="請輸入 Login Channel Secret" />
+                <input placeholder="請輸入 Login Channel Secret" v-model="LineOAListData.loLoginChannelSecret" />
             </div>
             <div class="input-content">
                 <p>*LIFF ID</p>
-                <input placeholder="請輸入 LIFF ID" />
+                <input placeholder="請輸入 LIFF ID" v-model="LineOAListData.loLiffId" />
             </div>
         </div>
         <div class="submitBtn">

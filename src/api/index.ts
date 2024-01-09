@@ -3,7 +3,7 @@ import { getMemberListRequest, postMemberDataRequest, postUpdateMemberDataReques
 import { getMemberBankListRequest, postMemberBankRequest, getMemberBankInfoListRequest, getMemberBankDetailRequest, putMemberBankInfoRequest } from "./memberBankRequest";
 import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest, getWorkingHoursRequest, postWorkingHoursRequest, getWorkingDefaultRequest, postWorkingDefaultRequest, putWorkingDefaultRequest } from "./managerRequest";
 import { getPermissionsListRequest, putOptionRoleRequest,getApiPermissionsListRequest,postApiPermissionsListRequest,updateApiPermissionsListRequest } from "./settingRequest";
-import { getTimeTablesRequest,postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest,getCompanyInfoRequest,putCompanyInfoRequest,getMessagesRequest,insertMessagesRequest,updateMessagesRequest,getBlackListSetRequest,putBlackListSetRequest } from "./companyRequest";
+import { getTimeTablesRequest,postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest,getCompanyInfoRequest,putCompanyInfoRequest,getMessagesRequest,insertMessagesRequest,updateMessagesRequest,getBlackListSetRequest,putBlackListSetRequest,getLineOAListRequest,putLineOAListRequest } from "./companyRequest";
 import { getTopUpCardListRequest,addTopUpCardInfoRequest,editTopUpCardInfoRequest } from "./topUpCardRequest";
 
 export const apiPostLoginRequest = postLoginRequest;
@@ -52,6 +52,7 @@ export const apiPostApiPermissionsListRequest = postApiPermissionsListRequest;
 export const apiUpdateApiPermissionsListRequest = updateApiPermissionsListRequest;
 
 
+
 export const apiGetTimeTablesRequest = getTimeTablesRequest;
 export const apiPostTimeTablesRequest = postTimeTablesRequest;
 export const apiGetCompanyInfoRequest = getCompanyInfoRequest;
@@ -61,6 +62,8 @@ export const apiPutBlackListSetRequest = putBlackListSetRequest;
 export const apiGetMessagesRequest = getMessagesRequest;
 export const apiInsertMessagesRequest = insertMessagesRequest;
 export const apiUpdateMessagesRequest = updateMessagesRequest;
+export const apiGetLineOAListRequest = getLineOAListRequest;
+export const apiPutLineOAListRequest = putLineOAListRequest;
 
 export const apiGetCheckOutTypeRequest = getCheckOutTypeRequest;
 export const apiPostCheckOutTypeRequest = postCheckOutTypeRequest;

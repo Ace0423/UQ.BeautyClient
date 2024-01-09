@@ -18,7 +18,14 @@ export const getToken = (name: string) => {
 export const delToken = (name: any) => {
     Cookies.remove(name);
 }
-
+export const getCompany = (name: string) => {
+    const val: any = Cookies.get(name);
+    try {
+        return JSON.parse(val).company;
+    } catch (err) {
+        return undefined;
+    }
+}
 export const getRole = (name: string) => {
     const val: any = Cookies.get(name);
     try {

@@ -14,7 +14,10 @@ import {
   getCourseTypeReq,
   getManagerListReq,
   getMemberListReq,
+  getOrderApptDetailReq,
   getOrderDetailReq,
+  getOrderListReq,
+  getPayTypeListReq,
   getServiceDetailReq,
   getServiceGroupReq,
   postAddApptDataReq,
@@ -701,9 +704,9 @@ export const useApptStore = defineStore("apptStore", () => {
 
   let orderDetailListRef: any = ref([]);
   /**獲取訂單資料 */
-  const getOrderDetailApi = async (g: any, id: any) => {
+  const getOrderApptDetailApi = async (g: any, id: any) => {
     try {
-      let res: any = await getOrderDetailReq(g, id).then((res: any) => {
+      let res: any = await getOrderApptDetailReq(g, id).then((res: any) => {
         if (res.data.data) {
           let curData = res.data.data.table;
           for (let i = 0; i < curData.length; i++) {
@@ -776,16 +779,57 @@ export const useApptStore = defineStore("apptStore", () => {
 
   //#region  訂單
 
+
+
   let orderList: any = ref([]);
-  /**獲取明細 */
-  const getOrderListApi = async (id: any = 0, isList: any = 0) => {
+  /**獲取訂單主表 */
+  const getOrderListApi = async (id: any = 0, startDate: any = "", endDate: any = "", isList: any = 0) => {
     try {
       orderList.value = [];
-      let res: any = await getOrderListReq(id, isList).then((res: any) => {
+      let res: any = await getOrderListReq(id, startDate, endDate, isList).then((res: any) => {
         if (res.data.data && !id) {
-          let detailVo: IServiceDetailVo = res.data.data.table;
+          let detailVo: any = res.data.data.table;
           orderList.value = detailVo;
           return orderList.value;
+        } else {
+          return res.data.data.table;
+        }
+      });
+      return res
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  let orderInfoRef: any = ref([]);
+  /**獲取訂單明細 */
+  const getOrderInfoApi = async (id: any = "", isList: any = 0) => {
+    try {
+      orderInfoRef.value = [];
+      let res: any = await getOrderDetailReq(id, isList).then((res: any) => {
+        if (res.data.data && id != "") {
+          let detailVo: any = res.data.data.table[0];
+          orderInfoRef.value = detailVo;
+          return orderInfoRef.value;
+        } else {
+          return res.data.data.table;
+        }
+      });
+      return res
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  let payTypeListRef: any = ref([]);
+  /**獲取訂單明細 */
+  const getPayTypeListApi = async (id: any = 0) => {
+    try {
+      payTypeListRef.value = [];
+      let res: any = await getPayTypeListReq(id).then((res: any) => {
+        if (res.data.data && id == 0) {
+          let dataVo: any = res.data.data.table;
+          payTypeListRef.value = dataVo;
+          return payTypeListRef.value;
         } else {
           return res.data.data.table;
         }
@@ -846,7 +890,7 @@ export const useApptStore = defineStore("apptStore", () => {
     updateGoodsDetailApi,
     delGoodsDetailApi,
     //--------------------Order
-    getOrderDetailApi,
+    getOrderApptDetailApi,
     orderDetailListRef,
     //--------------------管理員
     managerList,
@@ -858,7 +902,11 @@ export const useApptStore = defineStore("apptStore", () => {
     //--------------------結帳
     addCheckOutApi,
     //--------------------訂單
-    getOrderListApi
-
+    getOrderListApi,
+    orderList,
+    getOrderInfoApi,
+    orderInfoRef,
+    getPayTypeListApi,
+    payTypeListRef,
   };
 });

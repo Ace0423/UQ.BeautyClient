@@ -99,44 +99,23 @@ const managerstore = useManagerStore();
 const { managerRoleList, } = storeToRefs(managerstore);
 const { getManagerListNew } = managerstore;
 const simpleView = ref(true);
+
 const props = defineProps<{
   selItemData: any;
   showUIHdr: Function;
   infoBtnState: Function;
 }>();
+
 let dateCpt: any = computed(() => {
   return (
-    props.selItemData.dateBooking.split("T")[0].split("-")[1] +
-    "月" +
-    props.selItemData.dateBooking.split("T")[0].split("-")[2] +
-    "日"
+    props.selItemData.dateBooking.split("T")[0]
   );
 });
 let memberDataCpt: any = computed(() => {
-  // let customerData = [];
-  // for (let i = 0; i < memberList.value.length; i++) {
-  //   const element = memberList.value[i];
-  //   if (element.userId == props.selItemData.userId) {
-  //     customerData = element;
-  //   }
-  // }
-  // return customerData;
   return props.selItemData.memberInfo
 });
 getManagerListNew({ id: 0, pageindex: 0, count: 0 })
 let managerCpt: any = computed(() => {
-  // let beauticianData = {};
-  // if (props.selItemData.serverId == 0) {
-  //   beauticianData = { "nameView": "不指定" }
-  // } else {
-  //   for (let i = 0; i < managerRoleList.value.length; i++) {
-  //     const element = managerRoleList.value[i];
-  //     if (element.managerId == props.selItemData.serverId) {
-  //       beauticianData = element;
-  //     }
-  //   }
-  // }
-  // return beauticianData;
   return props.selItemData.managerInfo
 });
 

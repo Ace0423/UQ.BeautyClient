@@ -206,11 +206,11 @@ let submitBtn = () => {
 
   let curdata: any = {
     discountNo: formInputRef.value.discountNo,
-    dType: formInputRef.value.dType ? 4 : 3,
     title: formInputRef.value.name,
     discount: formInputRef.value.dType
       ? formInputRef.value.discount
       : formInputRef.value.discount / 100,
+    dType: formInputRef.value.dType ? 4 : 3,
     orderBy: 0,
     serviceMaps: curServiceMaps,
     productMaps: curGoodsMaps,
@@ -571,6 +571,7 @@ let { ruleItem } = toRefs(ruleLists);
     }
   }
 }
+
 .p_error {
   color: #fc0505 !important;
   width: 100% !important;

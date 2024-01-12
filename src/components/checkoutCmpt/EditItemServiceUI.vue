@@ -15,11 +15,16 @@
                         <span>價格</span>
                         <input v-model="formInputRef.price" placeholder="" type="text" disabled />
                     </div>
-                    <!-- <div>
+                    <div>
                         <span>折扣</span>
-                        <input v-model="formInputRef.discount" placeholder="請選擇折扣" type="text" @click="showCORdDcFn(true)"
-                            readonly />
-                    </div> -->
+                        <input v-if="formInputRef.sgDiscountList.length == 0" placeholder="請選擇折扣" type="text"
+                            @click="showRdSgDcFn(true)" readonly />
+                        <div v-else @click="showRdSgDcFn(true)">
+                            <div class="sgdc-item" v-for="(sdItem, index) in formInputRef.sgDiscountList" :key="sdItem">
+                                <span>{{ sdItem.title }}</span>
+                            </div>
+                        </div>
+                    </div>
                     <div>
                         <span>*服務人員</span>
                         <input v-model="formInputRef.managerInfo.nameView" placeholder="請選擇服務人員" type="text"
@@ -40,8 +45,8 @@
     <RdManagerUI v-if="showRdManagerRef" :selData="formInputRef.managerInfo" :getDataFn="getRdManagerFn"
         :showManagerUIFn="showManagerUIFn" />
 
-    <CORdDiscountUI v-if="showCORdDcUIRef" :selData="formInputRef.discountInfo" :getDataFn="getRdDcFn"
-        :showRdDFn="showCORdDcFn" />
+    <RdSgDiscountUI v-if="showRdSgDcUIRef" :itemData="selData" :selData="formInputRef.sgDiscountList" :getDataFn="getRdDcFn"
+        :showRdDFn="showRdSgDcFn" />
 </template>
   
 <script setup lang="ts">
@@ -52,7 +57,8 @@ import icon_closeX from "@/assets/images/icon_closeX.png";
 import { checkVerify_all, serviceTimer } from "@/utils/utils";
 
 let showRdManagerRef = ref(false);
-let showCORdDcUIRef = ref(false);
+let showRdSgDcUIRef = ref(false);
+
 
 let store = usePriceStore();
 let { allDiscountList } = storeToRefs(store);
@@ -69,7 +75,7 @@ let formInputRef: any = ref({
     subName: "",
     price: 0,
     managerInfo: { nameView: "" },
-    sgDiscount: null,
+    sgDiscountList: [],
 });
 
 onBeforeFn();
@@ -78,7 +84,9 @@ function onBeforeFn() {
     formInputRef.value.name = props.selData.name;
     formInputRef.value.price = props.selData.price;
     formInputRef.value.managerInfo = props.selData.managerInfo ? props.selData.managerInfo : formInputRef.value.managerInfo;
-    formInputRef.value.sgDiscount = props.selData.sgDiscount;
+    formInputRef.value.sgDiscountList = props.selData.sgDiscountList ? props.selData.sgDiscountList : [];
+
+    // formInputRef.value.sgDiscountList = props.selData.curSgDiscountList;
 
     if (props.selData.subList.length > 0) {
         formInputRef.value.subName = props.selData.subList[0].name
@@ -100,18 +108,30 @@ function getRdManagerFn(data: any) {
     showManagerUIFn(false);
     formInputRef.value.managerInfo = data;
 }
-function showCORdDcFn(state: boolean) {
-    showCORdDcUIRef.value = state;
+function showRdSgDcFn(state: boolean) {
+    showRdSgDcUIRef.value = state;
 }
 function getRdDcFn(data: any) {
-    console.log("getRdDiscountFn", data);
-    formInputRef.value.discountInfo = data;
-    showCORdDcFn(false);
+    if (data == "clearAll") {
+        console.log("移除");
+        formInputRef.value.sgDiscountList = [];
+    } else {
+        let curSgiscount = [];
+        for (let i = 0; i < formInputRef.value.sgDiscountList.length; i++) {
+            const element = formInputRef.value.sgDiscountList[i];
+            if (element.dType != data.dType) {
+                curSgiscount.push(element)
+            }
+        }
+        curSgiscount.push(data);
+        formInputRef.value.sgDiscountList = curSgiscount;
+    }
+    showRdSgDcFn(false);
 }
 function submitBtn() {
     if (formInputRef.value.managerInfo.nameView != "")
         props.selData.managerInfo = formInputRef.value.managerInfo;
-    props.selData.sgDiscount = formInputRef.value.sgDiscount;
+    props.selData.sgDiscountList = formInputRef.value.sgDiscountList;
 
     props.getDataFn(props.selData)
     console.log("提交");
@@ -345,6 +365,31 @@ const ruleLists: any = reactive({
 
                     ::placeholder {
                         color: #c1bdb8;
+                    }
+
+                    >div {
+                        display: flex;
+                        width: calc(268px);
+                        height: 100%;
+                        justify-content: left;
+                        align-items: center;
+                        overflow-x: auto;
+
+                        .sgdc-item {
+                            display: flex;
+                            height: 100%;
+                            justify-content: center;
+                            align-items: center;
+                            margin: 0 5px;
+
+                            >span {
+                                background-color: #717171;
+                                color: #fff;
+                                padding: 5px;
+                                white-space: nowrap;
+                            }
+                        }
+
                     }
                 }
 

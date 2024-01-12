@@ -62,7 +62,7 @@
                 <div class='input-box'>
                   <div class='input-type' v-if="formInputRef.dType">折扣金额</div>
                   <div class='input-type' v-else> 折扣%數 <span v-if="inputDiscount != '0'">{{ "(" + (100 -
-                    parseInt(inputDiscount)) + "折)"
+                    parseInt(inputDiscount)) / 10 + "折)"
                   }}</span> </div>
                   <div class='input-num'>{{ inputDiscount }}</div>
                 </div>
@@ -101,7 +101,7 @@
       </div>
       <div class="bottom-content">
         <!-- <button class="submit-btn" @click="submitBtn()">確認</button>
-        <button class="cancle-btn" @click="showServiceUIFn(0)">取消</button> -->
+        <button class="cancle-btn" @click="clearAll()">移除折扣</button> -->
       </div>
     </div>
   </div>
@@ -129,7 +129,7 @@ let formInputRef: any = ref({
   name: "",
   search: "",
   allDiscount: null,
-  dType: false,
+  dType: true,
   discount: 0,
 });
 
@@ -161,9 +161,6 @@ function getDiscountFn(data: any) {
 function _handleKeyPress(params: any) {
   let num: string = params.target.dataset.num;
   if (num == "-1") return;
-  // if (condition) {
-
-  // }
   switch (num) {
     case "S":
       // console.log("鍵盤S", num);
@@ -180,8 +177,23 @@ function _handleKeyPress(params: any) {
         inputDiscount.value = "0";
       }
       break;
-    default:
-      // console.log("鍵盤", num);
+    case undefined:
+      break;
+    case "0":
+    case "1":
+    case "2":
+    case "3":
+    case "4":
+    case "5":
+    case "6":
+    case "7":
+    case "8":
+    case "9":
+
+      if (!formInputRef.value.dType && inputDiscount.value.length == 2) {
+        inputDiscount.value = "0";
+      }
+
       if (inputDiscount.value == "0") {
         inputDiscount.value = "";
       }
@@ -189,9 +201,10 @@ function _handleKeyPress(params: any) {
         inputDiscount.value += num;
       }
       break;
+    default:
+      console.log("鍵盤", num);
+      break;
   }
-
-
 }
 
 function resetSwitchFn() {
@@ -200,26 +213,33 @@ function resetSwitchFn() {
 }
 
 function submitBtn() {
-  //自訂折扣確認
-  let curDiscount: any = {}
-  // curDiscount.isManual = true;
-  curDiscount.discountNo = "0";
-  curDiscount.dType = formInputRef.value.dType ? 2 : 1;
+  if (inputDiscount.value != "0") {
+    //自訂折扣確認
+    let curDiscount: any = {};
+    curDiscount.discountNo = "0";
+    curDiscount.dType = formInputRef.value.dType ? 2 : 1;
 
-  if (curDiscount.dType == 2) {
-    curDiscount.discount = parseInt(inputDiscount.value);
-    curDiscount.title = "自訂折扣 " + inputDiscount.value + " 元 ";
-  } else {
-    curDiscount.discount = parseInt(inputDiscount.value) / 100;
-    curDiscount.title = "自訂折扣 " + mathDiscount(inputDiscount.value) + " 折 ";
+    if (curDiscount.dType == 2) {
+      curDiscount.discount = parseInt(inputDiscount.value);
+      curDiscount.title = "自訂折扣 " + inputDiscount.value + " 元 ";
+    } else {
+      curDiscount.discount = parseInt(inputDiscount.value) / 100;
+      curDiscount.title = "自訂折扣 " + mathDiscount(inputDiscount.value) + " 折 ";
+    }
+
+    props.getDataFn(curDiscount);
+  }else{
+    props.showRdDFn(false);
   }
-
-  props.getDataFn(curDiscount);
 }
 
 function clickItem(item: any, id: number) {
   props.getDataFn(item);
   // props.showRdDFn(false)
+}
+
+function clearAll() {
+  props.getDataFn("clearAll");
 }
 </script>
 
@@ -617,7 +637,7 @@ function clickItem(item: any, id: number) {
       align-items: end;
       justify-content: center;
 
-      // height: calc(65px);
+      height: calc(65px);
       // width: 100px;
       >button {
         position: relative;

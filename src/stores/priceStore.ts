@@ -17,6 +17,7 @@ import {
   addCountTicketReq,
   updateCountTicketReq,
   deleteCountTicketReq,
+  getSgDiscountByItemReq,
 } from "@/api/priceRequest";
 import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
@@ -41,6 +42,7 @@ export const usePriceStore = defineStore("priceStore", () => {
     }
   }
 
+  //#region 全單折扣
   //取全單折扣資料
   const getAllDiscountApi = async (
     id: any = "",
@@ -97,8 +99,9 @@ export const usePriceStore = defineStore("priceStore", () => {
       console.log(error);
     }
   };
-  //--------------------------------單品
-
+  //#endregion
+  
+  //#region 單品
   //取單品折扣資料
   const getSingleDiscountApi = async (
     id: any = "",
@@ -158,8 +161,28 @@ export const usePriceStore = defineStore("priceStore", () => {
       console.log(error);
     }
   };
-  //--------------------------------優惠券
 
+  let sgDcListByItemRef: any = ref([]);
+  const getSgDiscountByItemApi = async (itemType: any = 0,id: any = 0,page: any = 0,count: any = 0
+  ) => {
+    try {
+      sgDcListByItemRef.value = [];
+      let res: any = await getSgDiscountByItemReq(itemType,id, page, count).then(
+        (res: any) => {
+          if (res.data.data.table) {
+            sgDcListByItemRef.value = res.data.data.table;
+          }
+          return res;
+        }
+      );
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //#endregion
+
+  //#region 優惠券
   //獲取
   let couponListRef: any = ref([]);
   let selectCouponRef: any = ref([]);
@@ -237,8 +260,9 @@ export const usePriceStore = defineStore("priceStore", () => {
       console.log(error);
     }
   };
-  //--------------------------------計次券
+  //#endregion
 
+  //#region 計次券
   //獲取
   let countTicketListRef: any = ref([]);
   let selectCountTicketRef: any = ref([]);
@@ -312,7 +336,9 @@ export const usePriceStore = defineStore("priceStore", () => {
       console.log(error);
     }
   };
-  //--------------------------------儲值卡
+  //#endregion
+
+  //#region 儲值卡
   const topUpCardList: any = reactive({ data: [] });
   const getTopUpCardList = async (data: any) => {
     try {
@@ -384,6 +410,7 @@ export const usePriceStore = defineStore("priceStore", () => {
       topUpCardList.data.push(data);
     }
   };
+  //#endregion
   return {
     getAllDiscountApi,
     allDiscountList,
@@ -396,6 +423,8 @@ export const usePriceStore = defineStore("priceStore", () => {
     addSingleDiscountApi,
     delSingleDiscountApi,
     updateSingleDiscountApi,
+    getSgDiscountByItemApi,
+    sgDcListByItemRef,
     //--------------------------------優惠券
     getCouponApi,
     couponListRef,

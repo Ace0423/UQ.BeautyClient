@@ -26,11 +26,14 @@
                           {{ bItem.timer + "分" }}
                           <span v-if="bItem.subList.length > 0"> {{ " ," + bItem.subList[0].name }}</span>
                         </span>
+                        <span v-for="(sglItem, index) in bItem.sgDiscountList" :key="sglItem">
+                          {{ sglItem.title }}
+                        </span>
                       </div>
                       <div class="info-price"><span v-if="bItem.subList.length > 0">{{ "$" +
                         bItem.subList[0].price
                       }}</span>
-                        <span v-else>{{ "$" + bItem.price }}</span>
+                        <span v-else>{{ "$" + bItem.sellPrice }}</span>
                       </div>
                     </div>
                     <div name="商品Item" v-if="bItem.ItemType == 2" class="info-service"
@@ -47,9 +50,12 @@
 
                           }}
                         </span>
+                        <span v-for="(sglItem, index) in bItem.sgDiscountList" :key="sglItem">
+                          {{ sglItem.title }}
+                        </span>
                       </div>
                       <div class="info-price">
-                        <span>{{ "$" + bItem.price }}</span>
+                        <span>{{ "$" + bItem.sellPrice }}</span>
                         <span class="fontBlack">{{ "x" + bItem.quantity }}</span>
                       </div>
                     </div>
@@ -121,18 +127,28 @@
               </div>
               <div v-for="(dItem, index) in allDCListCpt" :key="dItem">
                 <span>{{ dItem.title }}</span>
-                <span v-if="dItem.dType == 1">{{ "($ - " + (dItem.discount * formInputRef.priceTotal) + ")" }}</span>
+                <!-- <span v-if="dItem.dType == 1">{{ "($ - " + Math.floor(dItem.discount * formInputRef.priceTotal) + ")" }}</span> -->
+                <span v-if="dItem.dType == 1">{{ "($ - " + mathAllPercentFn(dItem) + ")" }}</span>
                 <span v-if="dItem.dType == 2">{{ "($ - " + (dItem.discount) + ")" }}</span>
               </div>
             </div>
             <div class="link-bottom"></div>
-            <div v-if="payAmountCpt > 0" class="pay-msg">
+            <div class="pay-msg">
               <span>應收金額</span>
               <span class="price-msg"> ${{ payAmountCpt }}</span>
             </div>
             <div class="customer-submit">
               <!-- <button class="otherpay-btn">其他收款方式</button> -->
-              <button class="cash-btn" @click="submitBtn()">現金收款</button>
+              <div class="select-payType">
+                <el-select :popper-append-to-body="false" placeholder="收款方式" popper-class="其他收款方式"
+                  v-model="formInputRef.payTypeId" @change="changePayType()">
+                  <el-option v-for="(item, index) in payTypeListRef" :key="index" :value="item.cotId"
+                    :label="item.cotTitle">
+                    <span> {{ item.cotTitle }}</span>
+                  </el-option>
+                </el-select>
+              </div>
+              <button class="cash-btn" @click="submitBtn()">確認</button>
             </div>
           </div>
         </div>
@@ -170,16 +186,17 @@ let showAddItemMenuUIRef = ref(false);
 let showRdAllDiscountUIRef = ref(false);
 let showEditItemServiceUIRef = ref(false);
 let showEditItemGoodsUIRef = ref(false);
-let selctItemInfoRef = ref(false);
+let selctItemInfoRef = ref(null);
 
 let store = useApptStore();
-let { } = storeToRefs(store);
-let { addCheckOutApi } = store;
+let { payTypeListRef } = storeToRefs(store);
+let { addCheckOutApi, getPayTypeListApi } = store;
 
 let formInputRef: any = ref({
   memberInfo: { nameView: "顧客", phone: "請選擇顧客" },
   customerCount: 1,
   memo: "",
+  payTypeId: 1,
   priceTotal: 0,
   percentAllDC: null,
   priceAllDC: null,
@@ -187,9 +204,30 @@ let formInputRef: any = ref({
   allDiscount: [],
 });
 
+let subTab = [
+  {
+    id: 0,
+    name: "無子項目",
+  },
+  {
+    id: 1,
+    name: "多項子項目",
+  },
+];
+
+
+onBeforeFn();
+function onBeforeFn() {
+  getPayTypeListFn()
+}
 onMounted(() => {
   // console.log('onMounted');
 });
+function getPayTypeListFn(id: any = 0) {
+  getPayTypeListApi(id).then((res: any) => {
+    console.log(payTypeListRef.value);
+  });
+}
 
 let payAmountCpt = computed(() => {
   let curPrice = formInputRef.value.priceTotal;
@@ -197,24 +235,48 @@ let payAmountCpt = computed(() => {
   for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
     const element = formInputRef.value.allDiscount[i];
     if (element.dType == 1) {
-      dcPrice += element.discount * curPrice
+      dcPrice += Math.floor(mathAllPercentFn(element) * curPrice)
     } else {
       dcPrice += element.discount
     }
   }
-  return (curPrice - dcPrice)
+  let amount = (curPrice - dcPrice) < 0 ? 0 : (curPrice - dcPrice)
+  return amount
 });
 let allDCListCpt = computed(() => {
-  // let curpercent = formInputRef.value.percentAllDC ? formInputRef.value.percentAllDC.discount : 0;
-  // Math.round(curpercent * formInputRef.value.priceTotal)
   return formInputRef.value.allDiscount
 });
-let pricePriceCpt = computed(() => {
+let percentPriceCpt = computed(() => {
   let curprice = formInputRef.value.priceAllDC ? formInputRef.value.priceAllDC.discount : 0;
   return (
     curprice
   )
 });
+//計算全單折扣排除單品折扣(%數折扣)
+function mathAllPercentFn(params: any) {
+  let curP = 0;
+  if (params.dType == 1) {
+    for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
+      const element = formInputRef.value.buyItemsList[i];
+      let havePercent = false;
+      let cMinus = 0;
+      if (element.sgDiscountList)
+        for (let j = 0; j < element.sgDiscountList.length; j++) {
+          const sdList = element.sgDiscountList[j];
+          if (sdList.dType == 3) {
+            havePercent = true;
+          } else {
+            cMinus += sdList.discount;
+          }
+        }
+      //無單品折扣
+      if (!havePercent) {
+        curP += Math.floor(params.discount * (element.price - cMinus))
+      }
+    }
+  }
+  return curP
+}
 
 function showMemberUIFn(state: boolean) {
   showMemberUIRef.value = state;
@@ -226,13 +288,6 @@ function showRdAllDiscountFn(state: boolean) {
   showRdAllDiscountUIRef.value = state;
 }
 function getRdDiscountFn(data: any) {
-  // // 折扣1:% 2:$$
-  // if (data.dType == 1) {
-  //   formInputRef.value.percentAllDC = data;
-  // } else if (data.dType == 2) {
-  //   formInputRef.value.priceAllDC = data;
-  // }
-
   let curAllDiscount = [];
   for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
     const element = formInputRef.value.allDiscount[i];
@@ -246,12 +301,6 @@ function getRdDiscountFn(data: any) {
   showRdAllDiscountFn(false);
 }
 function delDiscount(type: any) {
-  // if (type) {
-  //   formInputRef.value.priceAllDC = null;
-  // } else {
-  //   formInputRef.value.percentAllDC = null;
-  // }
-
   let curAllDiscount = [];
   for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
     const element = formInputRef.value.allDiscount[i];
@@ -312,12 +361,12 @@ function getItemInfoFn(data: any) {
     odDetail.stock = curItemData.stock;
     odDetail.color = "";
   }
+  odDetail.sellPrice = odDetail.price;
   odDetail.stock = 0;
   odDetail.managerInfo = null;
   odDetail.quantity = 1;
   odDetail.isManual = null;
   odDetail.percentSgDC = null;
-  odDetail.priceSgDC = null;
 
   formInputRef.value.buyItemsList.push(odDetail);
   updataPrice();
@@ -327,14 +376,9 @@ function updataPrice() {
   for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
     const element = formInputRef.value.buyItemsList[i];
     if (element.ItemType == 2) {
-      priceTotal += element.price;
+      priceTotal += element.sellPrice;
     } else if (element.ItemType == 1) {
-      // if (element.subList.length > 0) {
-      //   priceTotal += element.subList[0].price;
-      // } else {
-      //   priceTotal += element.price;
-      // }
-      priceTotal += element.price;
+      priceTotal += element.sellPrice;
     }
   }
   formInputRef.value.priceTotal = priceTotal;
@@ -349,10 +393,36 @@ function getEditGdInfoFn(data: any) {
     if (element.Id == data.Id && element.ItemType == data.ItemType) {
       element.managerInfo = data.managerInfo;
       element.quantity = data.quantity;
+      element.sgDiscountList = data.sgDiscountList;
+      setSglDiscountItem(element);
       break;
     }
   }
+  updataPrice();
   showEditGdInfoUIFn(false);
+}
+function setSglDiscountItem(params: any) {
+  console.log(111, params.sellPrice);
+  let curPercent = 0;
+  let curMinus = 0;
+  for (let i = 0; i < params.sgDiscountList.length; i++) {
+    const element = params.sgDiscountList[i];
+    if (element.dType == 3) {
+      curPercent = Math.floor(params.price * element.discount);
+    }
+  }
+  for (let i = 0; i < params.sgDiscountList.length; i++) {
+    const element = params.sgDiscountList[i];
+    if (element.dType == 4) {
+      curMinus = (element.discount);
+    }
+  }
+  if (params.price > (curPercent + curMinus))
+    params.sellPrice = params.price - (curPercent + curMinus);
+  else
+    params.sellPrice = 0
+
+  return params.sellPrice;
 }
 //刪除商品
 function delItemGdFn(data: any) {
@@ -377,9 +447,12 @@ function getEditSVInfoFn(data: any) {
     const element = formInputRef.value.buyItemsList[i];
     if (element.Id == data.Id && element.ItemType == data.ItemType) {
       element.managerInfo = data.managerInfo;
+      element.sgDiscountList = data.sgDiscountList;
+      setSglDiscountItem(element);
       break;
     }
   }
+  updataPrice();
   showEditSVInfoUIFn(false);
 }
 function delItemFn(data: any) {
@@ -400,7 +473,7 @@ function clickSvItem(params: any, id: any) {
   // console.log("selctItemInfoRef", selctItemInfoRef.value);
 }
 function clickPdItem(params: any, id: any) {
-  // console.log("selctItemInfoRef", params);
+  console.log("selctItemInfoRef", params);
   selctItemInfoRef.value = params;
   if (params.ItemType == 1) {
     showEditSVInfoUIFn(true);
@@ -416,7 +489,7 @@ function cancleGoodsFn(item: any, index: number) {
 }
 
 function submitBtn() {
-  // console.log("現金收款", formInputRef.value);
+  console.log("結帳確認", formInputRef.value);
 
   ruleLists.ruleItem.name.value = formInputRef.value.memberInfo.userId;
   ruleLists.ruleItem.buyItem.value = formInputRef.value.buyItemsList.length;
@@ -436,6 +509,7 @@ function submitBtn() {
   apiData.COCustomerCount = formData.customerCount;
   apiData.COBuyItemsList = formData.buyItemsList;
   apiData.COMemberId = formData.memberInfo.userId;
+  apiData.payTypeId = formData.memberInfo.payTypeId;
   apiData.COMemo = formData.memo;
   apiData.COTotalPrice = formData.priceTotal;
   apiData.COAllDCList = formInputRef.value.allDiscount;
@@ -451,6 +525,11 @@ function submitBtn() {
       }, 1000);
     }
   });
+}
+
+function changePayType() {
+  // console.log(formInputRef.value.subType);
+  // formInputRef.value.subType = formInputRef.value.subType == 0 ? 1 : 0;
 }
 //#region 規則
 
@@ -627,7 +706,7 @@ let { ruleItem } = toRefs(ruleLists);
                   .info-service {
                     display: flex;
                     width: 100%;
-                    height: 80px;
+                    min-height: 80px;
                     align-items: center;
 
                     .head-shot {
@@ -842,7 +921,7 @@ let { ruleItem } = toRefs(ruleLists);
 
               >span {
                 display: flex;
-                height: 50%;
+                height: 40px;
                 margin-left: 10%;
                 align-items: center;
                 font-size: 28px;
@@ -921,16 +1000,45 @@ let { ruleItem } = toRefs(ruleLists);
             border-top: solid 0.5px #ddd;
             box-sizing: border-box;
 
-            .otherpay-btn {
-              position: relative;
-              width: 200px;
-              height: 50px;
-              margin: 10px;
-              border-radius: 8px;
-              font-size: 20px;
-              font-weight: bold;
-              color: #717171;
-              background-color: #fff;
+            .select-payType {
+              width: calc(180px);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              .el-select {
+                width: 100%;
+                border-radius: 8px;
+
+                :deep(.el-input__inner) {
+                  &::placeholder {
+                    color: #717171;
+                  }
+
+                  text-align: center;
+                }
+
+                :deep(.el-input__wrapper) {
+                  width: 100%;
+                  font-size: 20px;
+                  height: 50px;
+                  border-radius: 8px;
+                  border: 2px solid #717171;
+                  box-sizing: border-box;
+
+                  :deep(.el-select-dropdown) {
+                    border: 1px solid #ff0000 !important;
+                  }
+                }
+
+                input {
+                  font-size: 12px;
+                  border: none;
+                  background: none;
+                  text-align: center;
+                  font-weight: bold;
+                }
+              }
             }
 
             .cash-btn {
@@ -944,6 +1052,7 @@ let { ruleItem } = toRefs(ruleLists);
               color: #717171;
               background-color: #fff;
             }
+
           }
         }
       }

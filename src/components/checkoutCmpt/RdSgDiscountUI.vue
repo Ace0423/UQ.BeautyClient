@@ -2,7 +2,7 @@
   <div class="popup-subService" v-on:click.self="showRdDFn(false)">
     <div class="popup-content">
       <div class="header-content">
-        <span>折扣</span>
+        <span>單品折扣</span>
         <img :src="icon_closeX" v-on:click="showRdDFn(false)" />
       </div>
       <div class="main-content">
@@ -12,8 +12,8 @@
           <label for="tab-1">折扣選項</label>
           <div class="tab-content">
             <div class="options-content">
-              <div v-for="item in filterCourseData" :key="item">
-                <label class="label-item" :value="item" v-if="item.dType == 0">
+              <div v-for="item in filterSgDcData" :key="item">
+                <label class="label-item" :value="item" v-if="item.dType == 3">
                   <input class="input-item" type="radio" :key="item" :value="item" :id="'RdAllDiscountUI_' + item"
                     v-model="formInputRef.allDiscount" @click="clickItem(item, item.SubId)" />
                   <!-- <label :for="'RdAllDiscountUI_' + item.SubId"></label> -->
@@ -26,7 +26,7 @@
                     <span>{{ " - " + item.discount * 100 + " % " }}</span>
                   </div>
                 </label>
-                <label class="label-item" :value="item" v-if="item.dType == 1">
+                <label class="label-item" :value="item" v-if="item.dType == 4">
                   <input class="input-item" type="radio" :key="item" :value="item" :id="'RdAllDiscountUI_' + item"
                     v-model="formInputRef.allDiscount" @click="clickItem(item, item.SubId)" />
                   <!-- <label :for="'RdAllDiscountUI_' + item.SubId"></label> -->
@@ -62,7 +62,7 @@
                 <div class='input-box'>
                   <div class='input-type' v-if="formInputRef.dType">折扣金额</div>
                   <div class='input-type' v-else> 折扣%數 <span v-if="inputDiscount != '0'">{{ "(" + (100 -
-                    parseInt(inputDiscount)) + "折)"
+                    parseInt(inputDiscount)) / 10 + "折)"
                   }}</span> </div>
                   <div class='input-num'>{{ inputDiscount }}</div>
                 </div>
@@ -102,6 +102,7 @@
       <div class="bottom-content">
         <!-- <button class="submit-btn" @click="submitBtn()">確認</button>
         <button class="cancle-btn" @click="showServiceUIFn(0)">取消</button> -->
+        <button class="cancle-btn" @click="clearAll()">移除折扣</button> 
       </div>
     </div>
   </div>
@@ -118,29 +119,32 @@ import { mathDiscount } from "@/utils/utils";
 
 
 let store = usePriceStore();
-let { allDiscountList } = storeToRefs(store);
-let { getAllDiscountApi, delAllDiscountApi } = store;
+let { sgDcListByItemRef } = storeToRefs(store);
+let { getSgDiscountByItemApi } = store;
 const props = defineProps<{
   showRdDFn: Function;
   getDataFn: Function;
   selData: any;
+  itemData: any;
 }>();
 let formInputRef: any = ref({
   name: "",
   search: "",
   allDiscount: null,
-  dType: false,
-  isManual: false,//是否手動輸入
+  dType: true,
+  discount: 0,
 });
 
 let inputDiscount = ref("0");
 onBeforeFn();
 function onBeforeFn() {
-  console.log(props.selData);
-  getAllDiscountFn();
+  // console.log(props.itemData);
+  getSgDiscountFn(props.itemData.ItemType, props.itemData.Id);
 }
-function getAllDiscountFn() {
-  getAllDiscountApi();
+function getSgDiscountFn(ItemType: number, Id: number) {
+  getSgDiscountByItemApi(ItemType, Id).then(()=>{
+  console.log(sgDcListByItemRef.value);
+  });
 }
 onMounted(() => {
   // console.log('onMounted');
@@ -149,8 +153,8 @@ onMounted(() => {
 if (props.selData) {
   // formInputRef.value.allDiscount = props.selData;
 }
-let filterCourseData: any = computed(() =>
-  allDiscountList.value.filter(getDiscountFn)
+let filterSgDcData: any = computed(() =>
+sgDcListByItemRef.value.filter(getDiscountFn)
 );
 function getDiscountFn(data: any) {
   return (
@@ -161,18 +165,15 @@ function getDiscountFn(data: any) {
 function _handleKeyPress(params: any) {
   let num: string = params.target.dataset.num;
   if (num == "-1") return;
-  // if (condition) {
-
-  // }
   switch (num) {
     case "S":
-      console.log("鍵盤S", num);
+      // console.log("鍵盤S", num);
       break;
     case "C":
       inputDiscount.value = "0";
       break;
     case "D":
-      console.log("鍵盤D", num);
+      // console.log("鍵盤D", num);
       if (inputDiscount.value != "0") {
         inputDiscount.value = inputDiscount.value.slice(0, -1);
       }
@@ -180,8 +181,23 @@ function _handleKeyPress(params: any) {
         inputDiscount.value = "0";
       }
       break;
-    default:
-      console.log("鍵盤", num);
+    case undefined:
+      break;
+    case "0":
+    case "1":
+    case "2":
+    case "3":
+    case "4":
+    case "5":
+    case "6":
+    case "7":
+    case "8":
+    case "9":
+
+      if (!formInputRef.value.dType && inputDiscount.value.length == 2) {
+        inputDiscount.value = "0";
+      }
+
       if (inputDiscount.value == "0") {
         inputDiscount.value = "";
       }
@@ -189,33 +205,44 @@ function _handleKeyPress(params: any) {
         inputDiscount.value += num;
       }
       break;
+    default:
+      console.log("鍵盤", num);
+      break;
   }
-
-
 }
 
 function resetSwitchFn() {
-  console.log("switch");
+  // console.log("switch");
   inputDiscount.value = "0";
 }
 
 function submitBtn() {
-  let nameDC = formInputRef.value.dType ? formInputRef.value.discount + " 折 " : mathDiscount(formInputRef.value.discount) + " 元 "
-  let curDiscount = {
-    isManual: true,
-    dType: formInputRef.value.dType,
-    discount: parseInt(formInputRef.value.discount) / 100,
-    title: "自訂折扣" + nameDC
+  if (inputDiscount.value != "0") {
+    //自訂折扣確認
+    let curDiscount: any = {};
+    curDiscount.discountNo = "0";
+    curDiscount.dType = formInputRef.value.dType ? 4 : 3;
+
+    if (curDiscount.dType == 4) {
+      curDiscount.discount = parseInt(inputDiscount.value);
+      curDiscount.title = "自訂折扣 " + inputDiscount.value + " 元 ";
+    } else {
+      curDiscount.discount = parseInt(inputDiscount.value) / 100;
+      curDiscount.title = "自訂折扣 " + mathDiscount(inputDiscount.value) + " 折 ";
+    }
+
+    props.getDataFn(curDiscount);
+  } else {
+    props.showRdDFn(false);
   }
-  props.getDataFn(curDiscount);
-  // props.showRdDFn(false)
 }
 
 function clickItem(item: any, id: number) {
-  item.isManual = false;
-  console.log(item);
   props.getDataFn(item);
   // props.showRdDFn(false)
+}
+function clearAll() {
+  props.getDataFn("clearAll");
 }
 </script>
 
@@ -491,17 +518,18 @@ function clickItem(item: any, id: number) {
               justify-content: space-between;
 
               .switch-box {
-                width: 60px;
+                display: flex;
+                width: 68px;
+                height: 34px;
 
                 .switch {
-                  width: 60px;
+                  width: calc(100% - 8px);
                   display: flex;
                   align-items: center;
                   border-radius: 5px;
-                  padding: 2px 2px;
+                  padding: 2px;
                   background-color: #877059;
                   filter: brightness(90%);
-                  height: 30px;
 
 
                   span {
@@ -511,7 +539,7 @@ function clickItem(item: any, id: number) {
                     justify-content: center;
                     align-items: center;
                     color: #fff;
-                    width: 50%;
+                    width: 30px;
                   }
 
                   .box_item {
@@ -521,7 +549,7 @@ function clickItem(item: any, id: number) {
                     border-radius: 5px;
                     background-color: #fff;
                     width: 30px;
-                    height: calc(90%);
+                    height: 30px;
                   }
 
                   .actived_Area {
@@ -610,7 +638,7 @@ function clickItem(item: any, id: number) {
     .bottom-content {
       display: flex;
       align-items: end;
-      justify-content: center;
+      justify-content: left;
 
       // height: calc(65px);
       // width: 100px;
@@ -619,11 +647,11 @@ function clickItem(item: any, id: number) {
         width: 100px;
         height: 45px;
         margin: 10px;
-        border-radius: 10px;
+        border-radius: 5px;
         font-size: 20px;
         font-weight: bold;
-        color: #717171;
-        background-color: #fff;
+        color: #ff0000;
+        background-color: #ffffff;
       }
 
       .submit-btn {

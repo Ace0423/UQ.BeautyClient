@@ -113,7 +113,7 @@ import icon_delete from "@/assets/images/icon_delete.png";
 
 let store = useApptStore();
 let { orderDetailListRef } = storeToRefs(store);
-let { getOrderDetailApi } = store;
+let { getOrderApptDetailApi } = store;
 const props = defineProps<{
   memuState: any;
   handmemuStateBtn: Function;
@@ -170,7 +170,7 @@ let changeTab = (index: number, item: any) => {
 
       break;
   }
-  // getOrderDetailApi(item.id, 0);
+  // getOrderApptDetailApi(item.id, 0);
 };
 let filterOrderData: any = computed(() =>
   orderDetailListRef.value.filter(getCourseFn)
@@ -185,7 +185,7 @@ function getCourseFn(data: any) {
 setTableFn();
 function setTableFn() {
   // changeTab(0, { id: 0 });
-  getOrderDetailApi(0, 0);
+  getOrderApptDetailApi(0, 0);
 }
 //排序明細
 let sortUpDown: string = "";

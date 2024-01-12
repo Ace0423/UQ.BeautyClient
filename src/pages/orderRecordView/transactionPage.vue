@@ -1,44 +1,50 @@
 
 <template>
   <div class="container">
-    <div class="header"></div>
+    <div class="header">
+      <div class="demo-date-picker">
+        <div class="block">
+          <span class="demonstration"></span>
+          <el-date-picker v-model="formInputRef.datePicker" type="daterange" range-separator="To" start-placeholder="開始日期"
+            end-placeholder="結束日期" :size="datePickerSize" @change="dateChange" />
+        </div>
+      </div>
+    </div>
     <div class="content">
       <div class="content-topBar">
-        <p>訂單(全部{{ filterServiceData.length }}個)</p>
+        <p>訂單(全部{{ filterOrderData.length }}個)</p>
         <div>
-          <input v-model="search" class="search-control" placeholder="搜尋名稱" />
+          <input v-model="search" class="search-control" placeholder="搜尋編號、顧客" />
         </div>
       </div>
       <div class="content-main">
-        <el-table :data="filterServiceData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
-          :header-cell-style="headerRowStyle" @sort-change="goclick">
-          <el-table-column prop="name" label="訂單" min-width="30%" :sort-by="['name']" sortable>
+        <el-table :data="filterOrderData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
+          :header-cell-style="headerRowStyle">
+          <el-table-column prop="coNo" label="訂單" min-width="50%" :sort-by="['name']" sortable>
             <template #default="scope">
               <div class="order-name">
-                <span>{{ 111 }}</span>
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="servicesTime" label="顧客" min-width="30%" sortable />
-          <el-table-column prop="price" label="金額" min-width="20%" sortable />
-          <!-- <el-table-column prop="display" label="上架" min-width="20%">
-            <template #default="scope">
-              <div class="handle-drag">
-                <div class="checked_state">
-                  <input class="checked_status" type="checkbox" name="sub" value="" :id="'servicePage_' + scope.$index"
-                    :checked="filterServiceData[scope.$index].display == true"
-                    @change="changeStutusHdr(scope.$index, scope.row)" />
-                  <label :for="'servicePage_' + scope.$index"></label>
+                <!-- <img class="customer-img" :src="icon_customer" /> -->
+                <el-icon :size="30">
+                  <CreditCard />
+                </el-icon>
+                <div>
+                  <span>{{ scope.row.coNo }}</span>
+                  <div>
+                    <span>{{ scope.row.coCheckTime.split("T")[0] + " " }}</span>
+                    <span>{{ scope.row.coCheckTime.split("T")[1].split(":")[0] + ":" }}</span>
+                    <span>{{ scope.row.coCheckTime.split("T")[1].split(":")[1] }}</span>
+                  </div>
+
                 </div>
               </div>
             </template>
-          </el-table-column>-->
-          <el-table-column label="操作" width="150">
+          </el-table-column>
+          <el-table-column prop="memberInfo.name" label="顧客" min-width="30%" sortable />
+          <el-table-column prop="coTotalPrice" label="金額" min-width="10%" sortable />
+          <el-table-column label="" min-width="10%">
             <template #default="scope">
-              <div class="handle-drag">
-                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;"
-                  @click="selectDataFn(filterServiceData[scope.$index])" />
-                <img class="del_img" :src="Icon_del" @click="deleteHdr(scope.$index, filterServiceData[scope.$index])" />
+              <div class="handle-drag" @click="selectDataFn(scope.row)">
+                <img class="edit_img" :src="icon_right_arrow" />
               </div>
             </template>
           </el-table-column>
@@ -50,6 +56,7 @@
     <div class="footer">
     </div>
   </div>
+  <InfoOrderDetail v-if="showOrderInfoRef" :showUIHdr="showOrderInfoFn" :selItemData="selItem" />
 </template>
   
 <script setup lang="ts">
@@ -57,39 +64,44 @@ import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import Alert from "@/components/alertCmpt";
-import { Sort } from '@element-plus/icons-vue'
-import Icon_edit from "@/assets/Ico_edit.svg";
-import Icon_del from "@/assets/Icon material-delete.svg";
+import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
+import icon_customer from "@/assets/images/icon_customer.png";
+import {
+  User, Edit, ShoppingBag, CreditCard
+} from '@element-plus/icons-vue';
+import { formatZeroDate } from "@/utils/utils";
 
 let store = useApptStore();
-let { serviceDetailList } =
+let { orderList } =
   storeToRefs(store);
 let {
-  getServiceDetailApi,
-  updateServiceDetailApi,
+  getOrderListApi,
 } = store;
 
-let showAddDetail = ref(false);
-let showEditDetail: any = ref(false);
-let serviceTitle = ["產品名稱", "服務時長(Min)", "售價(NT)", "上架", "操作"];
+let showOrderInfoRef: any = ref(false);
 let editServiceInfo: any = ref([]);
+const datePickerSize = ref<'default' | 'large' | 'small'>('large')
 
+let formInputRef: any = ref({
+  datePicker: "",
+});
 
 let search = ref("");
-let filterServiceData: any = computed(() =>
-  serviceDetailList.value.filter(getServiceFn)
+let filterOrderData: any = computed(() =>
+  orderList.value.filter(getOrderFn)
 );
-function getServiceFn(data: any) {
+function getOrderFn(data: any) {
   return (
     !search.value ||
-    data.name.toLowerCase().includes(search.value.toLowerCase())
+    data.coNo.toLowerCase().includes(search.value.toLowerCase()) ||
+    data.memberInfo.name.toLowerCase().includes(search.value.toLowerCase())
   );
 }
 
 
 onBefore();
 function onBefore() {
-  getServiceDetailApi(0);
+  getOrderListApi(0);
 }
 onMounted(() => { });
 
@@ -97,13 +109,49 @@ watchEffect(() => {
 
 });
 
+
+function selectDataFn(params: any) {
+  console.log("params", params);
+  selItem = params;
+  showOrderInfoFn(true);
+}
+let selItem: any = [];
+//刪除課程
+let deleteHdr = (index: number, item: any) => {
+  Alert.check("是否刪除", 1000, (data: any) => {
+    onDeleteAlertBtn(data, item.sId)
+  });
+};
+const onDeleteAlertBtn = (state: any, id: number) => {
+  if (state) {
+    // delServiceDetailApi(id).then((res: any) => {
+    //   getServiceDetailApi(0);
+    // });
+  } else {
+    console.log("取消刪除");
+  }
+  selItem.value = [];
+};
+
+
+function dateChange() {
+  let start: Date = formInputRef.value.datePicker[0]
+  let end: Date = formInputRef.value.datePicker[1]
+  let startDate: string = start.getFullYear() + "-" + start.getMonth() + 1 + "-" + formatZeroDate(start.getDate());
+  let endDate: string = end.getFullYear() + "-" + end.getMonth() + 1 + "-" + formatZeroDate(end.getDate());
+  console.log("startDate", startDate);
+  console.log("endDate", endDate);
+
+  getOrderListApi(0, startDate, endDate);
+}
+
 function showEditUIFn(index: number, item: any) {
   editServiceInfo.value = item;
-  showEditDetailHdr(true);
+  showOrderInfoFn(true);
 }
-function showEditDetailHdr(state: boolean) {
-  showEditDetail.value = state;
-  getServiceDetailApi(0);
+function showOrderInfoFn(state: boolean) {
+  showOrderInfoRef.value = state;
+  // getOrderListApi(0);
 }
 
 //改變課程狀態
@@ -123,9 +171,9 @@ let changeStutusHdr = (index: number, item: any) => {
     price: item.price,
     subList: item.subList,
   };
-  updateServiceDetailApi(curdata).then((res: any) => {
-    getServiceDetailApi(0);
-  });
+  // updateServiceDetailApi(curdata).then((res: any) => {
+  //   getOrderListApi(0);
+  // });
 }
 //-------------------------------------------------------------------------表格css
 //內容css
@@ -153,19 +201,30 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
 <style lang="scss" scoped>
 .container {
   position: absolute;
-  top: 45px;
+  top: 80px;
   bottom: 10px;
-  left: 0px;
-  right: 0px;
-  width: 100%;
-  background-color: #faf9f8;
-  border: solid 0.5px #ddd;
-  font-family: STXihei;
-  color: #717171;
+  left: 20px;
+  right: 20px;
+  // width: calc(100% - 40px);
+
+  .header {
+    display: flex;
+    height: 45px;
+    align-items: end;
+  }
 
   .content {
+    position: absolute;
+    top: 45px;
+    bottom: 45px;
+
+    width: 100%;
     display: block;
-    height: calc(100% - 50px);
+    // height: calc(100% - 50px);
+    border: solid 0.5px #ddd;
+    color: #717171;
+    background-color: #faf9f8;
+    font-family: STXihei;
 
     >.nav {
       display: flex;
@@ -264,109 +323,93 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
       // height: calc(100% - 50px);
       height: 100%;
 
-      >table {
-        // display: inline-block;
-        padding: 10px 25px;
-        width: 100%;
-        font-family: STXihei;
-        background-color: #faf9f8;
-        border: solid 0.5px #ddd;
-        box-sizing: border-box;
-        color: #717171;
-        height: 100%;
-        overflow-y: scroll;
-
-        // display: inline-table;
-        >thead {
-          display: inline-table;
-          width: 100%;
-          height: 50px;
-
-          >tr>td:nth-child(1) {
-            width: 40%;
+      .el-table {
+        .checked_state {
+          input {
+            display: none;
           }
 
-          >tr>td:nth-child(2) {
-            width: 15%;
+          label {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            border: 1px solid #8b6f6d;
+            box-sizing: border-box;
+            position: relative;
+            cursor: pointer;
           }
 
-          >tr>td:nth-child(3) {
-            width: 20%;
+          label::before {
+            display: inline-block;
+            content: " ";
+            width: 12px;
+            border: 2px solid #fff;
+            box-sizing: border-box;
+            height: 4px;
+            border-top: none;
+            border-right: none;
+            transform: rotate(-45deg);
+            top: 5px;
+            left: 3px;
+            position: absolute;
+            opacity: 0;
           }
 
-          >tr>td:nth-child(4) {
-            width: 10%;
+          input:checked+label {
+            background: #8b6f6d;
           }
 
-          >tr>td:nth-child(5) {
-            width: 15%;
+          input:checked+label::before {
+            opacity: 1;
+            transform: all 0.5s;
           }
         }
 
-        >tbody {
-          overflow-y: scroll;
-          overflow: hidden;
-          display: block;
-          width: 100%;
-          height: calc(100% - 50px);
+        .order-name {
+          display: flex;
+          align-items: center;
 
-          >tr {
-            display: flex;
-            width: 100%;
-            border-bottom: 2px solid rgba(112, 112, 112, 0.5);
+          >img {
+            width: 35px;
+            height: 40px;
+          }
 
-            >td {
-              align-items: center;
-              display: flex;
-              height: 47px;
-              padding: 2px;
+          >div {
+            display: grid;
+            padding-left: 10px;
 
-              .edit_img {
-                width: 30px;
-                height: 30px;
-              }
+            >span {
+              color: #000000;
+              font-size: 20px;
+            }
 
-              >img {
-                width: 40px;
-                height: 40px;
-                padding: 0 10px;
-                border-radius: 45px;
-              }
+            >div {
+              >span {
+                color: rgb(113, 113, 113);
 
-              >p {
-                margin: 3px 5px;
-              }
-
-              >button {
-                background-color: transparent;
-                border: none;
-              }
-              .order-name{
-
+                font-size: 18px;
               }
             }
           }
+        }
+        .handle-drag {
+          display: flex;
+          justify-content: end;
+          align-items: center;
+          width: 100%;
+          height: 46px;
 
-          >tr>td:nth-child(1) {
-            width: 40%;
+          .edit_img {
+            width: 27px;
+            height: 27px;
           }
+        }
 
-          >tr>td:nth-child(2) {
-            width: 15%;
-          }
 
-          >tr>td:nth-child(3) {
-            width: 20%;
-          }
-
-          >tr>td:nth-child(4) {
-            width: 10%;
-          }
-
-          >tr>td:nth-child(5) {
-            width: 15%;
-            min-width: 85px;
-          }
+        .del_img {
+          width: 20px;
+          height: 27px;
         }
       }
     }
@@ -378,58 +421,28 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
   
   
 <style lang="scss" scoped>
-.el-table {
+.demo-date-picker {
+  display: flex;
+  width: 100%;
+  padding: 0;
+  flex-wrap: wrap;
+}
 
-  .checked_state {
-    input {
-      display: none;
-    }
+.demo-date-picker .block {
+  // padding: 30px 0;
+  text-align: left;
+  border-right: solid 1px var(--el-border-color);
+  flex: 1;
+}
 
-    label {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border-radius: 5px;
-      border: 1px solid #8b6f6d;
-      box-sizing: border-box;
-      position: relative;
-      cursor: pointer;
-    }
+.demo-date-picker .block:last-child {
+  border-right: none;
+}
 
-    label::before {
-      display: inline-block;
-      content: " ";
-      width: 12px;
-      border: 2px solid #fff;
-      box-sizing: border-box;
-      height: 4px;
-      border-top: none;
-      border-right: none;
-      transform: rotate(-45deg);
-      top: 5px;
-      left: 3px;
-      position: absolute;
-      opacity: 0;
-    }
-
-    input:checked+label {
-      background: #8b6f6d;
-    }
-
-    input:checked+label::before {
-      opacity: 1;
-      transform: all 0.5s;
-    }
-  }
-
-  .edit_img {
-    width: 27px;
-    height: 27px;
-  }
-
-  .del_img {
-    width: 20px;
-    height: 27px;
-  }
+.demo-date-picker .demonstration {
+  display: block;
+  color: var(--el-text-color-secondary);
+  font-size: 14px;
+  // margin-bottom: 20px;
 }
 </style>

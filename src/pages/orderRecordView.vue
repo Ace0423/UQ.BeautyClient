@@ -32,11 +32,11 @@ onMounted(() => {
 
     .content {
         position: absolute;
-        top: 80px;
+        top: 0px;
         bottom: 0px;
         left: 0px;
         right: 0px;
-        margin: 2px 40px;
+        // margin: 2px 40px;
 
 
         >.nav {

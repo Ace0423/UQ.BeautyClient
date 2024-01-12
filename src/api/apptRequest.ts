@@ -12,7 +12,7 @@ const httpRequest = axios.create({
 });
 //-----------------------------------------會員
 /**獲取會員 */
-export const  getMemberListReq = (data: any) =>
+export const getMemberListReq = (data: any) =>
   getHttps(httpRequest, "/member/user", data);
 //-----------------------------------------預約
 //#region 預約
@@ -28,7 +28,7 @@ export const postEditApptDataReq = (data: any) =>
 /**更新預約狀態 */
 export const postEditApptStateReq = (data: any) =>
   postHttps(httpRequest, "/Booking/UpdateState", data);
-  //#endregion
+//#endregion
 //-----------------------------------------課程
 //#region 課程
 /**獲取課程資料 */
@@ -64,7 +64,7 @@ export const delCourseTypeReq = (data: any) =>
 /**刪除服務資訊 */
 export const delCourseDetailReq = (data: any) =>
   deleteHttps(httpRequest, "/Lesson/Detail/" + data);
-  //#endregion
+//#endregion
 //-----------------------------------------服務
 //#region 服務
 /**新增群組 */
@@ -106,7 +106,7 @@ export const updateGroupOrderReq = (data: any) =>
 //#endregion
 //-----------------------------------------Order
 /**獲取訂單資訊 */
-export const getOrderDetailReq = (Group: any, id: any) =>
+export const getOrderApptDetailReq = (Group: any, id: any) =>
   getHttps(httpRequest, "Lesson/Detail?id=" + Group + "&lid=" + id);
 
 //-----------------------------------------管理員
@@ -117,7 +117,7 @@ export const getManagerListReq = (id: any) =>
 export const addRestReq = (data: any) =>
   postHttps(httpRequest, "/manager/WorkingHours", data);
 
-  
+
 //-----------------------------------------結帳
 
 /**新增服務資訊 */
@@ -126,10 +126,16 @@ export const addCheckOutReq = (data: any) =>
 
 
 //-----------------------------------------訂單
-/**獲取群組 */
-export const getOrderListReq = (id: any, isList: any) =>
-  getHttps(httpRequest, "/Order/OrderList?oid=" + id + "&isList=" + isList + "&pageIndex=" + 0 + "&count=" + 0);
-  
+/**獲取訂單主表 */
+export const getOrderListReq = (id: any, startDate: any, endDate: any, isList: any) =>
+  getHttps(httpRequest, "/Order/OrderList?oid=" + id + "&startDate=" + startDate + "&endDate=" + endDate + "&isList=" + isList + "&pageIndex=" + 0 + "&count=" + 0);
+/**獲取訂單明細 */
+export const getOrderDetailReq = (id: any, isList: any) =>
+  getHttps(httpRequest, "/Order/OrderInfo?oid=" + id + "&isList=" + isList + "&pageIndex=" + 0 + "&count=" + 0);
+/**獲取付款方式 */
+export const getPayTypeListReq = (id: any) =>
+  getHttps(httpRequest, "/Company/CheckOutType?cotid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
+
 
 
 

@@ -116,6 +116,12 @@
                         </div>
                     </div>
                     <div class="link-bottom"></div>
+                    <div name="備註" class="info-memo" v-if="formInputRef.orderInfo.coMemo">
+                        <div>
+                            <span>{{ " 備註: " + formInputRef.orderInfo.coMemo }}</span>
+                        </div>
+                    </div>
+                    <div class="link-bottom" v-if="formInputRef.orderInfo.coMemo"></div>
                 </div>
             </div>
             <div class="footer">
@@ -459,6 +465,24 @@ watchEffect(() => {
                             justify-content: left;
                             font-family: STXihei;
                             color: #000000;
+                            font-weight: bold;
+                            font-size: 20px;
+                        }
+                    }
+                }
+                .info-memo {
+                    margin: 10px 0;
+
+                    >div {
+                        display: flex;
+                        justify-content: space-between;
+                        margin: 10px 0;
+
+                        >span {
+                            display: flex;
+                            justify-content: left;
+                            font-family: STXihei;
+                            color: #717171;
                             font-weight: bold;
                             font-size: 20px;
                         }

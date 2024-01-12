@@ -26,14 +26,14 @@
                           {{ bItem.timer + "分" }}
                           <span v-if="bItem.subList.length > 0"> {{ " ," + bItem.subList[0].name }}</span>
                         </span>
-                        <span v-for="(sglItem, index) in bItem.sgDiscountList" :key="sglItem">
+                        <span v-for="(sglItem, index) in bItem.sglDiscountList" :key="sglItem">
                           {{ sglItem.title }}
                         </span>
                       </div>
                       <div class="info-price"><span v-if="bItem.subList.length > 0">{{ "$" +
                         bItem.subList[0].price
                       }}</span>
-                        <span v-else>{{ "$" + bItem.sellPrice }}</span>
+                        <span v-else>{{ "$" + bItem.salePrice }}</span>
                       </div>
                     </div>
                     <div name="商品Item" v-if="bItem.ItemType == 2" class="info-service"
@@ -50,12 +50,12 @@
 
                           }}
                         </span>
-                        <span v-for="(sglItem, index) in bItem.sgDiscountList" :key="sglItem">
+                        <span v-for="(sglItem, index) in bItem.sglDiscountList" :key="sglItem">
                           {{ sglItem.title }}
                         </span>
                       </div>
                       <div class="info-price">
-                        <span>{{ "$" + bItem.sellPrice }}</span>
+                        <span>{{ "$" + bItem.salePrice }}</span>
                         <span class="fontBlack">{{ "x" + bItem.quantity }}</span>
                       </div>
                     </div>
@@ -259,9 +259,9 @@ function mathAllPercentFn(params: any) {
       const element = formInputRef.value.buyItemsList[i];
       let havePercent = false;
       let cMinus = 0;
-      if (element.sgDiscountList)
-        for (let j = 0; j < element.sgDiscountList.length; j++) {
-          const sdList = element.sgDiscountList[j];
+      if (element.sglDiscountList)
+        for (let j = 0; j < element.sglDiscountList.length; j++) {
+          const sdList = element.sglDiscountList[j];
           if (sdList.dType == 3) {
             havePercent = true;
           } else {
@@ -359,7 +359,7 @@ function getItemInfoFn(data: any) {
     odDetail.stock = curItemData.stock;
     odDetail.color = "";
   }
-  odDetail.sellPrice = odDetail.price;
+  odDetail.salePrice = odDetail.price;
   odDetail.stock = 0;
   odDetail.managerInfo = null;
   odDetail.quantity = 1;
@@ -374,9 +374,9 @@ function updataPrice() {
   for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
     const element = formInputRef.value.buyItemsList[i];
     if (element.ItemType == 2) {
-      priceTotal += element.sellPrice;
+      priceTotal += element.salePrice;
     } else if (element.ItemType == 1) {
-      priceTotal += element.sellPrice;
+      priceTotal += element.salePrice;
     }
   }
   formInputRef.value.priceTotal = priceTotal;
@@ -390,7 +390,7 @@ function getEditGdInfoFn(data: any) {
     if (element.Id == data.Id && element.ItemType == data.ItemType) {
       element.managerInfo = data.managerInfo;
       element.quantity = data.quantity;
-      element.sgDiscountList = data.sgDiscountList;
+      element.sglDiscountList = data.sglDiscountList;
       setSglDiscountItem(element);
       break;
     }
@@ -401,24 +401,24 @@ function getEditGdInfoFn(data: any) {
 function setSglDiscountItem(params: any) {
   let curPercent = 0;
   let curMinus = 0;
-  for (let i = 0; i < params.sgDiscountList.length; i++) {
-    const element = params.sgDiscountList[i];
+  for (let i = 0; i < params.sglDiscountList.length; i++) {
+    const element = params.sglDiscountList[i];
     if (element.dType == 3) {
       curPercent = Math.floor(params.price * element.discount);
     }
   }
-  for (let i = 0; i < params.sgDiscountList.length; i++) {
-    const element = params.sgDiscountList[i];
+  for (let i = 0; i < params.sglDiscountList.length; i++) {
+    const element = params.sglDiscountList[i];
     if (element.dType == 4) {
       curMinus = (element.discount);
     }
   }
   if (params.price > (curPercent + curMinus))
-    params.sellPrice = params.price - (curPercent + curMinus);
+    params.salePrice = params.price - (curPercent + curMinus);
   else
-    params.sellPrice = 0
+    params.salePrice = 0
 
-  return params.sellPrice;
+  return params.salePrice;
 }
 //刪除商品
 function delItemGdFn(data: any) {
@@ -441,7 +441,7 @@ function getEditSVInfoFn(data: any) {
     const element = formInputRef.value.buyItemsList[i];
     if (element.Id == data.Id && element.ItemType == data.ItemType) {
       element.managerInfo = data.managerInfo;
-      element.sgDiscountList = data.sgDiscountList;
+      element.sglDiscountList = data.sglDiscountList;
       setSglDiscountItem(element);
       break;
     }
@@ -504,6 +504,7 @@ function submitBtn() {
   apiData.COTotalPrice = formData.priceTotal;
   apiData.COAllDCList = formInputRef.value.allDiscount;
   apiData.COAmount = payAmountCpt.value;
+  console.log("apiData",apiData);
 
   /**新增結帳 */
   addCheckOutApi(apiData).then((res: any) => {

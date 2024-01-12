@@ -50,7 +50,8 @@
             </span>
             <div class="link-bottom"></div>
             <div class="msg-add" name="備註">
-              <el-input v-model="formInputRef.bookingMemo" maxlength="1000" placeholder="請輸入備註" show-word-limit type="text" />
+              <el-input v-model="formInputRef.bookingMemo" maxlength="1000" placeholder="請輸入備註" show-word-limit
+                type="text" />
             </div>
             <div class="link-bottom"></div>
           </div>
@@ -210,7 +211,7 @@ function submitBtn() {
     if (element.managerId == formInputRef.value.memberId) {
     }
   }
-console.log(888,formInputRef.value.courses);
+  console.log(888, formInputRef.value.courses);
 
   let courseListData = [];
   for (let i = 0; i < formInputRef.value.courses.length; i++) {
@@ -222,7 +223,7 @@ console.log(888,formInputRef.value.courses);
       bookingNo: "",
       price: element.price,
       discount: element.discount ? element.discount : 0,
-      subId: element.subList[0].subId,
+      subId: element.subList.length > 0 ? element.subList[0].subId : 0,
     });
   }
 

@@ -40,7 +40,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="memberInfo.name" label="顧客" min-width="30%" sortable />
-          <el-table-column prop="coTotalPrice" label="金額" min-width="10%" sortable />
+          <el-table-column prop="coAmount" label="金額" min-width="10%" sortable />
           <el-table-column label="" min-width="10%">
             <template #default="scope">
               <div class="handle-drag" @click="selectDataFn(scope.row)">

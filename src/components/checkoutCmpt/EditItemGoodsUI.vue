@@ -18,10 +18,10 @@
                     </div>
                     <div>
                         <span>折扣</span>
-                        <input v-if="formInputRef.sgDiscountList.length == 0" placeholder="請選擇折扣" type="text"
+                        <input v-if="formInputRef.sglDiscountList.length == 0" placeholder="請選擇折扣" type="text"
                             @click="showRdSgDcFn(true)" readonly />
                         <div v-else @click="showRdSgDcFn(true)">
-                            <div class="sgdc-item" v-for="(sdItem, index) in formInputRef.sgDiscountList" :key="sdItem">
+                            <div class="sgdc-item" v-for="(sdItem, index) in formInputRef.sglDiscountList" :key="sdItem">
                                 <span>{{ sdItem.title }}</span>
                             </div>
                         </div>
@@ -46,7 +46,7 @@
     <RdManagerUI v-if="showRdManagerRef" :selData="formInputRef.managerInfo" :getDataFn="getRdManagerFn"
         :showManagerUIFn="showManagerUIFn" />
 
-    <RdSgDiscountUI v-if="showRdSgDcUIRef" :itemData="selData" :selData="formInputRef.sgDiscountList" :getDataFn="getRdDcFn"
+    <RdSgDiscountUI v-if="showRdSgDcUIRef" :itemData="selData" :selData="formInputRef.sglDiscountList" :getDataFn="getRdDcFn"
         :showRdDFn="showRdSgDcFn" />
 </template>
   
@@ -76,16 +76,16 @@ let formInputRef: any = ref({
     name: "",
     managerInfo: { nameView: "" },
     quantity: 0,
-    sgDiscountList: [],
+    sglDiscountList: [],
 });
 
 onBeforeFn();
 function onBeforeFn() {
     formInputRef.value.name = props.selData.name;
     formInputRef.value.quantity = props.selData.quantity;
-    formInputRef.value.sgDiscountList = props.selData.sgDiscountList ? props.selData.sgDiscountList : [];
+    formInputRef.value.sglDiscountList = props.selData.sglDiscountList ? props.selData.sglDiscountList : [];
 
-    // formInputRef.value.sgDiscountList = props.selData.curSgDiscountList;
+    // formInputRef.value.sglDiscountList = props.selData.curSgDiscountList;
 }
 onMounted(() => {
     // console.log('onMounted');
@@ -106,24 +106,24 @@ function showRdSgDcFn(state: boolean) {
 }
 function getRdDcFn(data: any) {
     if (data == "clearAll") {
-        formInputRef.value.sgDiscountList = [];
+        formInputRef.value.sglDiscountList = [];
     } else {
         let curSgDiscountList = [];
-        for (let i = 0; i < formInputRef.value.sgDiscountList.length; i++) {
-            const element = formInputRef.value.sgDiscountList[i];
+        for (let i = 0; i < formInputRef.value.sglDiscountList.length; i++) {
+            const element = formInputRef.value.sglDiscountList[i];
             if (element.dType != data.dType) {
                 curSgDiscountList.push(element)
             }
         }
         curSgDiscountList.push(data);
-        formInputRef.value.sgDiscountList = curSgDiscountList;
+        formInputRef.value.sglDiscountList = curSgDiscountList;
     }
     showRdSgDcFn(false);
 }
 function submitBtn() {
     if (formInputRef.value.managerInfo.nameView != "")
         props.selData.managerInfo = formInputRef.value.managerInfo;
-    props.selData.sgDiscountList = formInputRef.value.sgDiscountList;
+    props.selData.sglDiscountList = formInputRef.value.sglDiscountList;
     props.selData.quantity = formInputRef.value.quantity;
 
 

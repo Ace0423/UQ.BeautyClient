@@ -82,11 +82,9 @@ function getGoodsFn(data: any) {
 
 function clickItem(item: any, id: number) {
   formInputRef.value.goods = item;
-  console.log("rdGoods", formInputRef.value.goods);
   props.getDataFn(formInputRef.value.goods);
 }
 function submitBtn() {
-  console.log("提交", formInputRef);
   props.getDataFn(formInputRef.value.goods);
 }
 </script>

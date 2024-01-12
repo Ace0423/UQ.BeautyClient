@@ -80,13 +80,10 @@ let formInputRef: any = ref({
 
 onBeforeFn();
 function onBeforeFn() {
-    // console.log('onBeforeFn', props.selData);
     formInputRef.value.name = props.selData.name;
     formInputRef.value.price = props.selData.price;
     formInputRef.value.managerInfo = props.selData.managerInfo ? props.selData.managerInfo : formInputRef.value.managerInfo;
     formInputRef.value.sgDiscountList = props.selData.sgDiscountList ? props.selData.sgDiscountList : [];
-
-    // formInputRef.value.sgDiscountList = props.selData.curSgDiscountList;
 
     if (props.selData.subList.length > 0) {
         formInputRef.value.subName = props.selData.subList[0].name
@@ -104,7 +101,6 @@ function showManagerUIFn(type: boolean) {
     showRdManagerRef.value = type;
 }
 function getRdManagerFn(data: any) {
-    console.log(data, "獲取getRadioSListFn");
     showManagerUIFn(false);
     formInputRef.value.managerInfo = data;
 }
@@ -113,7 +109,6 @@ function showRdSgDcFn(state: boolean) {
 }
 function getRdDcFn(data: any) {
     if (data == "clearAll") {
-        console.log("移除");
         formInputRef.value.sgDiscountList = [];
     } else {
         let curSgiscount = [];
@@ -132,9 +127,7 @@ function submitBtn() {
     if (formInputRef.value.managerInfo.nameView != "")
         props.selData.managerInfo = formInputRef.value.managerInfo;
     props.selData.sgDiscountList = formInputRef.value.sgDiscountList;
-
     props.getDataFn(props.selData)
-    console.log("提交");
 }
 function delBtn() {
     props.delDataFn(props.selData)

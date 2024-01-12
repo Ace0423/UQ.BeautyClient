@@ -43,7 +43,6 @@
   });
   
   function submitBtn() {
-    console.log("提交");
   }
   </script>
   

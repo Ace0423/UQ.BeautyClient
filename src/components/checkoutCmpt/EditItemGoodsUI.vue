@@ -81,7 +81,6 @@ let formInputRef: any = ref({
 
 onBeforeFn();
 function onBeforeFn() {
-    console.log('onBeforeFn', props.selData);
     formInputRef.value.name = props.selData.name;
     formInputRef.value.quantity = props.selData.quantity;
     formInputRef.value.sgDiscountList = props.selData.sgDiscountList ? props.selData.sgDiscountList : [];
@@ -99,7 +98,6 @@ function showManagerUIFn(type: boolean) {
     showRdManagerRef.value = type;
 }
 function getRdManagerFn(data: any) {
-    console.log(data, "獲取getRadioSListFn");
     showManagerUIFn(false);
     formInputRef.value.managerInfo = data;
 }
@@ -107,9 +105,7 @@ function showRdSgDcFn(state: boolean) {
     showRdSgDcUIRef.value = state;
 }
 function getRdDcFn(data: any) {
-    console.log("getRdDiscountFn", data);
     if (data == "clearAll") {
-        console.log("移除");
         formInputRef.value.sgDiscountList = [];
     } else {
         let curSgDiscountList = [];
@@ -132,7 +128,6 @@ function submitBtn() {
 
 
     props.getDataFn(props.selData)
-    console.log("提交");
 }
 function delBtn() {
     props.delDataFn(props.selData)

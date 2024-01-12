@@ -59,7 +59,6 @@ let formInputRef: any = ref({
 
 onBeforeFn();
 function onBeforeFn() {
-  console.log(props.selData.subList);
 }
 onMounted(() => {
   // console.log('onMounted');

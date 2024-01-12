@@ -111,7 +111,6 @@ watchEffect(() => {
 });
 
 function clickItem() {
-  // console.log(formInputRef.value.courses);
 }
 
 function submitBtn() {

@@ -81,7 +81,6 @@ function getMemberFn(data: any) {
 }
 
 function clickItem(item: any, id: number) {
-    console.log(item);
     formInputRef.value.memberItem = item;
     props.getDataFn(item)
 }

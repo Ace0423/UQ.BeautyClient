@@ -108,7 +108,6 @@ function getCourseFn(data: any) {
 
 function clickGroup() {
   let curCourse = formInputRef.value.service;
-  console.log(curCourse);
   if (curCourse.length > 0) {
     formInputRef.value.service = [];
   } else {
@@ -123,7 +122,6 @@ watchEffect(() => {
 });
 
 function clickItem() {
-  // console.log(formInputRef.value.courses);
 }
 
 function submitBtn() {

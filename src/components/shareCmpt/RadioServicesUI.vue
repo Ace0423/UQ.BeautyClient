@@ -89,8 +89,6 @@ function submitBtn() {
 
 function clickItem(item: any, id: number) {
   formInputRef.value.courses = item;
-  console.log("rdService", formInputRef.value.courses);
-
   if (formInputRef.value.courses.subList.length > 0) {
     showRdSubFn(true);
   } else {

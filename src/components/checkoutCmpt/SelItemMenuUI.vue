@@ -74,7 +74,6 @@ onMounted(() => {
 let itemTypeRef: any = ref(0);
 
 function submitBtn() {
-  console.log("提交");
 }
 function showItemTypeFn(type: number) {
   itemTypeRef.value = type;

@@ -138,12 +138,10 @@ let formInputRef: any = ref({
 let inputDiscount = ref("0");
 onBeforeFn();
 function onBeforeFn() {
-  // console.log(props.itemData);
   getSgDiscountFn(props.itemData.ItemType, props.itemData.Id);
 }
 function getSgDiscountFn(ItemType: number, Id: number) {
   getSgDiscountByItemApi(ItemType, Id).then(()=>{
-  console.log(sgDcListByItemRef.value);
   });
 }
 onMounted(() => {
@@ -151,7 +149,6 @@ onMounted(() => {
 });
 
 if (props.selData) {
-  // formInputRef.value.allDiscount = props.selData;
 }
 let filterSgDcData: any = computed(() =>
 sgDcListByItemRef.value.filter(getDiscountFn)
@@ -167,13 +164,11 @@ function _handleKeyPress(params: any) {
   if (num == "-1") return;
   switch (num) {
     case "S":
-      // console.log("鍵盤S", num);
       break;
     case "C":
       inputDiscount.value = "0";
       break;
     case "D":
-      // console.log("鍵盤D", num);
       if (inputDiscount.value != "0") {
         inputDiscount.value = inputDiscount.value.slice(0, -1);
       }
@@ -212,7 +207,6 @@ function _handleKeyPress(params: any) {
 }
 
 function resetSwitchFn() {
-  // console.log("switch");
   inputDiscount.value = "0";
 }
 

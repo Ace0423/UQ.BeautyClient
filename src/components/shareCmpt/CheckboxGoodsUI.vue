@@ -101,7 +101,6 @@ watchEffect(() => {
 });
 
 function clickItem(item: any, id: number) {
-  // console.log(formInputRef.value.goods);
 }
 
 function submitBtn() {

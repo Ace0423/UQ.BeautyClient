@@ -76,7 +76,6 @@ function getManagerFn(data: any) {
 }
 
 function clickItem(item: any, id: number) {
-    console.log(item);
     formInputRef.value.managerItem = item;
     props.getDataFn(item)
 }

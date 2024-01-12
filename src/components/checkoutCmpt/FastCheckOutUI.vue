@@ -225,7 +225,6 @@ onMounted(() => {
 });
 function getPayTypeListFn(id: any = 0) {
   getPayTypeListApi(id).then((res: any) => {
-    console.log(payTypeListRef.value);
   });
 }
 
@@ -297,7 +296,6 @@ function getRdDiscountFn(data: any) {
   }
   curAllDiscount.push(data);
   formInputRef.value.allDiscount = curAllDiscount;
-  console.log(111, formInputRef.value.allDiscount);
   showRdAllDiscountFn(false);
 }
 function delDiscount(type: any) {
@@ -387,7 +385,6 @@ function showEditGdInfoUIFn(state: any) {
   showEditItemGoodsUIRef.value = state;
 }
 function getEditGdInfoFn(data: any) {
-  // console.log("獲取商品項目", data);
   for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
     const element = formInputRef.value.buyItemsList[i];
     if (element.Id == data.Id && element.ItemType == data.ItemType) {
@@ -402,7 +399,6 @@ function getEditGdInfoFn(data: any) {
   showEditGdInfoUIFn(false);
 }
 function setSglDiscountItem(params: any) {
-  console.log(111, params.sellPrice);
   let curPercent = 0;
   let curMinus = 0;
   for (let i = 0; i < params.sgDiscountList.length; i++) {
@@ -426,7 +422,6 @@ function setSglDiscountItem(params: any) {
 }
 //刪除商品
 function delItemGdFn(data: any) {
-  // console.log("刪除商品項目", data);
   for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
     const element = formInputRef.value.buyItemsList[i];
     if (element.Id == data.Id && element.ItemType == data.ItemType) {
@@ -442,7 +437,6 @@ function showEditSVInfoUIFn(state: any) {
   showEditItemServiceUIRef.value = state;
 }
 function getEditSVInfoFn(data: any) {
-  // console.log("獲取服務項目", data);
   for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
     const element = formInputRef.value.buyItemsList[i];
     if (element.Id == data.Id && element.ItemType == data.ItemType) {
@@ -456,7 +450,6 @@ function getEditSVInfoFn(data: any) {
   showEditSVInfoUIFn(false);
 }
 function delItemFn(data: any) {
-  // console.log("刪除服務項目", data);
   for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
     const element = formInputRef.value.buyItemsList[i];
     if (element.Id == data.Id && element.ItemType == data.ItemType) {
@@ -470,10 +463,8 @@ function delItemFn(data: any) {
 function clickSvItem(params: any, id: any) {
   selctItemInfoRef.value = params;
   showEditSVInfoUIFn(true);
-  // console.log("selctItemInfoRef", selctItemInfoRef.value);
 }
 function clickPdItem(params: any, id: any) {
-  console.log("selctItemInfoRef", params);
   selctItemInfoRef.value = params;
   if (params.ItemType == 1) {
     showEditSVInfoUIFn(true);
@@ -490,7 +481,6 @@ function cancleGoodsFn(item: any, index: number) {
 
 function submitBtn() {
   console.log("結帳確認", formInputRef.value);
-
   ruleLists.ruleItem.name.value = formInputRef.value.memberInfo.userId;
   ruleLists.ruleItem.buyItem.value = formInputRef.value.buyItemsList.length;
 
@@ -515,8 +505,6 @@ function submitBtn() {
   apiData.COAllDCList = formInputRef.value.allDiscount;
   apiData.COAmount = payAmountCpt.value;
 
-  console.log("現金收款", apiData);
-
   /**新增結帳 */
   addCheckOutApi(apiData).then((res: any) => {
     if (res.state == 1) {
@@ -528,7 +516,6 @@ function submitBtn() {
 }
 
 function changePayType() {
-  // console.log(formInputRef.value.subType);
   // formInputRef.value.subType = formInputRef.value.subType == 0 ? 1 : 0;
 }
 //#region 規則

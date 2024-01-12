@@ -111,7 +111,6 @@ watchEffect(() => {
 
 
 function selectDataFn(params: any) {
-  console.log("params", params);
   selItem = params;
   showOrderInfoFn(true);
 }
@@ -128,7 +127,6 @@ const onDeleteAlertBtn = (state: any, id: number) => {
     //   getServiceDetailApi(0);
     // });
   } else {
-    console.log("取消刪除");
   }
   selItem.value = [];
 };
@@ -139,8 +137,6 @@ function dateChange() {
   let end: Date = formInputRef.value.datePicker[1]
   let startDate: string = start.getFullYear() + "-" + start.getMonth() + 1 + "-" + formatZeroDate(start.getDate());
   let endDate: string = end.getFullYear() + "-" + end.getMonth() + 1 + "-" + formatZeroDate(end.getDate());
-  console.log("startDate", startDate);
-  console.log("endDate", endDate);
 
   getOrderListApi(0, startDate, endDate);
 }

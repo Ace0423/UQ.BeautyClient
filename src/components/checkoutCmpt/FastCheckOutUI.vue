@@ -31,9 +31,9 @@
                         </span>
                       </div>
                       <div class="info-price"><span v-if="bItem.subList.length > 0">{{ "$" +
-                        bItem.subList[0].price
+                        bItem.salesPrice
                       }}</span>
-                        <span v-else>{{ "$" + bItem.salePrice }}</span>
+                        <span v-else>{{ "$" + bItem.salesPrice }}</span>
                       </div>
                     </div>
                     <div name="商品Item" v-if="bItem.ItemType == 2" class="info-service"
@@ -55,7 +55,7 @@
                         </span>
                       </div>
                       <div class="info-price">
-                        <span>{{ "$" + bItem.salePrice }}</span>
+                        <span>{{ "$" + bItem.salesPrice }}</span>
                         <span class="fontBlack">{{ "x" + bItem.quantity }}</span>
                       </div>
                     </div>
@@ -233,13 +233,14 @@ let payAmountCpt = computed(() => {
   let dcPrice = 0;
   for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
     const element = formInputRef.value.allDiscount[i];
-    if (element.dType == 1) {
-      dcPrice += Math.floor(mathAllPercentFn(element) * curPrice)
+    if (element.dType == 1 || element.dType == 3) {
+      dcPrice += Math.floor(mathAllPercentFn(element))
     } else {
       dcPrice += element.discount
     }
   }
-  let amount = (curPrice - dcPrice) < 0 ? 0 : (curPrice - dcPrice)
+
+  let amount = (curPrice < dcPrice) ? 0 : (curPrice - dcPrice)
   return amount
 });
 let allDCListCpt = computed(() => {
@@ -359,7 +360,7 @@ function getItemInfoFn(data: any) {
     odDetail.stock = curItemData.stock;
     odDetail.color = "";
   }
-  odDetail.salePrice = odDetail.price;
+  odDetail.salesPrice = odDetail.price;
   odDetail.stock = 0;
   odDetail.managerInfo = null;
   odDetail.quantity = 1;
@@ -374,9 +375,9 @@ function updataPrice() {
   for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
     const element = formInputRef.value.buyItemsList[i];
     if (element.ItemType == 2) {
-      priceTotal += element.salePrice;
+      priceTotal += element.salesPrice;
     } else if (element.ItemType == 1) {
-      priceTotal += element.salePrice;
+      priceTotal += element.salesPrice;
     }
   }
   formInputRef.value.priceTotal = priceTotal;
@@ -414,11 +415,11 @@ function setSglDiscountItem(params: any) {
     }
   }
   if (params.price > (curPercent + curMinus))
-    params.salePrice = params.price - (curPercent + curMinus);
+    params.salesPrice = params.price - (curPercent + curMinus);
   else
-    params.salePrice = 0
+    params.salesPrice = 0
 
-  return params.salePrice;
+  return params.salesPrice;
 }
 //刪除商品
 function delItemGdFn(data: any) {
@@ -504,7 +505,7 @@ function submitBtn() {
   apiData.COTotalPrice = formData.priceTotal;
   apiData.COAllDCList = formInputRef.value.allDiscount;
   apiData.COAmount = payAmountCpt.value;
-  console.log("apiData",apiData);
+  console.log("apiData", apiData);
 
   /**新增結帳 */
   addCheckOutApi(apiData).then((res: any) => {

@@ -83,6 +83,7 @@ onBeforeFn();
 function onBeforeFn() {
     formInputRef.value.name = props.selData.name;
     formInputRef.value.quantity = props.selData.quantity;
+    formInputRef.value.managerInfo = props.selData.managerInfo ? props.selData.managerInfo : formInputRef.value.managerInfo;
     formInputRef.value.sglDiscountList = props.selData.sglDiscountList ? props.selData.sglDiscountList : [];
 
     // formInputRef.value.sglDiscountList = props.selData.curSgDiscountList;

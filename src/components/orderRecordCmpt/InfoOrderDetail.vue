@@ -103,7 +103,7 @@
                         <div v-for="(dItem, index) in formInputRef.orderInfo.coAllDCList">
                             <span>{{ dItem.title }}</span>
                             <span v-if="dItem.dType == 1">
-                                {{ "($ - " + (formInputRef.orderInfo.coTotalPrice * dItem.discount) + " ) " }}</span>
+                                {{ "($ - " + mathAllPercentFn(dItem) + " ) " }}</span>
                             <span v-if="dItem.dType == 2">
                                 {{ "($ - " + dItem.discount + " ) " }}</span>
                         </div>
@@ -162,6 +162,33 @@ onMounted(() => {
 watchEffect(() => {
 
 });
+
+//計算全單折扣排除單品折扣(%數折扣)
+function mathAllPercentFn(params: any) {
+    let curP = 0;
+    if (params.dType == 1) {
+        for (let i = 0; i < formInputRef.value.orderInfo.detailList.length; i++) {
+            const element = formInputRef.value.orderInfo.detailList[i];
+            let havePercent = false;
+            let cMinus = 0;
+            if (element.sglDiscountList)
+                for (let j = 0; j < element.sglDiscountList.length; j++) {
+                    const sdList = element.sglDiscountList[j];
+                    if (sdList.dType == 3) {
+                        havePercent = true;
+                    } else {
+                        cMinus += sdList.discount;
+                    }
+                }
+
+            //無單品折扣
+            if (!havePercent) {
+                curP += Math.floor(params.discount * (element.price - cMinus))
+            }
+        }
+    }
+    return curP
+}
 </script>
   
 <style scoped lang="scss">
@@ -470,6 +497,7 @@ watchEffect(() => {
                         }
                     }
                 }
+
                 .info-memo {
                     margin: 10px 0;
 
@@ -482,7 +510,7 @@ watchEffect(() => {
                             display: flex;
                             justify-content: left;
                             font-family: STXihei;
-                            color: #717171;
+                            color: #000000;
                             font-weight: bold;
                             font-size: 20px;
                         }

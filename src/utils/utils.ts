@@ -238,3 +238,31 @@ let upperChars = [
 export const mathDiscount = (data: any) => {
   return (100 - parseInt(data)).toString().replace("0", "")
 };
+
+
+export const TopUpLimitDay: any = [
+  {
+      value: 1,
+      label: '1周',
+  },
+  {
+      value: 2,
+      label: '2周',
+  },
+  {
+      value: 3,
+      label: '3周',
+  },
+  {
+      value: 4,
+      label: '1月',
+  },
+  {
+      value: 5,
+      label: '3月',
+  },
+  {
+      value: 6,
+      label: '6月',
+  }
+]

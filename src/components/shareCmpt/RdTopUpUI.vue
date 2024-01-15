@@ -1,9 +1,9 @@
 <template>
-  <div class="popup-radioGoodsUI" v-on:click.self="showGoodsUIFn(0)">
+  <div class="popup-rdTopUpUI" v-on:click.self="showTopUpsUIFn(0)">
     <div class="popup-content">
       <div class="header-content">
         <span>儲值卡</span>
-        <img :src="icon_closeX" v-on:click="showGoodsUIFn(0)" />
+        <img :src="icon_closeX" v-on:click="showTopUpsUIFn(0)" />
       </div>
       <div class="main-content">
         <input placeholder="搜尋" v-model="formInputRef.search" />
@@ -14,13 +14,14 @@
                 v-model="formInputRef.courses" @click="clickItem(item, item.pId)" />
               <!-- <label :for="'RadioTopUps_' + item.SId"></label> -->
               <div class="title-input">
-                <span value="{{item}}" name="{{item.pName}}">{{
-                  item.pName
+                <span value="{{item}}" name="{{item.tuTitle}}">{{
+                  item.tuTitle
                 }}</span>
-                <span class="pCode-msg" value="{{item}}" name="{{item.pCode}}">{{ item.pCode }}</span>
+                <span class="limitday-msg" v-if="item.tuLimitType == 0">{{ "不限期" }}</span>
+                <span class="limitday-msg" v-else>{{ getLimitDay(item) }}</span>
               </div>
               <div class="price-input">
-                <span>{{ "$" + item.price }}</span>
+                <span>{{ "$" + item.tuViewPrice }}</span>
               </div>
             </label>
           </div>
@@ -41,6 +42,7 @@ import { usePriceStore } from "@/stores/priceStore";
 import Alert from "../alertCmpt";
 import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
 import { useCounterStore } from "@/stores/counter";
+import { TopUpLimitDay } from "@/utils/utils";
 
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
@@ -49,7 +51,7 @@ const { getTopUpCardList, editTopUpCardInfo } = priceStore;
 const { topUpCardList } = storeToRefs(priceStore);
 
 const props = defineProps<{
-  showGoodsUIFn: Function;
+  showTopUpsUIFn: Function;
   getDataFn: Function;
   selData: any;
   //   formInfo: any;
@@ -67,7 +69,7 @@ const getTopUpCardData = ((id: any) => {
   getTopUpCardList(allTopUpCard)
     .then((res) => {
       if (res.table) {
-        
+
       }
       if (res.state == 2) {
         Alert.warning(showErrorMsg(res.msg), 2000);
@@ -103,9 +105,9 @@ let filterTopUpData: any = computed(() =>
 );
 function getTopUpFn(data: any) {
   return (
-    data.display &&
+    data.tuType == 1 &&
     (!formInputRef.value.search ||
-      data.pName
+      data.tuTitle
         .toLowerCase()
         .includes(formInputRef.value.search.toLowerCase()))
   );
@@ -120,10 +122,24 @@ function clickItem(item: any, id: number) {
 function submitBtn() {
   props.getDataFn(formInputRef.value.TopUps);
 }
+
+function getLimitDay(params: any) {
+  let curLimitDay = "不限期"
+  if (params.tuLimitType != 0) {
+    let limitDays = TopUpLimitDay;
+    for (let i = 0; i < limitDays.length; i++) {
+      const element = limitDays[i];
+      if (params.tuLimitDay == element.value) {
+        curLimitDay = element.label;
+      }
+    }
+  }
+  return curLimitDay
+}
 </script>
 
 <style scoped lang="scss">
-.popup-radioGoodsUI {
+.popup-rdTopUpUI {
   position: fixed;
   top: 0;
   left: 0;
@@ -325,7 +341,7 @@ function submitBtn() {
               display: grid;
               margin-left: 10px;
 
-              .pCode-msg {
+              .limitday-msg {
                 font-size: 15px;
               }
             }

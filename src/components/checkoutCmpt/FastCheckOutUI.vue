@@ -59,6 +59,25 @@
                         <span class="fontBlack">{{ "x" + bItem.quantity }}</span>
                       </div>
                     </div>
+                    <div name="儲值卡Item" v-if="bItem.ItemType == 3" class="info-service"
+                      @click="clickPdItem(bItem, bItem.Id)">
+                      <div class="info-img"></div>
+                      <div class="info-name">
+                        <span class="fontBlack">{{ bItem.name }}</span>
+                        <span>
+                          <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , " }}</span>
+                          {{ getLimitDay(bItem) + " , " +"面額$ "+ bItem.tuViewPrice }}
+
+                        </span>
+                        <span v-for="(sglItem, index) in bItem.sglDiscountList" :key="sglItem">
+                          {{ sglItem.title }}
+                        </span>
+                      </div>
+                      <div class="info-price">
+                        <span>{{ "$" + bItem.salesPrice }}</span>
+                        <span class="fontBlack">{{ "x" + bItem.quantity }}</span>
+                      </div>
+                    </div>
                     <span class="p_error" v-if="!bItem.managerInfo">請選擇服務人員</span>
                   </div>
                 </div>
@@ -166,6 +185,8 @@
     :getDataFn="getEditSVInfoFn" :delDataFn="delItemFn" />
   <EditItemGoodsUI v-if="showEditItemGoodsUIRef" :selData="selctItemInfoRef" :showUIFn="showEditGdInfoUIFn"
     :getDataFn="getEditGdInfoFn" :delDataFn="delItemGdFn" />
+  <EditItemTopUpUI v-if="showEditItemTopUpUIRef" :selData="selctItemInfoRef" :showUIFn="showEditTuInfoUIFn"
+    :getDataFn="getEditTuInfoFn" :delDataFn="delItemGdFn" />
 </template>
 
 <script setup lang="ts">
@@ -175,7 +196,7 @@ import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
 import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
 import { useApptStore } from "@/stores/apptStore";
 import { storeToRefs } from "pinia";
-import { checkVerify_all } from "@/utils/utils";
+import { TopUpLimitDay, checkVerify_all } from "@/utils/utils";
 const props = defineProps<{
   showUIFn: Function;
   //   formInfo: any;
@@ -186,6 +207,7 @@ let showAddItemMenuUIRef = ref(false);
 let showRdAllDiscountUIRef = ref(false);
 let showEditItemServiceUIRef = ref(false);
 let showEditItemGoodsUIRef = ref(false);
+let showEditItemTopUpUIRef = ref(false);
 let selctItemInfoRef = ref(null);
 
 let store = useApptStore();
@@ -360,6 +382,24 @@ function getItemInfoFn(data: any) {
     odDetail.stock = curItemData.stock;
     odDetail.color = "";
   }
+  if (data.selectTopUp) {
+    curItemData = data.selectTopUp
+
+    odDetail.ItemType = 3;
+    odDetail.Id = curItemData.tuId;
+    odDetail.name = curItemData.tuTitle;
+    odDetail.nickName = "";
+    odDetail.tuLimitType = curItemData.tuLimitType;
+    odDetail.timer = curItemData.tuLimitDay;
+    odDetail.subId = 0;
+    odDetail.subList = [];
+    odDetail.stock = 0;
+    odDetail.color = curItemData.color;
+    odDetail.price = curItemData.tuViewPrice;
+    odDetail.tuViewPrice = curItemData.tuViewPrice;
+
+  }
+
   odDetail.salesPrice = odDetail.price;
   odDetail.stock = 0;
   odDetail.managerInfo = null;
@@ -385,7 +425,26 @@ function updataPrice() {
 function showEditGdInfoUIFn(state: any) {
   showEditItemGoodsUIRef.value = state;
 }
+
+function showEditTuInfoUIFn(state: any) {
+  showEditItemTopUpUIRef.value = state;
+}
+
 function getEditGdInfoFn(data: any) {
+  for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
+    const element = formInputRef.value.buyItemsList[i];
+    if (element.Id == data.Id && element.ItemType == data.ItemType) {
+      element.managerInfo = data.managerInfo;
+      element.quantity = data.quantity;
+      element.sglDiscountList = data.sglDiscountList;
+      setSglDiscountItem(element);
+      break;
+    }
+  }
+  updataPrice();
+  showEditGdInfoUIFn(false);
+}
+function getEditTuInfoFn(data: any) {
   for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
     const element = formInputRef.value.buyItemsList[i];
     if (element.Id == data.Id && element.ItemType == data.ItemType) {
@@ -469,7 +528,9 @@ function clickPdItem(params: any, id: any) {
   selctItemInfoRef.value = params;
   if (params.ItemType == 1) {
     showEditSVInfoUIFn(true);
-  } else {
+  } else if (params.ItemType == 2) {
+    showEditGdInfoUIFn(true);
+  }else if (params.ItemType == 3) {
     showEditGdInfoUIFn(true);
   }
 }
@@ -517,6 +578,19 @@ function submitBtn() {
   });
 }
 
+function getLimitDay(params: any) {
+  let curLimitDay = "不限期"
+  if (params.tuLimitType != 0) {
+    let limitDays = TopUpLimitDay;
+    for (let i = 0; i < limitDays.length; i++) {
+      const element = limitDays[i];
+      if (params.timer == element.value) {
+        curLimitDay = element.label;
+      }
+    }
+  }
+  return curLimitDay
+}
 function changePayType() {
   // formInputRef.value.subType = formInputRef.value.subType == 0 ? 1 : 0;
 }

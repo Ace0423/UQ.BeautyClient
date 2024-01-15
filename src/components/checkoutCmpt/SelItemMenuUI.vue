@@ -40,7 +40,7 @@
         </RadioGoodsUI>
       </div>
       <div class="service-content" v-show="itemTypeRef == 3">
-        <RdTopUpUI :showGoodsUIFn="showItemTypeFn" :selData="formInputRef.selectGood" :getDataFn="getRdGoodsFn">
+        <RdTopUpUI :showTopUpsUIFn="showItemTypeFn" :selData="formInputRef.selectTopUp" :getDataFn="getRdTopUpsFn">
         </RdTopUpUI>
       </div>
 
@@ -65,6 +65,7 @@ let formInputRef: any = ref({
   name: "",
   selectService: null,
   selectGood: null,
+  selectTopUp: null,
 });
 onBrfore();
 function onBrfore() {
@@ -90,6 +91,11 @@ function getRdServiceFn(data: any) {
 }
 function getRdGoodsFn(data: any) {
   formInputRef.value.selectGood = data;
+  props.getDataFn(formInputRef.value);
+  showItemTypeFn(0);
+}
+function getRdTopUpsFn(data: any) {
+  formInputRef.value.selectTopUp = data;
   props.getDataFn(formInputRef.value);
   showItemTypeFn(0);
 }

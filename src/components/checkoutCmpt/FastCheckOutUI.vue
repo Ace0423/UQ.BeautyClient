@@ -418,6 +418,8 @@ function updataPrice() {
       priceTotal += element.salesPrice;
     } else if (element.ItemType == 1) {
       priceTotal += element.salesPrice;
+    }else if (element.ItemType == 3) {
+      priceTotal += element.salesPrice;
     }
   }
   formInputRef.value.priceTotal = priceTotal;

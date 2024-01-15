@@ -774,13 +774,11 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+
   //#endregion
 
 
   //#region  訂單
-
-
-
   let orderList: any = ref([]);
   /**獲取訂單主表 */
   const getOrderListApi = async (id: any = 0, startDate: any = "", endDate: any = "", isList: any = 0) => {

@@ -16,10 +16,10 @@
               <span>商品</span>
               <img :src="icon_right_arrow" />
             </div>
-            <!-- <div v-on:click="showItemTypeFn(3)">
+            <div v-on:click="showItemTypeFn(3)">
               <span>儲值卡</span>
               <img :src="icon_right_arrow" />
-            </div> -->
+            </div>
             <!-- <div v-on:click="showItemTypeFn(4)">
               <span>計次券</span>
               <img :src="icon_right_arrow" />
@@ -38,6 +38,10 @@
       <div class="service-content" v-show="itemTypeRef == 2">
         <RadioGoodsUI :showGoodsUIFn="showItemTypeFn" :selData="formInputRef.selectGood" :getDataFn="getRdGoodsFn">
         </RadioGoodsUI>
+      </div>
+      <div class="service-content" v-show="itemTypeRef == 3">
+        <RdTopUpUI :showGoodsUIFn="showItemTypeFn" :selData="formInputRef.selectGood" :getDataFn="getRdGoodsFn">
+        </RdTopUpUI>
       </div>
 
       <div class="service-content" v-show="itemTypeRef == 3"></div>

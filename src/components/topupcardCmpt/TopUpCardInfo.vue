@@ -79,7 +79,8 @@ const handStopCardBtn = (() => {
         tuddPrice: infoDate.data.tuddPrice,
         tuddType: infoDate.data.tuddType,
         utShared: infoDate.data.utSharedv,
-        tuTitle: infoDate.data.tuTitle
+        tuTitle: infoDate.data.tuTitle,
+        tuColor: infoDate.data.tuColor
     }
     for (let index = 0; index < infoDate.data.topUpCardFreeProducts.length; index++) {
         data.topUpCardFreeProducts.push(infoDate.data.topUpCardFreeProducts[index].pid);

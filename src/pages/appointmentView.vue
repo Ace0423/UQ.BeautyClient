@@ -356,7 +356,6 @@ function onFirstTime() {
   // 獲取美容師
   getBeauticianApi(0);
   getApptInfoFn(new Date().getFullYear(), new Date().getMonth() + 1);
-  // getRestList();
 }
 onMounted(() => {
   // resetApptTable();
@@ -430,7 +429,7 @@ let filterApptData: any = computed(() => {
 
 let changeMainTab = (index: number) => {
   mainTabIndexRef.value = index;
-  changeWeekToday(1);
+  changeWeekToday(2);
 };
 //刪除課程
 let delCourseListHdr = (index: number, itemId: string) => {
@@ -847,8 +846,11 @@ function addAddReserveBtn() {
 }
 
 function changeWeekToday(data: number) {
+  showTuiApptRef.value = false;
   showWeekBoxRef.value = data;
   tuiOptions.tuiType = data;
+  getApptInfoFn(currentYear.value, currentMonth.value + 1);
+  // showTuiApptRef.value = true;
 }
 
 function dateBtn(btn: any, date: any) {

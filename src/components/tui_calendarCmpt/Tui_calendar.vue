@@ -213,7 +213,6 @@ export default {
       }
     },
     loadTuiOptions(data) {
-      console.log(666, data);
       if (window.cal) {
         var viewName = "";
         var options = window.cal.getOptions();
@@ -688,7 +687,6 @@ export default {
           );
         },
         allday: function (schedule) {
-          console.log(333);
           return getTimeTemplate(schedule, true);
         },
         time: function (schedule) {

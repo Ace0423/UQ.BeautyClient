@@ -108,7 +108,7 @@ function getRdTopUpsFn(data: any) {
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 3;
+  z-index: 1003;
   background: rgba(80, 80, 80, 0.8);
 
   display: flex;
@@ -170,7 +170,7 @@ function getRdTopUpsFn(data: any) {
       display: block;
       height: calc(100% - 40px - 65px);
       width: 90%;
-      margin-left:5%;
+      margin-left: 5%;
 
       >div {
         height: 100%;

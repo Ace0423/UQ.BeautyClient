@@ -46,8 +46,8 @@
     <RdManagerUI v-if="showRdManagerRef" :selData="formInputRef.managerInfo" :getDataFn="getRdManagerFn"
         :showManagerUIFn="showManagerUIFn" />
 
-    <RdSgDiscountUI v-if="showRdSgDcUIRef" :itemData="selData" :selData="formInputRef.sglDiscountList" :getDataFn="getRdDcFn"
-        :showRdDFn="showRdSgDcFn" />
+    <RdSgDiscountUI v-if="showRdSgDcUIRef" :itemData="selData" :selData="formInputRef.sglDiscountList"
+        :getDataFn="getRdDcFn" :showRdDFn="showRdSgDcFn" />
 </template>
   
 <script setup lang="ts">
@@ -183,7 +183,7 @@ const ruleLists: any = reactive({
     left: 0;
     bottom: 0;
     right: 0;
-    z-index: 3;
+    z-index: 1003;
     background: rgba(80, 80, 80, 0.8);
 
     display: flex;

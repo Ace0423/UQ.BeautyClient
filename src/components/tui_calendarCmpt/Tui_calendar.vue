@@ -768,12 +768,14 @@ export default {
           //icon
           // html.push('<span class="calendar-font-icon ic-location-b"></span>');
         }
-
+        console.log("tui", schedule.raw.bookingMemo);
         if (this_.proptuiOptions.tuiType == 0) {
           //月曆
           html.push(" " + schedule.title);
         } else {
           //週曆-日曆
+          if (schedule.raw.bookingMemo != "")
+            html.push("(" + schedule.raw.bookingMemo + ")")
           html.push("<br>" + "<span>" +
             schedule.raw.memberInfo.nameView +
             "<br>" +

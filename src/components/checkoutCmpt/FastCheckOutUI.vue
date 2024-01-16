@@ -66,7 +66,7 @@
                         <span class="fontBlack">{{ bItem.name }}</span>
                         <span>
                           <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , " }}</span>
-                          {{ getLimitDay(bItem) + " , " +"面額$ "+ bItem.tuViewPrice }}
+                          {{ getLimitDay(bItem) + " , " + "面額$ " + bItem.tuViewPrice }}
 
                         </span>
                         <span v-for="(sglItem, index) in bItem.sglDiscountList" :key="sglItem">
@@ -90,11 +90,11 @@
               {{ ruleItem.buyItem.warn }}
             </span>
             <div class="link-bottom"></div>
-            <div class="msg-add" name="備註">
+            <div name="備註" class="msg-add">
               <el-input v-model="formInputRef.memo" maxlength="1000" placeholder="請輸入備註" show-word-limit type="text" />
             </div>
             <div class="link-bottom"></div>
-            <div class="other-item" name="折扣按鈕">
+            <div name="其他項目" class="other-item">
               <span>其他項目</span>
               <div>
                 <div class="discount-link">
@@ -120,7 +120,7 @@
         </div>
         <div class="right-main">
           <div>
-            <div class="customer-btn" v-on:click="showMemberUIFn(true)">
+            <div name="顧客" class="customer-btn" v-on:click="showMemberUIFn(true)">
               <img class="customer-img" :src="icon_customer" />
               <div>
                 <span>{{ formInputRef.memberInfo.nameView }}</span>
@@ -199,6 +199,7 @@ import { storeToRefs } from "pinia";
 import { TopUpLimitDay, checkVerify_all } from "@/utils/utils";
 const props = defineProps<{
   showUIFn: Function;
+  selData: any;
   //   formInfo: any;
   //   addDetailTypeID?: any;
 }>();
@@ -212,7 +213,7 @@ let selctItemInfoRef = ref(null);
 
 let store = useApptStore();
 let { payTypeListRef } = storeToRefs(store);
-let { addCheckOutApi, getPayTypeListApi } = store;
+let { addCheckOutApi, getPayTypeListApi, getApptDataByUserApi } = store;
 
 let formInputRef: any = ref({
   memberInfo: { nameView: "顧客", phone: "請選擇顧客" },
@@ -241,6 +242,18 @@ let subTab = [
 onBeforeFn();
 function onBeforeFn() {
   getPayTypeListFn()
+
+  if (props.selData == '快速結帳') {
+    console.log(111, props.selData);
+
+  } else {
+    console.log(111, props.selData);
+    formInputRef.value.memberInfo = props.selData.memberInfo;
+    getApptDataByUserApi(props.selData.userId, props.selData.dateBooking).then((res: any) => {
+      console.log("getApptDataByUserApi", res);
+
+    });
+  }
 }
 onMounted(() => {
   // console.log('onMounted');
@@ -418,7 +431,7 @@ function updataPrice() {
       priceTotal += element.salesPrice;
     } else if (element.ItemType == 1) {
       priceTotal += element.salesPrice;
-    }else if (element.ItemType == 3) {
+    } else if (element.ItemType == 3) {
       priceTotal += element.salesPrice;
     }
   }
@@ -523,6 +536,8 @@ function delItemFn(data: any) {
   showEditSVInfoUIFn(false);
 }
 function clickSvItem(params: any, id: any) {
+  console.log("clickSvItem", params);
+
   selctItemInfoRef.value = params;
   showEditSVInfoUIFn(true);
 }
@@ -532,7 +547,7 @@ function clickPdItem(params: any, id: any) {
     showEditSVInfoUIFn(true);
   } else if (params.ItemType == 2) {
     showEditGdInfoUIFn(true);
-  }else if (params.ItemType == 3) {
+  } else if (params.ItemType == 3) {
     showEditGdInfoUIFn(true);
   }
 }
@@ -660,7 +675,7 @@ let { ruleItem } = toRefs(ruleLists);
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 3;
+  z-index: 1003;
   background: rgba(255, 255, 255, 0.5);
   display: flex;
   align-items: center;

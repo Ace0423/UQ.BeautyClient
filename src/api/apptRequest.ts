@@ -19,6 +19,9 @@ export const getMemberListReq = (data: any) =>
 /**獲取預約 */
 export const getApptDataRequest = (data: any) =>
   getHttps(httpRequest, "/Booking" + data, data);
+/**獲取預約 */
+export const getApptDataByUserReq = (data: any) =>
+  getHttps(httpRequest, "/Booking/BookingByUser" + data, data);
 /**新增預約 */
 export const postAddApptDataReq = (data: any) =>
   postHttps(httpRequest, "/Booking/Booking", data);

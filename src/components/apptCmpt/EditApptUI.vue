@@ -159,8 +159,8 @@ onBefore();
 function onBefore() {
   getManagerListApi(0, 5);
   getApptDataApi(props.oldSelList.bookingNo).then((res: any) => {
-    console.log(999,res);
-    
+    console.log(999, res);
+
     //格式化
     res.serviceInfo[0].subList = [];
     if (res.subList)
@@ -174,7 +174,7 @@ function onBefore() {
     formInputRef.value.memberId = res.userId;
     formInputRef.value.selDate = res.dateBooking.split("T")[0];
     formInputRef.value.selSId = res.lessonId;
-    formInputRef.value.bookingMemo = res.bookingMemo ? "" : res.bookingMemo;
+    formInputRef.value.bookingMemo = res.bookingMemo ? res.bookingMemo : "";
     formInputRef.value.courses = res.serviceInfo;
     formInputRef.value.bookingNo = res.bookingNo;
     formInputRef.value.memberInfo = res.memberInfo;
@@ -268,6 +268,7 @@ function submitBtn() {
 
   let editApptDate = {
     bookingNo: props.oldSelList.bookingNo,
+    bkListNo: props.oldSelList.bkListNo,
     userId: formInputRef.value.memberInfo.userId,
     lessonId: curService.sId,
     timer: curService.servicesTime,

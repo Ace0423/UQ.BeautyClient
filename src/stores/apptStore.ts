@@ -8,6 +8,7 @@ import {
   delCourseTypeReq,
   deleteServiceDetailReq,
   deleteServiceGroupReq,
+  getApptDataByUserReq,
   getApptDataRequest,
   getBeauticianReq,
   getCourseDetailReq,
@@ -486,6 +487,23 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+  /**獲取預約資料 */
+  const getApptDataByUserApi = async (UId: any, bTime: any) => {
+    try {
+      let data = "?UId=" + UId + "&bTime=" + bTime + "&pageIndex=0&count=0";
+      let res: any = await getApptDataByUserReq(data).then((res: any) => {
+        //插入預約
+        if (res.data.data) {
+          return res.data.data.table;
+        }
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log("error");
+      console.log(error);
+    }
+  };
   /**新增預約資料 */
   const postAddApptDataApi = async (data: any) => {
     try {
@@ -874,6 +892,7 @@ export const useApptStore = defineStore("apptStore", () => {
     tuiBookingListRef,
     beauticianList,
     timeGroup,
+    getApptDataByUserApi,
     //--------------------goods
     goodsTypesListValueRef,
     goodsTypesListRef,

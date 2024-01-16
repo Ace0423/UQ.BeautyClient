@@ -57,16 +57,13 @@
             <div class="content-box">
               <p>{{ props.selItemData.timePeriod }}</p>
               <div class="info-service">
-                <img class="head-shot" :src="Icon" />
+                <img class="head-shot" />
                 <div>
                   <span>{{ props.selItemData.serviceInfo[0].name }}</span>
                   <span>
-                    {{
-                      managerCpt.nameView +
-                      "," +
-                      props.selItemData.timer +
-                      "分"
-                    }}
+                    {{managerCpt.nameView}}
+                    <span v-if="props.selItemData.subList">{{ "," + props.selItemData.subList.servicesTime +"分 ,"+props.selItemData.subList.name }}</span>
+                    <span v-else>{{ "," + props.selItemData.timer +"分" }}</span>
                   </span>
                 </div>
               </div>
@@ -78,12 +75,13 @@
         <div class="link-bottom"></div>
         <div class="content-checkoutbtn">
           <!-- <span>結帳</span> -->
-          <button>結帳</button>
+          <button @click="showCheckOutUIHdr(true)">結帳</button>
         </div>
       </div>
 
     </div>
   </div>
+  <FastCheckOutUI v-if="showCheckOutRef" :showUIFn="showCheckOutUIHdr" :selData="selItemData" />
 </template>
 <script setup lang="ts">
 import closeIcon from "@/assets/Group32.svg";
@@ -99,12 +97,14 @@ const managerstore = useManagerStore();
 const { managerRoleList, } = storeToRefs(managerstore);
 const { getManagerListNew } = managerstore;
 const simpleView = ref(true);
+let showCheckOutRef = ref(false);
 
 const props = defineProps<{
   selItemData: any;
   showUIHdr: Function;
   infoBtnState: Function;
 }>();
+console.log(666,props.selItemData);
 
 let dateCpt: any = computed(() => {
   return (
@@ -135,6 +135,11 @@ let weekDayCpt: any = computed(() => {
 onMounted(() => {
   // getmemberInfoApi();
 });
+//新增分類-顯示
+let showCheckOutUIHdr = (state: boolean) => {
+  showCheckOutRef.value = state;
+  // getGoodsTypeApi(0);
+};
 </script>
 
 <style scoped lang="scss">
@@ -378,12 +383,14 @@ onMounted(() => {
 
               .head-shot {
                 position: relative;
-                width: 15%;
+                width: 15px;
               }
 
               >div {
                 height: 80%;
+                width: calc(100% - 15px);
                 padding-left: 10px;
+
                 >span {
                   height: 50%;
                   justify-content: left;

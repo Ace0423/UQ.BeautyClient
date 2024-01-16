@@ -145,7 +145,7 @@
   </div>
   <AddApptUI v-if="showAddRef" :showAddApptFn="showAddApptFn"></AddApptUI>
   <AddRestTimeUI v-if="showAddRestUIRef" :showAddRestUIFn="showAddRestUIFn"></AddRestTimeUI>
-  <FastCheckOutUI v-if="showFastCheckOutRef" :showUIFn="showFastCheckOutUIHdr" />
+  <FastCheckOutUI v-if="showFastCheckOutRef" :showUIFn="showFastCheckOutUIHdr" :selData="'快速結帳'" />
 
   <EditApptUI v-if="showEditReserveFormRef" :showEditApptFn="showEditReserveForm" :oldSelList="oldSelList"></EditApptUI>
   <LittleDateUI v-if="showLittleDateRef" :showUIFn="updataShowLittleDate" :selDate="selDate"

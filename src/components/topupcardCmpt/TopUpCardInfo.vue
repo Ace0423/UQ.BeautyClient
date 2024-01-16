@@ -206,7 +206,7 @@ const handEditCardBtn = (() => {
                     </div>
                     <div class="record-content" v-if="currentIndex == 2">
                         <div class="sale-block">
-                            <h1>{{ recordDate.data.length }}</h1>
+                            <h1>{{ recordDate.data[0].sellCount }}</h1>
                             <h1>銷售數量</h1>
                         </div>
                         <h3>銷售紀錄</h3>

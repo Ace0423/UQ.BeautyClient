@@ -213,6 +213,7 @@ export default {
       }
     },
     loadTuiOptions(data) {
+      console.log(666, data);
       if (window.cal) {
         var viewName = "";
         var options = window.cal.getOptions();
@@ -621,14 +622,15 @@ export default {
     var useCreationPopup = false; //點創建修改彈窗
     var useDetailPopup = false; //點資訊彈窗
     var taskView = []; //上半部整合訊息['milestone', 'task'],
-    var defaultView = "week"; //預設模式
+    var tuiTypeName = ['month', 'week', 'day'];
+    var defaultView = tuiTypeName[this_.tuiOptions.tuiType];  //預設模式 'day', 'week', 'month'.
     var scheduleView = ["time"]; //列表顯示訊息['allday', 'time'],
     var hourStart = 9; //
     var hourEnd = 18; //
     var datePicker, selectedCalendar;
 
     cal = new Calendar("#calendar", {
-      defaultView: "month",
+      // defaultView: "month",
       isReadOnly: isReadOnly,
       useCreationPopup: useCreationPopup,
       useDetailPopup: useDetailPopup,
@@ -768,7 +770,7 @@ export default {
           //icon
           // html.push('<span class="calendar-font-icon ic-location-b"></span>');
         }
-        
+
         if (this_.proptuiOptions.tuiType == 0) {
           //月曆
           html.push(" " + schedule.title);
@@ -777,10 +779,10 @@ export default {
           html.push("<br>" + "<span>" +
             schedule.raw.memberInfo.nameView +
             "<br>" +
-            schedule.raw.serviceInfo[0].name 
+            schedule.raw.serviceInfo[0].name
           );
           if (schedule.raw.subList) {
-            html.push("(" + schedule.raw.subList.name+")" );
+            html.push("(" + schedule.raw.subList.name + ")");
           }
         }
 

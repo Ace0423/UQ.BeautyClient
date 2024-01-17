@@ -1,5 +1,5 @@
 <template>
-  <div class="popup-mask" v-on:click.self="showUIHdr(false)">
+  <div class="popup-InfoApptUI" v-on:click.self="showUIHdr(false)">
     <div>
       <div class="info-head">
         <div class="info-img">
@@ -54,16 +54,20 @@
           </div>
           <div class="link-bottom"></div>
           <div class="info-list">
-            <div class="content-box">
-              <p>{{ props.selItemData.timePeriod }}</p>
+            <div class="content-box" v-for="(item, index) in  formInputRef.bookingList " :key="item">
+              <span class="time-service">{{ item.dateBooking.split("T")[1].split(":")[0] + " : "
+                + item.dateBooking.split("T")[1].split(":")[1] }}
+                <span v-if="item.bookingNo == props.selItemData.bookingNo">(選擇)</span>
+              </span>
               <div class="info-service">
                 <img class="head-shot" />
                 <div>
-                  <span>{{ props.selItemData.serviceInfo[0].name }}</span>
+                  <span class="name-service">{{ item.serviceInfo.name }}</span>
                   <span>
-                    {{managerCpt.nameView}}
-                    <span v-if="props.selItemData.subList">{{ "," + props.selItemData.subList.servicesTime +"分 ,"+props.selItemData.subList.name }}</span>
-                    <span v-else>{{ "," + props.selItemData.timer +"分" }}</span>
+                    {{ item.managerInfo.nameView }}
+                    <span v-if="item.serviceInfo.subInfo">{{ "," + item.serviceInfo.subInfo.servicesTime + "分 ,"
+                      + item.serviceInfo.subInfo.name }}</span>
+                    <span v-else>{{ "," + item.serviceInfo.servicesTime + "分" }}</span>
                   </span>
                 </div>
               </div>
@@ -82,6 +86,8 @@
     </div>
   </div>
   <FastCheckOutUI v-if="showCheckOutRef" :showUIFn="showCheckOutUIHdr" :selData="selItemData" />
+  <EditApptUI v-if="showEditReserveFormRef" :showEditApptFn="showEditReserveForm" :oldSelList="props.selItemData">
+  </EditApptUI>
 </template>
 <script setup lang="ts">
 import closeIcon from "@/assets/Group32.svg";
@@ -89,22 +95,41 @@ import Icon from "@/assets/Icon zocial-guest.svg";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import { useManagerStore } from "@/stores/manager";
+import Alert from "../alertCmpt";
+
 
 let store = useApptStore();
-let { memberList, beauticianList } = storeToRefs(store);
+let { bookingList, courseDataList, timeGroup, tuiBookingListRef } =
+  storeToRefs(store);
+let {
+  getApptDataApi,
+  getMemberListApi,
+  getCourseDetailApi,
+  postEditApptDataApi,
+  postEditApptStateApi,
+  getBeauticianApi,
+} = store;
 
 const managerstore = useManagerStore();
 const { managerRoleList, } = storeToRefs(managerstore);
 const { getManagerListNew } = managerstore;
 const simpleView = ref(true);
 let showCheckOutRef = ref(false);
+let showEditReserveFormRef = ref(false);
+// let curBookingList = ref([]);
 
 const props = defineProps<{
   selItemData: any;
   showUIHdr: Function;
-  infoBtnState: Function;
+  // infoBtnState: Function;
 }>();
-console.log(666,props.selItemData);
+
+let formInputRef: any = ref({
+  bookingList: [],
+});
+
+console.log(666, props.selItemData);
+
 
 let dateCpt: any = computed(() => {
   return (
@@ -114,7 +139,9 @@ let dateCpt: any = computed(() => {
 let memberDataCpt: any = computed(() => {
   return props.selItemData.memberInfo
 });
+
 getManagerListNew({ id: 0, pageindex: 0, count: 0 })
+
 let managerCpt: any = computed(() => {
   return props.selItemData.managerInfo
 });
@@ -132,6 +159,12 @@ let weekDayCpt: any = computed(() => {
   var week = weekArray[new Date(props.selItemData.dateBooking).getDay()];
   return week;
 });
+onBeforeFn();
+function onBeforeFn() {
+  getApptDataApi("", props.selItemData.bkListNo).then((res) => {
+    formInputRef.value.bookingList = res;
+  });
+}
 onMounted(() => {
   // getmemberInfoApi();
 });
@@ -140,10 +173,87 @@ let showCheckOutUIHdr = (state: boolean) => {
   showCheckOutRef.value = state;
   // getGoodsTypeApi(0);
 };
+
+const infoBtnState = (state: number) => {
+  switch (state) {
+    case 1:
+      //完成
+      // showApptInfoRef.value = false;
+      changeStutusFn(1, props.selItemData);
+      break;
+    case 2:
+      //修改
+      // showApptInfoRef.value = false;
+      editAddReserveBtn();
+      break;
+    case 3:
+      //刪除
+      // showApptInfoRef.value = false;
+      delReserveId(props.selItemData);
+      break;
+    case 4:
+      //未出席
+      // showApptInfoRef.value = false;
+      changeStutusFn(4, props.selItemData);
+      break;
+    default:
+      break;
+  }
+};
+//改變課程狀態
+let changeStutusFn = (state: number, item: any) => {
+  item.state = state;
+  let editApptDate = {
+    bookingNo: item.id ? item.id : item.bookingNo,
+    state: item.state,
+  };
+  //修改預約
+  postEditApptStateApi(editApptDate).then((res: any) => {
+    props.showUIHdr(false);
+  });
+};
+
+function editAddReserveBtn() {
+  // if (oldSelList) {
+  //   newApptDataRef.value.memberId = oldSelList.userId;
+
+  //   for (let i = 0; i < courseDataList.value.length; i++) {
+  //     let element = courseDataList.value[i];
+  //     if (element.lessonId == oldSelList.lessonId) {
+  //       newApptDataRef.value.courses = element;
+  //     }
+  //   }
+
+  //   newApptDataRef.value.beauticianId = oldSelList.serverId;
+  //   newApptDataRef.value.selDate = oldSelList.dateBooking.split("T")[0];
+  //   newApptDataRef.value.timeBooking =
+  //     oldSelList.dateBooking.split("T")[1].split(":")[0] +
+  //     ":" +
+  //     oldSelList.dateBooking.split("T")[1].split(":")[1];
+  //   showOkBtnRef.value = true;
+  //   showEditReserveForm(true);
+  // }
+  showEditReserveForm(true);
+}
+
+//修改預約表單-顯示
+let showEditReserveForm = (state: boolean) => {
+  showEditReserveFormRef.value = state;
+  if (!state) props.showUIHdr(false);
+};
+//刪除預約
+let delReserveId = (item: any) => {
+  Alert.check("是否刪除", 0, (data: any) => {
+    if (data) {
+      changeStutusFn(3, item)
+      props.showUIHdr(false);
+    }
+  });
+};
 </script>
 
 <style scoped lang="scss">
-.popup-mask {
+.popup-InfoApptUI {
   position: absolute;
   top: 0;
   left: 0;
@@ -202,7 +312,7 @@ let showCheckOutUIHdr = (state: boolean) => {
       .info-content {
         display: flex;
         flex-direction: column;
-        text-align: center;
+        // text-align: center;
         height: 100%;
         width: calc(100% - 6%);
         position: relative;
@@ -348,16 +458,15 @@ let showCheckOutUIHdr = (state: boolean) => {
 
         .info-list {
           height: 40%;
+          overflow-y: auto;
 
           .content-box {
             color: #877059;
             color: #877059;
-            min-height: 200px;
-            justify-content: center;
-            display: flex;
-            align-items: center;
+            width: 90%;
+            margin: 10px 5%;
 
-            P {
+            span {
               text-align: left;
               font-weight: bold;
               color: #717171;
@@ -368,15 +477,17 @@ let showCheckOutUIHdr = (state: boolean) => {
               border: solid 1px #707070;
               background-color: #e6e2de;
               border-radius: 10px;
+              width: 100%;
 
               P {
                 //margin: 0 0 5px 0;
               }
+
             }
 
             .info-service {
               display: flex;
-              width: 80%;
+              width: 100%;
               height: 80px;
               justify-content: center;
               align-items: center;
@@ -401,6 +512,14 @@ let showCheckOutUIHdr = (state: boolean) => {
                   font-weight: bold;
                 }
               }
+
+              .name-service {
+                color: #000000;
+              }
+            }
+
+            .time-service {
+              color: #000000;
             }
           }
         }

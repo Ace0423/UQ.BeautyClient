@@ -202,7 +202,7 @@
   <AddRestTimeUI v-if="showAddRestUIRef" :showAddRestUIFn="showAddRestUIFn"></AddRestTimeUI>
   <LittleDateUI v-if="showLittleDateRef" :showUIFn="updataShowLittleDate" :selDate="selDate"
     :selLittleDateFn="selLittleDateFn" />
-  <ApptInfoUI v-if="showApptInfoRef" :showUIHdr="updataShowApptInfoRef" :selItemData="oldSelList"
+  <InfoApptUI v-if="showApptInfoRef" :showUIHdr="updataShowApptInfoRef" :selItemData="oldSelList"
     :infoBtnState="infoBtnState" />
   <FastCheckOutUI v-if="showFastCheckOutRef" :showUIFn="showFastCheckOutUIHdr" />
   <div :class="tuiOptions.tuiType == 2 ? ' Tui_calendar_date' : 'Tui_calendar_main'
@@ -464,7 +464,7 @@ function getApptInfoFn(
   //先取得會員清單
   getMemberListApi().then((res: any) => {
     //預先呼叫api獲取數據
-    getApptDataApi(0,year, month).then((res: any) => {
+    getApptDataApi("","",year, month).then((res: any) => {
       resetApptTable(year, month, date);
       tuiList = [];
       for (let i = 0; i < tuiBookingListRef.value.length; i++) {

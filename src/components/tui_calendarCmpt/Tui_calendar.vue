@@ -496,7 +496,6 @@ export default {
       this.category = "";
       this.dueDateClass = "";
       this.listData = null;
-      console.log(555);
       this.color = null;
       this.bgColor = null;
       this.dragBgColor = null;
@@ -745,7 +744,9 @@ export default {
       var start = moment(schedule.start.toUTCString());
       var managerName = schedule.raw.managerInfo.nameView;
       if (!isAllDay) {
-        html.push("<strong>" + start.format("HH:mm") + "</strong> ");
+        if (this_.proptuiOptions.tuiType != 0)
+          html.push("<strong>" + start.format("HH:mm") + "</strong> ");
+
         if (this_.proptuiOptions.tuiType != 0)
           if (schedule.raw.serverId == 0) {
             html.push("<strong  style='float:right; background-color:#5B5B5B; border-radius:20%;'>" + managerName + "</strong> ");
@@ -768,10 +769,9 @@ export default {
           //icon
           // html.push('<span class="calendar-font-icon ic-location-b"></span>');
         }
-        console.log("tui", schedule.raw.bookingMemo);
         if (this_.proptuiOptions.tuiType == 0) {
           //月曆
-          html.push(" " + schedule.title);
+          html.push(" " + managerName+" - "+schedule.raw.serviceInfo.name);
         } else {
           //週曆-日曆
           if (schedule.raw.bookingMemo != "")
@@ -779,7 +779,7 @@ export default {
           html.push("<br>" + "<span>" +
             schedule.raw.memberInfo.nameView +
             "<br>" +
-            schedule.raw.serviceInfo[0].name
+            schedule.raw.serviceInfo.name
           );
           if (schedule.raw.subList) {
             html.push("(" + schedule.raw.subList.name + ")");

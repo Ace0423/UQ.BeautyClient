@@ -373,36 +373,9 @@ export const useApptStore = defineStore("apptStore", () => {
   //#endregion
 
   //#region 預約
-  let timeGroup: any = ref([
-    "08:00",
-    "08:30",
-    "09:00",
-    "09:30",
-    "10:00",
-    "10:30",
-    "11:00",
-    "11:30",
-    "12:00",
-    "12:30",
-    "13:00",
-    "13:30",
-    "14:00",
-    "14:30",
-    "15:00",
-    "15:30",
-    "16:00",
-    "16:30",
-    "17:00",
-    "17:30",
-    "18:00",
-    "18:30",
-    "19:00",
-    "19:30",
-    "20:00",
-    "20:30",
-    "21:00",
-    "21:30",
-  ]);
+  let timeGroup: any = ref(["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00",
+    "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00",
+    "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30",]);
   let bookingList: any = ref([]);
   let tuiBookingListRef: any = ref([]);
   const memberList: any = ref([]);
@@ -431,7 +404,7 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   /**獲取預約資料 */
-  const getApptDataApi = async (bNo: any = "", year: any = 0, month: any = 0) => {
+  const getApptDataApi = async (bkNo: any = "", blNo: any = "", year: any = 0, month: any = 0) => {
     try {
       bookingList.value = [];
       //重製預約
@@ -446,11 +419,11 @@ export const useApptStore = defineStore("apptStore", () => {
         });
       }
 
-      let data = "?bNo=" + bNo + "&year=" + year + "&month=" + month + "&pageIndex=0&count=0";
+      let data = "?bkNo=" + bkNo + "&blNo=" + blNo + "&year=" + year + "&month=" + month + "&pageIndex=0&count=0";
       let res: any = await getApptDataRequest(data).then((res: any) => {
         //插入預約
         if (res.data.data) {
-          if (bNo == "") {// 指定時間
+          if (bkNo == "" && blNo == "") {// 指定時間
             tuiBookingListRef.value = res.data.data.table.filter(function (
               item: any,
               index: any,
@@ -460,23 +433,38 @@ export const useApptStore = defineStore("apptStore", () => {
               if (item.serverId == 0) {
                 item.managerInfo = { managerId: 0, nameView: "不指定" }
               }
-              item.serviceInfo[0].subList = [];
+              item.serviceInfo.subList = [];
               if (item.subList)
-                item.serviceInfo[0].subList.push(item.subList);
+                item.serviceInfo.subList.push(item.subList);
               item.serverName = item.managerInfo.nameView;
               return item.state != 3
             });
+            
             return res.data.data.table;
-          } else {//  指定編號
+          } else if (bkNo != "") {//  指定明細編號
             let curItem = res.data.data.table[0];
             if (curItem.serverId == 0) {
               curItem.managerInfo = { managerId: 0, nameView: "不指定" }
               curItem.serverName = curItem.managerInfo.nameView;
             }
-            curItem.serviceInfo[0].subList = [];
+            curItem.serviceInfo.subList = [];
             if (curItem.subList)
-              curItem.serviceInfo[0].subList.push(curItem.subList);
+              curItem.serviceInfo.subList.push(curItem.subList);
             return curItem
+          } else {//  指定列表編號
+            let curItems = [];
+            for (let i = 0; i < res.data.data.table.length; i++) {
+              const element = res.data.data.table[i];
+              if (element.serverId == 0) {
+                element.managerInfo = { managerId: 0, nameView: "不指定" }
+                element.serverName = element.managerInfo.nameView;
+              }
+              element.serviceInfo.subList = [];
+              if (element.subList)
+                element.serviceInfo.subList.push(element.subList);
+              curItems.push(element);
+            }
+            return curItems
           }
         }
         return res;

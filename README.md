@@ -69,4 +69,5 @@ ALERT
  z-index: 2000;
 
 服務選單-CheckboxServiceUI
+基礎都設1003
  z-index: 1003;

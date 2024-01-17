@@ -9,7 +9,6 @@ type Props = {
 const div = document.createElement("div");
 div.setAttribute("class", "gl-alert");
 document.body.appendChild(div);
-console.log("alert初始化");
 
 // 定时器
 let timer = ref<any>(null);

@@ -117,7 +117,7 @@
                       <p>{{ item.timePeriod }}</p>
                     </td>
                     <td>
-                      <p>{{ item.serviceInfo[0].name }}</p>
+                      <p>{{ item.serviceInfo.name }}</p>
                     </td>
                     <td>
                       <p>{{ item.memberInfo.nameView }}</p>
@@ -147,11 +147,9 @@
   <AddRestTimeUI v-if="showAddRestUIRef" :showAddRestUIFn="showAddRestUIFn"></AddRestTimeUI>
   <FastCheckOutUI v-if="showFastCheckOutRef" :showUIFn="showFastCheckOutUIHdr" :selData="'快速結帳'" />
 
-  <EditApptUI v-if="showEditReserveFormRef" :showEditApptFn="showEditReserveForm" :oldSelList="oldSelList"></EditApptUI>
   <LittleDateUI v-if="showLittleDateRef" :showUIFn="updataShowLittleDate" :selDate="selDate"
     :selLittleDateFn="selLittleDateFn" />
-  <ApptInfoUI v-if="showApptInfoRef" :showUIHdr="updataShowApptInfoRef" :selItemData="oldSelList"
-    :infoBtnState="infoBtnState" />
+  <InfoApptUI v-if="showApptInfoRef" :showUIHdr="updataShowApptInfoRef" :selItemData="oldSelList" />
   <!-- <div :class="tuiOptions.tuiType == 2 ? ' Tui_calendar_date' : 'Tui_calendar_main'
     " class="Tui_calendar_main" v-if="mainTabIndexRef == 0 && showWeekBoxRef != 3">
     <Tui_calendar v-if="showTuiApptRef" :tuiList="showTuiList" :tuiOptions="tuiOptions" :selectDate="selectDate"
@@ -209,7 +207,6 @@ let monthsThingsRef: any = ref([]);
 let todayThingsRef: any = ref([]);
 
 let showAddRef = ref(false);
-let showEditReserveFormRef = ref(false);
 let showAddRestUIRef = ref(false);
 let showApptInfoRef = ref(false);
 let showLittleDateRef = ref(false);
@@ -371,15 +368,16 @@ function getApptInfoFn(
   //先取得會員清單
   // getMemberListApi().then((res: any) => {
   //預先呼叫api獲取數據
-  getApptDataApi("", year = 0, month = 0).then((res: any) => {
+  getApptDataApi("", "", year = 0, month = 0).then((res: any) => {
     resetApptTable(year, month, date)
     tuiList.value = [];
     showTuiApptRef.value = false;
     for (let i = 0; i < tuiBookingListRef.value.length; i++) {
+
       const element = tuiBookingListRef.value[i];
-      let courseBgColor = getColorNum(element.serviceInfo[0].color);
+      let courseBgColor = getColorNum(element.serviceInfo.color);
       courseBgColor = element.state == 1 ? 999 : courseBgColor;
-      let curTimer = element.timer == 0 ? element.subList.servicesTime : element.timer;
+      let curTimer = element.serviceInfo.servicesTime == 0 ? element.serviceInfo.subInfo.servicesTime : element.serviceInfo.servicesTime;
 
       //顯示課程ITEM
       tuiList.value.push({
@@ -391,11 +389,11 @@ function getApptInfoFn(
           "<br>" +
           element.memberInfo.nameView +
           "<br>" +
-          element.serviceInfo[0].name +
+          element.serviceInfo.name +
           "(" +
           curTimer +
           " Min)",
-        titleMonth: "" + element.memberInfo.nameView + " - " + element.serviceInfo[0].name,
+        titleMonth: "" + element.memberInfo.nameView + " - " + element.serviceInfo.name,
         category: "time",
         dueDateClass: "",
         serverId: element.serviceId,
@@ -443,10 +441,8 @@ let changeStutusFn = (state: number, item: any) => {
   };
   //修改預約
   postEditApptStateApi(editApptDate).then((res: any) => {
-    console.log(res);
+    getApptInfoFn(currentYear.value, currentMonth.value + 1);
   });
-
-  getApptInfoFn(currentYear.value, currentMonth.value + 1);
 };
 
 function goTodayHdr() {
@@ -678,42 +674,19 @@ function handleDetail(row: any) {
     oldSelList = row;
   }
 
-  if (row.serviceInfo[0]) {
+  if (row.serviceInfo) {
     onWeekSeldate(row.dateBooking.split("T")[0]);
     updataShowApptInfoRef(true);
   }
 }
 const updataShowApptInfoRef = (state: boolean) => {
   showApptInfoRef.value = state;
+  if (!state) {
+    getApptInfoFn(currentYear.value, currentMonth.value + 1);
+  }
 };
 const updataShowLittleDate = (state: boolean) => {
   showLittleDateRef.value = state;
-};
-const infoBtnState = (state: number) => {
-  switch (state) {
-    case 1:
-      //完成
-      showApptInfoRef.value = false;
-      changeStutusFn(1, oldSelList);
-      break;
-    case 2:
-      //修改
-      showApptInfoRef.value = false;
-      editAddReserveBtn();
-      break;
-    case 3:
-      //刪除
-      showApptInfoRef.value = false;
-      delReserveId();
-      break;
-    case 4:
-      //未出席
-      showApptInfoRef.value = false;
-      changeStutusFn(4, oldSelList);
-      break;
-    default:
-      break;
-  }
 };
 
 //---------------------------日曆
@@ -750,8 +723,6 @@ let checkToday = ref(true);
 function lastMonth() {
   // 点击上个月，若是0月则年份-1
   // 0是1月  11是12月
-  console.log(111);
-
   if (currentMonth.value == 0) {
     currentYear.value -= 1;
     currentMonth.value = 11;
@@ -820,11 +791,6 @@ let showAddApptFn = (state: boolean) => {
   showAddRef.value = state;
   if (!state) getApptInfoFn(currentYear.value, currentMonth.value + 1);
 };
-//修改預約表單-顯示
-let showEditReserveForm = (state: boolean) => {
-  showEditReserveFormRef.value = state;
-  if (!state) getApptInfoFn(currentYear.value, currentMonth.value + 1);
-};
 //休息時間-顯示
 function showAddRestUIFn(state: boolean) {
   showAddRestUIRef.value = state;
@@ -869,58 +835,7 @@ function selTuiListFn(data: any) {
   }
   if (data.raw) handleDetail(data.raw);
 }
-function editAddReserveBtn() {
-  if (oldSelList) {
-    newApptDataRef.value.memberId = oldSelList.userId;
 
-    for (let i = 0; i < courseDataList.value.length; i++) {
-      let element = courseDataList.value[i];
-      if (element.lessonId == oldSelList.lessonId) {
-        newApptDataRef.value.courses = element;
-      }
-    }
-
-    newApptDataRef.value.beauticianId = oldSelList.serverId;
-    newApptDataRef.value.selDate = oldSelList.dateBooking.split("T")[0];
-    newApptDataRef.value.timeBooking =
-      oldSelList.dateBooking.split("T")[1].split(":")[0] +
-      ":" +
-      oldSelList.dateBooking.split("T")[1].split(":")[1];
-    showOkBtnRef.value = true;
-    showEditReserveForm(true);
-  }
-}
-
-//刪除預約
-let delReserveId = () => {
-  Alert.check("是否刪除", 0, (data: any) => {
-    if (data) {
-      oldSelList.state = 3;
-      let delApptDate = {
-        bookingNo: oldSelList.bookingNo,
-        userId: oldSelList.userId,
-        lessonId: oldSelList.lessonId,
-        serverId: oldSelList.serverId,
-        dateBooking: oldSelList.dateBooking,
-        timer: oldSelList.timer,
-        tradeDone: oldSelList.tradeDone,
-        state: oldSelList.state,
-        price: oldSelList.price,
-        discount: oldSelList.discount,
-        dateCreate: oldSelList.dateCreate,
-        bookingMemo: oldSelList.bookingMemo,
-      };
-      //修改預約
-      postEditApptDataApi(delApptDate).then((res: any) => {
-        let resData = res;
-        if (resData.state == 1) {
-        } else {
-        }
-      });
-      getApptInfoFn(currentYear.value, currentMonth.value + 1);
-    }
-  });
-};
 
 //-------------------------------------------休息日
 function getRestList(id: any, y: any, m: any, d: any) {

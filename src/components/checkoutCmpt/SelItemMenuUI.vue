@@ -85,6 +85,7 @@ function showItemTypeFn(type: number) {
   if (!type) props.showUIFn(false);
 }
 function getRdServiceFn(data: any) {
+  data.subInfo = data.subList[0] ? data.subList[0] : null;
   formInputRef.value.selectService = data;
   props.getDataFn(formInputRef.value);
   showItemTypeFn(0);

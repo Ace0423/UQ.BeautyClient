@@ -3,7 +3,7 @@
     <div class="popup-content">
       <div class="header-content">
         <img :src="icon_closeX" v-on:click="showEditApptFn(false)" />
-        <span>修改預約</span>
+        <span>新預約</span>
       </div>
       <div class="main-content">
         <div class="left-main">
@@ -18,18 +18,19 @@
                 {{ ruleItem.timeBooking.warn }}
               </span>
               <div class="service-item" v-for="(item, index) in formInputRef.courses" :key="item">
+                <!-- <img class="service-img" :src="icon_customer" /> -->
                 <div>
                   <div class="title-main">
                     <span>{{ item.name }}</span>
-                    <span class="service-price" v-if="item.subList.length > 0">{{ " $ " + item.subList[0].price }}</span>
+                    <span class="service-price" v-if="item.subInfo">{{ " $ " + item.subInfo.price }}</span>
                     <span class="service-price" v-else>{{ " $ " + item.price }}</span>
                   </div>
-                  <div class="time-main" v-if="item.subList.length > 0">
+                  <div class="time-main" v-if="item.subInfo">
                     <span>{{
-                      item.subList[0].servicesTime + " 分 "
+                      item.subInfo.servicesTime + " 分 "
                     }}</span>
                     <span>{{
-                      " , " + item.subList[0].name
+                      " , " + item.subInfo.name
                     }}</span>
                   </div>
                   <div class="time-main" v-else>
@@ -41,9 +42,9 @@
                 <img class="delete_img" :src="icon_cancleItem" @click="cancleServiceFn(item, index)" />
               </div>
             </div>
-            <div class="bill-add" name="修改服務" v-on:click="showItemTypeFn(1)">
-              <span>&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;修改服務項目</span>
-            </div>
+            <!-- <div class="bill-add" name="新增服務" v-on:click="showItemTypeFn(1)">
+              <span>&nbsp;&nbsp;+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新增結帳項目</span>
+            </div> -->
             <span class="p_error" v-if="ruleItem.lessonItem.is_error">
               {{ ruleItem.lessonItem.warn }}
             </span>
@@ -126,6 +127,7 @@ import { useApptStore } from "@/stores/apptStore";
 const props = defineProps<{
   showEditApptFn: Function;
   oldSelList: any;
+  //   addDetailTypeID?: any;
 }>();
 let showMemberUIRef = ref(false);
 let showAddItemMenuUIRef = ref(false);
@@ -137,8 +139,8 @@ const { getWorkingHours } = managerStore;
 const { workingHoursList } = storeToRefs(managerStore);
 
 let store = useApptStore();
-const { getManagerListApi, getApptDataApi, postEditApptDataApi } = store;
-let { memberList, managerList } =
+const { postEditApptDataApi, getApptDataApi } = store;
+let { memberList, timeGroup, serviceDetailList } =
   storeToRefs(store);
 
 let formInputRef: any = ref({
@@ -152,22 +154,22 @@ let formInputRef: any = ref({
   customerTotal: 1,
   bookingMemo: "",
   priceTotal: 0,
-  //編輯
-  bookingNo: 0,
+
+  buyServicesGroup: [],
+  buyGoodsGroup: [],
 });
+
 onBefore();
 function onBefore() {
-  getManagerListApi(0, 5);
+  // getManagerListApi(0, 5);
+  formInputRef.value.courses = []
   getApptDataApi(props.oldSelList.bookingNo).then((res: any) => {
-    console.log(999, res);
-
+    console.log(222,res);
+    
     //格式化
-    res.serviceInfo[0].subList = [];
+    res.serviceInfo.subList = [];
     if (res.subList)
-      res.serviceInfo[0].subList.push(res.subList);
-
-
-
+      res.serviceInfo.subList.push(res.subList);
     formInputRef.value.memberId = res.userId;
     formInputRef.value.timeBooking = res.dateBooking.split("T")[1].split(":")[0] + ":" +
       res.dateBooking.split("T")[1].split(":")[1];
@@ -175,38 +177,16 @@ function onBefore() {
     formInputRef.value.selDate = res.dateBooking.split("T")[0];
     formInputRef.value.selSId = res.lessonId;
     formInputRef.value.bookingMemo = res.bookingMemo ? res.bookingMemo : "";
-    formInputRef.value.courses = res.serviceInfo;
+    formInputRef.value.courses.push(res.serviceInfo)
     formInputRef.value.bookingNo = res.bookingNo;
     formInputRef.value.memberInfo = res.memberInfo;
     formInputRef.value.managerInfo = res.managerInfo;
   })
+
 }
 onMounted(() => {
   // console.log('onMounted');
 });
-
-function getMemberById(id: any) {
-  for (let i = 0; i < memberList.value.length; i++) {
-    const element = memberList.value[i];
-    if (element.userId == id) {
-      return element
-    }
-  }
-}
-function getManagerById(id: any) {
-  console.log(managerList);
-
-  if (id == 0) {
-    return { managerId: 0, nameView: "芳療師", phone: "請選擇芳療師" }
-  } else {
-    for (let i = 0; i < managerList.value.length; i++) {
-      const element = managerList.value[i];
-      if (element.managerId == id) {
-        return element
-      }
-    }
-  }
-}
 
 function getNowDay() {
   let datetime = new Date();
@@ -323,7 +303,6 @@ function cancleServiceFn(item: any, index: number) {
 function getRadioSListFn(data: any) {
   console.log(data, "獲取getRadioSListFn");
   showItemTypeFn(0);
-  formInputRef.value.courses = []
   formInputRef.value.courses.push(data);
 }
 
@@ -402,7 +381,7 @@ let { ruleItem } = toRefs(ruleLists);
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 3;
+  z-index: 1003;
   background: rgba(255, 255, 255, 0.5);
 
   display: flex;

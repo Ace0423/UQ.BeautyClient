@@ -24,13 +24,14 @@
                         <span>
                           <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , " }}</span>
                           {{ bItem.timer + "分" }}
-                          <span v-if="bItem.subList.length > 0"> {{ " ," + bItem.subList[0].name }}</span>
+                          <span v-if="bItem.subInfo"> {{ " ," + bItem.subInfo.name
+                          }}</span>
                         </span>
                         <span v-for="(sglItem, index) in bItem.sglDiscountList" :key="sglItem">
                           {{ sglItem.title }}
                         </span>
                       </div>
-                      <div class="info-price"><span v-if="bItem.subList.length > 0">{{ "$" +
+                      <div class="info-price"><span v-if="bItem.subInfo">{{ "$" +
                         bItem.salesPrice
                       }}</span>
                         <span v-else>{{ "$" + bItem.salesPrice }}</span>
@@ -213,7 +214,7 @@ let selctItemInfoRef = ref(null);
 
 let store = useApptStore();
 let { payTypeListRef } = storeToRefs(store);
-let { addCheckOutApi, getPayTypeListApi, getApptDataByUserApi } = store;
+let { addCheckOutApi, getPayTypeListApi, getApptDataApi } = store;
 
 let formInputRef: any = ref({
   memberInfo: { nameView: "顧客", phone: "請選擇顧客" },
@@ -247,11 +248,13 @@ function onBeforeFn() {
     console.log(111, props.selData);
 
   } else {
-    console.log(111, props.selData);
     formInputRef.value.memberInfo = props.selData.memberInfo;
-    getApptDataByUserApi(props.selData.userId, props.selData.dateBooking).then((res: any) => {
-      console.log("getApptDataByUserApi", res);
-
+    getApptDataApi("", props.selData.bkListNo).then((res) => {
+      for (let i = 0; i < res.length; i++) {
+        const element = res[i];
+        element.serviceInfo.managerInfo=element.managerInfo
+        getItemInfoFn({ selectService: element.serviceInfo })
+      }
     });
   }
 }
@@ -359,26 +362,23 @@ function getItemInfoFn(data: any) {
   let odDetail: any = {};
   if (data.selectService) {
     curItemData = data.selectService
-
     odDetail.ItemType = 1;
     odDetail.Id = curItemData.sId;
     odDetail.name = curItemData.name;
     odDetail.nickName = curItemData.nickName;
     odDetail.price = curItemData.price;
     odDetail.timer = curItemData.servicesTime;
-    if (curItemData.subList.length > 0) {
-      odDetail.subId = curItemData.subList[0].subId
-      odDetail.price = curItemData.subList[0].price;
-      odDetail.timer = curItemData.subList[0].servicesTime;
+    if (curItemData.subInfo) {
+      odDetail.subId = curItemData.subInfo.subId
+      odDetail.price = curItemData.subInfo.price;
+      odDetail.timer = curItemData.subInfo.servicesTime;
     } else {
       odDetail.subId = 0;
       odDetail.price = curItemData.price;
       odDetail.timer = curItemData.servicesTime;
     }
-    // odDetail.subId = curItemData.subList.length > 0 ? curItemData.subList[0].subId : 0;
-    odDetail.subList = curItemData.subList;
+    odDetail.subInfo = curItemData.subInfo;
     odDetail.color = curItemData.color;
-    // odDetail.showDetail = curItemData;
   }
   if (data.selectGood) {
     curItemData = data.selectGood
@@ -388,10 +388,9 @@ function getItemInfoFn(data: any) {
     odDetail.name = curItemData.pName;
     odDetail.nickName = curItemData.pCode;
     odDetail.price = curItemData.price;
-    // odDetail.showDetail = curItemData;
     odDetail.timer = 0;
     odDetail.subId = 0;
-    odDetail.subList = [];
+    odDetail.subInfo = null;
     odDetail.stock = curItemData.stock;
     odDetail.color = "";
   }
@@ -405,17 +404,15 @@ function getItemInfoFn(data: any) {
     odDetail.tuLimitType = curItemData.tuLimitType;
     odDetail.timer = curItemData.tuLimitDay;
     odDetail.subId = 0;
-    odDetail.subList = [];
+    odDetail.subInfo = null;
     odDetail.stock = 0;
     odDetail.color = curItemData.color;
     odDetail.price = curItemData.tuViewPrice;
     odDetail.tuViewPrice = curItemData.tuViewPrice;
-
   }
-
+  odDetail.managerInfo = curItemData.managerInfo;
   odDetail.salesPrice = odDetail.price;
   odDetail.stock = 0;
-  odDetail.managerInfo = null;
   odDetail.quantity = 1;
   odDetail.isManual = null;
   odDetail.percentSgDC = null;
@@ -536,8 +533,6 @@ function delItemFn(data: any) {
   showEditSVInfoUIFn(false);
 }
 function clickSvItem(params: any, id: any) {
-  console.log("clickSvItem", params);
-
   selctItemInfoRef.value = params;
   showEditSVInfoUIFn(true);
 }
@@ -583,7 +578,6 @@ function submitBtn() {
   apiData.COTotalPrice = formData.priceTotal;
   apiData.COAllDCList = formInputRef.value.allDiscount;
   apiData.COAmount = payAmountCpt.value;
-  console.log("apiData", apiData);
 
   /**新增結帳 */
   addCheckOutApi(apiData).then((res: any) => {

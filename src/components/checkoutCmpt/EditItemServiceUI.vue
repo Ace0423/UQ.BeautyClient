@@ -85,9 +85,9 @@ function onBeforeFn() {
     formInputRef.value.managerInfo = props.selData.managerInfo ? props.selData.managerInfo : formInputRef.value.managerInfo;
     formInputRef.value.sglDiscountList = props.selData.sglDiscountList ? props.selData.sglDiscountList : [];
 
-    if (props.selData.subList.length > 0) {
-        formInputRef.value.subName = props.selData.subList[0].name
-        formInputRef.value.price = props.selData.subList[0].price
+    if (props.selData.subInfo) {
+        formInputRef.value.subName = props.selData.subInfo.name
+        formInputRef.value.price = props.selData.subInfo.price
     }
 }
 onMounted(() => {

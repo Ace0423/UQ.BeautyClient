@@ -1,11 +1,12 @@
 import { defineStore } from "pinia";
-import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest,apiGetBlackListSetRequest,apiPutBlackListSetRequest } from "@/api/index";
+import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest,apiGetBlackListSetRequest,apiPutBlackListSetRequest,apiGetMessageRecords } from "@/api/index";
 export const useCompanyStore = defineStore("company", () => {
     const businessHoursList: any = reactive({ data: [] });
     const checkOutTypeList: any = reactive({ data: [] });
     const companyInfoList: any = reactive({ data: [] });
     const companyBlackListSet: any = reactive({ data: [] });
     const messagesList: any = reactive({ data: [] });
+    const messagesRecordList: any = reactive({ data: [] });
     const getTimeTablesRequest = async (data: any) => {
 
         try {
@@ -218,6 +219,19 @@ export const useCompanyStore = defineStore("company", () => {
             messagesList.data.push(data);
         }
     };
+    const getMessageRecords = async (data: any) => {
+
+        try {
+            const res = await apiGetMessageRecords(data);
+            if (res.data.state == 1) {
+                messagesRecordList.data = res.data.data.table;
+            }
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
     return {
         businessHoursList,
         getTimeTablesRequest,
@@ -234,6 +248,8 @@ export const useCompanyStore = defineStore("company", () => {
         submitMessages,
         getBlackListSet,
         submitBlackListSet,
-        companyBlackListSet
+        companyBlackListSet,
+        messagesRecordList,
+        getMessageRecords,
     }
 })

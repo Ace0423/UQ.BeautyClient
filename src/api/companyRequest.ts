@@ -76,3 +76,8 @@ export const putLineOAListRequest = (data: any) => {
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return managerRequest.put("/Company/CompanyLineOA?cId=" + data.loId, data);
 }
+export const getMessageRecords = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.get("/Company/MessageRecords", { params: data });
+}

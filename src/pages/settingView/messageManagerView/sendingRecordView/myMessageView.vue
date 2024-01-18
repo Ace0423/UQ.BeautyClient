@@ -3,7 +3,7 @@
 import { onMounted, reactive } from 'vue';
 import { storeToRefs } from "pinia";
 
-const data = reactive([{ them: '生日快樂', channel: 0, type: 0, count: 0, point: 0, dategroup: '2024/01/01', id: 0 }, { them: '生日快樂', channel: 0, type: 0, count: 0, point: 0, dategroup: '2024/01/01', id: 1 }, { them: '生日快樂', channel: 0, type: 0, count: 0, point: 0, dategroup: '2024/01/01', id: 2 }])
+const data = reactive([])
 onMounted(() => {
 
 })
@@ -42,7 +42,7 @@ onMounted(() => {
                 </tr>
             </thead>
             <tbody class="content-tab">
-                <tr v-for="item in data " :key="item.id">
+                <!-- <tr v-for="item in data " :key="item.id">
                     <td style="width:40%">
                         <p>{{ item.them }}</p>
                     </td>
@@ -66,7 +66,7 @@ onMounted(() => {
                             >
                         </button>
                     </td>
-                </tr>
+                </tr> -->
             </tbody>
         </table>
     </div>

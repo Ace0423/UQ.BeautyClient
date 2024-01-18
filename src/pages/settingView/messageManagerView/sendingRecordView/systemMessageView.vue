@@ -2,10 +2,37 @@
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue';
 import { storeToRefs } from "pinia";
-
+import Alert from "@/components/alertCmpt";
+import { useCounterStore } from "@/stores/counter";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
+import { useCompanyStore } from "@/stores/company";
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
+const companyStore = useCompanyStore();
+const { messagesRecordList } = storeToRefs(companyStore);
+const { getMessageRecords } = companyStore;
 const data = reactive([{ them: '生日快樂', channel: 0, type: 0, count: 0, point: 0, dategroup: '2024/01/01', id: 0 }, { them: '生日快樂', channel: 0, type: 0, count: 0, point: 0, dategroup: '2024/01/01', id: 1 }, { them: '生日快樂', channel: 0, type: 0, count: 0, point: 0, dategroup: '2024/01/01', id: 2 }])
 onMounted(() => {
-
+    let data = {
+        cid: 0,
+        mrType: 2,
+        pageIndex: 0,
+        count: 0
+    }
+    getMessageRecords(data)
+        .then((res) => {
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        })
 })
 
 </script>
@@ -42,24 +69,25 @@ onMounted(() => {
                 </tr>
             </thead>
             <tbody class="content-tab">
-                <tr v-for="item in data " :key="item.id">
+                <tr v-for="item in messagesRecordList.data " :key="item.mId">
                     <td style="width:40%">
-                        <p>{{ item.them }}</p>
+                        <p>{{ item.mContext }}</p>
                     </td>
                     <td style="width:10%">
-                        <p>{{ item.channel }}</p>
+                        <p v-if="item.mrChannel == 0">LINE</p>
+                        <p v-if="item.mrChannel == 1">簡訊</p>
                     </td>
                     <td style="width:10%">
-                        <p>{{ item.type }}</p>
+                        <p v-if="item.mrType == 2">系統</p>
                     </td>
                     <td style="width:10%">
-                        <p>{{ item.count }}</p>
+                        <p>{{ item.mrCount }}</p>
                     </td>
                     <td style="width:10%">
-                        <p>{{ item.point }}</p>
+                        <p>{{ item.mrPointSum }}</p>
                     </td>
                     <td style="width:15%">
-                        <p>{{ item.dategroup }}</p>
+                        <p>{{ item.mrDateGroup }}</p>
                     </td>
                     <td style="width:5%">
                         <button class="header-btn">

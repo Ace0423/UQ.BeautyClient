@@ -81,3 +81,8 @@ export const getMessageRecords = (data: any) => {
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return managerRequest.get("/Company/MessageRecords", { params: data });
 }
+export const getInfoRecord = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.get("/Company/InfoRecord", { params: data });
+}

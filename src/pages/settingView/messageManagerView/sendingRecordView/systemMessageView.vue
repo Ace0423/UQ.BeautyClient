@@ -11,7 +11,12 @@ const { handLogOut } = counterStore;
 const companyStore = useCompanyStore();
 const { messagesRecordList } = storeToRefs(companyStore);
 const { getMessageRecords } = companyStore;
-const data = reactive([{ them: '生日快樂', channel: 0, type: 0, count: 0, point: 0, dategroup: '2024/01/01', id: 0 }, { them: '生日快樂', channel: 0, type: 0, count: 0, point: 0, dategroup: '2024/01/01', id: 1 }, { them: '生日快樂', channel: 0, type: 0, count: 0, point: 0, dategroup: '2024/01/01', id: 2 }])
+const infoRecordView = ref(false);
+const selectRecordItemItem = ref();
+const handInfoRecordView = (item: any) => {
+    selectRecordItemItem.value = item;
+    infoRecordView.value = !infoRecordView.value;
+};
 onMounted(() => {
     let data = {
         cid: 0,
@@ -90,7 +95,7 @@ onMounted(() => {
                         <p>{{ item.mrDateGroup }}</p>
                     </td>
                     <td style="width:5%">
-                        <button class="header-btn">
+                        <button class="header-btn" @click="handInfoRecordView(item)">
                             >
                         </button>
                     </td>
@@ -98,6 +103,7 @@ onMounted(() => {
             </tbody>
         </table>
     </div>
+    <InfoRecord v-if="infoRecordView" :selectRecordItemItem="selectRecordItemItem" :handInfoRecordView="handInfoRecordView"></InfoRecord>
 </template>
 
 <style lang="scss" scoped>

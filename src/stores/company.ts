@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest,apiGetBlackListSetRequest,apiPutBlackListSetRequest,apiGetMessageRecords } from "@/api/index";
+import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest,apiGetBlackListSetRequest,apiPutBlackListSetRequest,apiGetMessageRecords,apiGetInfoRecord } from "@/api/index";
 export const useCompanyStore = defineStore("company", () => {
     const businessHoursList: any = reactive({ data: [] });
     const checkOutTypeList: any = reactive({ data: [] });
@@ -232,6 +232,19 @@ export const useCompanyStore = defineStore("company", () => {
             return Promise.reject(error);
         }
     };
+    const getInfoRecord = async (data: any) => {
+
+        try {
+            const res = await apiGetInfoRecord(data);
+            // if (res.data.state == 1) {
+            //     messagesRecordList.data = res.data.data.table;
+            // }
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
     return {
         businessHoursList,
         getTimeTablesRequest,
@@ -251,5 +264,6 @@ export const useCompanyStore = defineStore("company", () => {
         companyBlackListSet,
         messagesRecordList,
         getMessageRecords,
+        getInfoRecord
     }
 })

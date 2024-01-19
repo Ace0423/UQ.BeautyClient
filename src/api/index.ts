@@ -3,7 +3,7 @@ import { getMemberListRequest, postMemberDataRequest, postUpdateMemberDataReques
 import { getMemberBankListRequest, postMemberBankRequest, getMemberBankInfoListRequest, getMemberBankDetailRequest, putMemberBankInfoRequest } from "./memberBankRequest";
 import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest, getWorkingHoursRequest, postWorkingHoursRequest, getWorkingDefaultRequest, postWorkingDefaultRequest, putWorkingDefaultRequest } from "./managerRequest";
 import { getPermissionsListRequest, putOptionRoleRequest,getApiPermissionsListRequest,postApiPermissionsListRequest,updateApiPermissionsListRequest } from "./settingRequest";
-import { getTimeTablesRequest,postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest,getCompanyInfoRequest,putCompanyInfoRequest,getMessagesRequest,insertMessagesRequest,updateMessagesRequest,getBlackListSetRequest,putBlackListSetRequest,getLineOAListRequest,putLineOAListRequest,getMessageRecords } from "./companyRequest";
+import { getTimeTablesRequest,postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest,getCompanyInfoRequest,putCompanyInfoRequest,getMessagesRequest,insertMessagesRequest,updateMessagesRequest,getBlackListSetRequest,putBlackListSetRequest,getLineOAListRequest,putLineOAListRequest,getMessageRecords,getInfoRecord } from "./companyRequest";
 import { getTopUpCardListRequest,addTopUpCardInfoRequest,editTopUpCardInfoRequest } from "./topUpCardRequest";
 
 export const apiPostLoginRequest = postLoginRequest;
@@ -65,7 +65,7 @@ export const apiUpdateMessagesRequest = updateMessagesRequest;
 export const apiGetLineOAListRequest = getLineOAListRequest;
 export const apiPutLineOAListRequest = putLineOAListRequest;
 export const apiGetMessageRecords = getMessageRecords;
-
+export const apiGetInfoRecord = getInfoRecord;
 
 export const apiGetCheckOutTypeRequest = getCheckOutTypeRequest;
 export const apiPostCheckOutTypeRequest = postCheckOutTypeRequest;

@@ -1,7 +1,5 @@
 
 <script setup lang="ts">
-import Icon from "@/assets/Icon zocial-guest.svg";
-import editIcon from "@/assets/Icon awesome-edit.svg";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";

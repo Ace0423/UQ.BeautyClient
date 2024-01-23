@@ -1,115 +1,141 @@
 <script lang='ts'>
-import { defineComponent } from 'vue'
-import  { CalendarOptions, EventApi, DateSelectArg, EventClickArg } from '@fullcalendar/core'
 import FullCalendar from '@fullcalendar/vue3'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
+import { INITIAL_EVENTS, createEventId } from './event-utils';
+import type { DateSelectArg, EventApi, EventClickArg } from '@fullcalendar/core';
 
-import { INITIAL_EVENTS, createEventId } from './event-utils'
-
-export default defineComponent({
+export default {
   components: {
-    FullCalendar,
+    FullCalendar // make the <FullCalendar> tag available
   },
-  data() {
+  // props: {
+  //   bookList: Array,
+  //   clickBookInfoFn:[
+
+  //   ],
+  // },
+  props: ['bookList', 'clickBookInfoFn', 'selectManager', 'changeDateTabsFn'],
+  data: function () {
     return {
       calendarOptions: {
-        plugins: [
-          dayGridPlugin,
+        plugins: [dayGridPlugin,
           timeGridPlugin,
-          interactionPlugin, // needed for dateClick,
-          resourceTimeGridPlugin
-        ],
+          interactionPlugin,
+          resourceTimeGridPlugin],
         headerToolbar: {
           left: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay,resourceTimeGridDay'
+          right: 'dayGridMonth,timeGridWeek,resourceTimeGridDay'
         },
+        locale: 'zh-tw',
         initialView: 'resourceTimeGridDay',
-        initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
-        allDaySlot: false,//全天
-        nowIndicator: true,//時間線
-        editable: true,
-        selectable: true,
-        selectMirror: true,
-        dayMaxEvents: true,
-        weekends: true,
-        select: this.handleDateSelect,
-        eventClick: this.handleEventClick,
-        eventsSet: this.handleEvents,
-        resources: [
-          { id: 'a', title: 'User A' },
-          { id: 'b', title: 'User B' },
-          { id: 'c', title: 'User C' },
-          { id: 'd', title: 'User D' }
-        ],
-        events: [
-          { id: '1', resourceId: 'b', start: '2024-01-18T02:00:00', end: '2024-01-18T07:00:00', title: '課程1', user: '會員1', manager: '管理員1', color: '#fff' },
-          { id: '2', resourceId: 'c', start: '2024-01-18T05:00:00', end: '2024-01-18T22:00:00', title: '課程2', user: '會員2', manager: '管理員2' },
-          { id: '3', resourceId: 'd', start: '2024-01-18', end: '2024-01-18', title: '課程3', user: '會員3', manager: '管理員3' },
-          {
-            id: '4', resourceId: 'a', start: new Date().toISOString().replace(/T.*$/, '') + 'T03:00:00',
-            end: new Date().toISOString().replace(/T.*$/, '') + 'T08:00:00', title: '課程4', user: '會員4', manager: '管理員4', color: '#6ffff3'
-          },
-        ],
-
-        eventRender: function (event: any, element: any, view: any) {
-          if (event.customRender == true) {
-            var el = element.html();
-            // element.html("<div style='width:90%;float:left;'>" + el + "</div><div style='text-align:right;' class='close'><span class='glyphicon glyphicon-trash'></span></div>");
-            //...etc
-          }
+        schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+        // initialEvents: INITIAL_EVENTS, // 預設資料
+        buttonText: {
+          today: '今天',
+          month: '月曆',
+          week: '週曆',
+          day: '日曆',
         },
-        eventDidMount: (arg: any) => {
-          let htmlStr = ""
-          arg.el.fcSeg.eventRange.title
-          const event = arg.event;
-          const info = event._def.extendedProps;
-          console.log(event);//規則變數
-          console.log(info);//額外變數
+        allDaySlot: false,// 是否显示全天
+        nowIndicator: true,// 是否显示当前时间轴
+        editable: false, // 能否编辑事件。如果需要拖拽事件，必须开启它
+        droppable: false,   // 是否把其它日历上的事件拖拽到这个日历上
+        selectOverlap: false, // 用户选择时能否重叠到事件上, selectable必须为true才生效
+        unselectAuto: true, // 选中时，点击页面其它位置是否取消选中
+        selectable: true, // 允许用户点击或拖拽选中
+        dayHeaders: true, // 是否显示日期标题
+        dayMinWidth: 'auto',  // 日最小宽度，如果日期单元格没办法满足，会出现水平滚动条
+        refetchResourcesOnNavigate: true, // 当用户切换不同视图时，是否重新加载数据
+        resourceOrder: 'index', // 资源按照index属性排序
+        selectMirror: true,
+        weekends: true,
+        slotEventOverlap: true,
+        eventSources: [], // 事件列表
+        dayMaxEvents: true,  // 在dayGrid视图中如果每个单元格事件超出单元格会出现'+more'
+        resourceAreaWidth: '280px', // 横轴资源视图的左侧列表宽度
 
-          htmlStr =
-            // "<div class='fc-event-main'>" + "<span><i>" +
-            // event.endStr.slice(11, 16)
-            // + "<strong  style='float:right;  border-radius:20%;'>" + 'managerName' + "</strong> "
-            // + "</i><br/><span>" +
-            // info.user
-            // + "</i><br/><span>" +
-            // event._def.title
-            // + "</p></span></div>"; 
-            htmlStr += "<div class='fc-event-main'>" + "<span><i>" + event.startStr.slice(11, 16)
-          if (true)
-            htmlStr += "<strong  style='float:right; background-color:#5B5B5B; '>" + '不指定' + "</strong> ";
-          else
-            htmlStr += "<strong  style='float:right;  border-radius:20%;'>" + 'managerName' + "</strong> "
-          htmlStr += "</i><br/><span>" + info.user
-          htmlStr += "</i><br/><span>" + event._def.title
-          htmlStr += "</p></span></div>";
 
-          arg.el.innerHTML = htmlStr;//替换HTML文本
+
+        customButtons: {
+          // 自定义button，如果想显示页面上，把timeline放到headerToolbar对象里。
+          timeline: {
+            text: '自定义',
+            click: this.timelineEvent
+          }
         },
         businessHours: {
           // days of week. an array of zero-based day of week integers (0=Sunday)
           daysOfWeek: [1, 2, 3, 4, 5], // Monday - Thursday
-
           startTime: '10:00', // a start time (10am in this example)
           endTime: '18:00', // an end time (6pm in this example)
         },
         slotLabelInterval: {
           hour: 1,
         },
-        slotDuration: {
-          minute: 20,
-        }
-        /* you can update a remote database when these fire:
-        eventAdd:
-        eventChange:
-        eventRemove:
-        */
-      } as CalendarOptions,
+        eventShortHeight: 15, // 具有最小事件的样式
+        slotDuration: "00:15", // 事件轴以15分钟为一刻度
+        eventMinHeight: "15", // 事件最小高度
+        resources: [],
+        events: [],
+        select: this.handleDateSelect,
+        eventClick: this.handleEventClick,
+        eventsSet: this.handleEvents,
+        eventDidMount: (arg: any) => {
+          let htmlStr = arg.el.innerHTML = ""
+          arg.el.fcSeg.eventRange.title
+          const event = arg.event;//規則變數
+          const info = event.extendedProps;//額外變數
+
+          let serverId = event.extendedProps.bookInfo.serverId
+          let serverName = event.extendedProps.bookInfo.managerInfo.nameView
+          switch (arg.view.type) {
+            case 'dayGridMonth'://月曆
+              // htmlStr += "<div class='fc-event-main'>" + "<span><i>" + event.startStr.slice(11, 16)
+              // htmlStr += '不指定';
+              htmlStr += "<div class='fc-event-main' style='overflow:hidden;background-color:" +event.backgroundColor + ";>"
+              if (serverId == 0)
+                htmlStr += "<span style='white-space: nowrap; float:right; background-color:#5B5B5B;'>" + '不指定' + "</span>"
+              else
+                htmlStr += "<strong  style='float:right;  border-radius:20%;'>" + serverName + "</strong> "
+
+              htmlStr += "<span style='white-space: nowrap;'>" + " - " + info.user + "</span>"
+              htmlStr += "<span  style='white-space: nowrap;'>" + " - " + event._def.title + "</span>"
+
+              htmlStr += "</div>";
+              break;
+            case 'timeGridWeek'://週曆
+            case 'resourceTimeGridDay'://日曆
+              htmlStr += "<div class='fc-event-main' style='overflow:hidden;>"
+              htmlStr += "<span style='white-space: nowrap; '>" + event.startStr.slice(11, 16) + "</span>"
+              if (serverId == 0)
+                htmlStr += "<span style='white-space: nowrap; float:right; background-color:#5B5B5B;'>" + '不指定' + "</span>"
+              else
+                htmlStr += "<strong  style='float:right;  border-radius:20%;'>" + serverName + "</strong> "
+
+              htmlStr += "<br/><span style='white-space: nowrap;'>" + info.user + "</span>"
+              htmlStr += "<br/><span  style='white-space: nowrap;'>" + event._def.title + "</span>"
+              htmlStr += "</div>";
+              break;
+            default:
+              console.log('無分類', arg.view.type);
+              break;
+          }
+          arg.el.innerHTML = htmlStr;//替换HTML文本
+        },
+      } as any,
+      proptuiList: this.bookList,
       currentEvents: [] as EventApi[],
+      newsList: '',
+      calendarApi: null,
+      selectBooking: 0,
+      // 日历尺寸发生改变
+      windowResize: (arg: any) => {
+        this.fullcalendarResize(arg.view.type)
+      }
     }
   },
   methods: {
@@ -119,7 +145,6 @@ export default defineComponent({
     handleDateSelect(selectInfo: DateSelectArg) {
       let title = prompt('Please enter a new title for your event')
       let calendarApi = selectInfo.view.calendar
-
       calendarApi.unselect() // clear date selection
 
       if (title) {
@@ -133,22 +158,74 @@ export default defineComponent({
       }
     },
     handleEventClick(clickInfo: EventClickArg) {
-      if (confirm(`Are you sure you want to delete the event '${clickInfo.event.title}'`)) {
-        clickInfo.event.remove()
-      }
+      console.log(333);
+      // if (confirm(`選中事件'${clickInfo.event.title}'`)) {
+      //   // clickInfo.event.remove()
+      // }
+
+      this.clickBookInfoFn(clickInfo.event._def.extendedProps.bookInfo);
     },
-    handleEvents(events: EventApi[]) {
+    handleEvents(events: any) {
+      if (events.length > 0) {
+        let dType = events[0]._context.currentViewType
+        if (dType == 'dayGridMonth')
+          this.changeDateTabsFn(0)
+        else if (dType == 'timeGridWeek')
+          this.changeDateTabsFn(1)
+        else if (dType == 'resourceTimeGridDay')
+          this.changeDateTabsFn(2)
+      }
       this.currentEvents = events
     },
-  }
-})
+    loadBookList() {
+      this.calendarOptions.events = this.bookList as any;
+    },
+    loadManagerList() {
+      this.calendarOptions.resources = this.selectManager as any;
+    },
+  },
+  async beforeMount() {
+    // 在挂載之前，從服務器加載新聞數據
+    try {
+      this.newsList = 'https://api.example.com/news';
+    } catch (error) {
+      console.error('加載新聞數據時出錯：', error);
+    }
+  },
 
+  mounted: function () {
+    // console.log(111, this.bookList);
+    // this.calendarOptions.events.push(this.bookList);
+    // this.calendarOptions.events.push({ id: '6', resourceId: 'c', start: '2024-01-19T10:00:00', end: '2024-01-19T12:00:00', title: '課程1', user: '會員1', manager: '管理員1', color: '#6ffff3' })
+
+    // this.calendarApi = this.$refs.fullCalendar.getApi();
+    // this.calendarApi.unselect()
+    // this.calendarApi.addEvent({ id: '6', resourceId: 'c', start: '2024-01-19T10:00:00', end: '2024-01-19T12:00:00', title: '課程1', user: '會員1', manager: '管理員1', color: '#6ffff3' })
+  },
+  watch: {
+    bookList: {
+      handler(newVal, oldVal) {
+        this.proptuiList = this.bookList;
+        this.loadBookList();
+      },
+      deep: true,
+    },
+    selectManager: {
+      handler(newVal, oldVal) {
+        this.loadManagerList();
+      },
+      deep: true,
+    },
+  },
+
+}
 </script>
 
 <template>
-  <div class='demo-app'>
-    <div class='demo-app-sidebar' v-if="false">
-      <div class='demo-app-sidebar-section'>
+  <!-- <FullCalendar :options='calendarOptions' /> -->
+  <div class='fullcalendar-ui'>
+    <div class='content-nav' v-if="false">
+      <div class='content-sidebar-section'>
         <h2>Instructions</h2>
         <ul>
           <li>Select dates and you will be prompted to create a new event</li>
@@ -156,13 +233,13 @@ export default defineComponent({
           <li>Click an event to delete it</li>
         </ul>
       </div>
-      <div class='demo-app-sidebar-section'>
+      <div class='content-sidebar-section'>
         <label>
           <input type='checkbox' :checked='calendarOptions.weekends' @change='handleWeekendsToggle' />
           toggle weekends
         </label>
       </div>
-      <div class='demo-app-sidebar-section'>
+      <div class='content-sidebar-section'>
         <h2>All Events ({{ currentEvents.length }})</h2>
         <ul>
           <li v-for='event in currentEvents' :key='event.id'>
@@ -172,11 +249,11 @@ export default defineComponent({
         </ul>
       </div>
     </div>
-    <div class='demo-app-main'>
-      <FullCalendar class='demo-app-calendar' :options='calendarOptions'>
+    <div class='content-main'>
+      <FullCalendar class='content-calendar' :options='calendarOptions' ref="fullCalendar">
         <template v-slot:eventContent='arg'>
-          <b>{{ arg.timeText }}</b>
-          <i>{{ arg.event.title }}</i>
+          <!-- <b>{{ arg.timeText }}</b>
+          <i>{{ arg.event.title }}</i> -->
         </template>
       </FullCalendar>
     </div>
@@ -184,7 +261,7 @@ export default defineComponent({
 </template>
 
 <style lang='css'>
-h2 {
+/* h2 {
   margin: 0;
   font-size: 16px;
 }
@@ -200,50 +277,64 @@ li {
 }
 
 b {
-  /* used for event dates/times */
   margin-right: 3px;
-}
+} */
 
-.demo-app {
+.fullcalendar-ui {
   display: flex;
-  min-height: 100%;
+  width: 100%;
+  height: 630px;
+  /* min-height: 100%; */
   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
   font-size: 14px;
 }
 
-.demo-app-sidebar {
+.content-calendar {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.fc-daygrid-event-harness {
+  overflow: hidden;
+}
+
+/* .fc-view-harness-active {
+  display: flex;
+  width: 100%;
+  height: 100%;
+} */
+
+/* .content-nav {
   width: 300px;
   line-height: 1.5;
   background: #eaf9ff;
   border-right: 1px solid #d3e2e8;
 }
 
-.demo-app-sidebar-section {
+.content-sidebar-section {
   padding: 2em;
 }
 
-.demo-app-main {
-  flex-grow: 1;
-  padding: 3em;
-}
 
 .fc {
-  /* the calendar root */
   max-width: 1100px;
   margin: 0 auto;
 }
 
-.done:before {
-  content: '[666]';
-}
-
-.fc-toolbar {
-  display: none !important;
-}
 
 .fc-event-main {
   >span {
     font-size: 20px;
   }
+} */
+.fc-toolbar {
+  /* margin: 10px 0 !important; */
+  /* display: none !important; */
+}
+
+.content-main {
+  height: 100%;
+  width: 100%;
 }
 </style>

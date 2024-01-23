@@ -57,7 +57,7 @@
             <div class="content-box" v-for="(item, index) in  formInputRef.bookingList " :key="item">
               <span class="time-service">{{ item.dateBooking.split("T")[1].split(":")[0] + " : "
                 + item.dateBooking.split("T")[1].split(":")[1] }}
-                <span v-if="item.bookingNo == props.selItemData.bookingNo">(選擇)</span>
+                <!-- <span v-if="item.bookingNo == props.selItemData.bookingNo">(選擇)</span> -->
               </span>
               <div class="info-service">
                 <img class="head-shot" />
@@ -128,9 +128,6 @@ let formInputRef: any = ref({
   bookingList: [],
 });
 
-console.log(666, props.selItemData);
-
-
 let dateCpt: any = computed(() => {
   return (
     props.selItemData.dateBooking.split("T")[0]
@@ -161,7 +158,8 @@ let weekDayCpt: any = computed(() => {
 });
 onBeforeFn();
 function onBeforeFn() {
-  getApptDataApi("", props.selItemData.bkListNo).then((res) => {
+  getApptDataApi(props.selItemData.bookingNo).then((res) => {
+  // getApptDataApi("", props.selItemData.bkListNo).then((res) => {
     formInputRef.value.bookingList = res;
   });
 }

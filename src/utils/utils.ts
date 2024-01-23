@@ -123,7 +123,7 @@ export const verify_methods: any = {
 };
 
 // 计算时间（基准时间yyyy-MM-dd HH:mm:ss，增加或减少(add|minus)，天，小时，分钟，秒）
-export function computeDate(
+export function countTimeUtil(
   times: any,
   type: any,
   days: any = 0,
@@ -161,17 +161,22 @@ function formatDateTime(time: any) {
   let date = new Date(time);
 
   let YY = date.getFullYear();
-  let MM =
-    date.getMonth() + 1 < 10
-      ? "0" + (date.getMonth() + 1)
-      : date.getMonth() + 1;
-  let DD = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-  let hh = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-  let mm = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-  let ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+  let MM = addZeroDateFn(date.getMonth(), 1);
+  // date.getMonth() + 1 < 10
+  //   ? "0" + (date.getMonth() + 1)
+  //   : date.getMonth() + 1;
+  let DD = addZeroDateFn(date.getDate());
+  let hh = addZeroDateFn(date.getHours());
+  let mm = addZeroDateFn(date.getMinutes());
+  let ss = addZeroDateFn(date.getSeconds());
 
   // 这里可以修改返回的日期格式
   return YY + "-" + MM + "-" + DD + " " + hh + ":" + mm + ":" + ss;
+}
+
+export function addZeroDateFn(data: any, num: number = 0) {
+  let numDate = parseInt(data) + num;
+  return numDate < 10 ? "0" + numDate : numDate;
 }
 
 export function formatZeroDate(data: any) {
@@ -242,27 +247,27 @@ export const mathDiscount = (data: any) => {
 
 export const TopUpLimitDay: any = [
   {
-      value: 1,
-      label: '1周',
+    value: 1,
+    label: '1周',
   },
   {
-      value: 2,
-      label: '2周',
+    value: 2,
+    label: '2周',
   },
   {
-      value: 3,
-      label: '3周',
+    value: 3,
+    label: '3周',
   },
   {
-      value: 4,
-      label: '1月',
+    value: 4,
+    label: '1月',
   },
   {
-      value: 5,
-      label: '3月',
+    value: 5,
+    label: '3月',
   },
   {
-      value: 6,
-      label: '6月',
+    value: 6,
+    label: '6月',
   }
 ]

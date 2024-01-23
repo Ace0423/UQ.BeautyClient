@@ -158,29 +158,27 @@ let formInputRef: any = ref({
   buyServicesGroup: [],
   buyGoodsGroup: [],
 });
-
 onBefore();
 function onBefore() {
   // getManagerListApi(0, 5);
   formInputRef.value.courses = []
   getApptDataApi(props.oldSelList.bookingNo).then((res: any) => {
-    console.log(222,res);
-    
+    let resData = res[0];
     //格式化
-    res.serviceInfo.subList = [];
-    if (res.subList)
-      res.serviceInfo.subList.push(res.subList);
-    formInputRef.value.memberId = res.userId;
-    formInputRef.value.timeBooking = res.dateBooking.split("T")[1].split(":")[0] + ":" +
-      res.dateBooking.split("T")[1].split(":")[1];
-    formInputRef.value.memberId = res.userId;
-    formInputRef.value.selDate = res.dateBooking.split("T")[0];
-    formInputRef.value.selSId = res.lessonId;
-    formInputRef.value.bookingMemo = res.bookingMemo ? res.bookingMemo : "";
-    formInputRef.value.courses.push(res.serviceInfo)
-    formInputRef.value.bookingNo = res.bookingNo;
-    formInputRef.value.memberInfo = res.memberInfo;
-    formInputRef.value.managerInfo = res.managerInfo;
+    resData.serviceInfo.subList = [];
+    if (resData.subList)
+      resData.serviceInfo.subList.push(res.subList);
+    formInputRef.value.memberId = resData.userId;
+    formInputRef.value.timeBooking = resData.dateBooking.split("T")[1].split(":")[0] + ":" +
+      resData.dateBooking.split("T")[1].split(":")[1];
+    formInputRef.value.memberId = resData.userId;
+    formInputRef.value.selDate = resData.dateBooking.split("T")[0];
+    formInputRef.value.selSId = resData.lessonId;
+    formInputRef.value.bookingMemo = resData.bookingMemo ? res.bookingMemo : "";
+    formInputRef.value.courses.push(resData.serviceInfo)
+    formInputRef.value.bookingNo = resData.bookingNo;
+    formInputRef.value.memberInfo = resData.memberInfo;
+    formInputRef.value.managerInfo = resData.managerInfo;
   })
 
 }
@@ -242,7 +240,6 @@ function submitBtn() {
       subId: element.subId,
     });
   }
-  console.log(formInputRef.value);
 
   let curService = formInputRef.value.courses[0];
 
@@ -261,8 +258,6 @@ function submitBtn() {
     discount: props.oldSelList.discount,
     bookingMemo: formInputRef.value.bookingMemo,
   };
-
-  console.log("編輯", editApptDate);
 
   // 修改預約
   postEditApptDataApi(editApptDate).then((res: any) => {

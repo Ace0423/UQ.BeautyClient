@@ -9,7 +9,7 @@
     "allowJs": true,
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
   },
 
   "references": [

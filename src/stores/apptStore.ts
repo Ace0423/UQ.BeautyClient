@@ -439,18 +439,31 @@ export const useApptStore = defineStore("apptStore", () => {
               item.serverName = item.managerInfo.nameView;
               return item.state != 3
             });
-            
+
             return res.data.data.table;
           } else if (bkNo != "") {//  指定明細編號
-            let curItem = res.data.data.table[0];
-            if (curItem.serverId == 0) {
-              curItem.managerInfo = { managerId: 0, nameView: "不指定" }
-              curItem.serverName = curItem.managerInfo.nameView;
+            // let curItem = res.data.data.table[0];
+            // if (curItem.serverId == 0) {
+            //   curItem.managerInfo = { managerId: 0, nameView: "不指定" }
+            //   curItem.serverName = curItem.managerInfo.nameView;
+            // }
+            // curItem.serviceInfo.subList = [];
+            // if (curItem.subList)
+            //   curItem.serviceInfo.subList.push(curItem.subList);
+            // return curItem
+            let curItems = [];
+            for (let i = 0; i < res.data.data.table.length; i++) {
+              const element = res.data.data.table[i];
+              if (element.serverId == 0) {
+                element.managerInfo = { managerId: 0, nameView: "不指定" }
+                element.serverName = element.managerInfo.nameView;
+              }
+              element.serviceInfo.subList = [];
+              if (element.subList)
+                element.serviceInfo.subList.push(element.subList);
+              curItems.push(element);
             }
-            curItem.serviceInfo.subList = [];
-            if (curItem.subList)
-              curItem.serviceInfo.subList.push(curItem.subList);
-            return curItem
+            return curItems
           } else {//  指定列表編號
             let curItems = [];
             for (let i = 0; i < res.data.data.table.length; i++) {
@@ -743,8 +756,8 @@ export const useApptStore = defineStore("apptStore", () => {
             managerList.value = res.data.data.table
           else
             managerList.value = res.data.data.table.filter((item: any) => item.roleList[0].roleId == level);
+          return managerList.value;
         }
-        return res;
       });
       return res;
     } catch (error) {

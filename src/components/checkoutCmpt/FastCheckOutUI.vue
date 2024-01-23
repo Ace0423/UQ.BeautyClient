@@ -214,7 +214,7 @@ let selctItemInfoRef = ref(null);
 
 let store = useApptStore();
 let { payTypeListRef } = storeToRefs(store);
-let { addCheckOutApi, getPayTypeListApi, getApptDataApi } = store;
+let { addCheckOutApi, getPayTypeListApi, getApptDataApi, getApptDataByUserApi } = store;
 
 let formInputRef: any = ref({
   memberInfo: { nameView: "顧客", phone: "請選擇顧客" },
@@ -249,10 +249,18 @@ function onBeforeFn() {
 
   } else {
     formInputRef.value.memberInfo = props.selData.memberInfo;
-    getApptDataApi("", props.selData.bkListNo).then((res) => {
+    // getApptDataApi("", props.selData.bkListNo).then((res) => {
+    //   for (let i = 0; i < res.length; i++) {
+    //     const element = res[i];
+    //     element.serviceInfo.managerInfo=element.managerInfo
+    //     getItemInfoFn({ selectService: element.serviceInfo })
+    //   }
+    // });
+
+    getApptDataByUserApi(props.selData.memberInfo.userId, props.selData.dateBooking).then((res) => {
       for (let i = 0; i < res.length; i++) {
         const element = res[i];
-        element.serviceInfo.managerInfo=element.managerInfo
+        element.serviceInfo.managerInfo = element.managerInfo
         getItemInfoFn({ selectService: element.serviceInfo })
       }
     });

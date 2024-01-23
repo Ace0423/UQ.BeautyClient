@@ -771,7 +771,7 @@ export default {
         }
         if (this_.proptuiOptions.tuiType == 0) {
           //月曆
-          html.push(" " + managerName+" - "+schedule.raw.serviceInfo.name);
+          html.push(" " + managerName + " - " + schedule.raw.serviceInfo.name);
         } else {
           //週曆-日曆
           if (schedule.raw.bookingMemo != "")

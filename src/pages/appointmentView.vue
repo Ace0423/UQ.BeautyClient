@@ -258,8 +258,6 @@ function getApptInfoFn(
     handleCheckAll(true);
     tuiList.value = [];
     bookingListRef.value = [];
-    // showTuiApptRef.value = false;
-    // showFullUIFn(true);
     for (let i = 0; i < tuiBookingListRef.value.length; i++) {
       //{ id: '1', resourceId: 'b', start: '2024-01-18T02:00:00', end: '2024-01-18T07:00:00', title: '課程1', user: '會員1', manager: '管理員1', color: '#6ffff3' }
       const element = tuiBookingListRef.value[i];
@@ -307,7 +305,7 @@ function getRestList(id: any, y: any, m: any, d: any) {
 }
 function setRestTimeFn(data: any) {
   // showTuiApptRef.value = false;
-  // showFullUIFn(true);
+  showFullUIFn(false);
   let tidyRestData = [];
   restList.value = [];
   for (let i = 0; i < data.length; i++) {
@@ -362,7 +360,7 @@ function setRestTimeFn(data: any) {
   // showTuiList = tuiList;
   // showTuiApptRef.value = true;
 
-  // showFullUIFn(true);
+  showFullUIFn(true);
 }
 let selBookData: any = null;
 //選單 新增預約 休息 快速結帳
@@ -415,6 +413,8 @@ let showFastCheckOutUIHdr = (state: boolean) => {
 const updataShowApptInfoRef = (state: boolean) => {
   showApptInfoRef.value = state;
   if (!state) {
+    selBookData = null;
+    bookingListRef.value = null;
     getApptInfoFn(currentYear.value, currentMonth.value + 1);
   }
 };
@@ -481,6 +481,7 @@ watch(selectManager, (val) => {
 //--------------------------------------------------full套件設置
 let xxx: any = ref([]);
 function clickBookInfoFn(data: any) {
+  console.log('clickBookInfoFn', data.bookingNo);
   if (data.bookingNo) {
     selBookData = data;
     updataShowApptInfoRef(true);

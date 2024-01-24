@@ -3,7 +3,7 @@
     <div class="popup-content">
       <div class="header-content">
         <img :src="icon_closeX" v-on:click="showEditApptFn(false)" />
-        <span>新預約</span>
+        <span>編輯預約</span>
       </div>
       <div class="main-content">
         <div class="left-main">
@@ -17,7 +17,8 @@
               <span class="p_error" v-if="ruleItem.timeBooking.is_error">
                 {{ ruleItem.timeBooking.warn }}
               </span>
-              <div class="service-item" v-for="(item, index) in formInputRef.courses" :key="item">
+              <div class="service-item" v-for="(item, index) in formInputRef.courses" :key="item"
+                v-on:click="showItemTypeFn(1)">
                 <!-- <img class="service-img" :src="icon_customer" /> -->
                 <div>
                   <div class="title-main">
@@ -26,6 +27,7 @@
                     <span class="service-price" v-else>{{ " $ " + item.price }}</span>
                   </div>
                   <div class="time-main" v-if="item.subInfo">
+                    <span>{{ item.serverId }}</span>
                     <span>{{
                       item.subInfo.servicesTime + " 分 "
                     }}</span>
@@ -34,12 +36,14 @@
                     }}</span>
                   </div>
                   <div class="time-main" v-else>
+                    <span v-if="formInputRef.isAssign">{{ formInputRef.managerInfo.nameView + " , " }}</span>
+                    <span v-else>{{ "不指定 , " }}</span>
                     <span>{{
                       item.servicesTime + " 分 "
                     }}</span>
                   </div>
                 </div>
-                <img class="delete_img" :src="icon_cancleItem" @click="cancleServiceFn(item, index)" />
+                <!-- <img class="delete_img" :src="icon_cancleItem" @click="cancleServiceFn(item, index)" /> -->
               </div>
             </div>
             <!-- <div class="bill-add" name="新增服務" v-on:click="showItemTypeFn(1)">
@@ -143,6 +147,7 @@ const { postEditApptDataApi, getApptDataApi } = store;
 let { memberList, timeGroup, serviceDetailList } =
   storeToRefs(store);
 
+let noManagerInfo = { managerId: 0, nameView: "芳療師", phone: "請選擇芳療師" };
 let formInputRef: any = ref({
   memberId: null,
   timeBooking: "",
@@ -150,7 +155,8 @@ let formInputRef: any = ref({
   selDate: "",
   selSId: 0,
   memberInfo: { userId: 0, nameView: "顧客", phone: "請選擇顧客" },
-  managerInfo: { managerId: 0, nameView: "芳療師", phone: "請選擇芳療師" },
+  isAssign: false,
+  managerInfo: noManagerInfo,
   customerTotal: 1,
   bookingMemo: "",
   priceTotal: 0,
@@ -178,7 +184,8 @@ function onBefore() {
     formInputRef.value.courses.push(resData.serviceInfo)
     formInputRef.value.bookingNo = resData.bookingNo;
     formInputRef.value.memberInfo = resData.memberInfo;
-    formInputRef.value.managerInfo = resData.managerInfo;
+    formInputRef.value.isAssign = resData.isAssign;
+    formInputRef.value.managerInfo = resData.isAssign ? resData.managerInfo : noManagerInfo;
   })
 
 }
@@ -226,6 +233,7 @@ function submitBtn() {
     if (element.managerId == formInputRef.value.memberId) {
     }
   }
+console.log('000',formInputRef.value.courses);
 
   let courseListData = [];
   for (let i = 0; i < formInputRef.value.courses.length; i++) {
@@ -242,15 +250,18 @@ function submitBtn() {
   }
 
   let curService = formInputRef.value.courses[0];
+  console.log(111, curService);
 
   let editApptDate = {
     bookingNo: props.oldSelList.bookingNo,
     bkListNo: props.oldSelList.bkListNo,
     userId: formInputRef.value.memberInfo.userId,
     lessonId: curService.sId,
-    timer: curService.servicesTime,
+    subId: curService.subInfo ? curService.subInfo.subId : 0,
+    timer: curService.subInfo ? curService.subInfo.servicesTime : curService.servicesTime,
     price: curService.price,
-    serverId: formInputRef.value.managerInfo.managerId,
+    isAssign: formInputRef.value.isAssign,
+    serverId: props.oldSelList.isAssign ? formInputRef.value.managerInfo.managerId : 0,
     dateBooking:
       formInputRef.value.selDate + "  " + formInputRef.value.timeBooking,
     tradeDone: props.oldSelList.tradeDone,
@@ -258,6 +269,7 @@ function submitBtn() {
     discount: props.oldSelList.discount,
     bookingMemo: formInputRef.value.bookingMemo,
   };
+  console.log(222, editApptDate);
 
   // 修改預約
   postEditApptDataApi(editApptDate).then((res: any) => {
@@ -298,6 +310,10 @@ function cancleServiceFn(item: any, index: number) {
 function getRadioSListFn(data: any) {
   console.log(data, "獲取getRadioSListFn");
   showItemTypeFn(0);
+  if (data.subList.length > 0) {
+    data.subInfo = data.subList[0];
+  }
+  formInputRef.value.courses = [];
   formInputRef.value.courses.push(data);
 }
 
@@ -310,7 +326,15 @@ function showManagerUIFn(type: boolean) {
 function getRdManagerFn(data: any) {
   console.log(data, "獲取getRadioSListFn");
   showManagerUIFn(false);
-  formInputRef.value.managerInfo = data;
+
+  if (data) {
+    formInputRef.value.isAssign = true;
+    formInputRef.value.managerInfo = data;
+  }
+  else {
+    formInputRef.value.isAssign = false;
+    formInputRef.value.managerInfo = noManagerInfo;
+  }
 }
 
 

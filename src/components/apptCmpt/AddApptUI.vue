@@ -143,6 +143,7 @@ const { postAddApptDataApi, getMemberListApi, getServiceDetailApi } = store;
 let { memberList, timeGroup, serviceDetailList } =
   storeToRefs(store);
 
+let noManagerInfo = { managerId: 0, nameView: "芳療師", phone: "請選擇芳療師" };
 let formInputRef: any = ref({
   memberId: null,
   timeBooking: "",
@@ -150,11 +151,11 @@ let formInputRef: any = ref({
   selDate: "",
   selSId: 0,
   memberInfo: { userId: 0, nameView: "顧客", phone: "請選擇顧客" },
-  managerInfo: { managerId: 0, nameView: "芳療師", phone: "請選擇芳療師" },
+  managerInfo: noManagerInfo,
+  isAssign: false,
   customerTotal: 1,
   bookingMemo: "",
   priceTotal: 0,
-
   buyServicesGroup: [],
   buyGoodsGroup: [],
 });
@@ -219,10 +220,11 @@ function submitBtn() {
     courseListData.push({
       listNo: i + 1,
       lid: element.sId,
-      time: element.servicesTime,
       bookingNo: "",
       price: element.price,
       discount: element.discount ? element.discount : 0,
+      // time: element.servicesTime,
+      timer: element.subList.length > 0 ? element.subList[0].servicesTime : element.servicesTime,
       subId: element.subList.length > 0 ? element.subList[0].subId : 0,
     });
   }
@@ -289,6 +291,15 @@ function getRdManagerFn(data: any) {
   console.log(data, "獲取getRadioSListFn");
   showManagerUIFn(false);
   formInputRef.value.managerInfo = data;
+
+  if (data) {
+    formInputRef.value.isAssign = true;
+    formInputRef.value.managerInfo = data;
+  }
+  else {
+    formInputRef.value.isAssign = false;
+    formInputRef.value.managerInfo = noManagerInfo;
+  }
 }
 
 

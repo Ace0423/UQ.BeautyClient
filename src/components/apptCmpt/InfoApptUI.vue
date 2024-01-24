@@ -26,7 +26,7 @@
               <button :class="{
                 finish: selItemData.state == 1 || selItemData.state == 4,
               }" @click="infoBtnState(2)">
-                修改預約
+                編輯預約
               </button>
               <button :class="{
                 finish: selItemData.state == 1 || selItemData.state == 4,

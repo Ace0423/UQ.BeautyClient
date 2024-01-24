@@ -4,7 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
-import { INITIAL_EVENTS, createEventId } from './event-utils';
+import { INITIAL_EVENTS, INITIAL_RESOURCES, createEventId } from './event-utils';
 import type { DateSelectArg, EventApi, EventClickArg } from '@fullcalendar/core';
 
 export default {
@@ -40,13 +40,14 @@ export default {
           week: '週曆',
           day: '日曆',
         },
-        allDaySlot: false,// 是否显示全天
+        allDayText: '整日',
+        allDaySlot: true,// 是否显示全天
         nowIndicator: true,// 是否显示当前时间轴
         editable: false, // 能否编辑事件。如果需要拖拽事件，必须开启它
         droppable: false,   // 是否把其它日历上的事件拖拽到这个日历上
         selectOverlap: false, // 用户选择时能否重叠到事件上, selectable必须为true才生效
         unselectAuto: true, // 选中时，点击页面其它位置是否取消选中
-        selectable: true, // 允许用户点击或拖拽选中
+        selectable: false, // 允许用户点击或拖拽选中
         dayHeaders: true, // 是否显示日期标题
         dayMinWidth: 'auto',  // 日最小宽度，如果日期单元格没办法满足，会出现水平滚动条
         refetchResourcesOnNavigate: true, // 当用户切换不同视图时，是否重新加载数据
@@ -57,7 +58,6 @@ export default {
         eventSources: [], // 事件列表
         dayMaxEvents: true,  // 在dayGrid视图中如果每个单元格事件超出单元格会出现'+more'
         resourceAreaWidth: '280px', // 横轴资源视图的左侧列表宽度
-
 
 
         customButtons: {
@@ -85,46 +85,49 @@ export default {
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents,
         eventDidMount: (arg: any) => {
-          let htmlStr = arg.el.innerHTML = ""
-          arg.el.fcSeg.eventRange.title
-          const event = arg.event;//規則變數
-          const info = event.extendedProps;//額外變數
+          //#region 渲染預約Item
+          if (arg.event.id != "") {
+            let htmlStr = arg.el.innerHTML = ""
+            const event = arg.event;//規則變數
+            const info = event.extendedProps;//額外變數
 
-          let serverId = event.extendedProps.bookInfo.serverId
-          let serverName = event.extendedProps.bookInfo.managerInfo.nameView
-          switch (arg.view.type) {
-            case 'dayGridMonth'://月曆
-              // htmlStr += "<div class='fc-event-main'>" + "<span><i>" + event.startStr.slice(11, 16)
-              // htmlStr += '不指定';
-              htmlStr += "<div class='fc-event-main' style='overflow:hidden;background-color:" +event.backgroundColor + ";>"
-              if (serverId == 0)
-                htmlStr += "<span style='white-space: nowrap; float:right; background-color:#5B5B5B;'>" + '不指定' + "</span>"
-              else
-                htmlStr += "<strong  style='float:right;  border-radius:20%;'>" + serverName + "</strong> "
 
-              htmlStr += "<span style='white-space: nowrap;'>" + " - " + info.user + "</span>"
-              htmlStr += "<span  style='white-space: nowrap;'>" + " - " + event._def.title + "</span>"
+            let serverId = event.extendedProps.bookInfo.serverId
+            let serverName = event.extendedProps.bookInfo.managerInfo.nameView
+            switch (arg.view.type) {
+              case 'dayGridMonth'://月曆
+                htmlStr += "<div class='fc-event-main' style='overflow:hidden;background-color:" + event.backgroundColor + ";>"
+                if (serverId == 0)
+                  htmlStr += "<br/><span style='white-space: nowrap;  background-color:#5B5B5B;'>" + '不指定' + "</span>"
+                else
+                  htmlStr += "<br/><strong  style='  border-radius:20%;'>" + serverName + "</strong> "
 
-              htmlStr += "</div>";
-              break;
-            case 'timeGridWeek'://週曆
-            case 'resourceTimeGridDay'://日曆
-              htmlStr += "<div class='fc-event-main' style='overflow:hidden;>"
-              htmlStr += "<span style='white-space: nowrap; '>" + event.startStr.slice(11, 16) + "</span>"
-              if (serverId == 0)
-                htmlStr += "<span style='white-space: nowrap; float:right; background-color:#5B5B5B;'>" + '不指定' + "</span>"
-              else
-                htmlStr += "<strong  style='float:right;  border-radius:20%;'>" + serverName + "</strong> "
+                htmlStr += "<span style='white-space: nowrap; '>" + " - " + info.user + "</span>"
+                htmlStr += "<span  style='white-space: nowrap;'>" + " - " + event.title + "</span>"
 
-              htmlStr += "<br/><span style='white-space: nowrap;'>" + info.user + "</span>"
-              htmlStr += "<br/><span  style='white-space: nowrap;'>" + event._def.title + "</span>"
-              htmlStr += "</div>";
-              break;
-            default:
-              console.log('無分類', arg.view.type);
-              break;
+                htmlStr += "</div>";
+                break;
+              case 'timeGridWeek'://週曆
+              case 'resourceTimeGridDay'://日曆
+                htmlStr += "<div class='fc-event-main' style='overflow:hidden;>"
+                htmlStr += "<br/><span style='white-space: nowrap; font-weight: bolder; font-size: 14px;'>" + event.startStr.slice(11, 16) + "</span>"
+                htmlStr += "<br/><span style='white-space: nowrap; font-weight: bolder; font-size: 14px;'>" + info.user + "</span>"
+
+                if (serverId == 0)
+                  htmlStr += "<br/><span style='white-space: nowrap;  background-color:#5B5B5B; font-weight: normal;'>" + '不指定' + "</span>"
+                else
+                  htmlStr += "<br/><strong  style='  border-radius:20%;  font-weight: normal;'>" + serverName + "</strong> "
+
+                htmlStr += "<br/><span  style='white-space: nowrap; font-weight: normal;'>" + event.title + "</span>"
+                htmlStr += "</div>";
+                break;
+              default:
+                console.log('無分類', arg.view.type);
+                break;
+            }
+            arg.el.innerHTML = htmlStr;//替换HTML文本
           }
-          arg.el.innerHTML = htmlStr;//替换HTML文本
+          //#endregion
         },
       } as any,
       proptuiList: this.bookList,
@@ -143,26 +146,10 @@ export default {
       this.calendarOptions.weekends = !this.calendarOptions.weekends // update a property
     },
     handleDateSelect(selectInfo: DateSelectArg) {
-      let title = prompt('Please enter a new title for your event')
-      let calendarApi = selectInfo.view.calendar
-      calendarApi.unselect() // clear date selection
 
-      if (title) {
-        calendarApi.addEvent({
-          id: createEventId(),
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay
-        })
-      }
     },
-    handleEventClick(clickInfo: EventClickArg) {
-      console.log(333);
-      // if (confirm(`選中事件'${clickInfo.event.title}'`)) {
-      //   // clickInfo.event.remove()
-      // }
-
+    handleEventClick(clickInfo: any) {
+      console.log(222);
       this.clickBookInfoFn(clickInfo.event._def.extendedProps.bookInfo);
     },
     handleEvents(events: any) {
@@ -179,9 +166,12 @@ export default {
     },
     loadBookList() {
       this.calendarOptions.events = this.bookList as any;
+      // this.calendarOptions.events = INITIAL_EVENTS;
+
     },
     loadManagerList() {
       this.calendarOptions.resources = this.selectManager as any;
+      // this.calendarOptions.resources = INITIAL_RESOURCES;
     },
   },
   async beforeMount() {
@@ -254,6 +244,7 @@ export default {
         <template v-slot:eventContent='arg'>
           <!-- <b>{{ arg.timeText }}</b>
           <i>{{ arg.event.title }}</i> -->
+          <!-- <span>{{ }}</span> -->
         </template>
       </FullCalendar>
     </div>

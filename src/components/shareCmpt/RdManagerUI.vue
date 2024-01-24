@@ -23,6 +23,7 @@
                 </div>
             </div>
             <div class="bottom-content">
+                <button class="cancle-btn" @click="clearAll()">移除</button>
             </div>
         </div>
     </div>
@@ -77,7 +78,11 @@ function getManagerFn(data: any) {
 
 function clickItem(item: any, id: number) {
     formInputRef.value.managerItem = item;
-    props.getDataFn(item)
+    props.getDataFn(item);
+}
+function clearAll() {
+    formInputRef.value.managerItem = null;
+    props.getDataFn(null);
 }
 
 </script>
@@ -149,7 +154,7 @@ function clickItem(item: any, id: number) {
 
         .main-content {
             display: block;
-            height: calc(100% - 40px - 65px);
+            height: calc(100% - 60px - 70px);
             width: 90%;
             margin-left: 5%;
 
@@ -312,10 +317,8 @@ function clickItem(item: any, id: number) {
         .bottom-content {
             display: flex;
             align-items: end;
-            justify-content: center;
-
-            // height: calc(65px);
-            // width: 100px;
+            justify-content: left;
+            height: 50px;
             >button {
                 position: relative;
                 width: 100px;

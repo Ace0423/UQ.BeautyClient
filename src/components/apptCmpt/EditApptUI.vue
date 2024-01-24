@@ -27,7 +27,8 @@
                     <span class="service-price" v-else>{{ " $ " + item.price }}</span>
                   </div>
                   <div class="time-main" v-if="item.subInfo">
-                    <span>{{ item.serverId }}</span>
+                    <span v-if="formInputRef.isAssign">{{ formInputRef.managerInfo.nameView + " , " }}</span>
+                    <span v-else>{{ "不指定(" + formInputRef.oldManagerInfo.nameView + ") , " }}</span>
                     <span>{{
                       item.subInfo.servicesTime + " 分 "
                     }}</span>
@@ -163,6 +164,7 @@ let formInputRef: any = ref({
 
   buyServicesGroup: [],
   buyGoodsGroup: [],
+  oldManagerInfo:[],
 });
 onBefore();
 function onBefore() {
@@ -186,6 +188,7 @@ function onBefore() {
     formInputRef.value.memberInfo = resData.memberInfo;
     formInputRef.value.isAssign = resData.isAssign;
     formInputRef.value.managerInfo = resData.isAssign ? resData.managerInfo : noManagerInfo;
+    formInputRef.value.oldManagerInfo = resData.managerInfo;
   })
 
 }
@@ -233,7 +236,7 @@ function submitBtn() {
     if (element.managerId == formInputRef.value.memberId) {
     }
   }
-console.log('000',formInputRef.value.courses);
+  console.log('000', formInputRef.value.courses);
 
   let courseListData = [];
   for (let i = 0; i < formInputRef.value.courses.length; i++) {
@@ -250,6 +253,7 @@ console.log('000',formInputRef.value.courses);
   }
 
   let curService = formInputRef.value.courses[0];
+  console.log(111,formInputRef.value);
   let editApptDate = {
     bookingNo: props.oldSelList.bookingNo,
     bkListNo: props.oldSelList.bkListNo,
@@ -259,7 +263,7 @@ console.log('000',formInputRef.value.courses);
     timer: curService.subInfo ? curService.subInfo.servicesTime : curService.servicesTime,
     price: curService.price,
     isAssign: formInputRef.value.isAssign,
-    serverId: props.oldSelList.isAssign ? formInputRef.value.managerInfo.managerId : 0,
+    serverId: formInputRef.value.isAssign ? formInputRef.value.managerInfo.managerId : 0,
     dateBooking:
       formInputRef.value.selDate + "  " + formInputRef.value.timeBooking,
     tradeDone: props.oldSelList.tradeDone,
@@ -267,6 +271,7 @@ console.log('000',formInputRef.value.courses);
     discount: props.oldSelList.discount,
     bookingMemo: formInputRef.value.bookingMemo,
   };
+  
   // 修改預約
   postEditApptDataApi(editApptDate).then((res: any) => {
     let resData = res;
@@ -274,7 +279,6 @@ console.log('000',formInputRef.value.courses);
       props.showEditApptFn(false);
     }
   });
-
 }
 
 function getItemInfoFn(data: any) {

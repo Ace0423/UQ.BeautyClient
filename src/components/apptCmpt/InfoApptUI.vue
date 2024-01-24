@@ -63,12 +63,16 @@
                 <img class="head-shot" />
                 <div>
                   <span class="name-service">{{ item.serviceInfo.name }}</span>
-                  <span>
-                    {{ item.managerInfo.nameView }}
-                    <span v-if="item.serviceInfo.subInfo">{{ "," + item.serviceInfo.subInfo.servicesTime + "分 ,"
-                      + item.serviceInfo.subInfo.name }}</span>
+                  <div>
+                    <span v-if="!item.isAssign"> 不指定 </span>
+                    <span v-if="!item.isAssign">(</span>
+                    <span>{{ item.managerInfo.nameView }}</span>
+                    <span v-if="!item.isAssign">)</span>
+                    <span v-if="item.serviceInfo.subInfo">
+                      {{ "," + item.serviceInfo.subInfo.servicesTime + "分 ," + item.serviceInfo.subInfo.name }}
+                    </span>
                     <span v-else>{{ "," + item.serviceInfo.servicesTime + "分" }}</span>
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -159,7 +163,7 @@ let weekDayCpt: any = computed(() => {
 onBeforeFn();
 function onBeforeFn() {
   getApptDataApi(props.selItemData.bookingNo).then((res) => {
-  // getApptDataApi("", props.selItemData.bkListNo).then((res) => {
+    // getApptDataApi("", props.selItemData.bkListNo).then((res) => {
     formInputRef.value.bookingList = res;
   });
 }
@@ -500,14 +504,22 @@ let delReserveId = (item: any) => {
                 width: calc(100% - 15px);
                 padding-left: 10px;
 
-                >span {
-                  height: 50%;
-                  justify-content: left;
+                >div {
                   display: flex;
-                  font-family: STXihei;
-                  font-size: 20px;
-                  color: #717171;
-                  font-weight: bold;
+                  height: 100%;
+                  width: 100%;
+
+                  >span {
+                    display: flex;
+                    align-items: center;
+                    height: 50%;
+                    justify-content: left;
+                    display: flex;
+                    font-family: STXihei;
+                    font-size: 20px;
+                    color: #717171;
+                    font-weight: bold;
+                  }
                 }
               }
 

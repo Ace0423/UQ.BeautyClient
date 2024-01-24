@@ -66,7 +66,7 @@ export const useApptStore = defineStore("apptStore", () => {
       return true;
     } else {
       setTimeout(() => {
-        Alert.error("失敗(" + showErrorMsg(res.msg) + ")", 1000);
+        Alert.error("失敗\n(" + showErrorMsg(res.msg) + ")", 1000);
       }, 200);
       return false;
     }
@@ -211,7 +211,8 @@ export const useApptStore = defineStore("apptStore", () => {
         if (res.data.data)
           for (let i = 0; i < res.data.data.table.length; i++) {
             const element = res.data.data.table[i];
-            beauticianList.value.push(element);
+            if (!element.userLock)
+              beauticianList.value.push(element);
           }
         return res;
       });
@@ -755,7 +756,7 @@ export const useApptStore = defineStore("apptStore", () => {
           if (level == 0)
             managerList.value = res.data.data.table
           else
-            managerList.value = res.data.data.table.filter((item: any) => item.roleList[0].roleId == level);
+            managerList.value = res.data.data.table.filter((item: any) => item.roleList[0].roleId == level && !item.userLock);
           return managerList.value;
         }
       });

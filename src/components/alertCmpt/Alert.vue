@@ -2,6 +2,7 @@
 const messageText = ref("alert_test"); // 提示內容
 const buttonState = ref(0); //按鈕顯示狀態 0:全部 1:只顯示確定按鈕 2:不顯示按鈕
 const timerVal = ref(0);
+const messageText2 = ref(""); // 提示內容
 const props = defineProps({
   type: {
     type: Number,
@@ -23,7 +24,13 @@ const props = defineProps({
 
 const isShow = ref(false);
 onMounted(() => {
-  messageText.value = props.message;
+
+  if (props.message.split("\n").length > 1) {
+    messageText.value = props.message.split("\n")[0];
+    messageText2.value = props.message.split("\n")[1];
+  } else {
+    messageText.value = props.message;
+  }
   buttonState.value = props.type;
   timerVal.value = props.showTimer;
   isShow.value = true;
@@ -40,7 +47,8 @@ onMounted(() => {
     <!-- 提示弹窗 -->
     <div class="alert-content">
       <h1>提示</h1>
-      <p>{{ messageText }}</p>
+      <span>{{ messageText }}</span>
+      <span>{{ messageText2 }}</span>
       <div class="alert-btn" v-if="buttonState == 0">
         <button @click="alertBtnHdr(0)">取消</button>
         <button @click="alertBtnHdr(1)">確定</button>
@@ -80,12 +88,13 @@ onMounted(() => {
     font-weight: bold;
     border: solid 1px #707070;
     min-width: 250px;
-    > h1 {
+
+    >h1 {
       font-size: 25px;
     }
 
-    > .alert-btn {
-      > button {
+    >.alert-btn {
+      >button {
         margin: 0 10px;
         min-width: 70px;
         border-radius: 10px;

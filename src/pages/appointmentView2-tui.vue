@@ -173,7 +173,7 @@ import btn_msg_ico from "@/assets/images/icon_msg.png";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
-import { colorValues, countTimeUtil, getColorNum } from "@/utils/utils";
+import { colorValues, computeDate, getColorNum } from "@/utils/utils";
 import Alert from "@/components/alertCmpt";
 import { useManagerStore } from "@/stores/manager";
 import { useCounterStore } from "@/stores/counter";
@@ -400,7 +400,7 @@ function getApptInfoFn(
         dueDateClass: "",
         serverId: element.serviceId,
         start: element.dateBooking,
-        end: countTimeUtil(element.dateBooking, "add", 0, 0, curTimer),
+        end: computeDate(element.dateBooking, "add", 0, 0, curTimer),
         raw: element,
       });
     }

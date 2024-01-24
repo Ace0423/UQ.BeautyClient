@@ -91,16 +91,17 @@ export default {
             const event = arg.event;//規則變數
             const info = event.extendedProps;//額外變數
 
+            console.log(333, event.extendedProps.bookInfo);
 
             let serverId = event.extendedProps.bookInfo.serverId
             let serverName = event.extendedProps.bookInfo.managerInfo.nameView
             switch (arg.view.type) {
               case 'dayGridMonth'://月曆
-                htmlStr += "<div class='fc-event-main' style='overflow:hidden;background-color:" + event.backgroundColor + ";>"
-                if (serverId == 0)
-                  htmlStr += "<br/><span style='white-space: nowrap;  background-color:#5B5B5B;'>" + '不指定' + "</span>"
-                else
-                  htmlStr += "<br/><strong  style='  border-radius:20%;'>" + serverName + "</strong> "
+                htmlStr += "<div class='fc-event-main'style='overflow:hidden;background-color:" + event.backgroundColor + "' >"
+                if (info.bookInfo.isAssign)//指定
+                  htmlStr += "<strong  style='  border-radius:20%;'>" + serverName + "</strong> "
+                else//不指定
+                  htmlStr += "<span style='white-space: nowrap;  background-color:#5B5B5B;'>" + serverName + "111" + "</span>"
 
                 htmlStr += "<span style='white-space: nowrap; '>" + " - " + info.user + "</span>"
                 htmlStr += "<span  style='white-space: nowrap;'>" + " - " + event.title + "</span>"
@@ -109,14 +110,14 @@ export default {
                 break;
               case 'timeGridWeek'://週曆
               case 'resourceTimeGridDay'://日曆
-                htmlStr += "<div class='fc-event-main' style='overflow:hidden;>"
-                htmlStr += "<br/><span style='white-space: nowrap; font-weight: bolder; font-size: 14px;'>" + event.startStr.slice(11, 16) + "</span>"
+                htmlStr += "<div class='fc-event-main' style='overflow:hidden;'>"
+                htmlStr += "<span style='white-space: nowrap; font-weight: bolder; font-size: 14px;'>" + event.startStr.slice(11, 16) + "</span>"
                 htmlStr += "<br/><span style='white-space: nowrap; font-weight: bolder; font-size: 14px;'>" + info.user + "</span>"
 
-                if (serverId == 0)
-                  htmlStr += "<br/><span style='white-space: nowrap;  background-color:#5B5B5B; font-weight: normal;'>" + '不指定' + "</span>"
-                else
+                if (info.bookInfo.isAssign)//指定
                   htmlStr += "<br/><strong  style='  border-radius:20%;  font-weight: normal;'>" + serverName + "</strong> "
+                else//不指定
+                  htmlStr += "<br/><span style='white-space: nowrap;  background-color:#5B5B5B; font-weight: normal;'>" + serverName + "</span>"
 
                 htmlStr += "<br/><span  style='white-space: nowrap; font-weight: normal;'>" + event.title + "</span>"
                 htmlStr += "</div>";

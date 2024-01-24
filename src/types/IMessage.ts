@@ -38,6 +38,9 @@ export const showErrorMsg = (status: string): string => {
     case "BK04":
       message = "預約資料有誤";
       break;
+    case "BK05":
+      message = "此時間段沒有空閒的芳療師";
+      break;
     case "LM01":
       message = "該課程有明細存在";
       break;

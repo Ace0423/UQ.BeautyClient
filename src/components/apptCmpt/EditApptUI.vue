@@ -250,8 +250,6 @@ console.log('000',formInputRef.value.courses);
   }
 
   let curService = formInputRef.value.courses[0];
-  console.log(111, curService);
-
   let editApptDate = {
     bookingNo: props.oldSelList.bookingNo,
     bkListNo: props.oldSelList.bkListNo,
@@ -269,8 +267,6 @@ console.log('000',formInputRef.value.courses);
     discount: props.oldSelList.discount,
     bookingMemo: formInputRef.value.bookingMemo,
   };
-  console.log(222, editApptDate);
-
   // 修改預約
   postEditApptDataApi(editApptDate).then((res: any) => {
     let resData = res;

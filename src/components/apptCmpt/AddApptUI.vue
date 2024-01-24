@@ -212,8 +212,6 @@ function submitBtn() {
     if (element.managerId == formInputRef.value.memberId) {
     }
   }
-  console.log(888, formInputRef.value.courses);
-
   let courseListData = [];
   for (let i = 0; i < formInputRef.value.courses.length; i++) {
     const element = formInputRef.value.courses[i];
@@ -232,6 +230,7 @@ function submitBtn() {
   let addApiData = {
     userId: formInputRef.value.memberInfo.userId,
     lessonlist: courseListData,
+    isAssign: formInputRef.value.managerInfo.managerId != 0,
     serverId: formInputRef.value.managerInfo.managerId,
     dateBooking:
       formInputRef.value.selDate + "  " + formInputRef.value.timeBooking, //"2023-04-20T07:25:10.372Z",
@@ -257,9 +256,6 @@ function getItemInfoFn(data: any) {
   if (data.selectService) {
     formInputRef.value.buyServicesGroup = data.selectService;
   }
-  console.log(data.selectGood);
-  console.log(data.selectService);
-
   let priceTotal = 0;
   for (let i = 0; i < data.selectGood.length; i++) {
     const element = data.selectGood[i];

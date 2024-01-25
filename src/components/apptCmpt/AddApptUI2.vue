@@ -255,7 +255,7 @@ let confirmReserveForm = () => {
   let addApptData = {
     userId: newApptDataRef.value.memberId,
     lessonlist: courseListData,
-    serverId: newApptDataRef.value.beauticianId,
+    managerId: newApptDataRef.value.beauticianId,
     dateBooking:
       newApptDataRef.value.selDate + "  " + newApptDataRef.value.timeBooking, //"2023-04-20T07:25:10.372Z",
     tradeDone: true,

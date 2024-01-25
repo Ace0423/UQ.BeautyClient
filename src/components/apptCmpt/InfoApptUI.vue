@@ -226,7 +226,7 @@ function editAddReserveBtn() {
   //     }
   //   }
 
-  //   newApptDataRef.value.beauticianId = oldSelList.serverId;
+  //   newApptDataRef.value.beauticianId = oldSelList.managerId;
   //   newApptDataRef.value.selDate = oldSelList.dateBooking.split("T")[0];
   //   newApptDataRef.value.timeBooking =
   //     oldSelList.dateBooking.split("T")[1].split(":")[0] +

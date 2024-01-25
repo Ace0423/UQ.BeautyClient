@@ -273,7 +273,7 @@ function submitBtn() {
     lessonId: curService.sId,
     timer: curService.servicesTime,
     price: curService.price,
-    serverId: formInputRef.value.managerInfo.managerId,
+    managerId: formInputRef.value.managerInfo.managerId,
     dateBooking:
       formInputRef.value.selDate + "  " + formInputRef.value.timeBooking,
     tradeDone: props.oldSelList.tradeDone,

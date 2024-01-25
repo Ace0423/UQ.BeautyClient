@@ -93,7 +93,7 @@ export default {
 
             console.log(333, event.extendedProps.bookInfo);
 
-            let serverId = event.extendedProps.bookInfo.serverId
+            let managerId = event.extendedProps.bookInfo.managerId
             let serverName = event.extendedProps.bookInfo.managerInfo.nameView
             switch (arg.view.type) {
               case 'dayGridMonth'://月曆

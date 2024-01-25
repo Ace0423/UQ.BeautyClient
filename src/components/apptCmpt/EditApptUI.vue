@@ -164,7 +164,7 @@ let formInputRef: any = ref({
 
   buyServicesGroup: [],
   buyGoodsGroup: [],
-  oldManagerInfo:[],
+  oldManagerInfo: [],
 });
 onBefore();
 function onBefore() {
@@ -253,7 +253,7 @@ function submitBtn() {
   }
 
   let curService = formInputRef.value.courses[0];
-  console.log(111,formInputRef.value);
+  console.log(111, formInputRef.value);
   let editApptDate = {
     bookingNo: props.oldSelList.bookingNo,
     bkListNo: props.oldSelList.bkListNo,
@@ -263,7 +263,7 @@ function submitBtn() {
     timer: curService.subInfo ? curService.subInfo.servicesTime : curService.servicesTime,
     price: curService.price,
     isAssign: formInputRef.value.isAssign,
-    serverId: formInputRef.value.isAssign ? formInputRef.value.managerInfo.managerId : 0,
+    managerId: formInputRef.value.managerInfo.managerId == 0 ? formInputRef.value.oldManagerInfo.managerId : formInputRef.value.managerInfo.managerId,
     dateBooking:
       formInputRef.value.selDate + "  " + formInputRef.value.timeBooking,
     tradeDone: props.oldSelList.tradeDone,
@@ -271,7 +271,8 @@ function submitBtn() {
     discount: props.oldSelList.discount,
     bookingMemo: formInputRef.value.bookingMemo,
   };
-  
+  console.log(222, editApptDate);
+
   // 修改預約
   postEditApptDataApi(editApptDate).then((res: any) => {
     let resData = res;

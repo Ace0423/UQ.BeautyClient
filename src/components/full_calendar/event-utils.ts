@@ -1,7 +1,7 @@
 
 let eventGuid = 0
 let todayStr = new Date().toISOString().replace(/T.*$/, '') // YYYY-MM-DD of today
-let bookInfo = { serverId: 5, managerInfo: { nameView: '芳療師A' } }
+let bookInfo = { managerId: 5, managerInfo: { nameView: '芳療師A' } }
 export const INITIAL_EVENTS: any[] = [
   { resourceId: 'd', id: createEventId(), title: '休息日', start: todayStr, color: '#6ffff3', user: '會員A', bookInfo },
   { resourceId: 'b', id: createEventId(), start: todayStr + 'T12:00:00', end: todayStr + 'T15:00:00', title: '課程0', user: '會員0', manager: '管理員0', bookInfo },

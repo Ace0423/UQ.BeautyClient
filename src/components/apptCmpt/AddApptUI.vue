@@ -231,7 +231,7 @@ function submitBtn() {
     userId: formInputRef.value.memberInfo.userId,
     lessonlist: courseListData,
     isAssign: formInputRef.value.managerInfo.managerId != 0,
-    serverId: formInputRef.value.managerInfo.managerId,
+    managerId: formInputRef.value.managerInfo.managerId,
     dateBooking:
       formInputRef.value.selDate + "  " + formInputRef.value.timeBooking, //"2023-04-20T07:25:10.372Z",
     tradeDone: true,

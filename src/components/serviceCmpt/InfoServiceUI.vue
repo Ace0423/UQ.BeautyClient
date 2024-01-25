@@ -116,12 +116,12 @@ let customerDataCpt: any = computed(() => {
 getManagerListNew({ id: 0, pageindex: 0, count: 0 })
 let beauticianCpt: any = computed(() => {
   let beauticianData = {};
-  if (props.selItemData.serverId == 0) {
+  if (props.selItemData.managerId == 0) {
     beauticianData = { "nameView": "不指定" }
   } else {
     for (let i = 0; i < managerRoleList.value.length; i++) {
       const element = managerRoleList.value[i];
-      if (element.managerId == props.selItemData.serverId) {
+      if (element.managerId == props.selItemData.managerId) {
         beauticianData = element;
       }
     }

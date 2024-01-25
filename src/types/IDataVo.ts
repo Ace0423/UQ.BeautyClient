@@ -92,7 +92,7 @@ export interface IBookingVo {
   lesson: string;
   lessonId: number;
   price: number;
-  serverId: number;
+  managerId: number;
   state: number;
   timer: number;
   tradeDone: boolean;

@@ -398,7 +398,7 @@ function getApptInfoFn(
         titleMonth: "" + element.memberInfo.nameView + " - " + element.serviceInfo.name,
         category: "time",
         dueDateClass: "",
-        serverId: element.serviceId,
+        managerId: element.serviceId,
         start: element.dateBooking,
         end: computeDate(element.dateBooking, "add", 0, 0, curTimer),
         raw: element,

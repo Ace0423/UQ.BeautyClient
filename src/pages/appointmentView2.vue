@@ -329,7 +329,7 @@ let tuiList: any = reactive([
   //     lesson: "課程-手",
   //     lessonId: 77,
   //     price: 2000,
-  //     serverId: 0,
+  //     managerId: 0,
   //     state: 0,
   //     timer: 120,
   //     tradeDone: false,
@@ -358,7 +358,7 @@ let tuiList: any = reactive([
   //     lesson: "課程-腳",
   //     lessonId: 77,
   //     price: 2000,
-  //     serverId: 0,
+  //     managerId: 0,
   //     state: 0,
   //     timer: 180,
   //     tradeDone: false,
@@ -469,8 +469,8 @@ function getApptInfoFn(
       tuiList = [];
       for (let i = 0; i < tuiBookingListRef.value.length; i++) {
         const element = tuiBookingListRef.value[i];
-        element.serverName = getManagerName(element.serverId);
-        let courseBgColor = element.serverId == 0 ? 0 : (element.serverId % 10) + 1;
+        element.serverName = getManagerName(element.managerId);
+        let courseBgColor = element.managerId == 0 ? 0 : (element.managerId % 10) + 1;
         courseBgColor = element.state == 1 ? 999 : courseBgColor;
         //顯示課程ITEM
         tuiList.push({
@@ -489,7 +489,7 @@ function getApptInfoFn(
           titleMonth: "" + element.customer + " - " + element.lesson,
           category: "time",
           dueDateClass: "",
-          serverId: element.serverId,
+          managerId: element.managerId,
           start: element.dateBooking,
           end: countTimeUtil(element.dateBooking, "add", 0, 0, element.timer),
           raw: element,
@@ -575,7 +575,7 @@ let changeStutusFn = (index: number, item: any) => {
     bookingNo: item.id ? item.id : item.bookingNo,
     userId: item.userId,
     lessonId: item.lessonId,
-    serverId: item.serverId,
+    managerId: item.managerId,
     dateBooking: item.dateBooking,
     timer: item.timer,
     tradeDone: item.tradeDone,
@@ -1059,7 +1059,7 @@ function editAddReserveBtn() {
     //     newApptDataRef.value.timeBooking = element;
     //   }
     // }
-    newApptDataRef.value.beauticianId = oldSelList.serverId;
+    newApptDataRef.value.beauticianId = oldSelList.managerId;
     newApptDataRef.value.selDate = oldSelList.dateBooking.split("T")[0];
     newApptDataRef.value.timeBooking =
       oldSelList.dateBooking.split("T")[1].split(":")[0] +
@@ -1079,7 +1079,7 @@ let delReserveId = () => {
         bookingNo: oldSelList.bookingNo,
         userId: oldSelList.userId,
         lessonId: oldSelList.lessonId,
-        serverId: oldSelList.serverId,
+        managerId: oldSelList.managerId,
         dateBooking: oldSelList.dateBooking,
         timer: oldSelList.timer,
         tradeDone: oldSelList.tradeDone,

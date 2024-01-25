@@ -748,7 +748,7 @@ export default {
           html.push("<strong>" + start.format("HH:mm") + "</strong> ");
 
         if (this_.proptuiOptions.tuiType != 0)
-          if (schedule.raw.serverId == 0) {
+          if (schedule.raw.managerId == 0) {
             html.push("<strong  style='float:right; background-color:#5B5B5B; border-radius:20%;'>" + managerName + "</strong> ");
           }
           else {

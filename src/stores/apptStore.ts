@@ -431,7 +431,7 @@ export const useApptStore = defineStore("apptStore", () => {
               arr: any
             ) {
               //處理數據
-              if (item.serverId == 0) {
+              if (item.managerId == 0) {
                 item.managerInfo = { managerId: 0, nameView: "不指定" }
               }
               item.serviceInfo.subList = [];
@@ -444,7 +444,7 @@ export const useApptStore = defineStore("apptStore", () => {
             return res.data.data.table;
           } else if (bkNo != "") {//  指定明細編號
             // let curItem = res.data.data.table[0];
-            // if (curItem.serverId == 0) {
+            // if (curItem.managerId == 0) {
             //   curItem.managerInfo = { managerId: 0, nameView: "不指定" }
             //   curItem.serverName = curItem.managerInfo.nameView;
             // }
@@ -455,7 +455,7 @@ export const useApptStore = defineStore("apptStore", () => {
             let curItems = [];
             for (let i = 0; i < res.data.data.table.length; i++) {
               const element = res.data.data.table[i];
-              if (element.serverId == 0) {
+              if (element.managerId == 0) {
                 element.managerInfo = { managerId: 0, nameView: "不指定" }
                 element.serverName = element.managerInfo.nameView;
               }
@@ -469,7 +469,7 @@ export const useApptStore = defineStore("apptStore", () => {
             let curItems = [];
             for (let i = 0; i < res.data.data.table.length; i++) {
               const element = res.data.data.table[i];
-              if (element.serverId == 0) {
+              if (element.managerId == 0) {
                 element.managerInfo = { managerId: 0, nameView: "不指定" }
                 element.serverName = element.managerInfo.nameView;
               }

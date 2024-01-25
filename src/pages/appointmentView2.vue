@@ -196,7 +196,7 @@
       </div>
     </div>
   </div>
-  <AddApptUI v-if="showAddReserveFormRef" :showAddReserveForm="showAddReserveForm"></AddApptUI>
+  <!-- <AddApptUI v-if="showAddReserveFormRef" :showAddReserveForm="showAddReserveForm"></AddApptUI>
   <EditApptUI v-if="showEditReserveFormRef" :showAddReserveForm="showEditReserveForm" :curApptDataRef="newApptDataRef"
     :showOkBtnRef="showOkBtnRef" :oldSelList="oldSelList"></EditApptUI>
   <AddRestTimeUI v-if="showAddRestUIRef" :showAddRestUIFn="showAddRestUIFn"></AddRestTimeUI>
@@ -208,8 +208,8 @@
   <div :class="tuiOptions.tuiType == 2 ? ' Tui_calendar_date' : 'Tui_calendar_main'
     " class="Tui_calendar_main" v-if="mainTabIndexRef == 0 && showWeekBoxRef != 3">
     <Tui_calendar :tuiList="tuiList" :tuiOptions="tuiOptions" :selectDate="selectDate" :selTuiListFn="selTuiListFn"
-      :tuiSetDate="tuiSetDate"></Tui_calendar>
-  </div>
+      :tuiSetDate="tuiSetDate"></Tui_calendar> 
+  </div>-->
 
   <div v-if="mainTabIndexRef == 0 && showWeekBoxRef == 3">
 

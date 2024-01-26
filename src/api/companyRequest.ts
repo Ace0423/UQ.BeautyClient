@@ -3,7 +3,6 @@ import { getToken } from "@/plugins/js-cookie";
 const managerRequest = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
     withCredentials: true,
-
 });
 
 export const getTimeTablesRequest = (data: any) => {

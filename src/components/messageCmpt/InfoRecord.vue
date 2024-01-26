@@ -58,15 +58,15 @@ onMounted(() => {
             <div class="content">
                 <h3>發送記錄現象</h3>
                 <p>發送時間:{{ props.selectRecordItemItem.mrDateGroup }}</p>
-                <p v-if="props.selectRecordItemItem.mrChannel ==0">發送頻道:LINE</p>
-                <p v-if="props.selectRecordItemItem.mrChannel ==1">發送頻道:簡訊</p>
+                <p v-if="props.selectRecordItemItem.mrChannel == 0">發送頻道:LINE</p>
+                <p v-if="props.selectRecordItemItem.mrChannel == 1">發送頻道:簡訊</p>
                 <div class="count-block">
                     <div>
-                        <p>{{props.selectRecordItemItem.mrCount}}</p>
+                        <p>{{ props.selectRecordItemItem.mrCount }}</p>
                         <p>總發送數</p>
                     </div>
                     <div>
-                        <p>{{props.selectRecordItemItem.mrPointSum}}</p>
+                        <p>{{ props.selectRecordItemItem.mrPointSum }}</p>
                         <p>消耗數量</p>
                     </div>
                 </div>
@@ -83,8 +83,8 @@ onMounted(() => {
                         <tr v-for="item in infoRecord.data " :key="item">
                             <td>
                                 <div>
-                                    <p>{{item.nameView}}</p>
-                                    <p>{{item.phone}}</p>
+                                    <p>{{ item.nameView }}</p>
+                                    <p>{{ item.phone }}</p>
                                 </div>
                             </td>
                         </tr>
@@ -169,7 +169,8 @@ onMounted(() => {
                         align-items: center;
                         height: 50px;
                         justify-content: space-between;
-margin: 0 10px;
+                        margin: 0 10px;
+
                         >th {
                             >p {
                                 padding: 0 0;
@@ -215,9 +216,10 @@ margin: 0 10px;
                         }
 
                         >td {
-                            >div{
+                            >div {
                                 margin: 0 10px;
                             }
+
                             >.header-btn {
                                 border: transparent;
                                 background-color: transparent;

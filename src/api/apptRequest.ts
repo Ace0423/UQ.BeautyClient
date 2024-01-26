@@ -140,6 +140,13 @@ export const getPayTypeListReq = (id: any) =>
   getHttps(httpRequest, "/Company/CheckOutType?cotid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
 
 
+//-----------------------------------------排休
+
+/**獲取預約 */
+export const getDayOffReq = (id: any, yy: any, mm: any, dd: any) =>
+  getHttps(httpRequest, "/manager/GetDayOff?managerId=" + id + "&year=" + yy + "&month=" + mm + "&day=" + dd + "&pageIndex=" + 0 + "&count=" + 0);
+
+
 
 
 

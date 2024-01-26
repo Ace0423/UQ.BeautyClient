@@ -3,7 +3,7 @@ let eventGuid = 0
 let todayStr = new Date().toISOString().replace(/T.*$/, '') // YYYY-MM-DD of today
 let bookInfo = { managerId: 5, managerInfo: { nameView: '芳療師A' } }
 export const INITIAL_EVENTS: any[] = [
-  { resourceId: 'd', id: createEventId(), title: '休息日', start: todayStr, color: '#6ffff3', user: '會員A', bookInfo },
+  { resourceId: 'd', id: createEventId(), title: '休假', start: todayStr, color: '#F0F0F0', user: '會員A', bookInfo },
   { resourceId: 'b', id: createEventId(), start: todayStr + 'T12:00:00', end: todayStr + 'T15:00:00', title: '課程0', user: '會員0', manager: '管理員0', bookInfo },
   { resourceId: 'a', id: createEventId(), start: todayStr + 'T15:00:00', end: todayStr + 'T16:00:00', title: '課程00', user: '會員00', manager: '管理員00', bookInfo },
   //{ id: '1', resourceId: 'b', start: '2024-01-18T02:00:00', end: '2024-01-18T07:00:00', title: '課程1', user: '會員1', manager: '管理員1', color: '#6ffff3', bookInfo }

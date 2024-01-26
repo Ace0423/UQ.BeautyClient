@@ -32,6 +32,7 @@ import {
   updateLessonTypeReq,
   updateServiceDetailReq,
   updateServiceGroupReq,
+  getDayOffReq,
 } from "@/api/apptRequest";
 import {
   addGoodsDetailReq,
@@ -797,7 +798,6 @@ export const useApptStore = defineStore("apptStore", () => {
 
   //#endregion
 
-
   //#region  訂單
   let orderList: any = ref([]);
   /**獲取訂單主表 */
@@ -858,6 +858,27 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   //#endregion
+
+  //#region 排休
+
+  /**獲取預約資料 */
+  const getDayOffApi = async (id: any = "", yy: any = 0, mm: any = 0, dd: any = 0) => {
+    try {
+      bookingList.value = [];
+      let res: any = await getDayOffReq(id, yy, mm, dd).then((res: any) => {
+        if (res.data.data) {
+
+        }
+        return res;
+      });
+      return res.data.data.table;
+    } catch (error) {
+      console.log("error");
+      console.log(error);
+    }
+  };
+  //#endregion
+
   return {
     //--------------------service
     addServiceGroupApi,
@@ -927,5 +948,7 @@ export const useApptStore = defineStore("apptStore", () => {
     orderInfoRef,
     getPayTypeListApi,
     payTypeListRef,
+    //-----------------休息日
+    getDayOffApi,
   };
 });

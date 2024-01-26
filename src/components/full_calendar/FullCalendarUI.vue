@@ -17,7 +17,7 @@ export default {
 
   //   ],
   // },
-  props: ['bookList', 'clickBookInfoFn', 'selectManager', 'changeDateTabsFn'],
+  props: ['bookList', 'clickBookInfoFn', 'selectManager', 'changeDateTabsFn', 'changeDateDayFn'],
   data: function () {
     return {
       calendarOptions: {
@@ -58,13 +58,21 @@ export default {
         eventSources: [], // 事件列表
         dayMaxEvents: true,  // 在dayGrid视图中如果每个单元格事件超出单元格会出现'+more'
         resourceAreaWidth: '280px', // 横轴资源视图的左侧列表宽度
-
-
         customButtons: {
           // 自定义button，如果想显示页面上，把timeline放到headerToolbar对象里。
           timeline: {
             text: '自定义',
             click: this.timelineEvent
+          },
+          next: {
+            click: this.nextClick
+          },
+          prev: {
+            click: this.prevClick
+          },
+          today: {
+            text: '今天',
+            click: this.todayClick
           }
         },
         businessHours: {
@@ -84,47 +92,65 @@ export default {
         select: this.handleDateSelect,
         eventClick: this.handleEventClick,
         eventsSet: this.handleEvents,
+
         eventDidMount: (arg: any) => {
           //#region 渲染預約Item
-          if (arg.event.id != "") {
-            let htmlStr = arg.el.innerHTML = ""
-            const event = arg.event;//規則變數
-            const info = event.extendedProps;//額外變數
-
-            console.log(333, event.extendedProps.bookInfo);
-
-            let managerId = event.extendedProps.bookInfo.managerId
+          const event = arg.event;//規則變數
+          if (event.id != "") {
+            let htmlStr = arg.el.innerHTML = "";
             let serverName = event.extendedProps.bookInfo.managerInfo.nameView
-            switch (arg.view.type) {
-              case 'dayGridMonth'://月曆
-                htmlStr += "<div class='fc-event-main'style='overflow:hidden;background-color:" + event.backgroundColor + "' >"
-                if (info.bookInfo.isAssign)//指定
-                  htmlStr += "<strong  style='  border-radius:20%;'>" + serverName + "</strong> "
-                else//不指定
-                  htmlStr += "<span style='white-space: nowrap;  background-color:#5B5B5B;'>" + serverName + "111" + "</span>"
+            let fontColor = event.backgroundColor
 
-                htmlStr += "<span style='white-space: nowrap; '>" + " - " + info.user + "</span>"
-                htmlStr += "<span  style='white-space: nowrap;'>" + " - " + event.title + "</span>"
+            if (event.backgroundColor == "#F0F0F0" || event.backgroundColor == "#717171") {
+              fontColor = "#FFFFFF";
+            } else {
+              fontColor = "#000000"
+            }
+            if (event.title == "休假") {
+              //#region 渲染休假
+              htmlStr += "<div class='fc-event-main'style='overflow:hidden;background-color:" + event.backgroundColor + "' >"
+              htmlStr += "<span style='white-space: nowrap; color: black; font-size: 14px;font-weight: bold;'>" + serverName + " " + "</span>"
+              htmlStr += "<span style='white-space: nowrap; color: black;'>" + event.title + "</span>"
+              //#endregion
+            } else {
+              //#region 渲染工作日
+              const info = event.extendedProps;//額外變數
+              let managerId = event.extendedProps.bookInfo.managerId
+              switch (arg.view.type) {
+                case 'dayGridMonth'://月曆
+                  htmlStr += "<div class='fc-event-main'style='overflow:hidden;background-color:" + event.backgroundColor + "' >"
+                  if (info.bookInfo.isAssign)//指定
+                    htmlStr += "<strong  style='  border-radius:20%; color:" + fontColor + ";'>" + serverName + "</strong> "
+                  else {//不指定
+                    htmlStr += "<span style='white-space: nowrap;  background-color:#5B5B5B; color:white; '>" + serverName + "</span>"
+                    // htmlStr += "<span style='white-space: nowrap;  background-color:#5B5B5B; font-weight: normal; color:white;'>" + serverName + "</span>"
+                  }
 
-                htmlStr += "</div>";
-                break;
-              case 'timeGridWeek'://週曆
-              case 'resourceTimeGridDay'://日曆
-                htmlStr += "<div class='fc-event-main' style='overflow:hidden;'>"
-                htmlStr += "<span style='white-space: nowrap; font-weight: bolder; font-size: 14px;'>" + event.startStr.slice(11, 16) + "</span>"
-                htmlStr += "<br/><span style='white-space: nowrap; font-weight: bolder; font-size: 14px;'>" + info.user + "</span>"
+                  htmlStr += "<span style='white-space: nowrap; color:" + fontColor + ";'>" + " - " + info.user + "</span>"
+                  htmlStr += "<span  style='white-space: nowrap; color:" + fontColor + ";'>" + " - " + event.title + "</span>"
+                  htmlStr += "</div>";
+                  break;
+                case 'timeGridWeek'://週曆
+                case 'resourceTimeGridDay'://日曆
+                  htmlStr += "<div class='fc-event-main' style='overflow:hidden;' >"
+                  htmlStr += "<span style='white-space: nowrap; font-weight: bolder; font-size: 14px;color:" + fontColor + ";'>" + event.startStr.slice(11, 16) + "</span>"
+                  htmlStr += "<br/><span style='white-space: nowrap; font-weight: bolder; font-size: 14px;color:" + fontColor + ";'>" + info.user + "</span>"
 
-                if (info.bookInfo.isAssign)//指定
-                  htmlStr += "<br/><strong  style='  border-radius:20%;  font-weight: normal;'>" + serverName + "</strong> "
-                else//不指定
-                  htmlStr += "<br/><span style='white-space: nowrap;  background-color:#5B5B5B; font-weight: normal;'>" + serverName + "</span>"
+                  if (info.bookInfo.isAssign)//指定
+                    htmlStr += "<br/><strong  style='  border-radius:20%;  font-weight: normal; color:" + fontColor + ";'>" + serverName + "</strong> "
+                  else//不指定
+                    htmlStr += "<br/><span style='white-space: nowrap;  background-color:#5B5B5B; font-weight: normal; color:white;'>" + serverName + "</span>"
 
-                htmlStr += "<br/><span  style='white-space: nowrap; font-weight: normal;'>" + event.title + "</span>"
-                htmlStr += "</div>";
-                break;
-              default:
-                console.log('無分類', arg.view.type);
-                break;
+                  htmlStr += "<br/><span  style='white-space: nowrap; font-weight: normal;color:" + fontColor + ";'>" + event.title + "</span>"
+                  htmlStr += "</div>";
+                  break;
+                default:
+                  console.log('無分類', arg.view.type);
+                  break;
+              }
+              //#endregion
+
+
             }
             arg.el.innerHTML = htmlStr;//替换HTML文本
           }
@@ -150,7 +176,6 @@ export default {
 
     },
     handleEventClick(clickInfo: any) {
-      console.log(222);
       this.clickBookInfoFn(clickInfo.event._def.extendedProps.bookInfo);
     },
     handleEvents(events: any) {
@@ -168,11 +193,25 @@ export default {
     loadBookList() {
       this.calendarOptions.events = this.bookList as any;
       // this.calendarOptions.events = INITIAL_EVENTS;
-
     },
     loadManagerList() {
       this.calendarOptions.resources = this.selectManager as any;
       // this.calendarOptions.resources = INITIAL_RESOURCES;
+    },
+    nextClick(mouseEvent: any, htmlElement: any) {
+      let cApi = ((this.$refs.fullCalendar) as any).getApi();
+      cApi.next();
+      this.changeDateDayFn(cApi.view.currentStart, cApi.view.currentEnd, cApi.view.title)
+    },
+    prevClick(mouseEvent: any, htmlElement: any) {
+      let cApi = ((this.$refs.fullCalendar) as any).getApi();
+      cApi.prev();
+      this.changeDateDayFn(cApi.view.currentStart, cApi.view.currentEnd, cApi.view.title)
+    },
+    todayClick(mouseEvent: any, htmlElement: any) {
+      let cApi = ((this.$refs.fullCalendar) as any).getApi();
+      cApi.today();
+      this.changeDateDayFn(cApi.view.currentStart, cApi.view.currentEnd, cApi.view.title)
     },
   },
   async beforeMount() {
@@ -185,13 +224,7 @@ export default {
   },
 
   mounted: function () {
-    // console.log(111, this.bookList);
-    // this.calendarOptions.events.push(this.bookList);
-    // this.calendarOptions.events.push({ id: '6', resourceId: 'c', start: '2024-01-19T10:00:00', end: '2024-01-19T12:00:00', title: '課程1', user: '會員1', manager: '管理員1', color: '#6ffff3' })
-
-    // this.calendarApi = this.$refs.fullCalendar.getApi();
-    // this.calendarApi.unselect()
-    // this.calendarApi.addEvent({ id: '6', resourceId: 'c', start: '2024-01-19T10:00:00', end: '2024-01-19T12:00:00', title: '課程1', user: '會員1', manager: '管理員1', color: '#6ffff3' })
+    this.calendarApi = ((this.$refs.fullCalendar) as any).getApi();
   },
   watch: {
     bookList: {
@@ -241,7 +274,7 @@ export default {
       </div>
     </div>
     <div class='content-main'>
-      <FullCalendar class='content-calendar' :options='calendarOptions' ref="fullCalendar">
+      <FullCalendar id="box1" class='content-calendar' :options='calendarOptions' ref="fullCalendar">
         <template v-slot:eventContent='arg'>
           <!-- <b>{{ arg.timeText }}</b>
           <i>{{ arg.event.title }}</i> -->

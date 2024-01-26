@@ -30,8 +30,9 @@
               {{ item.title }}
             </button>
           </div>
-          <el-select v-if="showManagerSelect" v-model="selectManager" multiple clearable collapse-tags value-key="id"
-            placeholder="人員" popper-class="custom-header" :max-collapse-tags="1" style="width: 240px">
+          <el-select v-if="showManagerSelect && mainTabIndexRef == 0" v-model="selectManager" multiple clearable
+            collapse-tags value-key="id" placeholder="人員" popper-class="custom-header" :max-collapse-tags="1"
+            style="width: 240px">
             <template #header>
               <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
                 All
@@ -45,7 +46,7 @@
           <div class="appt_calendar" name="預約排程" v-show="mainTabIndexRef == 0">
             <div v-if="mainTabIndexRef == 0">
               <FullCalendarUI v-if="showFullUIRef" :bookList="bookingListRef" :clickBookInfoFn="clickBookInfoFn"
-                :selectManager="selectManager" :changeDateTabsFn="changeDateTabsFn" />
+                :selectManager="selectManager" :changeDateTabsFn="changeDateTabsFn" :changeDateDayFn="changeDateDayFn" />
             </div>
           </div>
 
@@ -120,7 +121,7 @@ import btn_msg_ico from "@/assets/images/icon_msg.png";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
-import { addZeroDateFn, colorValues, countTimeUtil, getColorNum } from "@/utils/utils";
+import { addZeroDateFn, colorValues, countTimeUtil, formatDateTime, getColorNum } from "@/utils/utils";
 import Alert from "@/components/alertCmpt";
 import { useManagerStore } from "@/stores/manager";
 import { useCounterStore } from "@/stores/counter";
@@ -141,6 +142,7 @@ let { managerList, tuiBookingListRef } =
   storeToRefs(store);
 let {
   getApptDataApi,
+  getDayOffApi,
   postEditApptStateApi,
   getManagerListApi,
 } = store;
@@ -168,6 +170,7 @@ let checkYM = ref(true);
 let currentDay = ref(new Date().getDate());
 let currentMonth = ref(new Date().getMonth());
 let currentYear = ref(new Date().getFullYear());
+let bookingListRef: any = ref([]);
 
 let nowdatetime = curDateFn();
 let selDate = ref(nowdatetime);
@@ -226,9 +229,17 @@ function getDataFn(data: any) {
 let managerListRef: any = ref([]);
 onBefore();
 function onBefore() {
+  getApptInfoFn(new Date().getFullYear(), new Date().getMonth() + 1);
+}
+onMounted(() => {
+  // resetApptTable();
+});
+/**抓取預約紀錄 */
+function getApptInfoFn(year: number = 0, month: number = 0, date: number = currentDay.value) {
+  bookingListRef.value = [];
+  managerListRef.value = [];
   // 獲取美容師
   getManagerListApi(0, 5).then((res) => {
-    managerListRef.value = [];
     for (let i = 0; i < res.length; i++) {
       const element = res[i];
       managerListRef.value.push({
@@ -236,28 +247,14 @@ function onBefore() {
         title: element.nameView,
         managerInfo: element,
       })
+      handleCheckAll(true);
     }
     //預設全選
   });
-  getApptInfoFn(new Date().getFullYear(), new Date().getMonth() + 1);
-}
-onMounted(() => {
-  // resetApptTable();
-});
-let bookingListRef: any = ref([]);
-/**抓取預約紀錄 */
-function getApptInfoFn(
-  year: number,
-  month: number,
-  date: number = currentDay.value
-) {
   //預先呼叫api獲取數據
-  getApptDataApi("", "", year = 0, month = 0).then((res: any) => {
+  getApptDataApi("", "", year, month).then((res: any) => {
     // resetApptTable(year, month, date)
-
-    handleCheckAll(true);
     tuiList.value = [];
-    bookingListRef.value = [];
     for (let i = 0; i < tuiBookingListRef.value.length; i++) {
       //{ id: '1', resourceId: 'b', start: '2024-01-18T02:00:00', end: '2024-01-18T07:00:00', title: '課程1', user: '會員1', manager: '管理員1', color: '#6ffff3' }
       const element = tuiBookingListRef.value[i];
@@ -274,11 +271,33 @@ function getApptInfoFn(
         color: curColor,
       })
     }
-    getRestList(0, year, month, date);
+    // getRestList(0, year, month, date);
   });
+  getDayOffList(0, year, month, date);
 }
-let restList: any = ref([
-]);
+let dayOffList: any = ref([]);
+function getDayOffList(id: any, yy: any, mm: any, dd: any) {
+  getDayOffApi(id, yy, mm, dd).then((res: any) => {
+    console.log('getDayOffApi', res);
+    for (let i = 0; i < res.length; i++) {
+      const element = res[i];
+      bookingListRef.value.push({
+        bookInfo: element,
+        id: element.mwNo,
+        resourceId: element.managerInfo.managerId,
+        start: element.date,
+        title: "休假",
+        user: "",
+        manager: element.managerInfo.nameView,
+        color: '#F0F0F0',
+      })
+    }
+  })
+}
+
+
+
+let restList: any = ref([]);
 //獲取休息日
 function getRestList(id: any, y: any, m: any, d: any) {
   let data = {
@@ -303,6 +322,7 @@ function getRestList(id: any, y: any, m: any, d: any) {
       }
     });
 }
+//格式化休息日
 function setRestTimeFn(data: any) {
   // showTuiApptRef.value = false;
   showFullUIFn(false);
@@ -492,6 +512,14 @@ function changeDateTabsFn(data: any) {
     showManagerSelect.value = true;
   else//月曆週曆
     showManagerSelect.value = false;
+};
+//日曆換日期按鈕
+function changeDateDayFn(start: any, end: any, date: any) {
+  console.log(formatDateTime(start));
+  console.log(formatDateTime(end));
+  console.log(start.getFullYear());
+  console.log(end.getMonth());
+  getApptInfoFn(start.getFullYear(), end.getMonth() + 1, 0);
 };
 
 </script>

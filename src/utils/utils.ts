@@ -157,7 +157,7 @@ export function countTimeUtil(
 }
 
 //时间戳转换方法yyyy-MM-dd HH:mm:ss(时间戳)
-function formatDateTime(time: any) {
+export function formatDateTime(time: any) {
   let date = new Date(time);
 
   let YY = date.getFullYear();

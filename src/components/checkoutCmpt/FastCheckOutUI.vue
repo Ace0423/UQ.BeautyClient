@@ -92,7 +92,7 @@
             </span>
             <div class="link-bottom"></div>
             <div name="備註" class="msg-add">
-              <el-input v-model="formInputRef.memo" maxlength="1000" placeholder="請輸入備註" show-word-limit type="text" />
+              <el-input v-model="formInputRef.memo" maxlength="10" placeholder="請輸入備註" show-word-limit type="text" />
             </div>
             <div class="link-bottom"></div>
             <div name="其他項目" class="other-item">

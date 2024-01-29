@@ -50,7 +50,7 @@
             </span>
             <div class="link-bottom"></div>
             <div class="msg-add" name="備註">
-              <el-input v-model="formInputRef.bookingMemo" maxlength="1000" placeholder="請輸入備註" show-word-limit
+              <el-input v-model="formInputRef.bookingMemo" maxlength="10" placeholder="請輸入備註" show-word-limit
                 type="text" />
             </div>
             <div class="link-bottom"></div>

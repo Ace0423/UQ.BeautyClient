@@ -114,19 +114,19 @@ export default {
               //#endregion
             } else {
               //#region 渲染工作日
-              const info = event.extendedProps;//額外變數
+              const info = event.extendedProps.bookInfo;//額外變數
               let managerId = event.extendedProps.bookInfo.managerId
               switch (arg.view.type) {
                 case 'dayGridMonth'://月曆
                   htmlStr += "<div class='fc-event-main'style='overflow:hidden;background-color:" + event.backgroundColor + "' >"
-                  if (info.bookInfo.isAssign)//指定
+                  if (info.isAssign)//指定
                     htmlStr += "<strong  style='  border-radius:20%; color:" + fontColor + ";'>" + serverName + "</strong> "
                   else {//不指定
                     htmlStr += "<span style='white-space: nowrap;  background-color:#5B5B5B; color:white; '>" + serverName + "</span>"
                     // htmlStr += "<span style='white-space: nowrap;  background-color:#5B5B5B; font-weight: normal; color:white;'>" + serverName + "</span>"
                   }
 
-                  htmlStr += "<span style='white-space: nowrap; color:" + fontColor + ";'>" + " - " + info.user + "</span>"
+                  htmlStr += "<span style='white-space: nowrap; color:" + fontColor + ";'>" + " - " + info.memberInfo.nameView + "</span>"
                   htmlStr += "<span  style='white-space: nowrap; color:" + fontColor + ";'>" + " - " + event.title + "</span>"
                   htmlStr += "</div>";
                   break;
@@ -134,14 +134,17 @@ export default {
                 case 'resourceTimeGridDay'://日曆
                   htmlStr += "<div class='fc-event-main' style='overflow:hidden;' >"
                   htmlStr += "<span style='white-space: nowrap; font-weight: bolder; font-size: 14px;color:" + fontColor + ";'>" + event.startStr.slice(11, 16) + "</span>"
-                  htmlStr += "<br/><span style='white-space: nowrap; font-weight: bolder; font-size: 14px;color:" + fontColor + ";'>" + info.user + "</span>"
+                  htmlStr += "<br/><span style='white-space: nowrap; font-weight: bolder; font-size: 14px;color:" + fontColor + ";'>" + info.memberInfo.nameView + "</span>"
 
-                  if (info.bookInfo.isAssign)//指定
+                  if (info.isAssign)//指定
                     htmlStr += "<br/><strong  style='  border-radius:20%;  font-weight: normal; color:" + fontColor + ";'>" + serverName + "</strong> "
                   else//不指定
                     htmlStr += "<br/><span style='white-space: nowrap;  background-color:#5B5B5B; font-weight: normal; color:white;'>" + serverName + "</span>"
 
                   htmlStr += "<br/><span  style='white-space: nowrap; font-weight: normal;color:" + fontColor + ";'>" + event.title + "</span>"
+                  if (info.bookingMemo != "") {
+                    htmlStr += "<br/><span  style='white-space: nowrap; font-weight: normal;color:" + fontColor + ";'>" + "(P.S. " + info.bookingMemo + ")" + "</span>"
+                  }
                   htmlStr += "</div>";
                   break;
                 default:
@@ -312,6 +315,10 @@ b {
   /* min-height: 100%; */
   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
   font-size: 14px;
+}
+
+.fc-popover {
+  z-index: 1002 !important;
 }
 
 .content-calendar {

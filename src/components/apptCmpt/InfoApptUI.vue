@@ -36,7 +36,7 @@
             </div>
             <div class="grey-guest">
               <div class="grey-box">
-                <span>人數1位</span>
+                <span>人數{{formInputRef.bookingList[0].people}}位</span>
               </div>
             </div>
             <div class="list_btn">
@@ -326,7 +326,8 @@ let delReserveId = (item: any) => {
 
           .info-guest {
             display: flex;
-            width: 80%;
+            width: 90%;
+            margin-left: 5%;
             justify-content: center;
             height: 40%;
 
@@ -341,6 +342,7 @@ let delReserveId = (item: any) => {
             >div {
               height: 100%;
               padding-left: 10px;
+              width: calc(85% - 10px);
 
               >span {
                 height: 50%;
@@ -382,6 +384,7 @@ let delReserveId = (item: any) => {
           .list_btn {
             position: relative;
             height: 40%;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -444,7 +447,7 @@ let delReserveId = (item: any) => {
               justify-content: center;
               display: flex;
               height: 100%;
-              width: 80%;
+              width: 100%;
               background-color: #e6e2de;
               border-radius: 10px;
               color: #717171;

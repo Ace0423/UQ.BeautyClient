@@ -110,12 +110,13 @@
                   </button>
                 </div>
               </div>
-              <!-- <div>
-                <span>優惠券</span>
-              </div>
               <div>
-                <span>儲值卡</span>
-              </div> -->
+                <div class="discount-link">
+                  <span class="name-link">儲值卡</span>
+                  <span :class="formInputRef.memberInfo.userId == 0 ? 'a-nolink' : 'a-link'"
+                    v-on:click="showRdTopUpCardFn(true)">使用儲值卡</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -147,9 +148,12 @@
               </div>
               <div v-for="(dItem, index) in allDCListCpt" :key="dItem">
                 <span>{{ dItem.title }}</span>
-                <!-- <span v-if="dItem.dType == 1">{{ "($ - " + Math.floor(dItem.discount * formInputRef.priceTotal) + ")" }}</span> -->
                 <span v-if="dItem.dType == 1">{{ "($ - " + mathAllPercentFn(dItem) + ")" }}</span>
                 <span v-if="dItem.dType == 2">{{ "($ - " + (dItem.discount) + ")" }}</span>
+              </div>
+              <div v-if="formInputRef.useTopUpCard">
+                <span>{{ formInputRef.useTopUpCard.topUpCardInfo.tuTitle }}</span>
+                <span>{{ "($ - " + formInputRef.useTopUpPrice + ")" }}</span>
               </div>
             </div>
             <div class="link-bottom"></div>
@@ -182,6 +186,8 @@
     :getDataFn="getItemInfoFn" />
   <RdAllDiscountUI v-if="showRdAllDiscountUIRef" :selData="formInputRef.allDiscount" :getDataFn="getRdDiscountFn"
     :showRdDFn="showRdAllDiscountFn" />
+  <RdTopUpCardUI v-if="showRdTopUpCardUIRef" :selData="formInputRef.memberInfo" :getDataFn="getRdTopUpCardFn"
+    :showUIFn="showRdTopUpCardFn" />
   <EditItemServiceUI v-if="showEditItemServiceUIRef" :selData="selctItemInfoRef" :showUIFn="showEditSVInfoUIFn"
     :getDataFn="getEditSVInfoFn" :delDataFn="delItemFn" />
   <EditItemGoodsUI v-if="showEditItemGoodsUIRef" :selData="selctItemInfoRef" :showUIFn="showEditGdInfoUIFn"
@@ -211,13 +217,14 @@ let showEditItemServiceUIRef = ref(false);
 let showEditItemGoodsUIRef = ref(false);
 let showEditItemTopUpUIRef = ref(false);
 let selctItemInfoRef = ref(null);
+let showRdTopUpCardUIRef = ref(false);
 
 let store = useApptStore();
 let { payTypeListRef } = storeToRefs(store);
 let { addCheckOutApi, getPayTypeListApi, getApptDataApi, getApptDataByUserApi } = store;
 
 let formInputRef: any = ref({
-  memberInfo: { nameView: "顧客", phone: "請選擇顧客" },
+  memberInfo: { userId: 0, nameView: "顧客", phone: "請選擇顧客" },
   customerCount: 1,
   memo: "",
   payTypeId: 1,
@@ -226,6 +233,9 @@ let formInputRef: any = ref({
   priceAllDC: null,
   buyItemsList: [],
   allDiscount: [],
+  bkListNo: "",
+  useTopUpCard: null,
+  useTopUpPrice: 0,
 });
 
 let subTab = [
@@ -246,24 +256,25 @@ function onBeforeFn() {
 
   if (props.selData == '快速結帳') {
     console.log(111, props.selData);
-
+    formInputRef.value.bkListNo = "";
   } else {
     formInputRef.value.memberInfo = props.selData.memberInfo;
-    // getApptDataApi("", props.selData.bkListNo).then((res) => {
-    //   for (let i = 0; i < res.length; i++) {
-    //     const element = res[i];
-    //     element.serviceInfo.managerInfo=element.managerInfo
-    //     getItemInfoFn({ selectService: element.serviceInfo })
-    //   }
-    // });
-
-    getApptDataByUserApi(props.selData.memberInfo.userId, props.selData.dateBooking).then((res) => {
+    formInputRef.value.bkListNo = props.selData.bkListNo;
+    getApptDataApi("", props.selData.bkListNo).then((res) => {
       for (let i = 0; i < res.length; i++) {
         const element = res[i];
         element.serviceInfo.managerInfo = element.managerInfo
         getItemInfoFn({ selectService: element.serviceInfo })
       }
     });
+
+    // getApptDataByUserApi(props.selData.memberInfo.userId, props.selData.dateBooking).then((res) => {
+    //   for (let i = 0; i < res.length; i++) {
+    //     const element = res[i];
+    //     element.serviceInfo.managerInfo = element.managerInfo
+    //     getItemInfoFn({ selectService: element.serviceInfo })
+    //   }
+    // });
   }
 }
 onMounted(() => {
@@ -277,6 +288,8 @@ function getPayTypeListFn(id: any = 0) {
 let payAmountCpt = computed(() => {
   let curPrice = formInputRef.value.priceTotal;
   let dcPrice = 0;
+  let amount = 0;
+  //計算全單折扣
   for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
     const element = formInputRef.value.allDiscount[i];
     if (element.dType == 1 || element.dType == 3) {
@@ -285,8 +298,19 @@ let payAmountCpt = computed(() => {
       dcPrice += element.discount
     }
   }
+  amount = (curPrice < dcPrice) ? 0 : (curPrice - dcPrice)
+  //計算使用儲值卡
+  if (formInputRef.value.useTopUpCard) {
+    formInputRef.value.useTopUpPrice = 0;
+    let curUseBalance = formInputRef.value.useTopUpCard.balance;
+    if (amount < curUseBalance) {
+      formInputRef.value.useTopUpPrice = amount;
+    } else {
+      formInputRef.value.useTopUpPrice = curUseBalance;
+    }
+    amount -= formInputRef.value.useTopUpPrice;
+  }
 
-  let amount = (curPrice < dcPrice) ? 0 : (curPrice - dcPrice)
   return amount
 });
 let allDCListCpt = computed(() => {
@@ -333,6 +357,11 @@ function showItemMenuUIFn(state: boolean) {
 function showRdAllDiscountFn(state: boolean) {
   showRdAllDiscountUIRef.value = state;
 }
+function showRdTopUpCardFn(state: boolean) {
+  showRdTopUpCardUIRef.value = state;
+}
+
+
 function getRdDiscountFn(data: any) {
   let curAllDiscount = [];
   for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
@@ -344,6 +373,11 @@ function getRdDiscountFn(data: any) {
   curAllDiscount.push(data);
   formInputRef.value.allDiscount = curAllDiscount;
   showRdAllDiscountFn(false);
+}
+function getRdTopUpCardFn(data: any) {
+  console.log("儲值卡", data);
+  formInputRef.value.useTopUpCard = data;
+  showRdTopUpCardFn(false);
 }
 function delDiscount(type: any) {
   let curAllDiscount = [];
@@ -576,6 +610,15 @@ function submitBtn() {
 
   if (!checkVerify_all(ruleLists)) return;
 
+  let curTopUpInfo = null;
+  if (formInputRef.value.useTopUpCard)
+    curTopUpInfo = {
+      id: formInputRef.value.useTopUpCard.id,
+      balance: formInputRef.value.useTopUpCard.balance,
+      tuId: formInputRef.value.useTopUpCard.tuId,
+      useTopUpPrice: formInputRef.value.useTopUpPrice,
+    }
+
   let formData: any = formInputRef.value;
   let apiData: any = {};
   apiData.COCustomerCount = formData.customerCount;
@@ -586,6 +629,8 @@ function submitBtn() {
   apiData.COTotalPrice = formData.priceTotal;
   apiData.COAllDCList = formInputRef.value.allDiscount;
   apiData.COAmount = payAmountCpt.value;
+  apiData.bkListNo = formInputRef.value.bkListNo;
+  apiData.useTopUpInfo = curTopUpInfo;
 
   /**新增結帳 */
   addCheckOutApi(apiData).then((res: any) => {
@@ -931,6 +976,16 @@ let { ruleItem } = toRefs(ruleLists);
                   align-items: center;
                   color: #00b7ff;
                   font-size: 18px;
+                }
+
+                .a-nolink {
+                  display: flex;
+                  height: 60px;
+                  align-items: center;
+                  color: #707070;
+                  font-size: 18px;
+                  cursor: pointer;
+                  pointer-events: none;
                 }
               }
 

@@ -271,3 +271,27 @@ export const TopUpLimitDay: any = [
     label: '6月',
   }
 ]
+
+export const goodsUnitGroup: string[] = [
+  "不選擇",
+  "毫升",
+  "公升",
+  "功課",
+  "公斤",
+  "盎司",
+  "片",
+  "袋",
+  "包",
+  "個",
+  "組",
+  "式",
+  "瓶",
+  "罐",
+];
+export const bookingState: string[] = [
+  "新預約",
+  "已完成",
+  "",
+  "店家取消",
+  "已結帳",
+];

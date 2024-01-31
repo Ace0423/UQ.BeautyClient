@@ -151,10 +151,16 @@ let formInputRef: any = ref({
 
 onBefore();
 function onBefore() {
-    getOrderInfoApi(props.selItemData.coNo).then(() => {
-        console.log("orderInfoRef", orderInfoRef.value);
-        formInputRef.value.orderInfo = orderInfoRef.value
-    })
+    if (props.selItemData.coNo != "") {
+        getOrderInfoApi(props.selItemData.coNo).then((res) => {
+            console.log("orderInfoRef", orderInfoRef.value);
+            formInputRef.value.orderInfo = orderInfoRef.value
+        })
+    } else {
+        getOrderInfoApi("", props.selItemData.bkListNo).then((res) => {
+            formInputRef.value.orderInfo = res;
+        })
+    }
 }
 onMounted(() => {
 });

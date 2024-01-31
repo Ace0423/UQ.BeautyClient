@@ -87,27 +87,8 @@ export const deleteCouponReq = (data: any) =>
 //--------------------------------計次券
 //#region 計次券  
 /**獲取 */
-export const getCountTicketReq = (
-  id: any,
-  select: any,
-  type: any,
-  page: any,
-  count: any
-) =>
-  getHttps(
-    httpRequest,
-    "/Discounts/ForFreeCard" +
-    "?FFId=" +
-    id +
-    "&select=" +
-    select +
-    "&type=" +
-    type +
-    "&pageIndex=" +
-    page +
-    "&count=" +
-    count
-  );
+export const getCountTicketReq = (id: any, select: any, type: any, page: any, count: any) =>
+  getHttps(httpRequest, "/Discounts/ForFreeCard" + "?FFId=" + id + "&select=" + select + "&type=" + type + "&pageIndex=" + page + "&count=" + count);
 
 /**新增 */
 export const addCountTicketReq = (data: any) =>
@@ -124,4 +105,11 @@ export const deleteCountTicketReq = (data: any) =>
   deleteHttps(httpRequest, "/Discounts/ForFreeCard" + "?FFId=" + data, data);
 //#endregion
 
+
+//#region 儲值卡  
+
+/**獲取單品折扣 */
+export const getTopUpUseDetailReq = (UId: any, page: any, count: any) =>
+  getHttps(httpRequest, "/Discounts/TopUpUseDetail?UId=" + UId + "&pageIndex=" + page + "&count=" + count);
+//#endregion
 

@@ -12,7 +12,7 @@
         <div class="add-goodsType-btndiv">
           <draggable
             v-model="goodsTypesListRef"
-            group="people"
+            group="customerCount"
             @start="drag = true"
             @end="drag = false"
             item-key="id"

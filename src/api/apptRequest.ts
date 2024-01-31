@@ -133,8 +133,8 @@ export const addCheckOutReq = (data: any) =>
 export const getOrderListReq = (id: any, startDate: any, endDate: any, isList: any) =>
   getHttps(httpRequest, "/Order/OrderList?oid=" + id + "&startDate=" + startDate + "&endDate=" + endDate + "&isList=" + isList + "&pageIndex=" + 0 + "&count=" + 0);
 /**獲取訂單明細 */
-export const getOrderDetailReq = (id: any, isList: any) =>
-  getHttps(httpRequest, "/Order/OrderInfo?oid=" + id + "&isList=" + isList + "&pageIndex=" + 0 + "&count=" + 0);
+export const getOrderDetailReq = (id: any, bkListNo: any, isList: any) =>
+  getHttps(httpRequest, "/Order/OrderInfo?oid=" + id + "&bkListNo=" + bkListNo + "&isList=" + isList + "&pageIndex=" + 0 + "&count=" + 0);
 /**獲取付款方式 */
 export const getPayTypeListReq = (id: any) =>
   getHttps(httpRequest, "/Company/CheckOutType?cotid=" + id + "&pageIndex=" + 0 + "&count=" + 0);

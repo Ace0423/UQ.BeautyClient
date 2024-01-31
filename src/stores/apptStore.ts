@@ -821,11 +821,11 @@ export const useApptStore = defineStore("apptStore", () => {
 
   let orderInfoRef: any = ref([]);
   /**獲取訂單明細 */
-  const getOrderInfoApi = async (id: any = "", isList: any = 0) => {
+  const getOrderInfoApi = async (id: any = "", bkListNo = "", isList: any = 0) => {
     try {
       orderInfoRef.value = [];
-      let res: any = await getOrderDetailReq(id, isList).then((res: any) => {
-        if (res.data.data && id != "") {
+      let res: any = await getOrderDetailReq(id, bkListNo, isList).then((res: any) => {
+        if (res.data.data && (id != "" || bkListNo != "")) {
           let detailVo: any = res.data.data.table[0];
           orderInfoRef.value = detailVo;
           return orderInfoRef.value;

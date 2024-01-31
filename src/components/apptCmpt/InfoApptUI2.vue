@@ -36,7 +36,7 @@
             </div>
             <div class="grey-guest">
               <div class="grey-box">
-                <span v-if="formInputRef.bookingList.length > 0">人數{{ formInputRef.bookingList[0].customerCount }}位</span>
+                <span>人數{{formInputRef.bookingList[0].customerCount}}位</span>
               </div>
             </div>
             <div class="list_btn">
@@ -81,10 +81,9 @@
       </div>
       <div class="footer">
         <div class="link-bottom"></div>
-        <div class="content-checkoutbtn" v-if="formInputRef.bookingList.length > 0">
+        <div class="content-checkoutbtn">
           <!-- <span>結帳</span> -->
-          <button v-if="formInputRef.bookingList[0].state != 4" @click="showCheckOutUIHdr(true)">結帳</button>
-          <button v-else @click="showOrderInfoFn(true)">查看結帳明細</button>
+          <button @click="showCheckOutUIHdr(true)">結帳</button>
         </div>
       </div>
 
@@ -93,7 +92,6 @@
   <FastCheckOutUI v-if="showCheckOutRef" :showUIFn="showCheckOutUIHdr" :selData="selItemData" />
   <EditApptUI v-if="showEditReserveFormRef" :showEditApptFn="showEditReserveForm" :oldSelList="props.selItemData">
   </EditApptUI>
-  <InfoOrderDetail v-if="showOrderInfoRef" :showUIHdr="showOrderInfoFn" :selItemData="orderItem" />
 </template>
 <script setup lang="ts">
 import closeIcon from "@/assets/Group32.svg";
@@ -109,7 +107,11 @@ let { bookingList, courseDataList, timeGroup, tuiBookingListRef } =
   storeToRefs(store);
 let {
   getApptDataApi,
+  getMemberListApi,
+  getCourseDetailApi,
+  postEditApptDataApi,
   postEditApptStateApi,
+  getBeauticianApi,
 } = store;
 
 const managerstore = useManagerStore();
@@ -118,7 +120,6 @@ const { getManagerListNew } = managerstore;
 const simpleView = ref(true);
 let showCheckOutRef = ref(false);
 let showEditReserveFormRef = ref(false);
-let showOrderInfoRef: any = ref(false);
 // let curBookingList = ref([]);
 
 const props = defineProps<{
@@ -159,13 +160,11 @@ let weekDayCpt: any = computed(() => {
   var week = weekArray[new Date(props.selItemData.dateBooking).getDay()];
   return week;
 });
-let orderItem = ref({});
 onBeforeFn();
 function onBeforeFn() {
   getApptDataApi(props.selItemData.bookingNo).then((res) => {
     // getApptDataApi("", props.selItemData.bkListNo).then((res) => {
     formInputRef.value.bookingList = res;
-    orderItem.value = { coNo: "", bkListNo: res[0].bkListNo };
   });
 }
 onMounted(() => {
@@ -253,10 +252,6 @@ let delReserveId = (item: any) => {
     }
   });
 };
-function showOrderInfoFn(state: boolean) {
-  showOrderInfoRef.value = state;
-  // getOrderListApi(0);
-}
 </script>
 
 <style scoped lang="scss">

@@ -12,7 +12,7 @@
         <div class="add-coursedetail-btndiv">
           <draggable
             v-model="courseTypesTabs"
-            group="people"
+            group="customerCount"
             @start="drag = true"
             @end="drag = false"
             item-key="id"

@@ -83,7 +83,7 @@
           </span>
           <div class="customer-total">
             <span v-on:click="countCoustomerFn(-1)">-</span>
-            <span class="customer-headcount">人數 {{ formInputRef.people }} 位</span>
+            <span class="customer-headcount">人數 {{ formInputRef.customerCount }} 位</span>
             <span v-on:click="countCoustomerFn(+1)">+</span>
           </div>
           <div class="link-bottom"></div>
@@ -153,7 +153,7 @@ let formInputRef: any = ref({
   memberInfo: { userId: 0, nameView: "顧客", phone: "請選擇顧客" },
   managerInfo: noManagerInfo,
   isAssign: false,
-  people: 1,
+  customerCount: 1,
   bookingMemo: "",
   priceTotal: 0,
   buyServicesGroup: [],
@@ -187,8 +187,8 @@ function getMembersFn(data: any) {
   showMemberUIFn(false);
 }
 function countCoustomerFn(data: number) {
-  if (formInputRef.value.people + data > 0)
-    formInputRef.value.people += data;
+  if (formInputRef.value.customerCount + data > 0)
+    formInputRef.value.customerCount += data;
 }
 function submitBtn() {
   console.log(333, formInputRef.value);
@@ -224,7 +224,7 @@ function submitBtn() {
       // time: element.servicesTime,
       timer: element.subList.length > 0 ? element.subList[0].servicesTime : element.servicesTime,
       subId: element.subList.length > 0 ? element.subList[0].subId : 0,
-      people:formInputRef.value.people,
+      customerCount:formInputRef.value.customerCount,
     });
   }
 

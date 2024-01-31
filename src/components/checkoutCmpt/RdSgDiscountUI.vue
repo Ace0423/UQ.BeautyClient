@@ -89,7 +89,9 @@
                     <div class='key-cell' data-num='0'>0</div>
                     <div class='key-cell' data-num='D'>D</div>
                   </div>
-                  <button class="key-confirm" @click="submitBtn()">確認折扣</button>
+                  <div>
+                    <button class="key-confirm" @click="submitBtn()">確認折扣</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -102,7 +104,7 @@
       <div class="bottom-content">
         <!-- <button class="submit-btn" @click="submitBtn()">確認</button>
         <button class="cancle-btn" @click="showServiceUIFn(0)">取消</button> -->
-        <button class="cancle-btn" @click="clearAll()">移除折扣</button> 
+        <button class="cancle-btn" @click="clearAll()">移除折扣</button>
       </div>
     </div>
   </div>
@@ -141,7 +143,7 @@ function onBeforeFn() {
   getSgDiscountFn(props.itemData.ItemType, props.itemData.Id);
 }
 function getSgDiscountFn(ItemType: number, Id: number) {
-  getSgDiscountByItemApi(ItemType, Id).then(()=>{
+  getSgDiscountByItemApi(ItemType, Id).then(() => {
   });
 }
 onMounted(() => {
@@ -151,7 +153,7 @@ onMounted(() => {
 if (props.selData) {
 }
 let filterSgDcData: any = computed(() =>
-sgDcListByItemRef.value.filter(getDiscountFn)
+  sgDcListByItemRef.value.filter(getDiscountFn)
 );
 function getDiscountFn(data: any) {
   return (
@@ -309,7 +311,6 @@ function clearAll() {
       display: block;
       height: calc(100% - 70px - 70px);
       padding: 0 10px;
-      // width: calc(100% - 10px);
 
       .tabs-content {
         display: flex;
@@ -356,7 +357,7 @@ function clearAll() {
           // padding: 1em;
           width: 90%;
           order: 1;
-          height: calc(100%);
+          height: calc(100% - 50px);
 
           .options-content {
             height: calc(100% - 35px);
@@ -501,6 +502,7 @@ function clearAll() {
 
           .input-content {
             width: 100%;
+            height: 100%;
 
             .key-title {
               display: flex;
@@ -508,13 +510,14 @@ function clearAll() {
               width: 100%;
               height: 60px;
               background-color: #dddddd;
-              padding: 0 5px;
+              // padding: 0 5px;
               justify-content: space-between;
 
               .switch-box {
                 display: flex;
                 width: 68px;
                 height: 34px;
+                margin-left: 5px;
 
                 .switch {
                   width: calc(100% - 8px);
@@ -564,6 +567,7 @@ function clearAll() {
               .input-box {
                 width: calc(100% - 80px);
                 height: 100%;
+                margin-right: 5px;
 
                 .input-type {
                   height: 40%;
@@ -608,18 +612,24 @@ function clearAll() {
                   }
                 }
 
-                .key-confirm {
-                  position: relative;
+                >div {
                   display: flex;
-                  justify-content: center;
-                  align-items: center;
                   width: 100%;
-                  height: 50px;
-                  border-radius: 8px;
-                  font-size: 20px;
-                  font-weight: bold;
-                  color: #717171;
-                  background-color: #fff;
+                  justify-content: center;
+
+                  .key-confirm {
+                    position: relative;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 270px;
+                    height: 45px;
+                    border-radius: 8px;
+                    font-size: 20px;
+                    font-weight: bold;
+                    color: #717171;
+                    background-color: #fff;
+                  }
                 }
               }
             }
@@ -633,6 +643,9 @@ function clearAll() {
       display: flex;
       align-items: end;
       justify-content: left;
+      border-top: solid 1px #ddd;
+      box-sizing: border-box;
+
 
       // height: calc(65px);
       // width: 100px;

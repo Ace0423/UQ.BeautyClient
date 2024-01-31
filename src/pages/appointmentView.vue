@@ -66,17 +66,19 @@
                   <tr v-for="(item, index) in filterApptData" :v-if="item.state < 2" :key="item.id">
                     <td class="td_time">
                       <div class="dateBox">
-                        <span class="p_month">
-                          {{ item.dateBooking.split("-")[1] + "月" }}
-                        </span>
-                        <span class="p_date">{{
-                          item.dateBooking.split("-")[2].split("T")[0]
-                        }}</span>
-                        <span class="p_year">{{
-                          item.dateBooking.split("-")[0]
-                        }}</span>
+                        <div class="date-title">
+                          <span class="p_month">
+                            {{ item.dateBooking.split("-")[1] + "月" }}
+                          </span>
+                          <span class="p_date">{{
+                            item.dateBooking.split("-")[2].split("T")[0]
+                          }}</span>
+                          <span class="p_year">{{
+                            item.dateBooking.split("-")[0]
+                          }}</span>
+                        </div>
+                        <span>{{ item.dateBooking.split("-")[2].split("T")[1].substring(0, 5) }}</span>
                       </div>
-                      <p>{{ item.timePeriod }}</p>
                     </td>
                     <td>
                       <p>{{ item.serviceInfo.name }}</p>
@@ -85,12 +87,15 @@
                       <p>{{ item.memberInfo.nameView }}</p>
                     </td>
                     <td>
+                      <p>{{ bookingState[item.state] }}</p>
+                    </td>
+                    <!-- <td>
                       <div class="checked_state">
                         <input type="checkbox" :id="item.bookingNo" :checked="item.state == 1"
                           v-on:click="changeStutusFn(item.state == 1 ? 0 : 1, item)" />
                         <label :for="item.bookingNo"></label>
                       </div>
-                    </td>
+                    </td> -->
                     <td>
                       <button v-show="item.state == 0" v-on:click="delApptListHdr(index, item.id)">
                         <img :src="DeleteIcon" />
@@ -121,7 +126,7 @@ import btn_msg_ico from "@/assets/images/icon_msg.png";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
-import { addZeroDateFn, colorValues, countTimeUtil, formatDateTime, getColorNum } from "@/utils/utils";
+import { addZeroDateFn, bookingState, colorValues, countTimeUtil, formatDateTime, getColorNum } from "@/utils/utils";
 import Alert from "@/components/alertCmpt";
 import { useManagerStore } from "@/stores/manager";
 import { useCounterStore } from "@/stores/counter";
@@ -146,7 +151,6 @@ let {
   postEditApptStateApi,
   getManagerListApi,
 } = store;
-
 
 let searchList = ref("");
 let showWeekBoxRef = ref(2);
@@ -278,7 +282,6 @@ function getApptInfoFn(year: number = 0, month: number = 0, date: number = curre
 let dayOffList: any = ref([]);
 function getDayOffList(id: any, yy: any, mm: any, dd: any) {
   getDayOffApi(id, yy, mm, dd).then((res: any) => {
-    console.log('getDayOffApi', res);
     for (let i = 0; i < res.length; i++) {
       const element = res[i];
       bookingListRef.value.push({
@@ -501,7 +504,6 @@ watch(selectManager, (val) => {
 //--------------------------------------------------full套件設置
 let xxx: any = ref([]);
 function clickBookInfoFn(data: any) {
-  console.log('clickBookInfoFn', data.bookingNo);
   if (data.bookingNo) {
     selBookData = data;
     updataShowApptInfoRef(true);
@@ -515,10 +517,6 @@ function changeDateTabsFn(data: any) {
 };
 //日曆換日期按鈕
 function changeDateDayFn(start: any, end: any, date: any) {
-  console.log(formatDateTime(start));
-  console.log(formatDateTime(end));
-  console.log(start.getFullYear());
-  console.log(end.getMonth());
   getApptInfoFn(start.getFullYear(), end.getMonth() + 1, 0);
 };
 
@@ -678,41 +676,27 @@ $borderCoder: #eaedf2;
                     width: 20%;
 
                     >p {
-                      margin: 3px 5px;
                       display: flex;
                       justify-content: center;
-                      // align-content: center;
                     }
                   }
 
                   >th:nth-child(2) {
                     width: 30%;
-
-                    >p {
-                      margin: 3px 5px;
-                    }
                   }
 
                   >th:nth-child(3) {
                     width: 20%;
-
-                    >p {
-                      margin: 3px 5px;
-                    }
                   }
 
                   >th:nth-child(4) {
                     width: 10%;
-
-                    >p {
-                      margin: 3px 5px;
-                    }
                   }
 
                   >th {
                     // border: solid 1px #707070; //格線
                     flex-wrap: nowrap;
-                    padding: 2px 0px 2px 0px;
+                    padding: 2px;
                     // width: 100%;
                     font-size: 18px;
 
@@ -765,78 +749,21 @@ $borderCoder: #eaedf2;
                   text-align: left; //If disabled, default align central
                   // height: 10%;
 
-                  .td_time {
-                    text-align: center;
-                    justify-content: center;
-
-                    .dateBox {
-                      width: 63px;
-                      height: 63px;
-                      border: solid 1px #707070;
-                      border-radius: 10px;
-
-                      display: inline-block;
-                      position: relative;
-                      text-align: center;
-                      justify-content: center;
-
-                      .p_month {
-                        font-size: 10px;
-                        height: 20px;
-                        display: flex;
-                        justify-content: center;
-                        height: 30%;
-                      }
-
-                      .p_date {
-                        font-size: 20px;
-                        height: 20px;
-                        display: flex;
-                        justify-content: center;
-                        height: 40%;
-                      }
-
-                      .p_year {
-                        font-size: 10px;
-                        // line-height: 1px;
-                        height: 20px;
-                        display: flex;
-                        justify-content: center;
-                        height: 30%;
-                      }
-                    }
-                  }
 
                   >td:nth-child(1) {
                     width: 20%;
-
-                    >p {
-                      margin: 3px 5px;
-                    }
                   }
 
                   >td:nth-child(2) {
                     width: 30%;
-
-                    >p {
-                      margin: 3px 5px;
-                    }
                   }
 
                   >td:nth-child(3) {
                     width: 20%;
-
-                    >p {
-                      margin: 3px 5px;
-                    }
                   }
 
                   >td:nth-child(4) {
                     width: 10%;
-
-                    >p {
-                      margin: 3px 5px;
-                    }
                   }
 
                   >td {
@@ -915,6 +842,57 @@ $borderCoder: #eaedf2;
 
                     >p {
                       justify-content: center;
+                    }
+                  }
+
+                  .td_time {
+                    >div {
+                      justify-content: center;
+                      display: grid;
+                      width: 100%;
+                      height: 100%;
+
+                      .date-title {
+                        width: 63px;
+                        height: 63px;
+                        border: solid 1px #707070;
+                        box-sizing: border-box;
+                        border-radius: 10px;
+
+                        // display: inline-block;
+                        // position: relative;
+                        // text-align: center;
+                        // justify-content: center;
+
+                        .p_month {
+                          font-size: 10px;
+                          height: 20px;
+                          display: flex;
+                          justify-content: center;
+                          height: 30%;
+                        }
+
+                        .p_date {
+                          font-size: 20px;
+                          height: 20px;
+                          display: flex;
+                          justify-content: center;
+                          height: 40%;
+                        }
+
+                        .p_year {
+                          font-size: 10px;
+                          // line-height: 1px;
+                          height: 20px;
+                          display: flex;
+                          justify-content: center;
+                          height: 30%;
+                        }
+                      }
+
+                      >span {
+                        text-align: center;
+                      }
                     }
                   }
                 }

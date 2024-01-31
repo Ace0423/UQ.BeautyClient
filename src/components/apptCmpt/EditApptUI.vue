@@ -88,7 +88,7 @@
           </span>
           <div class="customer-total">
             <span v-on:click="countCoustomerFn(-1)">-</span>
-            <span class="customer-headcount">人數 {{ formInputRef.people }} 位</span>
+            <span class="customer-headcount">人數 {{ formInputRef.customerCount }} 位</span>
             <span v-on:click="countCoustomerFn(+1)">+</span>
           </div>
           <div class="link-bottom"></div>
@@ -158,7 +158,7 @@ let formInputRef: any = ref({
   memberInfo: { userId: 0, nameView: "顧客", phone: "請選擇顧客" },
   isAssign: false,
   managerInfo: noManagerInfo,
-  people: 1,
+  customerCount: 1,
   bookingMemo: "",
   priceTotal: 0,
 
@@ -189,7 +189,7 @@ function onBefore() {
     formInputRef.value.isAssign = resData.isAssign;
     formInputRef.value.managerInfo = resData.isAssign ? resData.managerInfo : noManagerInfo;
     formInputRef.value.oldManagerInfo = resData.managerInfo;
-    formInputRef.value.people = resData.people;
+    formInputRef.value.customerCount = resData.customerCount;
   })
 
 }
@@ -216,8 +216,8 @@ function getMembersFn(data: any) {
   showMemberUIFn(false);
 }
 function countCoustomerFn(data: number) {
-  if (formInputRef.value.people + data > 0)
-    formInputRef.value.people += data;
+  if (formInputRef.value.customerCount + data > 0)
+    formInputRef.value.customerCount += data;
 }
 function submitBtn() {
   ruleLists.ruleItem.name.value = formInputRef.value.memberInfo.userId;
@@ -271,7 +271,7 @@ function submitBtn() {
     state: props.oldSelList.state == 99 ? 0 : props.oldSelList.state,
     discount: props.oldSelList.discount,
     bookingMemo: formInputRef.value.bookingMemo,
-    people: formInputRef.value.people,
+    customerCount: formInputRef.value.customerCount,
   };
   console.log(222, editApptDate);
 

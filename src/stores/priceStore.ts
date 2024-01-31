@@ -18,6 +18,7 @@ import {
   updateCountTicketReq,
   deleteCountTicketReq,
   getSgDiscountByItemReq,
+  getTopUpUseDetailReq,
 } from "@/api/priceRequest";
 import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
@@ -100,7 +101,7 @@ export const usePriceStore = defineStore("priceStore", () => {
     }
   };
   //#endregion
-  
+
   //#region 單品
   //取單品折扣資料
   const getSingleDiscountApi = async (
@@ -163,11 +164,11 @@ export const usePriceStore = defineStore("priceStore", () => {
   };
 
   let sgDcListByItemRef: any = ref([]);
-  const getSgDiscountByItemApi = async (itemType: any = 0,id: any = 0,page: any = 0,count: any = 0
+  const getSgDiscountByItemApi = async (itemType: any = 0, id: any = 0, page: any = 0, count: any = 0
   ) => {
     try {
       sgDcListByItemRef.value = [];
-      let res: any = await getSgDiscountByItemReq(itemType,id, page, count).then(
+      let res: any = await getSgDiscountByItemReq(itemType, id, page, count).then(
         (res: any) => {
           if (res.data.data.table) {
             sgDcListByItemRef.value = res.data.data.table;
@@ -274,13 +275,7 @@ export const usePriceStore = defineStore("priceStore", () => {
     count: any = 0
   ) => {
     try {
-      let res: any = await getCountTicketReq(
-        id,
-        select,
-        type,
-        page,
-        count
-      ).then((res: any) => {
+      let res: any = await getCountTicketReq(id, select, type, page, count).then((res: any) => {
         if (res.data.data.table) {
           if (id == 0) {
             countTicketListRef.value = [];
@@ -410,6 +405,28 @@ export const usePriceStore = defineStore("priceStore", () => {
       topUpCardList.data.push(data);
     }
   };
+
+  let useTopUpDetailRef: any = ref([]);
+  /**獲取可以使用儲值卡明細 */
+  const getTopUpUseDetailApi = async (UId: any = "",page: any = 0,count: any = 0) => {
+    try {
+      useTopUpDetailRef.value = [];
+      let res: any = await getTopUpUseDetailReq(UId, page, count).then((res: any) => {
+        if (res.data.data && UId != "") {
+          let detailVo: any = res.data.data.table;
+          useTopUpDetailRef.value = detailVo;
+          return useTopUpDetailRef.value;
+        } else {
+          return res.data.data.table;
+        }
+      });
+      return res
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   //#endregion
   return {
     getAllDiscountApi,
@@ -444,5 +461,7 @@ export const usePriceStore = defineStore("priceStore", () => {
     getTopUpCardList,
     addTopUpCardInfo,
     editTopUpCardInfo,
+    getTopUpUseDetailApi,
+
   };
 });

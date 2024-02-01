@@ -142,9 +142,12 @@ export const getPayTypeListReq = (id: any) =>
 
 //-----------------------------------------排休
 
-/**獲取預約 */
+/**獲取排修 */
 export const getDayOffReq = (id: any, yy: any, mm: any, dd: any) =>
   getHttps(httpRequest, "/manager/GetDayOff?managerId=" + id + "&year=" + yy + "&month=" + mm + "&day=" + dd + "&pageIndex=" + 0 + "&count=" + 0);
+/**獲取休息時間 */
+export const getRestReq = (id: any, yy: any, mm: any, dd: any) =>
+  getHttps(httpRequest, "/manager/GetBookingRest?managerId=" + id + "&year=" + yy + "&month=" + mm + "&day=" + dd + "&pageIndex=" + 0 + "&count=" + 0);
 
 
 

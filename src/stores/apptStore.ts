@@ -33,6 +33,7 @@ import {
   updateServiceDetailReq,
   updateServiceGroupReq,
   getDayOffReq,
+  getRestReq,
 } from "@/api/apptRequest";
 import {
   addGoodsDetailReq,
@@ -866,12 +867,33 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       bookingList.value = [];
       let res: any = await getDayOffReq(id, yy, mm, dd).then((res: any) => {
-        if (res.data.data) {
-
+        let tableVo = []
+        if (res.data.state == 2 && res.data.msg == 'DE03') {
+          tableVo = [];
+        } else if (res.data.data && res.data.state == 1) {
+          tableVo = res.data.data.table;
         }
-        return res;
+        return tableVo;
       });
-      return res.data.data.table;
+      return res;
+    } catch (error) {
+      console.log("error");
+      console.log(error);
+    }
+  };
+  const getRestApi = async (id: any = "", yy: any = 0, mm: any = 0, dd: any = 0) => {
+    try {
+      bookingList.value = [];
+      let res: any = await getRestReq(id, yy, mm, dd).then((res: any) => {
+        let tableVo = []
+        if (res.data.state == 2 && res.data.msg == 'DE03') {
+          tableVo = [];
+        } else if (res.data.data && res.data.state == 1) {
+          tableVo = res.data.data.table;
+        }
+        return tableVo;
+      });
+      return res;
     } catch (error) {
       console.log("error");
       console.log(error);
@@ -950,5 +972,6 @@ export const useApptStore = defineStore("apptStore", () => {
     payTypeListRef,
     //-----------------休息日
     getDayOffApi,
+    getRestApi,
   };
 });

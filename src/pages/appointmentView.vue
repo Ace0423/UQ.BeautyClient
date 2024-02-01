@@ -150,6 +150,7 @@ let {
   getDayOffApi,
   postEditApptStateApi,
   getManagerListApi,
+  getRestApi,
 } = store;
 
 let searchList = ref("");
@@ -278,6 +279,7 @@ function getApptInfoFn(year: number = 0, month: number = 0, date: number = curre
     // getRestList(0, year, month, date);
   });
   getDayOffList(0, year, month, date);
+  getRestList(0, year, month, date);
 }
 let dayOffList: any = ref([]);
 function getDayOffList(id: any, yy: any, mm: any, dd: any) {
@@ -289,10 +291,29 @@ function getDayOffList(id: any, yy: any, mm: any, dd: any) {
         id: element.mwNo,
         resourceId: element.managerInfo.managerId,
         start: element.date,
-        title: "休假",
+        title: element.title,
         user: "",
         manager: element.managerInfo.nameView,
-        color: '#F0F0F0',
+        color: element.color,
+      })
+    }
+  })
+}
+
+function getRestList(id: any, yy: any, mm: any, dd: any) {
+  getRestApi(id, yy, mm, dd).then((res: any) => {
+    for (let i = 0; i < res.length; i++) {
+      const element = res[i];
+      bookingListRef.value.push({
+        bookInfo: element,
+        id: element.mwNo,
+        resourceId: element.managerInfo.managerId,
+        start: element.date + "T" + element.dayOn,
+        end: element.date + "T" + element.dayOff,
+        title: element.title,
+        user: "",
+        manager: element.managerInfo.nameView,
+        color: element.color,
       })
     }
   })
@@ -302,7 +323,7 @@ function getDayOffList(id: any, yy: any, mm: any, dd: any) {
 
 let restList: any = ref([]);
 //獲取休息日
-function getRestList(id: any, y: any, m: any, d: any) {
+function getRestList1(id: any, y: any, m: any, d: any) {
   let data = {
     managerId: id,
     year: y,

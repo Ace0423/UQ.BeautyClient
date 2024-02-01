@@ -104,7 +104,7 @@ export default {
             if (event.backgroundColor == "#F0F0F0" || event.backgroundColor == "#717171") {
               fontColor = "#FFFFFF";
             } else {
-              fontColor = "#000000"
+              fontColor = "#000000";
             }
             if (event.title == "休假") {
               //#region 渲染休假
@@ -112,6 +112,22 @@ export default {
               htmlStr += "<span style='white-space: nowrap; color: black; font-size: 14px;font-weight: bold;'>" + serverName + " " + "</span>"
               htmlStr += "<span style='white-space: nowrap; color: black;'>" + event.title + "</span>"
               //#endregion
+            } else if (event.title == "休息") {
+              console.log('休息');
+              switch (arg.view.type) {
+                case 'timeGridWeek'://週曆
+                case 'resourceTimeGridDay'://日曆
+                  fontColor = "#000000";
+                  htmlStr += "<div class='fc-event-main' style='overflow:hidden;' >"
+                  htmlStr += "<span style='white-space: nowrap; font-weight: bolder; font-size: 14px;color:" + fontColor + ";'>" + event.startStr.slice(11, 16) + "</span>"
+                  htmlStr += "<br/><strong  style='  border-radius:20%;  font-weight: normal; color:" + fontColor + ";'>" + serverName + "</strong> "
+                  htmlStr += "<br/><span  style='white-space: nowrap; font-weight: normal;color:" + fontColor + ";'>" + event.title + "</span>"
+                  htmlStr += "</div>";
+                  break;
+                default:
+                  console.log('無分類', arg.view.type);
+                  break;
+              }
             } else {
               //#region 渲染工作日
               const info = event.extendedProps.bookInfo;//額外變數

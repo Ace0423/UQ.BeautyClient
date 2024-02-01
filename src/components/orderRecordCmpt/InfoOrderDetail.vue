@@ -111,17 +111,30 @@
                     <div class="link-bottom"></div>
                     <div name="總計" class="info-amount">
                         <div>
-                            <span>{{ " 總計 (" + formInputRef.orderInfo.coCheckTypeName + ")" }}</span>
+                            <span>{{ " 總計 " }}</span>
                             <span>{{ " $ " + formInputRef.orderInfo.coAmount }}</span>
                         </div>
                     </div>
                     <div class="link-bottom"></div>
+                    <div name="儲值卡" class="info-topup" v-if="formInputRef.orderInfo.coUseTopUpInfo">
+                        <div>
+                            <span>{{ formInputRef.orderInfo.coUseTopUpInfo.title }}</span>
+                            <span>{{ " $ " + formInputRef.orderInfo.coUseTopUpInfo.usePrice }}</span>
+                        </div>
+                    </div>
+                    <div name="剩下金額" class="info-topup">
+                        <div>
+                            <span>{{ formInputRef.orderInfo.coCheckTypeName }}</span>
+                            <span>{{ " $ " + totalAmountRef }}</span>
+                        </div>
+                    </div>
+                    <div class="link-bottom" v-if="formInputRef.orderInfo.coMemo"></div>
                     <div name="備註" class="info-memo" v-if="formInputRef.orderInfo.coMemo">
                         <div>
                             <span>{{ " 備註: " + formInputRef.orderInfo.coMemo }}</span>
                         </div>
                     </div>
-                    <div class="link-bottom" v-if="formInputRef.orderInfo.coMemo"></div>
+                    <div class="link-bottom"></div>
                 </div>
             </div>
             <div class="footer">
@@ -140,6 +153,7 @@ import { useManagerStore } from "@/stores/manager";
 let store = useApptStore();
 let { orderInfoRef } = storeToRefs(store);
 let { getOrderInfoApi, } = store;
+let totalAmountRef = ref(0)
 
 const props = defineProps<{
     selItemData: any;
@@ -155,6 +169,12 @@ function onBefore() {
         getOrderInfoApi(props.selItemData.coNo).then((res) => {
             console.log("orderInfoRef", orderInfoRef.value);
             formInputRef.value.orderInfo = orderInfoRef.value
+
+            let amount = formInputRef.value.orderInfo.coAmount;
+            if (formInputRef.value.orderInfo.coUseTopUpInfo) {
+                amount -= formInputRef.value.orderInfo.coUseTopUpInfo.usePrice;
+            }
+            totalAmountRef.value = amount;
         })
     } else {
         getOrderInfoApi("", props.selItemData.bkListNo).then((res) => {
@@ -168,6 +188,7 @@ onMounted(() => {
 watchEffect(() => {
 
 });
+
 
 //計算全單折扣排除單品折扣(%數折扣)
 function mathAllPercentFn(params: any) {
@@ -492,6 +513,30 @@ function mathAllPercentFn(params: any) {
                         display: flex;
                         justify-content: space-between;
                         margin: 20px 0;
+
+                        >span {
+                            display: flex;
+                            justify-content: left;
+                            font-family: STXihei;
+                            color: #000000;
+                            font-weight: bold;
+                            font-size: 20px;
+                        }
+                    }
+                }
+
+                .info-topup {
+                    margin: 10px 0;
+
+                    >div {
+                        display: flex;
+                        height: 50px;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin: 10px 0;
+                        padding: 0 10px;
+                        border-radius: 10px;
+                        background-color: #e6e2de;
 
                         >span {
                             display: flex;

@@ -159,7 +159,7 @@
             <div class="link-bottom"></div>
             <div class="pay-msg">
               <span>應收金額</span>
-              <span class="price-msg"> ${{ payAmountCpt }}</span>
+              <span class="price-msg"> ${{ finalAmountCpt }}</span>
             </div>
             <div class="customer-submit">
               <!-- <button class="otherpay-btn">其他收款方式</button> -->
@@ -299,19 +299,35 @@ let payAmountCpt = computed(() => {
     }
   }
   amount = (curPrice < dcPrice) ? 0 : (curPrice - dcPrice)
+  // //計算使用儲值卡
+  // if (formInputRef.value.useTopUpCard) {
+  //   formInputRef.value.useTopUpPrice = 0;
+  //   let curUseBalance = formInputRef.value.useTopUpCard.balance;
+  //   if (amount < curUseBalance) {
+  //     formInputRef.value.useTopUpPrice = amount;
+  //   } else {
+  //     formInputRef.value.useTopUpPrice = curUseBalance;
+  //   }
+  //   amount -= formInputRef.value.useTopUpPrice;
+  // }
+
+  return amount
+});
+let finalAmountCpt = computed(() => {
+  let finalAmount: any = payAmountCpt.value;
   //計算使用儲值卡
   if (formInputRef.value.useTopUpCard) {
     formInputRef.value.useTopUpPrice = 0;
     let curUseBalance = formInputRef.value.useTopUpCard.balance;
-    if (amount < curUseBalance) {
-      formInputRef.value.useTopUpPrice = amount;
+    if (finalAmount < curUseBalance) {
+      formInputRef.value.useTopUpPrice = finalAmount;
     } else {
       formInputRef.value.useTopUpPrice = curUseBalance;
     }
-    amount -= formInputRef.value.useTopUpPrice;
+    finalAmount -= formInputRef.value.useTopUpPrice;
   }
 
-  return amount
+  return finalAmount
 });
 let allDCListCpt = computed(() => {
   return formInputRef.value.allDiscount

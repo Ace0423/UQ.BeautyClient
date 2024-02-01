@@ -276,7 +276,7 @@ export const goodsUnitGroup: string[] = [
   "不選擇",
   "毫升",
   "公升",
-  "功課",
+  "功克",
   "公斤",
   "盎司",
   "片",

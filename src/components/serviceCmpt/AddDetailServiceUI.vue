@@ -17,9 +17,6 @@
                   <span>*服務名稱</span>
                   <input v-model="formInputRef.name" placeholder="請輸入服務名稱" type="text" />
                 </div>
-                <span class="p_error" v-if="ruleLists.ruleItem.name.is_error">
-                  {{ ruleLists.ruleItem.name.warn }}
-                </span>
                 <div>
                   <span>簡稱</span>
                   <input v-model="formInputRef.nickName" placeholder="最多輸入四個字簡稱" type="text" />
@@ -28,6 +25,9 @@
                   <span>說明</span>
                   <textarea v-model="formInputRef.memo" placeholder="請輸入說明或注意事項"></textarea>
                 </div>
+                <span class="p_error" v-if="ruleLists.ruleItem.name.is_error">
+                  {{ ruleLists.ruleItem.name.warn }}
+                </span>
               </div>
               <div class="img-info">
                 <div :style="{ '--color': formInputRef.color }" class="img-bg">
@@ -66,9 +66,6 @@
               <span>*價格</span>
               <input v-model="formInputRef.price" placeholder="請輸入價格" type="text" />
             </div>
-            <span class="p_error" v-if="ruleLists.ruleItem.price.is_error && formInputRef.subType == 0">
-              {{ ruleLists.ruleItem.price.warn }}
-            </span>
             <div v-if="formInputRef.subType == 0">
               <span>*服務時長</span>
               <div class="select-content">
@@ -80,6 +77,9 @@
                 </el-select>
               </div>
             </div>
+            <span class="p_error" v-if="ruleLists.ruleItem.price.is_error && formInputRef.subType == 0">
+              {{ ruleLists.ruleItem.price.warn }}
+            </span>
             <span class="p_error" v-if="ruleLists.ruleItem.servicesTime.is_error && formInputRef.subType == 0">
               {{ ruleLists.ruleItem.servicesTime.warn }}
             </span>
@@ -124,7 +124,7 @@
           </div>
           <div class="input-switch" name="其他設定">
             <span class="title-switch">其他設定</span>
-            <div class="box-switch">
+            <!-- <div class="box-switch">
               <div class="switch">
                 <input type="checkbox" id="switch" v-model="formInputRef.isBonusOpen" /><label for="switch">Toggle</label>
               </div>
@@ -132,7 +132,7 @@
                 <label>服務是否提供抽成</label>
                 <span>開啟後，系統將按人員分潤設定比例白動計算抽成金額</span>
               </div>
-            </div>
+            </div> -->
             <div class="box-switch">
               <div class="switch">
                 <input type="checkbox" id="switch3" v-model="formInputRef.display" /><label for="switch3">Toggle2</label>
@@ -142,7 +142,7 @@
                 <span>開啟後，你的顧客即可透過線上預約瀏覽此項目</span>
               </div>
             </div>
-            <div class="box-switch">
+            <!-- <div class="box-switch">
               <div class="switch">
                 <input type="checkbox" id="switch2" v-model="formInputRef.isEditAccounting" /><label
                   for="switch2">Toggle1</label>
@@ -151,7 +151,7 @@
                 <label> 是否允許結帳時修改金額</label>
                 <span>開啟後，結帳時可手動調整服務金額</span>
               </div>
-            </div>
+            </div> -->
           </div>
           <div class="input-item" name="服務群組">
             <div class="bottom-item">
@@ -332,7 +332,7 @@ const ruleLists: any = reactive({
       label: "名稱",
       rules: {
         required: {
-          warn: "此項為必填",
+          warn: " 名稱為必填",
         },
       },
       is_error: false,
@@ -342,7 +342,7 @@ const ruleLists: any = reactive({
       label: "價格",
       rules: {
         required: {
-          warn: "此項為必填",
+          warn: " 價格為必填",
         },
       },
       is_error: false,
@@ -352,7 +352,7 @@ const ruleLists: any = reactive({
       label: "時長",
       rules: {
         required: {
-          warn: "此項為必填",
+          warn: " 時長為必填",
         },
       },
       is_error: false,
@@ -362,7 +362,7 @@ const ruleLists: any = reactive({
       label: "子項目",
       rules: {
         required: {
-          warn: "此項為必填",
+          warn: " 子項目為必填",
         },
       },
       is_error: false,

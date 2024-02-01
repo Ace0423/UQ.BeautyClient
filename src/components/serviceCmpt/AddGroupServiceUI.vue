@@ -261,7 +261,7 @@ const ruleLists: any = reactive({
             border: solid 0px #c1bdb8;
             box-sizing: border-box;
             height: 100%;
-            width: calc(100% - 130px);
+            width: calc(100% - 110px);
             font-size: 20px;
           }
 

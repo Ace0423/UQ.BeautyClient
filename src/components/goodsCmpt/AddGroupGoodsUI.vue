@@ -1,9 +1,9 @@
 <template>
-  <div class="popup-mask2" v-on:click.self="showEditForm(false)">
+  <div class="popup-AddGroupGoodsUI" v-on:click.self="showAddUI(false)">
     <div>
       <div class="header">
-        <img :src="closeIcon" v-on:click="showEditForm(false)" />
-        <span>編輯服務群組</span>
+        <img :src="closeIcon" v-on:click="showAddUI(false)" />
+        <span>新增商品群組</span>
       </div>
       <div class="main-content">
         <div class="input-item">
@@ -16,27 +16,30 @@
             {{ ruleLists.ruleItem.groupName.warn }}
           </span>
           <div class="group-input">
-            <span>服務列表</span>
+            <span>商品列表</span>
             <div class="link-bottom"></div>
             <div class="check-item" name="check_item">
               <div>
                 <table>
-                  <tbody v-for="(item, index) in formInputRef.selServiceItems" :key="item.sId">
+                  <tbody v-for="(item, index) in formInputRef.selGoodsItems" :key="item.pId">
                     <tr>
                       <td>
-                        <p>{{ item.name }}</p>
+                        <p>{{ item.pName }}</p>
                       </td>
+                      <!-- <td>
+                        <p>{{ item.pCode }}</p>
+                      </td> -->
                       <td>
                         <p>{{ item.price }}</p>
                       </td>
                       <td>
-                        <img class="delete_img" :src="icon_cancleItem" @click="cancleServiceFn(item, index)" />
+                        <img class="delete_img" :src="icon_cancleItem" @click="cancleGoodsFn(item, index)" />
                       </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
-              <span class="link-url" v-on:click="showGroupUIFn(true)">加入服務列表</span>
+              <span class="link-url" v-on:click="showGroupUIFn(true)">加入商品列表</span>
               <div class="link-bottom"></div>
             </div>
           </div>
@@ -45,14 +48,14 @@
       <div class="footer">
         <div class="link-bottom"></div>
         <div class="box-footer">
-          <button class="otherpay-btn" v-on:click="submitBtn()">確認編輯</button>
+          <button class="otherpay-btn" v-on:click="submitBtn()">確認新增</button>
         </div>
       </div>
     </div>
   </div>
-  <div v-if="showCServiceRef" style="justify-content: center;">
-    <CbServiceDetailUI :showCServiceUIFn="showGroupUIFn" :selData="formInputRef.selServiceItems"
-      :getDataFn="getCheckServiceFn"></CbServiceDetailUI>
+  <div v-if="showCGoodsRef" style="justify-content: center;">
+    <CbGoodsdDetailUI :showCGoodsUIFn="showGroupUIFn" :selData="formInputRef.selGoodsItems"
+      :getDataFn="getCheckGoodsFn"></CbGoodsdDetailUI>
   </div>
 </template>
 <script setup lang="ts">
@@ -66,59 +69,44 @@ import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 
 let apptstore = useApptStore();
-const { serviceGroupList } = storeToRefs(apptstore);
-const {
-  getServiceGroupApi, updateServiceGroupApi } = apptstore;
+const { } = storeToRefs(apptstore);
+const { addGoodsTypeApi } = apptstore;
 const props = defineProps<{
-  selData: any;
-  showEditForm: Function;
+  showAddUI: Function;
 }>();
+
 let formInputRef: any = ref({
   name: "",
-  selServiceItems: [],
+  selGoodsItems: [],
 });
-
-
-onBefore();
-function onBefore() {
-  getServiceGroupApi(props.selData.sgId, 1).then((res: any) => {
-    formInputRef.value.selServiceItems = res[0].sIdList;
-  });
-}
-
-onMounted(() => {
-  formInputRef.value.name = props.selData.sgTitle
-  formInputRef.value.selServiceItems = props.selData.serviceList;
-});
-
-function cancleServiceFn(item: any, index: number) {
-  formInputRef.value.selServiceItems.splice(index, 1);
+function cancleGoodsFn(item: any, index: number) {
+  formInputRef.value.selGoodsItems.splice(index, 1);
 }
 function submitBtn() {
-  console.log("提交formInputRef", formInputRef.value);
+
   ruleLists.ruleItem.groupName.value = formInputRef.value.name;
-  // if (!verify_all()) return;
   if (!checkVerify_all(ruleLists)) return;
 
-  let serviceNums = [];
-  for (let i = 0; i < formInputRef.value.selServiceItems.length; i++) {
-    const element = formInputRef.value.selServiceItems[i];
-    serviceNums.push(element.sId)
+  let goodsNums = [];
+  for (let i = 0; i < formInputRef.value.selGoodsItems.length; i++) {
+    const element = formInputRef.value.selGoodsItems[i];
+    goodsNums.push(element.pId)
   }
 
   let apiData = {
-    pgId: props.selData.sgId,
+    pgId: 0,
     pgTitle: formInputRef.value.name,
-    pIdList: serviceNums,
+    pIdList: goodsNums,
   };
+
   console.log("提交apiData", apiData);
 
   /**新增 */
-  updateServiceGroupApi(apiData).then((res: any) => {
+  addGoodsTypeApi(apiData).then((res: any) => {
     if (res.state == 1) {
       Alert.sussess("成功", 1000);
       setTimeout(() => {
-        props.showEditForm(false);
+        props.showAddUI(false);
       }, 1000);
     } else {
       Alert.warning(showErrorMsg(res.msg), 1000);
@@ -127,15 +115,15 @@ function submitBtn() {
 }
 
 function showGroupUIFn(params: any) {
-  showCServiceRef.value = params;
+  showCGoodsRef.value = params;
 }
 
 //1:服務，2:商品，
-let showCServiceRef: any = ref(false);
+let showCGoodsRef: any = ref(false);
 
-function getCheckServiceFn(data: any) {
+function getCheckGoodsFn(data: any) {
   console.log(111, data);
-  formInputRef.value.selServiceItems = data;
+  formInputRef.value.selGoodsItems = data;
   // props.getDataFn(formInputRef.value);
   showGroupUIFn(false);
 }
@@ -157,7 +145,7 @@ const ruleLists: any = reactive({
 </script>
 
 <style scoped lang="scss">
-.popup-mask2 {
+.popup-AddGroupGoodsUI {
   position: fixed;
   top: 0;
   left: 0;

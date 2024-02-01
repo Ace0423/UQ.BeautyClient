@@ -43,8 +43,8 @@ import {
   getGoodsDetailReq,
   getGoodsTypeReq,
   updateGoodsDetailReq,
+  updateGoodsGroupReq,
   updateGoodsTypeOrderReq,
-  updateGoodsTypeReq,
 } from "@/api/goodsRequest";
 import Alert from "@/components/alertCmpt";
 import type {
@@ -549,38 +549,21 @@ export const useApptStore = defineStore("apptStore", () => {
   //#region  商品
 
   /**獲取商品分類 */
-  const goodsTypesListValueRef = ref(0);
-  let goodsTypesListRef: any = ref([]);
-  const getGoodsTypeApi = async (data: any = 0) => {
+  let goodsGroupList: any = ref([]);
+  const getGoodsGroupApi = async (id: any = 0, isList: any = 0) => {
     try {
-      goodsDetailListRef.value = [];
-      goodsTypesListRef.value = [];
-      // goodsTypesListRef.value = [
-      //   {
-      //     pgId: 0,
-      //     display: true,
-      //     pgTitle: "全部",
-      //     order: 0,
-      //     isList: 0,
-      //   },
-      // ];
-      let res: any = await getGoodsTypeReq(data, 0).then((res: any) => {
-        if (res.data.data) {
-          let typeVo: IGoodsTypeVo = res.data.data.table;
-          for (let i = 0; i < res.data.data.table.length; i++) {
-            let element = res.data.data.table[i].group;
-            element.editState = false;
-            element.isList = 0;
-            element.pIdList = [];
-            element.pgId = parseInt(element.pgId);
-            element.editNameTw = element.pgTitle;
-            goodsTypesListRef.value.push(element);
-          }
-          goodsTypesListRef.value.sort(function (a: any, b: any) {
+      goodsGroupList.value = [];
+      let res: any = await getGoodsTypeReq(id, isList).then((res: any) => {
+        if (res.data.data && !id) {
+          let detailVo: IServiceGroupVo = res.data.data.table;
+          goodsGroupList.value = detailVo;
+          goodsGroupList.value.sort(function (a: any, b: any) {
             return a.order > b.order ? 1 : -1;
           });
+          return goodsGroupList.value;
+        } else {
+          return res.data.data.table;
         }
-        return res;
       });
       return res;
     } catch (error) {
@@ -600,9 +583,9 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   /**更新商品分類 */
-  const updataGoodsTypeApi = async (data: any) => {
+  const updataGoodsGroupApi = async (data: any) => {
     try {
-      let res = await updateGoodsTypeReq(data).then((res: any) => {
+      let res = await updateGoodsGroupReq(data).then((res: any) => {
         alertStateFn(res, "更新商品分類");
         return res;
       });
@@ -939,13 +922,12 @@ export const useApptStore = defineStore("apptStore", () => {
     timeGroup,
     getApptDataByUserApi,
     //--------------------goods
-    goodsTypesListValueRef,
-    goodsTypesListRef,
-    getGoodsTypeApi,
+    goodsGroupList,
+    getGoodsGroupApi,
     goodsDetailListRef,
     getGoodsDetailApi,
     addGoodsTypeApi,
-    updataGoodsTypeApi,
+    updataGoodsGroupApi,
     updataGoodsTypeOrderApi,
     delGoodsTypeApi,
     addGoodsDetailApi,

@@ -115,8 +115,8 @@
   </div>
   <CbServiceDetailUI v-if="showServiceUIRef" :selData="formInputRef.serviceGroup" :showCServiceUIFn="showServiceUIFn"
     :getDataFn="getSelServiceFn"></CbServiceDetailUI>
-  <CheckboxGoodsUI v-if="showGoodsUIRef" :selData="formInputRef.goodsGroup" :showCGoodsUIFn="showGoodsUIFn"
-    :getDataFn="getGoodsFn"></CheckboxGoodsUI>
+  <CbGoodsdDetailUI v-if="showGoodsUIRef" :selData="formInputRef.goodsGroup" :showCGoodsUIFn="showGoodsUIFn"
+    :getDataFn="getGoodsFn"></CbGoodsdDetailUI>
 </template>
 <script setup lang="ts">
 import { usePriceStore } from "@/stores/priceStore";

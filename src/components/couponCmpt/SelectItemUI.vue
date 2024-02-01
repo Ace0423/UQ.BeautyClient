@@ -31,12 +31,12 @@
         </CheckboxServiceUI>
       </div>
       <div class="service-content" v-show="itemTypeRef == 2">
-        <CheckboxGoodsUI
+        <CbGoodsdDetailUI
           :selData="formInputRef.goods"
           :getDataFn="getCGoodsFn"
           :showCGoodsUIFn="showItemTypeFn"
         >
-        </CheckboxGoodsUI>
+        </CbGoodsdDetailUI>
       </div>
     </div>
   </div>

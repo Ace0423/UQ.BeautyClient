@@ -14,16 +14,15 @@
             <div class="content-main">
                 <el-table :data="filterGoodsType" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
                     :header-cell-style="headerRowStyle">
-                    <el-table-column prop="pgTitle" label="群組名稱" width="500" />
-                    <el-table-column prop="pgId" label="群組名稱" width="150" />
-                    <el-table-column prop="pgTitle" label="操作" />
-                    <el-table-column label="操作" width="150">
+                    <el-table-column prop="pgTitle" label="群組名稱" min-width="50%" />
+                    <el-table-column prop="pIdList.length" label="服務數量" min-width="30%" align="center" />
+                    <el-table-column label="操作" min-width="20%">
                         <template #default="scope">
                             <div class="handle-drag">
                                 <el-icon>
                                     <Sort />
                                 </el-icon>
-                                <img class="edit_img" :src="Icon_edit" />
+                                <img class="edit_img" :src="Icon_edit" @click="selectDataFn(scope.row)" />
                                 <img class="del_img" :src="Icon_del"
                                     @click="deleteHdr(scope.$index, filterGoodsType[scope.$index])" />
                             </div>
@@ -35,8 +34,10 @@
     </div>
     <div class="footer">
     </div>
-    <AddGoodsTypeUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" />
-</template>
+    <!-- <AddGoodsTypeUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" /> -->
+    <AddGroupGoodsUI v-if="showAddTypeRef" :showAddUI="showAddTypeFormHdr" />
+    <EditGroupGoodsUI v-if="showEditGroup" :showEditUI="showEditGroupHdr" :selData="selectDataRef" />
+</template>UI
   
 <script lang="ts" setup>
 import { useApptStore } from "@/stores/apptStore";
@@ -48,27 +49,26 @@ import Icon_del from "@/assets/Icon material-delete.svg";
 import Alert from "@/components/alertCmpt";
 
 let store = useApptStore();
-let { goodsTypesListRef, goodsTypesListValueRef, goodsDetailListRef } =
+let { goodsGroupList, goodsDetailListRef } =
     storeToRefs(store);
 let {
-    getGoodsTypeApi,
-    getGoodsDetailApi,
-    updateGoodsDetailApi,
+    getGoodsGroupApi,
     delGoodsTypeApi,
     updataGoodsTypeOrderApi,
 } = store;
 
 let showEditUIRef = ref(false);
 let showAddTypeRef = ref(false);
+let showEditGroup = ref(false);
 
 let selItem: any = [];
 let sortUpDown: string = "";
 
 let search = ref("");
 let filterGoodsType: any = computed(() =>
-    goodsTypesListRef.value.filter(getGoodsFn)
+    goodsGroupList.value.filter(getGoodsfilterFn)
 );
-function getGoodsFn(data: any) {
+function getGoodsfilterFn(data: any) {
     return (
         !search.value ||
         data.pgTitle.toLowerCase().includes(search.value.toLowerCase())
@@ -77,7 +77,7 @@ function getGoodsFn(data: any) {
 
 onBeforeFn();
 function onBeforeFn() {
-    getDetailByTypeFn(0, 0);
+    getGroupFn();
 
 }
 
@@ -109,27 +109,22 @@ function OrderGroupFn() {
         })
     }
     updataGoodsTypeOrderApi(orderApiData).then((res: any) => {
-        getDetailByTypeFn(0, 0);
+        getGroupFn();
     });
 }
 
-function getDetailByTypeFn(id: any, isList: any) {
-    goodsTypesListRef.value = [];
-    getGoodsTypeApi().then(() => {
-        getGoodsDetailApi(
-            id,
-            isList
-        );
-    });
+function getGroupFn(id: any = 0, isList: any = 0) {
+    goodsGroupList.value = [];
+    getGoodsGroupApi().then(() => { });
 }
 //新增分類-顯示
 let showAddTypeFormHdr = (state: boolean) => {
     showAddTypeRef.value = state;
-    getGoodsTypeApi(0);
+    getGroupFn();
 };
 const showEditDetailUIHdr = (state: boolean) => {
     showEditUIRef.value = state;
-    getDetailByTypeFn(0, 0);
+    getGroupFn();
     // getGoodsDetailApi(0, 0);
 };
 
@@ -143,12 +138,23 @@ let deleteHdr = (index: any, itemId: any) => {
 const onDeleteAlertBtn = (state: any, itemId: any) => {
     if (state) {
         delGoodsTypeApi(itemId.pgId).then((res: any) => {
-            getDetailByTypeFn(0, 0);
+            getGroupFn();
         });
     } else {
         console.log("取消刪除");
     }
     selItem.value = [];
+};
+let selectDataRef = ref([])
+function selectDataFn(params: any) {
+    selectDataRef = params;
+    showEditGroupHdr(true);
+}
+//新增分類-顯示
+let showEditGroupHdr = (state: boolean) => {
+    showEditGroup.value = state;
+    if (!state)
+        getGroupFn();
 };
 //-------------------------------------------------------------------------表格css
 //內容css
@@ -243,7 +249,7 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
 
         .content-main {
             width: 100%;
-            height: calc(100% - 47px);
+            height: calc(100%);
 
             >el-table {
                 // display: inline-block;
@@ -260,18 +266,6 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
                 >thead {
                     display: inline-table;
                     width: 100%;
-
-                    >tr>td:nth-child(1) {
-                        width: 70%;
-                    }
-
-                    >tr>td:nth-child(2) {
-                        width: 20%;
-                    }
-
-                    >tr>td:nth-child(3) {
-                        width: 10%;
-                    }
                 }
 
                 >tbody {

@@ -179,8 +179,8 @@
   </div>
   <CheckboxServiceUI v-if="showServiceUIRef" :selData="formInputRef.giftServices" :showCServiceUIFn="showServiceUIFn"
     :getDataFn="getSelServiceFn"></CheckboxServiceUI>
-  <CheckboxGoodsUI v-if="showGoodsUIRef" :selData="formInputRef.giftGoods" :showCGoodsUIFn="showGoodsUIFn"
-    :getDataFn="getGoodsFn"></CheckboxGoodsUI>
+  <CbGoodsdDetailUI v-if="showGoodsUIRef" :selData="formInputRef.giftGoods" :showCGoodsUIFn="showGoodsUIFn"
+    :getDataFn="getGoodsFn"></CbGoodsdDetailUI>
   <RadioServicesUI v-if="itemTypeRef" :selData="formInputRef.ffServiceId" :getDataFn="getRadioServiceFn"
     :showServiceUIFn="showItemTypeFn">
   </RadioServicesUI>

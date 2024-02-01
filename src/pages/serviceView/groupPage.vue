@@ -16,7 +16,7 @@
         <el-table :data="filterServiceType" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
           :header-cell-style="headerRowStyle">
           <el-table-column prop="sgTitle" label="群組名稱" min-width="60%" />
-          <el-table-column prop="sIdList.length" label="服務數量" min-width="20%" />
+          <el-table-column prop="sIdList.length" label="服務數量" min-width="20%" align="center"/>
           <el-table-column label="操作" min-width="20%">
             <template #default="scope">
               <div class="handle-drag">
@@ -24,7 +24,7 @@
                   <Sort />
                 </el-icon>
                 <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;"
-                  @click="selectDataFn(filterServiceType[scope.$index])" />
+                  @click="selectDataFn(scope.row)" />
                 <img class="del_img" :src="Icon_del" @click="deleteHdr(scope.$index, filterServiceType[scope.$index])" />
               </div>
             </template>
@@ -257,7 +257,7 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
       width: 100%;
       height: calc(100% );
 
-      >table {
+      >el-table {
         // display: inline-block;
         padding: 10px 25px;
         width: 100%;

@@ -125,17 +125,17 @@ function submitBtn() {
 
 <style scoped lang="scss">
 .popup-mask {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 3;
+  z-index: 1003;
   background: rgba(255, 255, 255, 0.5);
 
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
 
   .popup-content {
     width: 325px;

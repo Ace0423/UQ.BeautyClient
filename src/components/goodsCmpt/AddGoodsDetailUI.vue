@@ -1,311 +1,175 @@
 <template>
-  <div id="ck1" class="form_bg" @click.self="showAddUIFn(false)">
-    <div class="add-form">
-      <div class="add-bg Column">
-        <div class="top-form">
-          <p>新增</p>
-        </div>
-        <div class="main-form">
-          <div class="main-img"></div>
-          <div class="main-info">
-            <div class="main-input">
-              <div class="form-input">
+  <div class="popup-AddGoodsDetailUI" v-on:click.self="showAddUIFn(false)">
+    <div class="popup-content">
+      <div class="top-content">
+        <img :src="icon_closeX" v-on:click="showAddUIFn(false)" />
+        <span>新增商品</span>
+        <button class="otherpay-btn" v-on:click="submitBtn()">確認新增</button>
+      </div>
+      <div class="main-content">
+        <div class="center-main">
+          <div class="input-item" name="基本資訊">
+            <span class="title-content">基本資訊</span>
+            <span class="msg-content">填寫你的商品基本資訊。</span>
+            <div class="name-content">
+              <div class="name-info">
                 <div>
-                  <el-input
-                    class="input-name"
-                    v-model="formInputRef.name"
-                    placeholder="請輸入名稱"
-                  />
-                  <span class="p_error" v-if="ruleItem.name.is_error">
-                    {{ ruleItem.name.warn }}
+                  <span>*商品名稱
                   </span>
+                  <input v-model="formInputRef.name" placeholder="請輸入服務名稱" type="text" />
                 </div>
-              </div>
-              <div class="form-input">
-                <div>
-                  <el-select
-                    class="select-unit"
-                    filterable
-                    placeholder="請選擇單位"
-                    v-model="formInputRef.unit"
-                  >
-                    <el-option
-                      v-for="(item, index) in unitGroup"
-                      :key="item"
-                      :value="index"
-                      :label="item"
-                    >
-                      {{ item }}
-                    </el-option>
-                  </el-select>
-                  <span class="p_error" v-if="ruleItem.unit.is_error">
-                    {{ ruleItem.unit.warn }}
-                  </span>
+                <div class="textMsg-content">
+                  <span>說明</span>
+                  <textarea v-model="formInputRef.memo" placeholder="請輸入商品說明"></textarea>
                 </div>
-              </div>
-              <div class="form-input">
                 <div>
-                  <el-input
-                    class="input-capacity"
-                    v-model="formInputRef.capacity"
-                    placeholder="請輸入容量"
-                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                  />
-                  <span class="p_error" v-if="ruleItem.capacity.is_error">
-                    {{ ruleItem.capacity.warn }}
-                  </span>
+                  <span>*銷售價格</span>
+                  <input v-model="formInputRef.price" placeholder="請輸入商品銷售價格" type="text" />
                 </div>
+                <span class="p_error" v-if="ruleLists.ruleItem.price.is_error">
+                  {{ ruleLists.ruleItem.price.warn }}
+                </span>
+                <span class="p_error" v-if="ruleLists.ruleItem.name.is_error">
+                  {{ ruleLists.ruleItem.name.warn }}
+                </span>
               </div>
-            </div>
-            <div class="main-input">
-              <div class="form-input">
-                <div>
-                  <div>
-                    <el-input
-                      class="input-basic"
-                      v-model="formInputRef.NameNo"
-                      placeholder="請輸入編號"
-                      onkeyup="value=value.replace(' ','')"
-                    >
-                    </el-input>
-                  </div>
-                  <span class="p_error" v-if="ruleItem.NameNo.is_error">
-                    {{ ruleItem.NameNo.warn }}
-                  </span>
-                </div>
-              </div>
-              <div class="form-input">
-                <div>
-                  <div>
-                    <!-- <el-input
-                      class="input-basic"
-                      v-model="formInputRef.GoodsTypeId"
-                      placeholder="請選擇分類"
-                      onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                    </el-input>
-                    > -->
-                    <el-select
-                      class="input-basic"
-                      filterable
-                      placeholder="請選擇分類"
-                      v-model="formInputRef.GoodsTypeId"
-                    >
-                      <el-option
-                        v-for="(item, index) in filterTypesTabs"
-                        :key="item.pgTitle"
-                        :value="item.pgId"
-                        :label="item.pgTitle"
-                      >
-                        {{ item.pgTitle }}
-                      </el-option>
-                    </el-select>
-                  </div>
-                  <span class="p_error" v-if="ruleItem.GoodsTypeId.is_error">
-                    {{ ruleItem.GoodsTypeId.warn }}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div class="main-input">
-              <div class="form-input">
-                <div>
-                  <div>
-                    <el-input
-                      class="input-basic"
-                      v-model="formInputRef.price"
-                      placeholder="請輸入價格"
-                      onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                    >
-                    </el-input>
-                  </div>
-                  <span class="p_error" v-if="ruleItem.price.is_error">
-                    {{ ruleItem.price.warn }}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div class="main-input">
-              <div class="form-total">
-                <div>
-                  <p>庫存數量</p>
-                  <div>
-                    <img :src="icon_minus" @click="countTotalBtn(-1)" />
-                    <el-input
-                      class="input-total"
-                      v-model="formInputRef.total"
-                      onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                    >
-                    </el-input>
-                    <img :src="icon_plus" @click="countTotalBtn(+1)" />
-                  </div>
-                  <span class="p_error" v-if="ruleItem.total.is_error">
-                    {{ ruleItem.total.warn }}
-                  </span>
-                </div>
-              </div>
-              <div class="form-state">
-                <div>
-                  <p>上架期間</p>
-                  <div>
-                    <div>
-                      <img
-                        v-if="formInputRef.state"
-                        :src="icon_sure"
-                        @click="updataOnlineBtn(1)"
-                      />
-                      <img
-                        v-if="!formInputRef.state"
-                        :src="icon_cancle"
-                        @click="updataOnlineBtn(1)"
-                      />
-                      <span> 永久 </span>
-                    </div>
-                    <el-input
-                      class="input-state"
-                      v-model="formInputRef.state"
-                      placeholder="請輸入上架"
-                      onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
-                    >
-                    </el-input>
-                    <div>
-                      <img
-                        v-if="formInputRef.state"
-                        :src="icon_cancle"
-                        @click="updataOnlineBtn(0)"
-                      />
-                      <img
-                        v-if="!formInputRef.state"
-                        :src="icon_sure"
-                        @click="updataOnlineBtn(0)"
-                      />
-                      <span> 暫停 </span>
-                    </div>
-                  </div>
-                  <span class="p_error" v-if="ruleItem.state.is_error">
-                    {{ ruleItem.state.warn }}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div class="main-input">
-              <div class="form-input">
-                <div>
-                  <div>
-                    <el-input
-                      class="input-msg"
-                      v-model="formInputRef.msg"
-                      placeholder="請輸入說明"
-                      type="textarea"
-                    />
-                  </div>
+              <div class="img-info">
+                <div :style="{ '--color': formInputRef.color }" class="img-bg">
+
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="bottom-form">
-          <button class="confirm-coursedetail-btn" @click="submitBtn()">
-            確認
-          </button>
-          <button class="confirm-coursedetail-btn" @click="showAddUIFn(false)">
-            取消
-          </button>
+          <div class="input-item" name="項目類型">
+            <div class="horizontal-content">
+              <div>
+                <span>單位</span>
+                <div>
+                  <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.unit"
+                    placeholder="請選擇單位" @change="changeValue()">
+                    <el-option v-for="(item, index) in goodsUnitGroup" :key="item" :value="index" :label="item">
+                      {{ item }}
+                    </el-option>
+                  </el-select>
+                </div>
+              </div>
+              <div>
+                <span>容量</span>
+                <input v-model="formInputRef.capacity" placeholder="請輸入價格" type="text" />
+              </div>
+            </div>
+          </div>
+          <div class="input-item" name="服務群組">
+            <div class="bottom-item">
+              <span>服務群組</span>
+              <div class="link">
+                <span @click="showCGroupsUIFn(true)">加入群組</span>
+              </div>
+            </div>
+          </div>
+          <div class="input-item" name="庫存管理">
+            <span class="title-content">庫存管理</span>
+            <span class="msg-content">管理商品的多項規格及庫存數量</span>
+            <div class="bottom-item">
+              <span>*SKU編號</span>
+              <input v-model="formInputRef.nameNo" placeholder="請輸入編號" type="text"
+                onkeyup="value=value.replace(' ','')" />
+              <span class="auto-link" @click="changeNameNo()">自動產生</span>
+              <!-- <input v-model="formInputRef.NameNo" placeholder="請輸入編號" type="text" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"/> -->
+            </div>
+            <span class="p_error" v-if="ruleLists.ruleItem.NameNo.is_error">
+              {{ ruleLists.ruleItem.NameNo.warn }}
+            </span>
+          </div>
+          <div class="input-switch" name="其他設定">
+            <span class="title-switch">其他設定</span>
+            <!-- <div class="box-switch">
+              <div class="switch">
+                <input type="checkbox" id="switch" v-model="formInputRef.isBonusOpen" /><label for="switch">Toggle</label>
+              </div>
+              <div class="label-info">
+                <label>服務是否提供抽成</label>
+                <span>開啟後，系統將按人員分潤設定比例白動計算抽成金額</span>
+              </div>
+            </div> -->
+            <div class="box-switch">
+              <div class="switch">
+                <input type="checkbox" id="switch3" v-model="formInputRef.display" /><label for="switch3">Toggle2</label>
+              </div>
+              <div class="label-info">
+                <label>上架 </label>
+                <span>開啟後，你的顧客即可透過線上預約瀏覽此項目</span>
+              </div>
+            </div>
+            <!-- <div class="box-switch">
+              <div class="switch">
+                <input type="checkbox" id="switch2" v-model="formInputRef.isEditAccounting" /><label
+                  for="switch2">Toggle1</label>
+              </div>
+              <div class="label-info">
+                <label> 是否允許結帳時修改金額</label>
+                <span>開啟後，結帳時可手動調整服務金額</span>
+              </div>
+            </div> -->
+          </div>
         </div>
       </div>
+      <div class="bottom-content"></div>
     </div>
   </div>
 </template>
+  
 <script setup lang="ts">
-import { useApptStore } from "@/stores/apptStore";
-import icon_plus from "@/assets/images/icon_plus.png";
-import icon_minus from "@/assets/images/icon_minus.png";
-import icon_sure from "@/assets/images/icon_sure.png";
-import icon_cancle from "@/assets/images/icon_cancle.png";
-import type { IBackStatus } from "@/types/IData";
-import { showErrorMsg } from "@/types/IMessage";
-import { GetRandomChar, GetRandomNumStr, verify_methods } from "@/utils/utils";
 import { storeToRefs } from "pinia";
+import { useApptStore } from "@/stores/apptStore";
+import icon_closeX from "@/assets/images/icon_closeX.png";
+import icon_ticket from "@/assets/images/icon_cancle.png";
+import { GetRandomChar, GetRandomNumStr, checkVerify_all, formatZeroDate, goodsUnitGroup } from "@/utils/utils";
 import Alert from "../alertCmpt";
+import { showErrorMsg } from "@/types/IMessage";
+import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
+
 let store = useApptStore();
-let { goodsTypesListRef } = storeToRefs(store);
+let { } = storeToRefs(store);
 let { addGoodsDetailApi } = store;
+
 const props = defineProps<{
   showAddUIFn: Function;
 }>();
-let unitGroup: string[] = [
-  "不選擇",
-  "毫升",
-  "公升",
-  "功課",
-  "公斤",
-  "盎司",
-  "片",
-  "袋",
-  "包",
-  "個",
-  "組",
-  "式",
-  "瓶",
-  "罐",
-];
+let showSelItemUIRef = ref(false);
+let showSelGroupsUIRef = ref(false);
+let showSubDetailUIRef = ref(false);
 
 let formInputRef: any = ref({
   name: "",
-  unit: null,
-  capacity: null,
-  NameNo: null,
-  GoodsTypeId: null,
-  price: null,
+  unit: "",
+  capacity: "",
+  nameNo: "",
+  GoodsGroups: [],
+  price: "",
   total: 0,
   state: 0,
   msg: "",
 });
 
-let filterTypesTabs: any = computed(() =>
-  goodsTypesListRef.value.filter(function (value: any) {
-    return value.pgId > 0;
-  })
-);
 onBeforeFn();
 function onBeforeFn() {
-  formInputRef.value.name = "";
-  formInputRef.value.unit = "";
-  formInputRef.value.capacity = "";
-  formInputRef.value.NameNo =
+  formInputRef.value.nameNo =
     GetRandomChar(3) + "-" + GetRandomNumStr(1, 99999);
-  formInputRef.value.GoodsTypeId = "";
-  formInputRef.value.price = "";
-  formInputRef.value.total = 0;
-  formInputRef.value.state = 0;
-  formInputRef.value.msg = "";
 }
+onMounted(() => {
+  // console.log('onMounted');
+});
 
-onMounted(() => {});
 
-function countTotalBtn(data: number) {
-  if (!formInputRef.value.total) formInputRef.value.total = 0;
-  formInputRef.value.total += data;
-  if (formInputRef.value.total < 0) formInputRef.value.total = 0;
-}
-function updataOnlineBtn(data: number) {
-  formInputRef.value.state = data;
-}
-//新增課程-確認
-let submitBtn = () => {
-  console.log(formInputRef.value);
-
+function submitBtn() {
   ruleLists.ruleItem.name.value = formInputRef.value.name;
   ruleLists.ruleItem.price.value = formInputRef.value.price;
-  ruleLists.ruleItem.unit.value = formInputRef.value.unit;
-  ruleLists.ruleItem.capacity.value = formInputRef.value.capacity;
-  ruleLists.ruleItem.NameNo.value = formInputRef.value.NameNo;
-  ruleLists.ruleItem.GoodsTypeId.value = formInputRef.value.GoodsTypeId;
-  ruleLists.ruleItem.total.value = formInputRef.value.total;
-  ruleLists.ruleItem.state.value = formInputRef.value.state;
-  if (!verify_all()) return;
+  ruleLists.ruleItem.NameNo.value = formInputRef.value.nameNo;
+  if (!checkVerify_all(ruleLists)) return;
 
   let curdata: any = {
-    pCode: formInputRef.value.NameNo,
+    pCode: formInputRef.value.nameNo,
     pName: formInputRef.value.name,
     memo: formInputRef.value.msg,
     price: formInputRef.value.price,
@@ -317,10 +181,10 @@ let submitBtn = () => {
     stockOpen: false,
     stock: formInputRef.value.total,
     stockTrace: false,
-    bonusOpen: false,
-    updateOpen: false,
+    bonusOpen: formInputRef.value.isBonusOpen,
+    updateOpen: formInputRef.value.isEditAccounting,
     display: formInputRef.value.state == 1,
-    productGroup: [formInputRef.value.GoodsTypeId],
+    productGroup: formInputRef.value.GoodsGroups,
     productDiscount: [],
     productProvider: [],
   };
@@ -336,361 +200,726 @@ let submitBtn = () => {
       Alert.warning(showErrorMsg(res.msg), 1000);
     }
   });
-};
-
-//-------------------------------------form驗證
+}
+function updateImgUrl() {
+  // console.log("更新圖片");
+}
+function changeValue() {
+  // console.log(formInputRef.value.subType);
+  // formInputRef.value.subType = formInputRef.value.subType == 0 ? 1 : 0;
+}
+function getCGroupsFn(data: any) {
+  formInputRef.value.sgList = data;
+  showCGroupsUIFn(false)
+}
+function showCGroupsUIFn(data: boolean) {
+  showSelGroupsUIRef.value = data;
+}
+function changeNameNo() {
+  formInputRef.value.nameNo =
+    GetRandomChar(3) + "-" + GetRandomNumStr(1, 99999);
+}
+function updataColorFn(params: any) {
+  formInputRef.value.color = params
+}
+//#region 規則
 const ruleLists: any = reactive({
   ruleItem: {
     name: {
-      type: "number",
+      label: "名稱",
       rules: {
         required: {
-          warn: "此項為必填",
-        },
-        length: {
-          max: 9,
-          warn: "不高於9字",
-        },
-      },
-      is_error: false,
-      warn: "",
-    },
-    unit: {
-      type: "number",
-      rules: {},
-      is_error: false,
-      warn: "",
-    },
-    capacity: {
-      type: "number",
-      rules: {},
-      is_error: false,
-      warn: "",
-    },
-    NameNo: {
-      type: "number",
-      rules: {
-        required: {
-          warn: "此項為必填",
-        },
-      },
-      is_error: false,
-      warn: "",
-    },
-    GoodsTypeId: {
-      type: "number",
-      rules: {
-        required: {
-          warn: "此項為必填",
+          warn: " 名稱為必填",
         },
       },
       is_error: false,
       warn: "",
     },
     price: {
-      type: "number",
+      label: "價格",
       rules: {
         required: {
-          warn: "此項為必填",
+          warn: " 價格為必填",
         },
       },
       is_error: false,
       warn: "",
     },
-    total: {
-      type: "number",
-      rules: {},
-      is_error: false,
-      warn: "",
-    },
-    state: {
-      type: "number",
-      rules: {},
+    NameNo: {
+      label: "編號",
+      rules: {
+        required: {
+          warn: " 編號為必填",
+        },
+      },
       is_error: false,
       warn: "",
     },
   },
 });
-let { ruleItem } = toRefs(ruleLists);
-const verify_all = () => {
-  let is_valid = true;
-  for (let component in ruleLists.ruleItem) {
-    let item = ruleLists.ruleItem[component];
-    for (let rule in item.rules) {
-      if (!verify_methods[rule](item)) {
-        is_valid = false;
-        break;
-      }
-    }
-  }
-  return is_valid;
-};
-//-----------------------------------我是底部-------------------------------------------
+//#endregion
 </script>
-
-<style lang="scss" scoped>
-.form_bg {
-  position: absolute;
+  
+<style lang="scss">
+.el-select-dropdown {
+  top: 0px;
+}
+</style>
+<style scoped lang="scss">
+.popup-AddGoodsDetailUI {
+  position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.5);
   z-index: 3;
+  background: rgba(255, 255, 255, 0.5);
 
-  .add-form {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    // width: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 
-    background-color: #e6e2de;
-    padding: 10px 10px 10px 10px;
+  .popup-content {
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    font-size: 20px;
+    font-family: HeitiTC;
+    color: #84715c;
+    font-weight: bold;
 
-    .Column {
-      // width: 100%;
+    .top-content {
       display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
+      height: 70px;
+      border: solid 1px #ddd;
+      box-sizing: border-box;
 
-    .top-form {
-      width: 100%;
-      p {
-        font-weight: bold;
-        width: 80px;
-        height: 20px;
-        font-family: HeitiTC;
-        font-size: 20px;
-        text-align: left;
-        color: #877059;
+      >span {
+        display: flex;
+        width: calc(100%);
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        height: 70px;
+        // height: 100px;
+        justify-content: center;
+      }
+
+      >img {
+        position: absolute;
+        width: 41px;
+        height: 38px;
+        top: 15px;
+        left: 15px;
+      }
+
+      >button {
+        position: absolute;
+        width: 150px;
+        height: 50px;
+        top: 10px;
+        right: 10px;
+        border-radius: 5px;
+        box-sizing: border-box;
+        border: none;
+        background-color: #84715c;
+        color: #fff;
       }
     }
-    .main-img {
-      width: 300px;
-      height: 300px;
+
+    .main-content::-webkit-scrollbar {
+      display: none;
+      /* Chrome Safari */
     }
-    .main-form {
+
+    .main-content {
       display: flex;
-      width: 100%;
-      .main-info {
-        .main-input {
+      height: calc(100% - 70px - 20px);
+      justify-content: center;
+      overflow-y: auto;
+
+
+      scrollbar-width: none;
+      /* firefox */
+      -ms-overflow-style: none;
+      /* IE 10+ */
+
+      .center-main {
+        width: 70%;
+        height: 100%;
+        // border-right: solid 0.5px #ddd;
+        box-sizing: border-box;
+
+        // overflow: hidden;
+
+        .input-item {
+          display: grid;
           width: 100%;
-          display: flex;
-          justify-content: left;
-          > div {
+          margin: 15px 0;
+
+          >div {
+            display: flex;
+            height: 80px;
+            width: 100%;
+            border: solid 0.5px #ddd;
+            box-sizing: border-box;
+
+            // margin: 15px 0;
+            .link {
+              display: flex;
+              height: 100%;
+              width: calc(100% - 180px);
+              justify-content: center;
+              align-items: center;
+              color: #87ceeb;
+            }
+
+            >span {
+              height: 100%;
+              width: 180px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              background-color: #faf9f8;
+              font-size: 24px;
+            }
+
+            >input {
+              border: solid 0px #c1bdb8;
+              box-sizing: border-box;
+              height: 100%;
+              width: calc(100% - 180px);
+              font-size: 22px;
+            }
+
+            >p {
+              color: #87ceeb;
+              width: calc(100% - 180px);
+            }
+
+            ::placeholder {
+              color: #c1bdb8;
+            }
+          }
+
+          .auto-link {
+            display: flex;
+            height: 100%;
+            // width: calc(100% - 180px);
+            justify-content: center;
+            align-items: center;
+            color: #87ceeb;
+          }
+
+          .title-content {
+            font-size: 28px;
+            width: 100%;
+          }
+
+          .name-content {
+            display: flex;
+            width: 100%;
+            margin: 15px 0;
+            height: 240px;
+
+            .name-info {
+              width: calc(100% - 160px);
+
+              >div {
+                display: flex;
+                height: 80px;
+                width: calc(100%);
+                border: solid 0.5px #ddd;
+                box-sizing: border-box;
+
+                // margin: 15px 0;
+                .link {
+                  display: flex;
+                  height: 100%;
+                  width: calc(100% - 180px);
+                  justify-content: center;
+                  align-items: center;
+                  color: #87ceeb;
+                }
+
+                >span {
+                  height: 100%;
+                  width: 180px;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  background-color: #faf9f8;
+                  font-size: 24px;
+                }
+
+                >input {
+                  border: solid 0px #c1bdb8;
+                  box-sizing: border-box;
+                  height: 100%;
+                  width: calc(100% - 180px);
+                  font-size: 22px;
+                }
+
+                >p {
+                  color: #87ceeb;
+                  width: calc(100% - 180px);
+                }
+
+                ::placeholder {
+                  color: #c1bdb8;
+                }
+              }
+            }
+
+            .img-info {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 160px;
+              height: 160px;
+              background-color: #f5f5f5;
+
+              .img-bg {
+                display: grid;
+                width: 100px;
+                height: 100px;
+                background: var(--color);
+                border-radius: 12px;
+
+                >div {
+                  width: 100px;
+                  height: 100px;
+
+                  >span {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100px;
+                    height: 50px;
+                    font-size: 40px;
+                    color: #ffffff;
+                  }
+                }
+              }
+            }
+          }
+
+          .msg-content {
+            font-size: 20px;
+            color: #c1bdb8;
+            margin-bottom: 10px;
+          }
+
+          .select-content {
+            width: calc(100% - 180px);
+
+            .el-select {
+              width: 100%;
+
+              :deep(.el-input__wrapper) {
+                width: 100%;
+                height: 77px;
+                font-size: 24px;
+
+                :deep(.el-select-dropdown) {
+                  border: 1px solid #ff0000 !important;
+                  box-sizing: border-box !important;
+                }
+              }
+
+              input {
+                font-size: 12px;
+                border: none;
+                background: none;
+                text-align: center;
+                font-weight: bold;
+              }
+            }
+          }
+
+          .horizontal-content {
+            border: 0px solid #000000;
+            width: 100%;
+            height: 60px;
+            justify-content: space-between;
+
+            >div {
+              display: flex;
+              height: 100%;
+              width: calc(50% - 10px);
+              border: solid 0.5px #ddd;
+              box-sizing: border-box;
+
+              >span {
+                height: 100%;
+                width: 180px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: #faf9f8;
+                font-size: 24px;
+              }
+
+              .el-select {
+                // width:  calc(100%);
+                height: 100%;
+
+                :deep(.el-input__wrapper) {
+                  // width: calc(100%);
+                  height: 57px;
+                  font-size: 24px;
+
+                  :deep(.el-select-dropdown) {
+                    border: 1px solid #ff0000 !important;
+                    box-sizing: border-box !important;
+                  }
+                }
+
+                input {
+                  font-size: 12px;
+                  border: none;
+                  background: none;
+                  text-align: center;
+                  font-weight: bold;
+                  border: 0px solid #000000;
+                }
+              }
+
+              >input {
+                // width: calc(100% - 180px);
+                border: 0px solid #000000;
+              }
+            }
+          }
+
+          .input-timer {
+            width: calc(100% - 180px);
+            height: 100%;
+            margin-left: 0;
+
+            .el-input__inner {
+              height: 100px;
+            }
+          }
+
+          .percent-input {
+            width: calc(100% - 180px - 180px);
+          }
+
+          .textMsg-content {
+            display: flex;
+            height: 100px;
+            width: 100%;
+            border: solid 0.5px #ddd;
+            box-sizing: border-box;
+
+            textarea {
+              width: calc(100% - 180px);
+              height: 99%;
+              border: solid 0px #ddd;
+              box-sizing: border-box;
+            }
+          }
+
+
+          .link-btn {
+            font-size: 28px;
+            width: 100%;
+
+            >span {
+              color: #87ceeb;
+              font-size: 28px;
+              width: 100%;
+            }
+          }
+
+          .form-info {
+            width: 100%;
+            height: auto;
             display: flex;
             justify-content: center;
-            padding: 5px 3px;
-            p {
-              text-align: left;
-              font-size: 15px;
-              text-align: left;
-              color: #877059;
-              height: 8px;
-            }
-            span {
-              display: block;
-              height: 30px;
-              width: 95%;
-              text-align: left;
-              font-size: 15px;
-              text-align: left;
-              color: #877059;
-              font-weight: bold;
-              font-size: 10px;
+            border: solid 0px #ddd;
+
+            >div {
+              p {
+                text-align: left;
+                font-size: 18px;
+                text-align: left;
+                color: #877059;
+                height: 8px;
+              }
+
+              span {
+                display: block;
+                height: 30px;
+                width: 95%;
+                text-align: left;
+                font-size: 22px;
+                text-align: left;
+                color: #877059;
+                font-weight: bold;
+              }
+
+              >input {
+                vertical-align: middle;
+                width: 95%;
+                margin: 5;
+                height: 30px;
+                border: solid 1px #707070;
+                box-sizing: border-box !important;
+                background-color: #fff;
+              }
             }
 
-            :deep(.el-input__wrapper) {
-              vertical-align: middle;
-              margin: 5;
-              border: solid 2px #877059;
-              background-color: #fff;
-              border-radius: 0px;
-              &:focus {
-                box-shadow: 0 0 0 1px var(--el-input-focus-border-color) inset; //输入内容原本样式
-                background-color: #877059;
-              }
-              ::placeholder {
-                // color: #877059;
-                font-weight: bold;
-              }
-              font-size: 15px;
-              height: 38px;
-            }
-            .input-basic {
-              height: 45px;
-              width: 230px;
-            }
-            .input-name {
-              height: 45px;
-              width: 230px;
-            }
-            .select-unit {
-              height: 45px;
-              width: 125px;
-            }
-            .input-capacity {
-              height: 45px;
-              width: 100px;
-            }
-            .input-msg {
-              width: 460px;
-              height: 140px;
-              border: solid 2px #877059;
-              background-color: #fff;
-              ::placeholder {
-                // color: #877059;
-                font-size: 15px;
-                font-weight: bold;
-              }
-              :deep(.el-textarea__inner) {
-                width: 460px;
-                height: 140px;
-                font-size: 15px;
-              }
-            }
-          }
-          .form-total {
-            width: 230px;
-            height: 100px;
-            > div {
-              width: 230px;
-              border: solid 2px #877059;
-              background-color: #fff;
-              > div {
+            .form-item {
+              width: 100%;
+              border-bottom: 0px solid #fff;
+              box-sizing: border-box !important;
+
+              >span {
                 display: flex;
+                width: 100%;
                 justify-content: center;
                 align-items: center;
-                .input-total {
-                  width: 66px;
-                  font-size: 20px;
-                  margin: 0px 10px;
-                  :deep(.el-input__wrapper) .el-input__inner {
-                    text-align: center;
-                    font-size: 20px;
+                height: 40px;
+              }
+
+              >div {
+                display: flex;
+                width: 100%;
+                justify-content: center;
+                // max-height: 100px;
+                // overflow-y: auto;
+
+                >table {
+                  // display: flex;
+                  width: 100%;
+
+                  >thead {
+                    background-color: #c1bdb8;
+                    color: #797979;
+                    width: 100%;
+                    border-bottom: 2px;
+                    box-sizing: border-box !important;
+
+                    >tr>th {
+                      font-size: 16px;
+                      color: #636363;
+                      font-weight: bold;
+                    }
+
+                    >tr>th:nth-child(1) {
+                      width: 50%;
+                    }
+
+                    >tr>th:nth-child(2) {
+                      width: 15%;
+                    }
+
+                    >tr>th:nth-child(3) {
+                      width: 15%;
+                    }
+
+                    >tr>th:nth-child(4) {
+                      width: 20%;
+                    }
                   }
-                }
-                img {
-                  width: 30px;
-                  height: 30px;
-                }
-              }
-              > p {
-                display: flex;
-                justify-content: center;
-                height: 10px;
-                font-weight: bold;
-                font-size: 15px;
-              }
-            }
-          }
-          .form-state {
-            width: 230px;
-            height: 100px;
-            > div {
-              width: 230px;
-              border: solid 2px #877059;
-              background-color: #fff;
-              > div {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                .input-state {
-                  opacity: 0;
-                  width: 66px;
-                  font-size: 20px;
-                  margin: 0px 10px;
-                  :deep(.el-input__wrapper) .el-input__inner {
-                    text-align: center;
+
+                  >tbody {
+                    border-bottom: 2px solid #dadada;
+                    box-sizing: border-box !important;
+
+                    >tr>td>span {
+                      display: block;
+                      text-align: left;
+                      font-size: 22px;
+                      color: #877059;
+                      font-weight: bold;
+                      margin: 10px 0px;
+                    }
+
+                    >tr>td:nth-child(1) {
+                      width: 50%;
+                    }
+
+                    >tr>td:nth-child(2) {
+                      width: 15%;
+                    }
+
+                    >tr>th:nth-child(3) {
+                      width: 15%;
+                    }
+
+                    >tr>th:nth-child(4) {
+                      width: 20%;
+                    }
                   }
                 }
               }
-              > p {
-                display: flex;
-                justify-content: center;
-                height: 10px;
-                font-weight: bold;
-                font-size: 15px;
+
+              .link-btn {
+                color: #b89087;
               }
             }
           }
-          .p_error {
-            color: #fc0505;
+
+        }
+
+
+
+        .input-radio {
+          display: grid;
+          width: 100%;
+          // margin-left: 5%;
+          margin-top: 3%;
+
+          .title-content {
+            font-size: 28px;
             width: 100%;
-            height: 20px;
+            // .el-select{
           }
+
+          .msg-content {
+            font-size: 20px;
+            color: #c1bdb8;
+            margin-bottom: 10px;
+          }
+
         }
-      }
 
-      .add-coursedetail-btndiv {
-        padding: 0px 20px;
-        max-height: 250px;
-        overflow-y: scroll;
-        width: 100%;
-        div {
-          flex-wrap: wrap;
-          display: flex;
 
-          // padding: 10px;
-          div {
-            .add-coursedetail-btn {
-              width: 250px;
-              height: 45px;
-              margin: 5px;
-              border-radius: 10px;
+        .input-switch {
+          // padding: 0px 15px;
+          width: 100%;
+          height: 300px;
+          // border: 1px solid #000;
 
-              font-size: 20px;
-              font-weight: bold;
-              background-color: #fff;
-              color: #717171;
-              display: flex;
+          .title-switch {
+            display: block;
+            height: 60px;
+            width: 100%;
+            text-align: left;
+            font-size: 28px;
+            text-align: left;
+            color: #877059;
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            box-sizing: border-box !important;
+          }
 
-              > span {
-                margin-top: 5px;
-                width: 88%;
-                justify-content: center;
+          .box-switch {
+            display: flex;
+            width: 100%;
+            height: calc(100% / 4);
+            align-items: center;
+            // margin-top: 15px;
+
+            box-sizing: border-box;
+            // border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+            box-sizing: border-box !important;
+
+            .label-info {
+              display: grid;
+              width: calc(100% - 80px);
+              height: 100%;
+
+              >label {
+                color: #707070;
+                font-size: 26px;
+                margin-left: 20px;
               }
 
-              .add-coursedetail-ico {
-                margin-top: 10px;
-                width: 20px;
-                height: 20px;
-                display: flex;
-                justify-content: center;
-                flex: 1;
+              >span {
+                color: #c1bdb8;
+                font-size: 20px;
+                margin-left: 20px;
               }
             }
           }
-        }
 
-        p {
-          text-align: left;
-          font-size: 20px;
-          font-weight: bold;
-          text-align: left;
-          color: #877059;
+          .switch {
+            align-items: center;
+            display: flex;
+            width: 80px;
+            height: 40px;
+            // object-fit: contain;
+            // aspect-ratio: 2/1;
+
+            input[type="checkbox"] {
+              height: 0;
+              width: 0;
+              visibility: hidden;
+            }
+
+            label {
+              cursor: pointer;
+              text-indent: -9999px;
+              width: 100%;
+              height: 100%;
+              background: grey;
+              display: block;
+              border-radius: 50px;
+              position: relative;
+            }
+
+            label:after {
+              content: "";
+              position: absolute;
+              top: 1px;
+              left: 1px;
+              width: calc(50% - 2px - 1px);
+              height: calc(100% - 2px - 1px);
+              background: #fff;
+              border-radius: 90px;
+              transition: 0.3s;
+            }
+
+            input:checked+label {
+              background: #877059;
+            }
+
+            input:checked+label:after {
+              left: calc(100% - 1px);
+              transform: translateX(-100%);
+            }
+
+            label:active:after {
+              width: calc(50% - 2px - 1px);
+              ;
+            }
+
+            // centering
+            body {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100vh;
+            }
+          }
         }
       }
     }
-    .bottom-form {
-      width: 100%;
+
+    .bottom-content {
       display: flex;
-      justify-content: center;
-      .confirm-coursedetail-btn {
-        position: relative;
-        width: 100px;
-        height: 45px;
-        margin: 10px;
-        // padding: 9px 16px;
-        border-radius: 10px;
-        font-size: 20px;
-        font-weight: bold;
-        color: #717171;
-        background-color: #fff;
-      }
+      height: 20px;
     }
   }
 }
+
+.p_error {
+  color: #fc0505;
+  width: 100%;
+}
+
+.link-bottom {
+  padding: 0 5px;
+  opacity: 0.5;
+  margin: auto;
+  width: 80%;
+  height: 2px;
+  background-color: #707070;
+}
 </style>
+  

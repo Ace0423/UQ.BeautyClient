@@ -20,12 +20,10 @@ export const updateGoodsTypeOrderReq = (data: any) =>
   postHttps(httpRequest, "/Product/GroupUpdateOrder", data);
 export const addGoodsTypeReq = (data: any) =>
   postHttps(httpRequest, "/Product/ProductGroup", data);
-export const updateGoodsTypeReq = (data: any) =>
+export const updateGoodsGroupReq = (data: any) =>
   putHttps(
     httpRequest,
-    "/Product/ProductGroup?pgid=" + data.pgId + "&isList=" + data.isList,
-    data
-  );
+    "/Product/ProductGroup?pgid=" + data.pgId + "&isList=0",data);
 export const delGoodsTypeReq = (data: any) =>
   deleteHttps(httpRequest, "/Product/ProductGroup/" + data);
 

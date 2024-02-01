@@ -235,12 +235,12 @@
     :showCServiceUIFn="showServiceUIFn"
     :getDataFn="getSelServiceFn"
   ></CheckboxServiceUI>
-  <CheckboxGoodsUI
+  <CbGoodsdDetailUI
     v-if="showGoodsUIRef"
     :showCGoodsUIFn="showGoodsUIFn"
     :selData="formInputRef.giftGoods"
     :getDataFn="getGoodsFn"
-  ></CheckboxGoodsUI>
+  ></CbGoodsdDetailUI>
   <RadioServicesUI
     v-if="itemTypeRef"
     :selData="formInputRef.ffServiceId"

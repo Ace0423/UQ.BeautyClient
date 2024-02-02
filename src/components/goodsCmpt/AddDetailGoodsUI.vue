@@ -60,10 +60,16 @@
             </div>
           </div>
           <div class="input-item" name="商品群組">
-            <div class="bottom-item">
+            <div class="bottom-item" v-if="false">
               <span>商品群組</span>
               <div class="link">
                 <span @click="showCbGroupsUIFn(true)">加入群組</span>
+              </div>
+            </div>
+            <div class="bottom-item">
+              <span>商品品牌</span>
+              <div class="link">
+                <span @click="showCbBrandUIFn(true)">加入品牌</span>
               </div>
             </div>
           </div>
@@ -117,8 +123,10 @@
       <div class="bottom-content"></div>
     </div>
   </div>
-  <CbGoodsGroupsUI v-if="showCbGoodsUIRef" :selData="formInputRef.GroupsItem" :getDataFn="getCbGroupsFn"
+  <CbGoodsGroupsUI v-if="showCbGoodsUIRef" :selData="formInputRef.groupsItem" :getDataFn="getCbGroupsFn"
     :showCbGroupsUIFn="showCbGroupsUIFn" />
+  <CbGoodsBrandUI v-if="showCbBrandUIRef" :selData="formInputRef.brandItem" :getDataFn="getCbBrandFn"
+    :showCbUIFn="showCbBrandUIFn" />
 </template>
   
 <script setup lang="ts">
@@ -139,13 +147,15 @@ const props = defineProps<{
   showAddUIFn: Function;
 }>();
 let showCbGoodsUIRef = ref(false);
+let showCbBrandUIRef = ref(false);
 
 let formInputRef: any = ref({
   name: "",
   unit: "",
   capacity: "",
   nameNo: "",
-  GroupsItem: [],
+  groupsItem: [],
+  brandItem: [],
   price: "",
   total: 0,
   state: 0,
@@ -168,10 +178,10 @@ function submitBtn() {
   ruleLists.ruleItem.NameNo.value = formInputRef.value.nameNo;
   if (!checkVerify_all(ruleLists)) return;
 
-  // let curGroupMaps = formInputRef.value.GroupsItem;
+  // let curGroupMaps = formInputRef.value.groupsItem;
   // let curGroupMaps = [];
-  // for (let i = 0; i < formInputRef.value.GroupsItem.length; i++) {
-  //   const element = formInputRef.value.GroupsItem[i];
+  // for (let i = 0; i < formInputRef.value.groupsItem.length; i++) {
+  //   const element = formInputRef.value.groupsItem[i];
   //   curGroupMaps.push(element.pgId);
   // }
 
@@ -191,7 +201,7 @@ function submitBtn() {
     bonusOpen: formInputRef.value.isBonusOpen,
     updateOpen: formInputRef.value.isEditAccounting,
     display: formInputRef.value.state == 1,
-    productGroup: GroupsIdList,
+    productGroup: groupsIdList,
     productDiscount: [],
     productProvider: [],
   };
@@ -216,14 +226,25 @@ function changeValue() {
   // formInputRef.value.subType = formInputRef.value.subType == 0 ? 1 : 0;
 }
 
-let GroupsIdList: string[] = []
+let groupsIdList: string[] = []
+//取回群組資料
 function getCbGroupsFn(itemList: any, idList: any = []) {
-  formInputRef.value.GroupsItem = itemList;
-  GroupsIdList = idList;
+  formInputRef.value.groupsItem = itemList;
+  groupsIdList = idList;
   showCbGroupsUIFn(false)
+}
+let brandList: string[] = []
+//取回品牌資料
+function getCbBrandFn(itemList: any, idList: any = []) {
+  formInputRef.value.brandItem = itemList;
+  brandList = idList;
+  showCbBrandUIFn(false)
 }
 function showCbGroupsUIFn(data: boolean) {
   showCbGoodsUIRef.value = data;
+}
+function showCbBrandUIFn(data: boolean) {
+  showCbBrandUIRef.value = data;
 }
 function changeNameNo() {
   formInputRef.value.nameNo =

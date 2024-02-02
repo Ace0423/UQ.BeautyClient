@@ -81,7 +81,7 @@ let formInputRef: any = ref({
 
 onBefore();
 function onBefore() {
-  getGoodsBrandApi(props.selData.pgId, 1).then((res: any) => {
+  getGoodsBrandApi(props.selData.pbId, 1).then((res: any) => {
     setInputData(res[0]);
   });
 }
@@ -110,8 +110,8 @@ function submitBtn() {
   }
 
   let apiData = {
-    pgId: props.selData.pgId,
-    pgTitle: formInputRef.value.name,
+    pbId: props.selData.pbId,
+    pbTitle: formInputRef.value.name,
     pIdList: goodsNums,
   };
   console.log("提交apiData", apiData);

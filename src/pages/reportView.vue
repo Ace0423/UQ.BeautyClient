@@ -6,7 +6,7 @@ const props = defineProps<{
     memuState: any;
     handmemuStateBtn: Function;
 }>();
-const idx = ref(0);
+const idx = ref(1);
 const value2 = ref('');
 const routerArr = ["realTimeView", "businessView"];
 const options = [
@@ -110,9 +110,9 @@ onMounted(() => {
             <div class="nav">
                 <div class="item-tab">
                     <router-link to="/reportView/realTimeView" :class="{ active: idx == 0 }"
-                        @click="headWitchBox(0)">即時分析</router-link>
+                        @click="headWitchBox(0)"  v-if="false">即時分析</router-link>
                     <router-link to="/reportView/businessView" :class="{ active: idx == 1 }"
-                        @click="headWitchBox(1)">營業報表</router-link>
+                        @click="headWitchBox(1)" >營業報表</router-link>
                 </div>
                 <div class="condition-block" v-if="idx == 1">
                     <el-config-provider :locale="zhCn">

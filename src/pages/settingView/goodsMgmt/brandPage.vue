@@ -104,7 +104,7 @@ function OrderBrandFn() {
         const element = filterBrandBrand.value[i];
         element.order = i;
         orderApiData.push({
-            pgId: element.pgId,
+            pbId: element.pbId,
             order: i
         })
     }
@@ -116,7 +116,7 @@ function OrderBrandFn() {
 function getBrandFn(id: any = 0, isList: any = 0) {
     goodsBrandListRef.value = [];
     getGoodsBrandApi().then(() => {
-        console.log(goodsBrandListRef.value);
+        
     });
 }
 //新增分類-顯示

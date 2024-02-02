@@ -60,34 +60,16 @@
             </div>
           </div>
           <div class="input-item" name="商品群組">
-            <div class="bottom-item">
+            <div class="bottom-item"  v-if="false">
               <span>商品群組</span>
               <div class="link">
                 <span @click="showCbGroupsUIFn(true)">加入群組</span>
               </div>
             </div>
-            <div class="form-info" v-if="false">
-              <div class="form-item">
-                <div>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th align="left">名稱({{ formInputRef.groupsItem.length }})</th>
-                        <th align="left">操作</th>
-                      </tr>
-                    </thead>
-                    <tbody v-for="(item, key, index) in formInputRef.groupsItem" :key="item">
-                      <tr>
-                        <td>
-                          <span>{{ item.pgTitle }}</span>
-                        </td>
-                        <td>
-                          <img class="delete_img" :src="icon_cancleItem" @click="cancleGroupsListFn(item, index)" />
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+            <div class="bottom-item">
+              <span>品牌</span>
+              <div class="link">
+                <span @click="showCbBrandUIFn(true)">加入品牌</span>
               </div>
             </div>
           </div>
@@ -143,6 +125,8 @@
   </div>
   <CbGoodsGroupsUI v-if="showCbGoodsUIRef" :selData="formInputRef.groupsItem" :getDataFn="getCbGroupsFn"
     :showCbGroupsUIFn="showCbGroupsUIFn" />
+  <CbGoodsBrandUI v-if="showCbBrandUIRef" :selData="formInputRef.brandItem" :getDataFn="getCbBrandFn"
+    :showCbUIFn="showCbBrandUIFn" />
 </template>
     
 <script setup lang="ts">
@@ -164,8 +148,8 @@ const props = defineProps<{
   showUIFn: Function;
   selData: any;
 }>();
-let showSelGroupsUIRef = ref(false);
 let showCbGoodsUIRef = ref(false);
+let showCbBrandUIRef = ref(false);
 
 let formInputRef: any = ref({
   name: "",
@@ -173,6 +157,7 @@ let formInputRef: any = ref({
   capacity: "",
   nameNo: "",
   groupsItem: [],
+  brandItem: [],
   price: "",
   stock: 0,
   state: 0,
@@ -181,7 +166,6 @@ let formInputRef: any = ref({
 
 onBeforeFn();
 function onBeforeFn() {
-  console.log('onBeforeFn', props.selData);
   getGoodsDetailApi(props.selData.pId).then((res: any) => {
     setInputData(res[0])
   });
@@ -191,7 +175,6 @@ onMounted(() => {
 });
 
 function setInputData(params: any) {
-  console.log('onBeforeFn', params);
   formInputRef.value.nameNo = params.pCode;
   formInputRef.value.name = params.pName;
   formInputRef.value.memo = params.memo;
@@ -234,7 +217,7 @@ function submitBtn() {
     bonusOpen: formInputRef.value.isBonusOpen,
     updateOpen: formInputRef.value.isEditAccounting,
     display: formInputRef.value.state == 1,
-    productGroup: GroupsIdList,
+    productGroup: groupsIdList,
     productDiscount: [],
     productProvider: [],
   };
@@ -258,14 +241,26 @@ function changeValue() {
   // console.log(formInputRef.value.subType);
   // formInputRef.value.subType = formInputRef.value.subType == 0 ? 1 : 0;
 }
-let GroupsIdList: string[] = []
+let groupsIdList: string[] = []
+//取回群組資料
 function getCbGroupsFn(itemList: any, idList: any = []) {
   formInputRef.value.groupsItem = itemList;
-  GroupsIdList = idList;
+  groupsIdList = idList;
   showCbGroupsUIFn(false)
 }
+let brandList: string[] = []
+//取回品牌資料
+function getCbBrandFn(itemList: any, idList: any = []) {
+  formInputRef.value.brandItem = itemList;
+  brandList = idList;
+  showCbBrandUIFn(false)
+}
+
 function showCbGroupsUIFn(data: boolean) {
   showCbGoodsUIRef.value = data;
+}
+function showCbBrandUIFn(data: boolean) {
+  showCbBrandUIRef.value = data;
 }
 function cancleGroupsListFn(item: any, index: number) {
   formInputRef.value.groupsItem.splice(index, 1);

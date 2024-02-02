@@ -40,7 +40,7 @@ export const updateGoodsBrandOrderReq = (data: any) =>
 export const addGoodsBrandReq = (data: any) =>
   postHttps(httpRequest, "/Product/ProductBrand", data);
 export const updateGoodsBrandReq = (data: any) =>
-  putHttps(httpRequest, "/Product/ProductBrand?pbid=" + data.pgId + "&isList=0", data);
+  putHttps(httpRequest, "/Product/ProductBrand?pbid=" + data.pbId + "&isList=0", data);
 export const delGoodsBrandReq = (data: any) =>
   deleteHttps(httpRequest, "/Product/ProductBrand/" + data);
 //#endregion

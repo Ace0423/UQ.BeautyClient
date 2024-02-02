@@ -195,7 +195,6 @@ function onBeforeFn() {
 onMounted(() => { });
 
 function countTotalBtn(data: number) {
-  console.log(formInputRef.value.total);
   if (!formInputRef.value.total) formInputRef.value.total = 0;
   formInputRef.value.total += data;
   if (formInputRef.value.total < 0) formInputRef.value.total = 0;

@@ -15,7 +15,12 @@ watch(
     }
 );
 onMounted(() => {
-
+    routerArr.forEach((item, index) => {
+            const rp = route.path.substring(1).split("/")[2];
+            if (rp === item) {
+                idx.value = index;
+            }
+        })
 })
 </script>
 <template>

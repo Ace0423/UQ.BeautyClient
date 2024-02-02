@@ -6,7 +6,7 @@ import settingImg from "@/assets/Icon material-settings.svg";
 import customerImg from "@/assets/Icon zocial-guest.svg";
 import bankImg from "@/assets/Icon awesome-money-check-alt.svg";
 import orderImg from "@/assets/images/ico_order.png";
-
+import reportImg from "@/assets/file-text-fill.svg";
 import closeIcon from "@/assets/Group32.svg";
 import { getRole, getshowMap } from "@/plugins/js-cookie";
 import { useCounterStore } from "@/stores/counter";
@@ -56,6 +56,9 @@ onMounted(() => {
           <!-- <li>
             <img :src="bankImg" /><router-link to="/memberBankView/memberBankView">儲值金</router-link>
           </li> -->
+          <li>
+            <img :src="reportImg" /><router-link to="/reportView/realTimeView">報表</router-link>
+          </li>
           <li>
             <img :src="settingImg" /><router-link to="/settingView">設定</router-link>
           </li>

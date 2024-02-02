@@ -173,7 +173,7 @@ import { getshowMap } from "@/plugins/js-cookie";
   background-color: rgba(231, 227, 223, 0.2);
 
   >.menu {
-    margin: 2px 10px;
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     overflow: auto;

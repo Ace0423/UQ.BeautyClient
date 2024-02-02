@@ -93,7 +93,8 @@ onMounted(() => {
       <tbody class="content-tab">
         <tr v-for="item in filterMemberListData" :key="item.userId">
           <td class="content-name">
-            <img class="img-name" :src="Icon" />
+            <img v-if="!item.photo" class="img-name" :src="Icon" />
+            <img v-if="item.photo" class="img-name" :src="item.photo" />
             <div>
               <p>{{ item.nameView }}</p>
               <p>{{ item.phone }}</p>
@@ -281,8 +282,11 @@ onMounted(() => {
           // padding-left: 10px;
           display: flex;
 
-          img {
+          >.img-name {
+            width: 35px;
+            height: 35px;
             margin: 0 15px;
+            clip-path: circle(50% at 50% 50%);
           }
 
           P {

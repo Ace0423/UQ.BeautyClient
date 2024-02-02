@@ -54,8 +54,7 @@
     </div>
   </div>
   <div v-if="showCGoodsRef" style="justify-content: center;">
-    <CbGoodsdDetailUI :showCGoodsUIFn="showGroupUIFn" :selData="formInputRef.selGoodsItems"
-      :getDataFn="getCheckGoodsFn"></CbGoodsdDetailUI>
+    <CbGoodsdDetailUI :showCGoodsUIFn="showGroupUIFn" :selData="formInputRef.selGoodsItems" :getDataFn="getCheckGoodsFn"/>
   </div>
 </template>
 <script setup lang="ts">
@@ -70,7 +69,7 @@ import { showErrorMsg } from "@/types/IMessage";
 
 let apptstore = useApptStore();
 const { } = storeToRefs(apptstore);
-const { addGoodsTypeApi } = apptstore;
+const { addGoodsGroupApi } = apptstore;
 const props = defineProps<{
   showAddUI: Function;
 }>();
@@ -102,7 +101,7 @@ function submitBtn() {
   console.log("提交apiData", apiData);
 
   /**新增 */
-  addGoodsTypeApi(apiData).then((res: any) => {
+  addGoodsGroupApi(apiData).then((res: any) => {
     if (res.state == 1) {
       Alert.sussess("成功", 1000);
       setTimeout(() => {

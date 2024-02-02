@@ -3,7 +3,7 @@
   "AddGroups": "AddGroups",
   "AddService": "AddService",
   "AddGoods": "AddGoods",
-  "AddGoodsType": "AddGoodsType",
+  "AddGoodsGroup": "AddGoodsGroup",
   "goodsMgmt": "goodsMgmt",
   "edit": "Edit"
 }

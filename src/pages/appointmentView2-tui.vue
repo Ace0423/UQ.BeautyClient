@@ -348,7 +348,7 @@ const handleCommand = (command: string | number | object) => {
 //新增分類-顯示
 let showFastCheckOutUIHdr = (state: boolean) => {
   showFastCheckOutRef.value = state;
-  // getGoodsTypeApi(0);
+  // getGoodsGroupApi(0);
 };
 onFirstTime();
 function onFirstTime() {

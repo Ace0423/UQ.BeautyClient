@@ -451,7 +451,7 @@ function showAddRestUIFn(state: boolean) {
 //新增分類-顯示
 let showFastCheckOutUIHdr = (state: boolean) => {
   showFastCheckOutRef.value = state;
-  // getGoodsTypeApi(0);
+  // getGoodsGroupApi(0);
 };
 //更新預約資訊
 const updataShowApptInfoRef = (state: boolean) => {

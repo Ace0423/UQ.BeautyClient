@@ -117,7 +117,7 @@ export interface IMemberListVo {
   tradingTime: string;
 }
 
-export interface IGoodsTypeVo {
+export interface IGoodsGroupVo {
   group: IGroupTypeVo[];
   productList: [];
 }

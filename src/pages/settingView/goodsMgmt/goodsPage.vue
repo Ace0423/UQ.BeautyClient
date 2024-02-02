@@ -14,41 +14,39 @@
       <div class="content-main">
         <el-table :data="filterGoodsData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
           :header-cell-style="headerRowStyle">
-          <el-table-column prop="pCode" label="產品編號" width="400" :sort-by="['pCode']" sortable />
-          <el-table-column prop="pName" label="產品名稱" width="200" sortable />
-          <el-table-column prop="price" label="售價(NT)" width="200" sortable />
-          <el-table-column label="上架" width="150">
+          <el-table-column prop="pCode" label="產品編號" min-width="30%" :sort-by="['pCode']" sortable />
+          <el-table-column prop="pName" label="產品名稱" min-width="30%" sortable />
+          <el-table-column prop="price" label="售價(NT)" min-width="20%" sortable />
+          <el-table-column label="上架" min-width="10%">
             <template #default="scope">
               <div class="handle-drag">
                 <div class="checkbox_state">
                   <input type="checkbox" :checked="filterGoodsData[scope.$index].display == true"
-                    v-on:click="updataStutusBtn(scope.$index, filterGoodsData[scope.$index])" />
+                    v-on:click="updataStutusBtn(scope.$index, scope.row)" />
                 </div>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="150">
+          <el-table-column label="操作" min-width="10%">
             <template #default="scope">
               <div class="handle-drag">
-                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;" />
-                <img class="del_img" :src="Icon_del" @click="deleteHdr(scope.$index, filterGoodsData[scope.$index])" />
+                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;"
+                  @click="selectDataFn(scope.row)" />
+                <img class="del_img" :src="Icon_del" @click="deleteHdr(scope.$index, scope.row)" />
               </div>
             </template>
           </el-table-column>
         </el-table>
       </div>
-
       <div>
-
       </div>
     </div>
     <div class="footer">
 
     </div>
   </div>
-  <AddGoodsDetailUI v-if="showAddUIRef" :showAddUIFn="showAddDetailFormHdr" />
-  <EditGoodsDetailUI v-if="showEditUIRef" :showUIFn="showEditDetailUIHdr" :formInfo="selItem" />
-  <AddGoodsTypeUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" />
+  <AddDetailGoodsUI v-if="showAddUIRef" :showAddUIFn="showAddDetailFormHdr" />
+  <EditDetailGoodsUI v-if="showEditUIRef" :showUIFn="showEditDetailHdr" :selData="selectDataRef" />
 </template>
 
 <script lang="ts" setup>
@@ -59,7 +57,7 @@ import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
 
 let store = useApptStore();
-let { goodsTypesListRef, goodsTypesListValueRef, goodsDetailListRef } =
+let { goodsDetailListRef } =
   storeToRefs(store);
 let {
   getGoodsGroupApi,
@@ -71,8 +69,6 @@ let {
 
 let showAddUIRef = ref(false);
 let showEditUIRef = ref(false);
-let showAddTypeRef = ref(false);
-let goodsTableTitle = ["產品編號", "產品名稱", "售價(NT)", "上架", "操作"];
 
 let selItem: any = [];
 let sortUpDown: string = "";
@@ -107,21 +103,7 @@ let showAddDetailFormHdr = (state: boolean) => {
   }
 };
 function getDetailFn(id: any = 0, isList: any = 0) {
-  getGoodsDetailApi(id, isList);
-}
-//新增分類-顯示
-let showAddTypeFormHdr = (state: boolean) => {
-  showAddTypeRef.value = state;
-  // getGoodsGroupApi(0);
-};
-const showEditDetailUIHdr = (state: boolean) => {
-  showEditUIRef.value = state;
-  getDetailFn();
-};
-//編輯
-function showEditFormFn(index: number, item: any) {
-  selItem.value = item;
-  showEditDetailUIHdr(true);
+  getGoodsDetailApi(id);
 }
 //改變狀態
 function updataStutusBtn(index: number, item: any) {
@@ -153,8 +135,20 @@ function updataStutusBtn(index: number, item: any) {
     }
   });
 }
+
+let selectDataRef = ref([])
+//編輯
+function selectDataFn(params: any) {
+  selectDataRef = params;
+  showEditDetailHdr(true);
+}
+function showEditDetailHdr(state: boolean) {
+  showEditUIRef.value = state;
+  if (!state)
+    getDetailFn(0);
+}
 //刪除
-let deleteHdr = (item: any, index: number) => {
+let deleteHdr = (index: number, item: any) => {
   selItem = item;
   Alert.check("是否刪除", 1000, (data: any) => {
     onDeleteAlertBtn(data, item)
@@ -163,7 +157,6 @@ let deleteHdr = (item: any, index: number) => {
 
 const onDeleteAlertBtn = (state: any, item: any) => {
   if (state) {
-    let curPgId = goodsTypesListRef.value[goodsTypesListValueRef.value].pgId;
     delGoodsDetailApi(selItem.pId).then((res: any) => {
       getDetailFn(0, 0);
     });

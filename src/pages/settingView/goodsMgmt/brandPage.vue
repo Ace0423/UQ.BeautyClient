@@ -3,18 +3,18 @@
         <div class="header"></div>
         <div class="content">
             <div class="content-top">
-                <p>群組(全部{{ filterGoodsGroup.length }}個)</p>
+                <p>群組(全部{{ filterBrandBrand.length }}個)</p>
                 <div>
                     <input v-model="search" class="search-control" placeholder="搜尋名稱" />
                     <div class="btn-open" @click="showAddTypeFormHdr(true)">
-                        {{ $t("AddGoodsGroup") }}
+                        {{ "新增品牌" }}
                     </div>
                 </div>
             </div>
             <div class="content-main">
-                <el-table :data="filterGoodsGroup" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
+                <el-table :data="filterBrandBrand" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
                     :header-cell-style="headerRowStyle">
-                    <el-table-column prop="pgTitle" label="群組名稱" min-width="50%" />
+                    <el-table-column prop="pbTitle" label="群組名稱" min-width="50%" />
                     <el-table-column prop="pIdList.length" label="服務數量" min-width="30%" align="center" />
                     <el-table-column label="操作" min-width="20%">
                         <template #default="scope">
@@ -24,7 +24,7 @@
                                 </el-icon>
                                 <img class="edit_img" :src="Icon_edit" @click="selectDataFn(scope.row)" />
                                 <img class="del_img" :src="Icon_del"
-                                    @click="deleteHdr(scope.$index, filterGoodsGroup[scope.$index])" />
+                                    @click="deleteHdr(scope.$index, scope.row)" />
                             </div>
                         </template>
                     </el-table-column>
@@ -34,9 +34,9 @@
     </div>
     <div class="footer">
     </div>
-    <!-- <AddGoodsGroupUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" /> -->
-    <AddGroupGoodsUI v-if="showAddTypeRef" :showAddUI="showAddTypeFormHdr" />
-    <EditGroupGoodsUI v-if="showEditGroup" :showEditUI="showEditGroupHdr" :selData="selectDataRef" />
+    <!-- <AddGoodsBrandUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" /> -->
+    <AddBrandGoodsUI v-if="showAddTypeRef" :showAddUI="showAddTypeFormHdr" />
+    <EditBrandGoodsUI v-if="showEditBrand" :showEditUI="showEditBrandHdr" :selData="selectDataRef" />
 </template>UI
   
 <script lang="ts" setup>
@@ -49,35 +49,35 @@ import Icon_del from "@/assets/Icon material-delete.svg";
 import Alert from "@/components/alertCmpt";
 
 let store = useApptStore();
-let { goodsGroupList, goodsDetailListRef } =
+let { goodsBrandListRef } =
     storeToRefs(store);
 let {
-    getGoodsGroupApi,
-    delGoodsGroupApi,
-    updataGoodsGroupOrderApi,
+    getGoodsBrandApi,
+    delGoodsBrandApi,
+    updataGoodsBrandOrderApi,
 } = store;
 
 let showEditUIRef = ref(false);
 let showAddTypeRef = ref(false);
-let showEditGroup = ref(false);
+let showEditBrand = ref(false);
 
 let selItem: any = [];
 let sortUpDown: string = "";
 
 let search = ref("");
-let filterGoodsGroup: any = computed(() =>
-    goodsGroupList.value.filter(getGoodsfilterFn)
+let filterBrandBrand: any = computed(() =>
+    goodsBrandListRef.value.filter(getGoodsfilterFn)
 );
 function getGoodsfilterFn(data: any) {
     return (
         !search.value ||
-        data.pgTitle.toLowerCase().includes(search.value.toLowerCase())
+        data.pbTitle.toLowerCase().includes(search.value.toLowerCase())
     );
 }
 
 onBeforeFn();
 function onBeforeFn() {
-    getGroupFn();
+    getBrandFn();
 
 }
 
@@ -92,53 +92,55 @@ function setSort() {
         handle: '.handle-drag',
         ghostClass: 'sortable-ghost',
         onEnd: (e: any) => {
-            const targetRow = filterGoodsGroup.value.splice(e.oldIndex, 1)[0]
-            filterGoodsGroup.value.splice(e.newIndex, 0, targetRow)
-            OrderGroupFn();
+            const targetRow = filterBrandBrand.value.splice(e.oldIndex, 1)[0]
+            filterBrandBrand.value.splice(e.newIndex, 0, targetRow)
+            OrderBrandFn();
         },
     })
 }
-function OrderGroupFn() {
+function OrderBrandFn() {
     let orderApiData = [];
-    for (let i = 0; i < filterGoodsGroup.value.length; i++) {
-        const element = filterGoodsGroup.value[i];
+    for (let i = 0; i < filterBrandBrand.value.length; i++) {
+        const element = filterBrandBrand.value[i];
         element.order = i;
         orderApiData.push({
             pgId: element.pgId,
             order: i
         })
     }
-    updataGoodsGroupOrderApi(orderApiData).then((res: any) => {
-        getGroupFn();
+    updataGoodsBrandOrderApi(orderApiData).then((res: any) => {
+        getBrandFn();
     });
 }
 
-function getGroupFn(id: any = 0, isList: any = 0) {
-    goodsGroupList.value = [];
-    getGoodsGroupApi().then(() => { });
+function getBrandFn(id: any = 0, isList: any = 0) {
+    goodsBrandListRef.value = [];
+    getGoodsBrandApi().then(() => {
+        console.log(goodsBrandListRef.value);
+    });
 }
 //新增分類-顯示
 let showAddTypeFormHdr = (state: boolean) => {
     showAddTypeRef.value = state;
-    getGroupFn();
+    getBrandFn();
 };
 const showEditDetailUIHdr = (state: boolean) => {
     showEditUIRef.value = state;
-    getGroupFn();
+    getBrandFn();
     // getGoodsDetailApi(0, 0);
 };
 
 //刪除課程
-let deleteHdr = (index: any, itemId: any) => {
+let deleteHdr = (itemId: any, item: any) => {
     Alert.check("是否刪除", 1000, (data: any) => {
-        onDeleteAlertBtn(data, itemId)
+        onDeleteAlertBtn(data, item)
     });
 };
 
-const onDeleteAlertBtn = (state: any, itemId: any) => {
+const onDeleteAlertBtn = (state: any, item: any) => {
     if (state) {
-        delGoodsGroupApi(itemId.pgId).then((res: any) => {
-            getGroupFn();
+        delGoodsBrandApi(item.pbId).then((res: any) => {
+            getBrandFn();
         });
     } else {
         console.log("取消刪除");
@@ -148,13 +150,13 @@ const onDeleteAlertBtn = (state: any, itemId: any) => {
 let selectDataRef = ref([])
 function selectDataFn(params: any) {
     selectDataRef = params;
-    showEditGroupHdr(true);
+    showEditBrandHdr(true);
 }
 //新增分類-顯示
-let showEditGroupHdr = (state: boolean) => {
-    showEditGroup.value = state;
+let showEditBrandHdr = (state: boolean) => {
+    showEditBrand.value = state;
     if (!state)
-        getGroupFn();
+        getBrandFn();
 };
 //-------------------------------------------------------------------------表格css
 //內容css

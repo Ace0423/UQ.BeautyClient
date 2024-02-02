@@ -79,7 +79,7 @@
                   <div>
                     <!-- <el-input
                       class="input-basic"
-                      v-model="formInputRef.GoodsTypeId"
+                      v-model="formInputRef.GoodsGroupId"
                       placeholder="請選擇分類"
                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"
                     </el-input>
@@ -88,7 +88,7 @@
                       class="input-basic"
                       filterable
                       placeholder="請選擇分類"
-                      v-model="formInputRef.GoodsTypeId"
+                      v-model="formInputRef.GoodsGroupId"
                     >
                       <el-option
                         v-for="(item, index) in filterTypesTabs"
@@ -100,8 +100,8 @@
                       </el-option>
                     </el-select>
                   </div>
-                  <span class="p_error" v-if="ruleItem.GoodsTypeId.is_error">
-                    {{ ruleItem.GoodsTypeId.warn }}
+                  <span class="p_error" v-if="ruleItem.GoodsGroupId.is_error">
+                    {{ ruleItem.GoodsGroupId.warn }}
                   </span>
                 </div>
               </div>
@@ -227,7 +227,7 @@ import { GetRandomChar, GetRandomNumStr, verify_methods } from "@/utils/utils";
 import { storeToRefs } from "pinia";
 import Alert from "../alertCmpt";
 let store = useApptStore();
-let { goodsTypesListRef } = storeToRefs(store);
+let { goodsGroupsListRef } = storeToRefs(store);
 let { addGoodsDetailApi } = store;
 const props = defineProps<{
   showAddUIFn: Function;
@@ -254,7 +254,7 @@ let formInputRef: any = ref({
   unit: "",
   capacity: "",
   NameNo: "",
-  GoodsTypeId: "",
+  GoodsGroupId: "",
   price: "",
   total: 0,
   state: 0,
@@ -262,7 +262,7 @@ let formInputRef: any = ref({
 });
 
 let filterTypesTabs: any = computed(() =>
-  goodsTypesListRef.value.filter(function (value: any) {
+  goodsGroupsListRef.value.filter(function (value: any) {
     return value.pgId > 0;
   })
 );
@@ -273,7 +273,7 @@ function onBeforeFn() {
   formInputRef.value.capacity = "";
   formInputRef.value.NameNo =
     GetRandomChar(3) + "-" + GetRandomNumStr(1, 99999);
-  formInputRef.value.GoodsTypeId = "";
+  formInputRef.value.GoodsGroupId = "";
   formInputRef.value.price = "";
   formInputRef.value.total = 0;
   formInputRef.value.state = 0;
@@ -299,7 +299,7 @@ let submitBtn = () => {
   ruleLists.ruleItem.unit.value = formInputRef.value.unit;
   ruleLists.ruleItem.capacity.value = formInputRef.value.capacity;
   ruleLists.ruleItem.NameNo.value = formInputRef.value.NameNo;
-  ruleLists.ruleItem.GoodsTypeId.value = formInputRef.value.GoodsTypeId;
+  ruleLists.ruleItem.GoodsGroupId.value = formInputRef.value.GoodsGroupId;
   ruleLists.ruleItem.total.value = formInputRef.value.total;
   ruleLists.ruleItem.state.value = formInputRef.value.state;
   if (!verify_all()) return;
@@ -320,7 +320,7 @@ let submitBtn = () => {
     bonusOpen: false,
     updateOpen: false,
     display: formInputRef.value.state == 1,
-    productGroup: [formInputRef.value.GoodsTypeId],
+    productGroup: [formInputRef.value.GoodsGroupId],
     productDiscount: [],
     productProvider: [],
   };
@@ -377,7 +377,7 @@ const ruleLists: any = reactive({
       is_error: false,
       warn: "",
     },
-    GoodsTypeId: {
+    GoodsGroupId: {
       type: "number",
       rules: {
         required: {

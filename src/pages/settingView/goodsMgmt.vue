@@ -3,6 +3,7 @@
     <div class="nav">
       <router-link to="/settingView/goodsMgmt/goodsPage">商品</router-link>
       <router-link to="/settingView/goodsMgmt/groupPage">群組</router-link>
+      <router-link to="/settingView/goodsMgmt/brandPage">品牌</router-link>
     </div>
     <router-view />
   </div>

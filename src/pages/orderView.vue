@@ -99,7 +99,7 @@
     :showUIFn="showEditDetailUIHdr"
     :formInfo="selItem"
   />
-  <AddGoodsTypeUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" /> -->
+  <AddGoodsGroupUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" /> -->
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
@@ -241,7 +241,7 @@ let updataStutusFn = (index: number, item: any) => {
   //   }
   // });
   // getGoodsDetailApi(
-  //   goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
+  //   goodsGroupsListRef.value[goodsGroupsListValueRef.value].pgId,
   //   0
   // );
 };

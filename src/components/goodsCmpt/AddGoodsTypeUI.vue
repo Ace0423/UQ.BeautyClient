@@ -1,7 +1,7 @@
 <template>
   <div id="ck1" class="form_bg" @click.self="showAddUIFn(false)">
-    <div class="add-goodsType-form">
-      <div class="add-goodsType-bg">
+    <div class="add-goodsGroup-form">
+      <div class="add-goodsGroup-bg">
         <p>新增分類</p>
         <div class="typeInput_div">
           <input v-model="formInputRef.name" />
@@ -9,9 +9,9 @@
             {{ ruleItem.name.warn }}
           </span>
         </div>
-        <div class="add-goodsType-btndiv">
+        <div class="add-goodsGroup-btndiv">
           <draggable
-            v-model="goodsTypesListRef"
+            v-model="goodsGroupsListRef"
             group="customerCount"
             @start="drag = true"
             @end="drag = false"
@@ -19,7 +19,7 @@
           >
             <template #item="{ element }">
               <div style="">
-                <button v-if="element.pgId != 0" class="add-goodsType-btn">
+                <button v-if="element.pgId != 0" class="add-goodsGroup-btn">
                   <span v-show="!element.editState">{{
                     element.editNameTw
                   }}</span>
@@ -35,7 +35,7 @@
                     v-on:click="editTypeHdr(element, element)"
                   />
                   <img
-                    class="add-goodsType-ico"
+                    class="add-goodsGroup-ico"
                     :src="Icon_back"
                     v-on:click="deleteHdr(element, element.lessonTypeId)"
                   />
@@ -45,10 +45,10 @@
           </draggable>
         </div>
         <div>
-          <button class="confirm-goodsType-btn" @click="submitTypeHdr()">
+          <button class="confirm-goodsGroup-btn" @click="submitTypeHdr()">
             確認
           </button>
-          <button class="confirm-goodsType-btn" @click="showAddUIFn(false)">
+          <button class="confirm-goodsGroup-btn" @click="showAddUIFn(false)">
             取消
           </button>
         </div>
@@ -67,8 +67,8 @@ import { showErrorMsg } from "@/types/IMessage";
 import { verify_methods } from "@/utils/utils";
 
 const store = useApptStore();
-const { delGoodsTypeApi, updataGoodsTypeApi, addGoodsTypeApi } = store;
-let { goodsTypesListRef } = storeToRefs(store);
+const { delGoodsGroupApi, updataGoodsGroupApi, addGoodsGroupApi } = store;
+let { goodsGroupsListRef } = storeToRefs(store);
 const props = defineProps<{
   showAddUIFn: Function;
 }>();
@@ -108,7 +108,7 @@ let selItemBtn: any = ref([]);
 // };
 // const onDelReturn = (data: any) => {
 //   if (data) {
-//     delGoodsTypeApi(selItemBtn.pgId).then((res: any) => {
+//     delGoodsGroupApi(selItemBtn.pgId).then((res: any) => {
 //       if (res.state == 1) {
 //       }
 //     });
@@ -123,7 +123,7 @@ let deleteHdr = (item: any, index: number) => {
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
     let curId = selItemBtn.pgId;
-    delGoodsTypeApi(selItemBtn.pgId).then((res: any) => {
+    delGoodsGroupApi(selItemBtn.pgId).then((res: any) => {
       if (res.state == 1) {
         props.showAddUIFn(false);
       }
@@ -136,8 +136,8 @@ const onDeleteAlertBtn = (data: any) => {
 
 let submitTypeHdr = () => {
   let changeNameList = [];
-  for (let i = 0; i < goodsTypesListRef.value.length; i++) {
-    const element = goodsTypesListRef.value[i];
+  for (let i = 0; i < goodsGroupsListRef.value.length; i++) {
+    const element = goodsGroupsListRef.value[i];
     if (element.pgId != 0) {
       /**判斷改名 */
       if (element.pgTitle != element.editNameTw) {
@@ -152,7 +152,7 @@ let submitTypeHdr = () => {
           isList: 0,
         };
 
-        updataGoodsTypeApi(curdata).then((res: any) => {
+        updataGoodsGroupApi(curdata).then((res: any) => {
           if (res.state == 1) {
           }
         });
@@ -172,7 +172,7 @@ let submitTypeHdr = () => {
 
     console.log(curdata);
 
-    addGoodsTypeApi(curdata).then((res: any) => {
+    addGoodsGroupApi(curdata).then((res: any) => {
       let resData = res;
       if (res.state == 1) {
         setTimeout(() => {
@@ -238,7 +238,7 @@ const verify_all = () => {
   background: rgba(255, 255, 255, 0.5);
   z-index: 3;
 
-  .add-goodsType-form {
+  .add-goodsGroup-form {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -246,7 +246,7 @@ const verify_all = () => {
     width: 650px;
     background-color: #e6e2de;
 
-    .add-goodsType-bg {
+    .add-goodsGroup-bg {
       // padding: 15px 15px 15px 15px;
       background-color: #e6e2de;
       width: 92%;
@@ -272,7 +272,7 @@ const verify_all = () => {
         justify-content: center;
       }
 
-      .add-goodsType-btn {
+      .add-goodsGroup-btn {
         width: 260px;
         height: 45px;
         margin: 5px;
@@ -290,7 +290,7 @@ const verify_all = () => {
           justify-content: center;
         }
 
-        .add-goodsType-ico {
+        .add-goodsGroup-ico {
           margin-top: 10px;
           width: 21px;
           height: 20px;
@@ -303,7 +303,7 @@ const verify_all = () => {
       > div {
         display: flex;
         justify-content: center;
-        .confirm-goodsType-btn {
+        .confirm-goodsGroup-btn {
           width: 100px;
           height: 45px;
           margin: 5px;
@@ -342,7 +342,7 @@ const verify_all = () => {
         color: #877059;
         font-weight: bold;
       }
-      .add-goodsType-btndiv {
+      .add-goodsGroup-btndiv {
         padding: 0px 0px;
         max-height: 250px;
         overflow-y: scroll;
@@ -354,7 +354,7 @@ const verify_all = () => {
 
           // padding: 10px;
           div {
-            .add-goodsType-btn {
+            .add-goodsGroup-btn {
               width: 275px;
               height: 45px;
               margin: 5px;
@@ -386,7 +386,7 @@ const verify_all = () => {
                 justify-content: center;
                 flex: 1;
               }
-              .add-goodsType-ico {
+              .add-goodsGroup-ico {
                 margin-top: 14px;
                 width: 20px;
                 height: 16px;

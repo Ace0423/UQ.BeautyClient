@@ -173,7 +173,7 @@ onMounted(() => {
 //新增分類-顯示
 let showCheckOutUIHdr = (state: boolean) => {
   showCheckOutRef.value = state;
-  // getGoodsTypeApi(0);
+  // getGoodsGroupApi(0);
 };
 
 const infoBtnState = (state: number) => {

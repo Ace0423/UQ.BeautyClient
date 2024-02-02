@@ -16,7 +16,7 @@
               <span> 全選(商品) </span>
             </label>
           </div>
-          <div v-for="item in filterGoodsTypesData" :key="item">
+          <div v-for="item in filterGoodsGroupsData" :key="item">
             <label class="label-item" :value="item">
               <input class="input-item" type="checkbox" :key="item.pgId" :id="'CheckboxGroups_' + item.pgId" :value="item"
                 v-model="formInputRef.groups" @click="clickItem" />
@@ -45,8 +45,8 @@ import { useApptStore } from "@/stores/apptStore";
 import search_ico from "@/assets/images/icon_search.png";
 
 let store = useApptStore();
-let { courseTypesTabs, goodsTypesListRef } = storeToRefs(store);
-let { getGoodsTypeApi } = store;
+let { courseTypesTabs, goodsGroupsListRef } = storeToRefs(store);
+let { getGoodsGroupApi } = store;
 
 const props = defineProps<{
   showCGroupsUIFn: Function;
@@ -66,13 +66,13 @@ onBeforeFn();
 function onBeforeFn() {
   // getCourseTypeApi();
   formInputRef.value.groups = [];
-  getGoodsTypeApi().then((res: any) => {
+  getGoodsGroupApi().then((res: any) => {
     for (let i = 0; i < props.selData.length; i++) {
       const eleSelData = props.selData[i];
       //pgId原本  pGid編輯數據名稱不同
       eleSelData.pgId = eleSelData.pgId ? eleSelData.pgId : eleSelData.pGid;
-      for (let j = 0; j < goodsTypesListRef.value.length; j++) {
-        const eleData = goodsTypesListRef.value[j];
+      for (let j = 0; j < goodsGroupsListRef.value.length; j++) {
+        const eleData = goodsGroupsListRef.value[j];
         if (eleSelData.pgId == eleData.pgId) {
           formInputRef.value.groups.push(eleData);
         }
@@ -87,8 +87,8 @@ let filterCourseTypesData: any = computed(() => {
     return item.lessonTypeId != 0; // 取得陣列中雙數的物件
   });
 });
-let filterGoodsTypesData: any = computed(() => {
-  let mixData: any = goodsTypesListRef.value;
+let filterGoodsGroupsData: any = computed(() => {
+  let mixData: any = goodsGroupsListRef.value;
   return mixData.filter(function (item: any) {
     return item.pgId != 0; // 取得陣列中雙數的物件
   });
@@ -98,8 +98,8 @@ function clickGoodssGroup() {
   if (curGoods.length > 0) {
     formInputRef.value.groups = [];
   } else {
-    for (let i = 0; i < filterGoodsTypesData.value.length; i++) {
-      const element = filterGoodsTypesData.value[i];
+    for (let i = 0; i < filterGoodsGroupsData.value.length; i++) {
+      const element = filterGoodsGroupsData.value[i];
       formInputRef.value.groups.push(element.pgId);
     }
   }

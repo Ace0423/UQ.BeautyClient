@@ -36,21 +36,26 @@ import {
   getRestReq,
 } from "@/api/apptRequest";
 import {
+  addGoodsBrandReq,
   addGoodsDetailReq,
-  addGoodsTypeReq,
+  addGoodsGroupReq,
+  delGoodsBrandReq,
   delGoodsDetailReq,
-  delGoodsTypeReq,
+  delGoodsGroupReq,
   getGoodsDetailReq,
-  getGoodsTypeReq,
+  getGoodsGroupReq,
+  updateGoodsBrandOrderReq,
+  updateGoodsBrandReq,
   updateGoodsDetailReq,
   updateGoodsGroupReq,
-  updateGoodsTypeOrderReq,
+  updateGoodsGroupOrderReq,
+  getGoodsBrandReq,
 } from "@/api/goodsRequest";
 import Alert from "@/components/alertCmpt";
 import type {
   IApptDetailVo,
   IBookingVo,
-  IGoodsTypeVo,
+  IGoodsGroupVo,
   IMemberListVo,
   IServiceDetailVo,
   IServiceGroupVo,
@@ -548,12 +553,13 @@ export const useApptStore = defineStore("apptStore", () => {
 
   //#region  商品
 
-  /**獲取商品分類 */
+  //#region 群組
+
   let goodsGroupList: any = ref([]);
   const getGoodsGroupApi = async (id: any = 0, isList: any = 0) => {
     try {
       goodsGroupList.value = [];
-      let res: any = await getGoodsTypeReq(id, isList).then((res: any) => {
+      let res: any = await getGoodsGroupReq(id, isList).then((res: any) => {
         if (res.data.data && !id) {
           let detailVo: IServiceGroupVo = res.data.data.table;
           goodsGroupList.value = detailVo;
@@ -571,9 +577,9 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   /**新增商品分類 */
-  const addGoodsTypeApi = async (data: any) => {
+  const addGoodsGroupApi = async (data: any) => {
     try {
-      let res = await addGoodsTypeReq(data).then((res: any) => {
+      let res = await addGoodsGroupReq(data).then((res: any) => {
         alertStateFn(res, "新增商品分類");
         return res;
       });
@@ -595,9 +601,9 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   /**更新商品分類排序 */
-  const updataGoodsTypeOrderApi = async (data: any) => {
+  const updataGoodsGroupOrderApi = async (data: any) => {
     try {
-      let res = await updateGoodsTypeOrderReq(data).then((res: any) => {
+      let res = await updateGoodsGroupOrderReq(data).then((res: any) => {
         alertStateFn(res, "更新商品分類排序");
         return res;
       });
@@ -607,11 +613,85 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   /**刪除商品分類 */
-  const delGoodsTypeApi = async (data: any) => {
+  const delGoodsGroupApi = async (data: any) => {
     try {
-      let res = await delGoodsTypeReq(data).then((res: any) => {
+      let res = await delGoodsGroupReq(data).then((res: any) => {
         alertStateFn(res, "刪除商品分類");
-        // if (res) getGoodsTypeApi(0);
+        // if (res) getGoodsGroupApi(0);
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //#endregion
+
+  //#region 品牌
+  /**獲取商品品牌 */
+  let goodsBrandListRef: any = ref([]);
+  const getGoodsBrandApi = async (id: any = 0, isList: any = 0) => {
+    try {
+      goodsBrandListRef.value = [];
+      let res: any = await getGoodsBrandReq(id, isList).then((res: any) => {
+        if (res.data.data && !id) {
+          let detailVo: IServiceGroupVo = res.data.data.table;
+          goodsBrandListRef.value = detailVo;
+          goodsBrandListRef.value.sort(function (a: any, b: any) {
+            return a.order > b.order ? 1 : -1;
+          });
+          return goodsBrandListRef.value;
+        } else {
+          return res.data.data.table;
+        }
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  /**新增商品分品牌 */
+  const addGoodsBrandApi = async (data: any) => {
+    try {
+      let res = await addGoodsBrandReq(data).then((res: any) => {
+        alertStateFn(res, "新增商品品牌");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  /**更新商品品牌 */
+  const updataGoodsBrandApi = async (data: any) => {
+    try {
+      let res = await updateGoodsBrandReq(data).then((res: any) => {
+        alertStateFn(res, "更新商品分類");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  /**更新商品品牌排序 */
+  const updataGoodsBrandOrderApi = async (data: any) => {
+    try {
+      let res = await updateGoodsBrandOrderReq(data).then((res: any) => {
+        alertStateFn(res, "更新商品分類排序");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  /**刪除商品品牌 */
+  const delGoodsBrandApi = async (data: any) => {
+    try {
+      let res = await delGoodsBrandReq(data).then((res: any) => {
+        alertStateFn(res, "刪除商品分類");
+        // if (res) getGoodsGroupApi(0);
         return res;
       });
       return res;
@@ -620,41 +700,25 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
 
+  //#endregion 
+
+  //#region 明細
   let goodsDetailListRef: any = ref([]);
   /**獲取商品資料 */
-  const getGoodsDetailApi = async (group: any = 0, id: any = 0) => {
+  const getGoodsDetailApi = async (id: any = 0) => {
     try {
       let res: any = null;
       goodsDetailListRef.value = [];
-      if (group == 0) {
-        //查全部
-        res = await getGoodsDetailReq(group, id).then((res: any) => {
-          if (res.data.data.table) {
-            let dataDetail = res.data.data.table;
-            for (let i = 0; i < dataDetail.length; i++) {
-              const element = dataDetail[i];
-              goodsDetailListRef.value.push(element);
-            }
-          }
-          return res;
-        });
-      } else {
-        //查群組
-        goodsDetailListRef.value = [];
-        res = await getGoodsTypeReq(group, 1).then((res: any) => {
-          if (res.data.data.table) {
-            let curProductList = res.data.data.table[0].productList;
-            for (let i = 0; i < curProductList.length; i++) {
-              const element = curProductList[i];
-              element.groupList = [{ pgId: group }];
-              element.discountList = [];
-              element.providerList = [];
-            }
-            goodsDetailListRef.value = res.data.data.table[0].productList;
-          }
-        });
-        return res;
-      }
+      //查全部
+      res = await getGoodsDetailReq(id).then((res: any) => {
+        if (res.data.data && !id) {
+          let detailVo: any = res.data.data.table;
+          goodsDetailListRef.value = detailVo;
+          return goodsDetailListRef.value;
+        } else {
+          return res.data.data.table;
+        }
+      });
       return res;
     } catch (error) {
       console.log(error);
@@ -703,6 +767,8 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+  //#endregion 
+
   //#endregion 
 
   //#region Order
@@ -921,18 +987,24 @@ export const useApptStore = defineStore("apptStore", () => {
     beauticianList,
     timeGroup,
     getApptDataByUserApi,
-    //--------------------goods
+    //--------------------商品
     goodsGroupList,
     getGoodsGroupApi,
+    addGoodsGroupApi,
+    updataGoodsGroupApi,
+    updataGoodsGroupOrderApi,
+    delGoodsGroupApi,
     goodsDetailListRef,
     getGoodsDetailApi,
-    addGoodsTypeApi,
-    updataGoodsGroupApi,
-    updataGoodsTypeOrderApi,
-    delGoodsTypeApi,
     addGoodsDetailApi,
     updateGoodsDetailApi,
     delGoodsDetailApi,
+    goodsBrandListRef,
+    getGoodsBrandApi,
+    addGoodsBrandApi,
+    updataGoodsBrandApi,
+    updataGoodsBrandOrderApi,
+    delGoodsBrandApi,
     //--------------------Order
     getOrderApptDetailApi,
     orderDetailListRef,

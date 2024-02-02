@@ -8,7 +8,7 @@
       </div>
       <div class="content">
         <div class="content-tab">
-          <button :class="goodsTypesListValueRef == index ? 'active' : ''" v-for="(item, index) in goodsTypesListRef"
+          <button :class="goodsGroupsListValueRef == index ? 'active' : ''" v-for="(item, index) in goodsGroupsListRef"
             :key="item.pgTitle" v-on:click="changeTab(index, item)">
             {{ item.pgTitle }}
           </button>
@@ -63,7 +63,7 @@
   </div>
   <AddGoodsDetailUI v-if="showAddUIRef" :showAddUIFn="showAddDetailFormHdr" />
   <EditGoodsDetailUI v-if="showEditUIRef" :showUIFn="showEditDetailUIHdr" :formInfo="selItem" />
-  <AddGoodsTypeUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" />
+  <AddGoodsGroupUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" />
 </template>
 
 <script lang="ts" setup>
@@ -76,10 +76,10 @@ import Alert from "@/components/alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 
 let store = useApptStore();
-let { goodsTypesListRef, goodsTypesListValueRef, goodsDetailListRef } =
+let { goodsGroupsListRef, goodsGroupsListValueRef, goodsDetailListRef } =
   storeToRefs(store);
 let {
-  getGoodsTypeApi,
+  getGoodsGroupApi,
   getGoodsDetailApi,
   updateGoodsDetailApi,
   delGoodsDetailApi,
@@ -103,7 +103,7 @@ function getGoodsFn(data: any) {
 }
 onBeforeFn();
 function onBeforeFn() {
-  getGoodsTypeApi().then((res: any) => {
+  getGoodsGroupApi().then((res: any) => {
     getDetailByTypeFn();
   });
 }
@@ -113,7 +113,7 @@ onMounted(() => {
 });
 function getDetailByTypeFn() {
   getGoodsDetailApi(
-    goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
+    goodsGroupsListRef.value[goodsGroupsListValueRef.value].pgId,
     0
   );
 }
@@ -127,7 +127,7 @@ let showAddDetailFormHdr = (state: boolean) => {
 //新增分類-顯示
 let showAddTypeFormHdr = (state: boolean) => {
   showAddTypeRef.value = state;
-  getGoodsTypeApi(0);
+  getGoodsGroupApi(0);
 };
 const showEditDetailUIHdr = (state: boolean) => {
   showEditUIRef.value = state;
@@ -141,7 +141,7 @@ let deleteHdr = (item: any, index: number) => {
 };
 const onDeleteAlertBtn = (data: any) => {
   if (data) {
-    let curPgId = goodsTypesListRef.value[goodsTypesListValueRef.value].pgId;
+    let curPgId = goodsGroupsListRef.value[goodsGroupsListValueRef.value].pgId;
     delGoodsDetailApi(selItem.pId, curPgId).then((res: any) => {
       getDetailByTypeFn();
     });
@@ -158,7 +158,7 @@ function showEditFormFn(index: number, item: any) {
 }
 
 let changeTab = (index: number, item: any) => {
-  goodsTypesListValueRef.value = index;
+  goodsGroupsListValueRef.value = index;
   getGoodsDetailApi(item.pgId, 0);
 };
 //排序明細

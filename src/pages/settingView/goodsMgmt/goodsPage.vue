@@ -22,7 +22,7 @@
               <div class="handle-drag">
                 <div class="checkbox_state">
                   <input type="checkbox" :checked="filterGoodsData[scope.$index].display == true"
-                    v-on:click="updataStutusBtn(scope.$index, scope.row)" />
+                    v-on:click="updateStutusBtn(scope.$index, scope.row)" />
                 </div>
               </div>
             </template>
@@ -106,7 +106,7 @@ function getDetailFn(id: any = 0, isList: any = 0) {
   getGoodsDetailApi(id);
 }
 //改變狀態
-function updataStutusBtn(index: number, item: any) {
+function updateStutusBtn(index: number, item: any) {
   let curdata: any = {
     pId: item.pId,
     pCode: item.pCode,

@@ -43,7 +43,7 @@
                   <p>{{ item.price }}</p>
                 </td>
                 <td class="checkbox_state">
-                  <input type="checkbox" :checked="item.display == true" v-on:click="updataStutusFn(index, item)" />
+                  <input type="checkbox" :checked="item.display == true" v-on:click="updateStutusFn(index, item)" />
                 </td>
                 <td>
                   <button v-on:click="showEditFormFn(index, item)">
@@ -179,7 +179,7 @@ function sorttheadFn(name: number) {
     }
 }
 //改變狀態
-function updataStutusFn(index: number, item: any) {
+function updateStutusFn(index: number, item: any) {
   let curdata: any = {
     pId: item.pId,
     pCode: item.pCode,

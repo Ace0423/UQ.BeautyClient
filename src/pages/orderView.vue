@@ -70,7 +70,7 @@
                     <input
                       type="checkbox"
                       :checked="item.state == selStateRef"
-                      v-on:click="updataStutusFn(index, item)"
+                      v-on:click="updateStutusFn(index, item)"
                     />
                   </td>
                   <td>
@@ -207,7 +207,7 @@ function sorttheadHdr(name: number) {
 }
 let curChangeState: any = [];
 //改變狀態
-let updataStutusFn = (index: number, item: any) => {
+let updateStutusFn = (index: number, item: any) => {
   // item.state = selStateRef;
   item.changeState = selStateRef;
   curChangeState.push(item);

@@ -46,7 +46,7 @@
           <div class="input-radio" name="服務顏色">
             <span class="title-content">服務顏色</span>
             <div>
-              <RadioColorUI v-if="showColorUIRef" :selColorIndex="formInputRef.color" :updataColorFn="updataColorFn"
+              <RadioColorUI v-if="showColorUIRef" :selColorIndex="formInputRef.color" :updateColorFn="updateColorFn"
                 :coloarSize="60" />
             </div>
           </div>
@@ -345,7 +345,7 @@ function getCGroupsFn(data: any) {
 function showCGroupsUIFn(data: boolean) {
   showSelGroupsUIRef.value = data;
 }
-function updataColorFn(params: any) {
+function updateColorFn(params: any) {
   formInputRef.value.color = params
 }
 //#region 規則

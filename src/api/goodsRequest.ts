@@ -44,3 +44,4 @@ export const updateGoodsBrandReq = (data: any) =>
 export const delGoodsBrandReq = (data: any) =>
   deleteHttps(httpRequest, "/Product/ProductBrand/" + data);
 //#endregion
+

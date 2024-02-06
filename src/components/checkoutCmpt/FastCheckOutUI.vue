@@ -476,9 +476,9 @@ function getItemInfoFn(data: any) {
   odDetail.percentSgDC = null;
 
   formInputRef.value.buyItemsList.push(odDetail);
-  updataPrice();
+  updatePrice();
 }
-function updataPrice() {
+function updatePrice() {
   let priceTotal = 0;
   for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
     const element = formInputRef.value.buyItemsList[i];
@@ -511,7 +511,7 @@ function getEditGdInfoFn(data: any) {
       break;
     }
   }
-  updataPrice();
+  updatePrice();
   showEditGdInfoUIFn(false);
 }
 function getEditTuInfoFn(data: any) {
@@ -525,7 +525,7 @@ function getEditTuInfoFn(data: any) {
       break;
     }
   }
-  updataPrice();
+  updatePrice();
   showEditGdInfoUIFn(false);
 }
 function setSglDiscountItem(params: any) {
@@ -559,7 +559,7 @@ function delItemGdFn(data: any) {
       break;
     }
   }
-  updataPrice();
+  updatePrice();
   showEditGdInfoUIFn(false);
 }
 
@@ -576,7 +576,7 @@ function getEditSVInfoFn(data: any) {
       break;
     }
   }
-  updataPrice();
+  updatePrice();
   showEditSVInfoUIFn(false);
 }
 function delItemFn(data: any) {
@@ -587,7 +587,7 @@ function delItemFn(data: any) {
       break;
     }
   }
-  updataPrice();
+  updatePrice();
   showEditSVInfoUIFn(false);
 }
 function clickSvItem(params: any, id: any) {

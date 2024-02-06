@@ -67,7 +67,7 @@ import { showErrorMsg } from "@/types/IMessage";
 import { verify_methods } from "@/utils/utils";
 
 const store = useApptStore();
-const { delGoodsGroupApi, updataGoodsGroupApi, addGoodsGroupApi } = store;
+const { delGoodsGroupApi, updateGoodsGroupApi, addGoodsGroupApi } = store;
 let { goodsGroupsListRef } = storeToRefs(store);
 const props = defineProps<{
   showAddUIFn: Function;
@@ -152,7 +152,7 @@ let submitTypeHdr = () => {
           isList: 0,
         };
 
-        updataGoodsGroupApi(curdata).then((res: any) => {
+        updateGoodsGroupApi(curdata).then((res: any) => {
           if (res.state == 1) {
           }
         });

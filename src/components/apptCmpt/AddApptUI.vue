@@ -312,7 +312,7 @@ const ruleLists: any = reactive({
       value: "",
       rules: {
         required: {
-          warn: "此項為必填",
+          warn: " 名稱為必填",
         },
       },
       is_error: false,
@@ -327,7 +327,7 @@ const ruleLists: any = reactive({
       value: "",
       rules: {
         required: {
-          warn: "此項為必填",
+          warn: " 時間為必填",
         },
       },
       is_error: false,
@@ -342,7 +342,7 @@ const ruleLists: any = reactive({
       value: "",
       rules: {
         required: {
-          warn: "此項為必填",
+          warn: " 服務為必填",
         },
       },
       is_error: false,

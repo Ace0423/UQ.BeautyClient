@@ -54,7 +54,7 @@ export const useCompanyStore = defineStore("company", () => {
         try {
             const res = await apiPostCheckOutTypeRequest(data);
             if (res.data.state == 1) {
-                updataCheckOutTypeList(res.data.data)
+                updateCheckOutTypeList(res.data.data)
             }
             return res.data;
         } catch (error) {
@@ -66,7 +66,7 @@ export const useCompanyStore = defineStore("company", () => {
         try {
             const res = await apiPutCheckOutTypeRequest(data);
             if (res.data.state == 1) {
-                updataCheckOutTypeList(res.data.data)
+                updateCheckOutTypeList(res.data.data)
             }
             return res.data;
         } catch (error) {
@@ -74,7 +74,7 @@ export const useCompanyStore = defineStore("company", () => {
             return Promise.reject(error);
         }
     };
-    const updataCheckOutTypeList = (data: any) => {
+    const updateCheckOutTypeList = (data: any) => {
         if (checkOutTypeList.data.filter((item: any) => item.cotId == data.cotId).length > 0) {
             checkOutTypeList.data.findIndex((item: any) => {
                 if (item.cotId == data.cotId) {
@@ -108,7 +108,7 @@ export const useCompanyStore = defineStore("company", () => {
         try {
             const res = await apiPutCompanyInfoRequest(data);
             if (res.data.state == 1) {
-                updataCompanyInfo(res.data.data)
+                updateCompanyInfo(res.data.data)
             }
             return res.data;
         } catch (error) {
@@ -117,7 +117,7 @@ export const useCompanyStore = defineStore("company", () => {
         }
     };
   
-    const updataCompanyInfo = async (data: any) => {
+    const updateCompanyInfo = async (data: any) => {
         if (companyInfoList.data.cId == data.cId) {
             companyInfoList.data.cName = data.cName;
             companyInfoList.data.cAddress = data.cAddress;
@@ -152,7 +152,7 @@ export const useCompanyStore = defineStore("company", () => {
         try {
             const res = await apiPutBlackListSetRequest(data);
             if (res.data.state == 1) {
-                updataCheckOutTypeList(res.data.data)
+                updateCheckOutTypeList(res.data.data)
             }
             return res.data;
         } catch (error) {
@@ -160,7 +160,7 @@ export const useCompanyStore = defineStore("company", () => {
             return Promise.reject(error);
         }
     };
-    const updataBlackListSet = async () => {
+    const updateBlackListSet = async () => {
        
     };
 
@@ -182,7 +182,7 @@ export const useCompanyStore = defineStore("company", () => {
         try {
             const res = data.mId == 0 ? await apiInsertMessagesRequest(data) : await apiUpdateMessagesRequest(data);
             if (res.data.state == 1) {
-                updataMessagesList(res.data.data.table[0]);
+                updateMessagesList(res.data.data.table[0]);
             }
             return res.data;
         } catch (error) {
@@ -190,7 +190,7 @@ export const useCompanyStore = defineStore("company", () => {
             return Promise.reject(error);
         }
     };
-    const updataMessagesList = (data: any) => {
+    const updateMessagesList = (data: any) => {
         if (messagesList.data.filter((item: any) => item.mId == data.mId).length > 0) {
             messagesList.data.findIndex((item: any) => {
                 if (item.mId == data.mId) {

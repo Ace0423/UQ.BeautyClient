@@ -54,7 +54,7 @@ let { goodsBrandListRef } =
 let {
     getGoodsBrandApi,
     delGoodsBrandApi,
-    updataGoodsBrandOrderApi,
+    updateGoodsBrandOrderApi,
 } = store;
 
 let showEditUIRef = ref(false);
@@ -108,7 +108,7 @@ function OrderBrandFn() {
             order: i
         })
     }
-    updataGoodsBrandOrderApi(orderApiData).then((res: any) => {
+    updateGoodsBrandOrderApi(orderApiData).then((res: any) => {
         getBrandFn();
     });
 }

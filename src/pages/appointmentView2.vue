@@ -200,9 +200,9 @@
   <EditApptUI v-if="showEditReserveFormRef" :showAddReserveForm="showEditReserveForm" :curApptDataRef="newApptDataRef"
     :showOkBtnRef="showOkBtnRef" :oldSelList="oldSelList"></EditApptUI>
   <AddRestTimeUI v-if="showAddRestUIRef" :showAddRestUIFn="showAddRestUIFn"></AddRestTimeUI>
-  <LittleDateUI v-if="showLittleDateRef" :showUIFn="updataShowLittleDate" :selDate="selDate"
+  <LittleDateUI v-if="showLittleDateRef" :showUIFn="updateShowLittleDate" :selDate="selDate"
     :selLittleDateFn="selLittleDateFn" />
-  <InfoApptUI v-if="showApptInfoRef" :showUIHdr="updataShowApptInfoRef" :selItemData="oldSelList"
+  <InfoApptUI v-if="showApptInfoRef" :showUIHdr="updateShowApptInfoRef" :selItemData="oldSelList"
     :infoBtnState="infoBtnState" />
   <FastCheckOutUI v-if="showFastCheckOutRef" :showUIFn="showFastCheckOutUIHdr" />
   <div :class="tuiOptions.tuiType == 2 ? ' Tui_calendar_date' : 'Tui_calendar_main'
@@ -852,13 +852,13 @@ function handleDetail(row: any) {
   }
   if (row.lessonId) {
     onWeekSeldate(row.dateBooking.split("T")[0]);
-    updataShowApptInfoRef(true);
+    updateShowApptInfoRef(true);
   }
 }
-const updataShowApptInfoRef = (state: boolean) => {
+const updateShowApptInfoRef = (state: boolean) => {
   showApptInfoRef.value = state;
 };
-const updataShowLittleDate = (state: boolean) => {
+const updateShowLittleDate = (state: boolean) => {
   showLittleDateRef.value = state;
 };
 const infoBtnState = (state: number) => {

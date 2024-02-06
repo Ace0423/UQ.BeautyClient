@@ -68,7 +68,7 @@ import { showErrorMsg } from "@/types/IMessage";
 let apptstore = useApptStore();
 const { } = storeToRefs(apptstore);
 const {
-  getGoodsBrandApi, updataGoodsBrandApi } = apptstore;
+  getGoodsBrandApi, updateGoodsBrandApi } = apptstore;
 const props = defineProps<{
   selData: any;
   showEditUI: Function;
@@ -117,7 +117,7 @@ function submitBtn() {
   console.log("提交apiData", apiData);
 
   /**新增 */
-  updataGoodsBrandApi(apiData).then((res: any) => {
+  updateGoodsBrandApi(apiData).then((res: any) => {
     if (res.state == 1) {
       Alert.sussess("成功", 1000);
       setTimeout(() => {

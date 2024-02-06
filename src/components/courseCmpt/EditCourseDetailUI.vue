@@ -53,7 +53,7 @@
             </span>
           </div>
         </div>
-        <RadioColorUI :selColorIndex="formInputRef.color" :updataColorFn="updataColorFn" />
+        <RadioColorUI :selColorIndex="formInputRef.color" :updateColorFn="updateColorFn" />
         <div class="switch-info">
           <span>上架</span>
           <div class="online">
@@ -144,7 +144,7 @@ function onBeforeFn() {
 onMounted(() => { });
 
 const selColorName = ref("");
-function updataColorFn(params: any) {
+function updateColorFn(params: any) {
   formInputRef.value.color = params
 }
 //編輯課程

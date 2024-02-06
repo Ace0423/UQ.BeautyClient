@@ -5,7 +5,7 @@
       </Header>
       <div class="top_menu">
         <div>
-          <img :src="btn_msg_ico" />
+          <img :src="btn_msg_ico" @click="showNoticeFn(true)"/>
           <el-dropdown trigger="click" @command="handleCommand">
             <span class="el-dropdown-link">
               <img :src="btn_add_ico" />
@@ -113,7 +113,8 @@
   <AddApptUI v-if="showAddRef" :showAddApptFn="showAddApptFn"></AddApptUI>
   <AddRestTimeUI v-if="showAddRestUIRef" :showAddRestUIFn="showAddRestUIFn"></AddRestTimeUI>
   <FastCheckOutUI v-if="showFastCheckOutRef" :showUIFn="showFastCheckOutUIHdr" :selData="'快速結帳'" />
-  <InfoApptUI v-if="showApptInfoRef" :showUIHdr="updataShowApptInfoRef" :selItemData="selBookData" />
+  <InfoApptUI v-if="showApptInfoRef" :showUIHdr="showApptInfoHdr" :selItemData="selBookData" />
+  <NoticeApptUI v-if="showNoticeRef" :showUIHdr="showNoticeFn" />
 </template>
 
 <script setup lang="ts">
@@ -164,6 +165,7 @@ let title = ["日", "一", "二", "三", "四", "五", "六"];
 let showAddRef = ref(false);
 let showAddRestUIRef = ref(false);
 let showApptInfoRef = ref(false);
+let showNoticeRef = ref(false);
 let showOkBtnRef = ref(false);
 let showTuiApptRef = ref(false);
 let showManagerSelect = ref(false);
@@ -454,7 +456,7 @@ let showFastCheckOutUIHdr = (state: boolean) => {
   // getGoodsGroupApi(0);
 };
 //更新預約資訊
-const updataShowApptInfoRef = (state: boolean) => {
+const showApptInfoHdr = (state: boolean) => {
   showApptInfoRef.value = state;
   if (!state) {
     selBookData = null;
@@ -462,6 +464,9 @@ const updataShowApptInfoRef = (state: boolean) => {
     getApptInfoFn(currentYear.value, currentMonth.value + 1);
   }
 };
+function showNoticeFn(state:boolean) {
+  showNoticeRef.value = state;
+}
 //改變預約狀態
 let changeStutusFn = (state: number, item: any) => {
   item.state = state;
@@ -527,7 +532,7 @@ let xxx: any = ref([]);
 function clickBookInfoFn(data: any) {
   if (data.bookingNo) {
     selBookData = data;
-    updataShowApptInfoRef(true);
+    showApptInfoHdr(true);
   }
 };
 function changeDateTabsFn(data: any) {

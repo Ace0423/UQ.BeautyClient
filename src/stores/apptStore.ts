@@ -34,6 +34,8 @@ import {
   updateServiceGroupReq,
   getDayOffReq,
   getRestReq,
+  getNoticeListReq,
+  updateNoticeIsReadReq,
 } from "@/api/apptRequest";
 import {
   addGoodsBrandReq,
@@ -589,7 +591,7 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   /**更新商品分類 */
-  const updataGoodsGroupApi = async (data: any) => {
+  const updateGoodsGroupApi = async (data: any) => {
     try {
       let res = await updateGoodsGroupReq(data).then((res: any) => {
         alertStateFn(res, "更新商品分類");
@@ -601,7 +603,7 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   /**更新商品分類排序 */
-  const updataGoodsGroupOrderApi = async (data: any) => {
+  const updateGoodsGroupOrderApi = async (data: any) => {
     try {
       let res = await updateGoodsGroupOrderReq(data).then((res: any) => {
         alertStateFn(res, "更新商品分類排序");
@@ -663,7 +665,7 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   /**更新商品品牌 */
-  const updataGoodsBrandApi = async (data: any) => {
+  const updateGoodsBrandApi = async (data: any) => {
     try {
       let res = await updateGoodsBrandReq(data).then((res: any) => {
         alertStateFn(res, "更新商品分類");
@@ -675,7 +677,7 @@ export const useApptStore = defineStore("apptStore", () => {
     }
   };
   /**更新商品品牌排序 */
-  const updataGoodsBrandOrderApi = async (data: any) => {
+  const updateGoodsBrandOrderApi = async (data: any) => {
     try {
       let res = await updateGoodsBrandOrderReq(data).then((res: any) => {
         alertStateFn(res, "更新商品分類排序");
@@ -950,8 +952,43 @@ export const useApptStore = defineStore("apptStore", () => {
   };
   //#endregion
 
+  //#region 明細
+  let noticeListRef: any = ref([]);
+  /**獲取商品資料 */
+  const getNoticeListApi = async (uid: any = 0) => {
+    try {
+      let res: any = null;
+      noticeListRef.value = [];
+      //查全部
+      res = await getNoticeListReq(uid).then((res: any) => {
+        if (res.data.data && !uid) {
+          let detailVo: any = res.data.data.table;
+          noticeListRef.value = detailVo;
+          return noticeListRef.value;
+        } else {
+          return res.data.data.table;
+        }
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  /**更新通知閱讀狀態 */
+  const updateNoticeIsReadApi = async (data: any) => {
+    try {
+      let res = await updateNoticeIsReadReq(data).then((res: any) => {
+        alertStateFn(res, "更新通知讀取狀態");
+        return res;
+      });
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   return {
-    //--------------------service
+    //--------------------服務S
     addServiceGroupApi,
     addServiceDetailApi,
     getServiceGroupApi,
@@ -963,7 +1000,7 @@ export const useApptStore = defineStore("apptStore", () => {
     updateServiceGroupApi,
     updateServiceDetailApi,
     updateGroupOrderApi,
-    //--------------------course
+    //--------------------舊課程c
     getCourseTypeApi,
     courseTypesTabs,
     delCourseTypeApi,
@@ -976,7 +1013,7 @@ export const useApptStore = defineStore("apptStore", () => {
     updateCourseDetailApi,
     editCourseTypeApi,
     editCourseTypeOrderApi,
-    //--------------------appt
+    //--------------------預約
     getApptDataApi,
     postAddApptDataApi,
     postEditApptDataApi,
@@ -991,8 +1028,8 @@ export const useApptStore = defineStore("apptStore", () => {
     goodsGroupList,
     getGoodsGroupApi,
     addGoodsGroupApi,
-    updataGoodsGroupApi,
-    updataGoodsGroupOrderApi,
+    updateGoodsGroupApi,
+    updateGoodsGroupOrderApi,
     delGoodsGroupApi,
     goodsDetailListRef,
     getGoodsDetailApi,
@@ -1002,8 +1039,8 @@ export const useApptStore = defineStore("apptStore", () => {
     goodsBrandListRef,
     getGoodsBrandApi,
     addGoodsBrandApi,
-    updataGoodsBrandApi,
-    updataGoodsBrandOrderApi,
+    updateGoodsBrandApi,
+    updateGoodsBrandOrderApi,
     delGoodsBrandApi,
     //--------------------Order
     getOrderApptDetailApi,
@@ -1027,5 +1064,9 @@ export const useApptStore = defineStore("apptStore", () => {
     //-----------------休息日
     getDayOffApi,
     getRestApi,
+    //-----------------通知
+    getNoticeListApi,
+    noticeListRef,
+    updateNoticeIsReadApi,
   };
 });

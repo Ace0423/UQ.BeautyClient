@@ -54,7 +54,7 @@ let { goodsGroupList, goodsDetailListRef } =
 let {
     getGoodsGroupApi,
     delGoodsGroupApi,
-    updataGoodsGroupOrderApi,
+    updateGoodsGroupOrderApi,
 } = store;
 
 let showEditUIRef = ref(false);
@@ -108,7 +108,7 @@ function OrderGroupFn() {
             order: i
         })
     }
-    updataGoodsGroupOrderApi(orderApiData).then((res: any) => {
+    updateGoodsGroupOrderApi(orderApiData).then((res: any) => {
         getGroupFn();
     });
 }

@@ -88,16 +88,16 @@
                   <p>上架期間</p>
                   <div>
                     <div>
-                      <img v-if="formInputRef.state" :src="icon_sure" @click="updataOnlineBtn(1)" />
-                      <img v-if="!formInputRef.state" :src="icon_cancle" @click="updataOnlineBtn(1)" />
+                      <img v-if="formInputRef.state" :src="icon_sure" @click="updateOnlineBtn(1)" />
+                      <img v-if="!formInputRef.state" :src="icon_cancle" @click="updateOnlineBtn(1)" />
                       <span> 永久 </span>
                     </div>
                     <el-input class="input-state" v-model="formInputRef.state" placeholder="請輸入上架"
                       onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')">
                     </el-input>
                     <div>
-                      <img v-if="formInputRef.state" :src="icon_cancle" @click="updataOnlineBtn(0)" />
-                      <img v-if="!formInputRef.state" :src="icon_sure" @click="updataOnlineBtn(0)" />
+                      <img v-if="formInputRef.state" :src="icon_cancle" @click="updateOnlineBtn(0)" />
+                      <img v-if="!formInputRef.state" :src="icon_sure" @click="updateOnlineBtn(0)" />
                       <span> 暫停 </span>
                     </div>
                   </div>
@@ -199,7 +199,7 @@ function countTotalBtn(data: number) {
   formInputRef.value.total += data;
   if (formInputRef.value.total < 0) formInputRef.value.total = 0;
 }
-function updataOnlineBtn(data: number) {
+function updateOnlineBtn(data: number) {
   formInputRef.value.state = data;
 }
 //新增課程-確認

@@ -20,15 +20,12 @@
                             <span>{{ nItem.detailInfo.content.replaceAll("-", '/') }}</span>
                         </div>
                         <div class="time-content">
-                            <span>{{ nItem.createDate.split("T")[0].replaceAll("-", '/') }}</span>
-                            <span>{{ " " + nItem.createDate.split("T")[1].split(":")[0] }}</span>
-                            <span>{{ ":" + nItem.createDate.split("T")[1].split(":")[1] }}</span>
+                            <span>{{ nItem.createDate }}</span>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="footer">
-                <div class="link-bottom"></div>
             </div>
         </div>
     </div>
@@ -121,7 +118,7 @@ function updateNoticeListFn(data: any) {
 
         .info-head {
             display: flex;
-            height: 7%;
+            height: 52px;
             width: calc(100%);
             border-bottom: solid 2px #707070;
             box-sizing: border-box;
@@ -156,7 +153,7 @@ function updateNoticeListFn(data: any) {
         }
 
         >.content {
-            height: calc(100% - 7%);
+            height: calc(100% - 52px);
             width: calc(100% - 20px);
             overflow-y: auto;
             margin-left: 10px;
@@ -189,6 +186,13 @@ function updateNoticeListFn(data: any) {
                             color: #7a7a7a;
                         }
                     }
+
+                    .time-content {
+                        >span {
+                            font-size: 16px;
+                            color: #7a7a7a;
+                        }
+                    }
                 }
 
             }
@@ -196,7 +200,7 @@ function updateNoticeListFn(data: any) {
         }
 
         .footer {
-            height: 0%;
+            height: 0px;
 
             .content-checkoutbtn {
                 height: 100%;
@@ -209,12 +213,11 @@ function updateNoticeListFn(data: any) {
                     height: 55px;
                     border-radius: 10px;
                     box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
-                    border: solid 1px #707070;
-                    //margin: 5px;
                     font-weight: bold;
                     color: #906e6c;
                     background-color: #ffffff;
                     border: solid 1px #707070;
+                    box-sizing: border-box;
                     font-size: 18px;
                 }
             }
@@ -227,6 +230,7 @@ function updateNoticeListFn(data: any) {
         width: 100%;
         height: 2px;
         background-color: #707070;
+        box-sizing: border-box;
     }
 }
 </style>

@@ -10,11 +10,25 @@ const props = defineProps<{
 const emits = defineEmits<{
     (e: "handCropperSubmit", data: any): void;
 }>();
-const imageUrl = ref()
 const cropper = ref()
+const cropperOption = ref({
+    imageUrl: "", // 圖片來源
+    outputType: "png", // 產生圖片的格式
+    autoCrop: true, // 是否要有截圖框
+    autoCropWidth: 200, // 截圖框寬
+    autoCropHeight: 200, //截圖框高
+    fixed: false,
+    fixedBox: false,
+    canMove: false,
+    centerBox: false,
+})
+// :fixedBox = true //截圖框縮放
+// :fixed = true    //截圖框限制比例
 
 onMounted(() => {
-    imageUrl.value = props.cropperData.imgResult;
+    cropperOption.value.imageUrl = props.cropperData.imgResult;
+    cropperOption.value.autoCropWidth = props.cropperData.width;
+    cropperOption.value.autoCropHeight = props.cropperData.height;
 });
 const handleCropping = ((roleRefs: any) => {
     roleRefs.getCropData((res: any) => {
@@ -37,8 +51,9 @@ const handleCropping = ((roleRefs: any) => {
                 <ElButton class="otherpay-btn" type="primary" @click="handleCropping($refs.cropper)">截圖</ElButton>
             </div>
             <div class="content">
-                <VueCropper ref="cropper" :img=imageUrl :autoCrop=true :autoCropWidth=props.cropperData.width
-                    :autoCropHeight=props.cropperData.height :canMove=false :centerBox=true>
+                <VueCropper ref="cropper" :img=cropperOption.imageUrl :autoCrop=cropperOption.autoCrop
+                    :autoCropWidth=cropperOption.autoCropWidth :autoCropHeight=cropperOption.autoCropHeight
+                    :canMove=cropperOption.canMove :centerBox=cropperOption.centerBox :fixed=cropperOption.fixed>
                 </VueCropper>
             </div>
         </div>

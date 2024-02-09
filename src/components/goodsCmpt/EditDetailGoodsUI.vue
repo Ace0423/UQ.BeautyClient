@@ -33,10 +33,15 @@
                   {{ ruleLists.ruleItem.name.warn }}
                 </span>
               </div>
-              <div class="img-info">
+              <div name="上傳圖片" class="img-info">
                 <div :style="{ '--color': formInputRef.color }" class="img-bg">
-
+                  <img :src="formInputRef.imageSmall" width="80" height="80" />
                 </div>
+                <!-- <span>上傳圖片 <input class="file-input" type="file" @change="fileImageSmall"></span> -->
+                <label class="button">
+                  <span>上傳圖片</span>
+                  <input class="file-input" type="file" @change="fileImageSmall">
+                </label>
               </div>
             </div>
           </div>
@@ -60,7 +65,7 @@
             </div>
           </div>
           <div class="input-item" name="商品群組">
-            <div class="bottom-item"  v-if="false">
+            <div class="bottom-item" v-if="false">
               <span>商品群組</span>
               <div class="link">
                 <span @click="showCbGroupsUIFn(true)">加入群組</span>
@@ -127,6 +132,8 @@
     :showCbGroupsUIFn="showCbGroupsUIFn" />
   <CbGoodsBrandUI v-if="showCbBrandUIRef" :selData="formInputRef.brandItem" :getDataFn="getCbBrandFn"
     :showCbUIFn="showCbBrandUIFn" />
+  <CropperImg-UI v-if="cropperImgUI" :cropperData="cropperData" :handCropperImgView="handCropperImgView"
+    @handCropperSubmit="resImgCropper" />
 </template>
     
 <script setup lang="ts">
@@ -151,6 +158,14 @@ const props = defineProps<{
 let showCbGoodsUIRef = ref(false);
 let showCbBrandUIRef = ref(false);
 
+const cropperImgUI = ref(false);
+const cropperData: any = reactive({
+  type: "",
+  width: 80,
+  height: 80,
+  imgResult: ''
+})
+
 let formInputRef: any = ref({
   name: "",
   unit: "",
@@ -162,6 +177,7 @@ let formInputRef: any = ref({
   stock: 0,
   state: 0,
   memo: "",
+  imageSmall: "",
 });
 
 onBeforeFn();
@@ -185,6 +201,8 @@ function setInputData(params: any) {
   formInputRef.value.state = params.display;
   formInputRef.value.stock = params.stock;
   formInputRef.value.groupsItem = params.groupList;
+  formInputRef.value.imageSmall = params.imageSmall;
+  formInputRef.value.brandItem = params.brandList;
 }
 
 function submitBtn() {
@@ -200,6 +218,9 @@ function submitBtn() {
   //   curGroupMaps.push(element.pgId);
   // }
 
+  console.log(formInputRef.brandItem);
+  
+
   let curdata: any = {
     pId: props.selData.pId,
     pCode: formInputRef.value.nameNo,
@@ -207,7 +228,7 @@ function submitBtn() {
     memo: formInputRef.value.memo,
     price: formInputRef.value.price,
     imageBig: "",
-    imageSmall: "",
+    imageSmall: formInputRef.value.imageSmall,
     unit: formInputRef.value.unit ? formInputRef.value.unit : 0,
     amount: formInputRef.value.capacity ? formInputRef.value.capacity : 0,
     brand: 0,
@@ -218,6 +239,7 @@ function submitBtn() {
     updateOpen: formInputRef.value.isEditAccounting,
     display: formInputRef.value.state == 1,
     productGroup: groupsIdList,
+    productBrand: brandIdList,
     productDiscount: [],
     productProvider: [],
   };
@@ -248,11 +270,11 @@ function getCbGroupsFn(itemList: any, idList: any = []) {
   groupsIdList = idList;
   showCbGroupsUIFn(false)
 }
-let brandList: string[] = []
+let brandIdList: string[] = []
 //取回品牌資料
 function getCbBrandFn(itemList: any, idList: any = []) {
   formInputRef.value.brandItem = itemList;
-  brandList = idList;
+  brandIdList = idList;
   showCbBrandUIFn(false)
 }
 
@@ -272,6 +294,67 @@ function changeNameNo() {
 function updateColorFn(params: any) {
   formInputRef.value.color = params
 }
+
+//---------------------------------------------------------------上傳圖片
+const dataURLtoFile = ((dataurl: any, filename: any) => {
+  var arr = dataurl.split(','),
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]),
+    n = bstr.length,
+    u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, { type: mime });
+})
+const handCropperImgView = (() => {
+  cropperImgUI.value = !cropperImgUI.value;
+})
+const fileImageSmall = ((e: any) => {
+  const file = e.target.files.item(0);
+  let suffixName = file.name.substring(file.name.lastIndexOf('.') + 1);
+  if (suffixName !== 'jpg' && suffixName !== 'png' && suffixName !== 'JPG' && suffixName !== 'PNG') {
+    Alert.warning("上傳檔案只能是 jpg、png 格式!", 2000);
+    return;
+  }
+  const reader = new FileReader();
+  reader.addEventListener('load', (e: any) => {
+    let file: any = dataURLtoFile(e.target.result, suffixName);
+    cropperData.type = 'small'
+    cropperData.width = 200;
+    cropperData.height = 200;
+    cropperData.imgResult = e.target.result;
+    handCropperImgView();
+  });
+  reader.readAsDataURL(file);
+})
+const fileImageBig = ((e: any) => {
+  const file = e.target.files.item(0);
+  let suffixName = file.name.substring(file.name.lastIndexOf('.') + 1);
+  if (suffixName !== 'jpg' && suffixName !== 'png' && suffixName !== 'JPG' && suffixName !== 'PNG') {
+    Alert.warning("上傳檔案只能是 jpg、png 格式!", 2000);
+    return;
+  }
+  const reader = new FileReader();
+  reader.addEventListener('load', (e: any) => {
+    let file: any = dataURLtoFile(e.target.result, suffixName);
+    cropperData.type = 'big'
+    cropperData.width = 800;
+    cropperData.height = 800;
+    cropperData.imgResult = e.target.result;
+    handCropperImgView();
+  });
+  reader.readAsDataURL(file);
+})
+const resImgCropper = ((res: any) => {
+  console.log(222, res)
+  if (res.type == "small") {
+    formInputRef.value.imageSmall = res.res
+  } else if (res.type == "big") {
+    formInputRef.value.imageBig = res.res
+  }
+  handCropperImgView();
+})
 //#region 規則
 const ruleLists: any = reactive({
   ruleItem: {
@@ -522,33 +605,40 @@ const ruleLists: any = reactive({
             }
 
             .img-info {
-              display: flex;
-              align-items: center;
-              justify-content: center;
               width: 160px;
-              height: 160px;
-              background-color: #f5f5f5;
+              height: 100%;
 
-              .img-bg {
-                display: grid;
-                width: 100px;
-                height: 100px;
-                background: var(--color);
-                border-radius: 12px;
+              >div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 160px;
+                height: 160px;
+                background-color: #f5f5f5;
 
-                >div {
-                  width: 100px;
-                  height: 100px;
+                >img {
+                  width: 80px;
+                  height: 80px;
+                }
+              }
 
-                  >span {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 100px;
-                    height: 50px;
-                    font-size: 40px;
-                    color: #ffffff;
-                  }
+              .button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                >span {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  width: 160px;
+                  height: 80px;
+                  font-size: 24px;
+                  color: #18bdff;
+                }
+
+                .file-input {
+                  display: none;
                 }
               }
             }

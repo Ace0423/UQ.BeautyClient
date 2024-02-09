@@ -62,7 +62,7 @@ let { goodsDetailListRef } =
 let {
   getGoodsGroupApi,
   getGoodsDetailApi,
-  updateGoodsDetailApi,
+  updateGoodsStateApi,
   delGoodsDetailApi,
 } = store;
 
@@ -109,27 +109,10 @@ function getDetailFn(id: any = 0, isList: any = 0) {
 function updateStutusBtn(index: number, item: any) {
   let curdata: any = {
     pId: item.pId,
-    pCode: item.pCode,
-    pName: item.pName,
-    memo: item.memo,
-    price: item.price,
-    imageBig: item.imageBig,
-    imageSmall: item.imageSmall,
-    unit: item.unit,
-    amount: item.amount,
-    brand: item.brand,
-    stock: item.stock,
-    stockTrace: item.stockTrace,
-    bonusOpen: item.amount,
-    updateOpen: item.updateOpen,
     display: !item.display,
-    stockOpen: item.stockOpen,
-    productGroup: item.groupList,
-    productProvider: item.providerList,
-    productDiscount: item.discountList,
   };
 
-  updateGoodsDetailApi(curdata).then((res: any) => {
+  updateGoodsStateApi(curdata).then((res: any) => {
     if (res.state == 1) {
       getDetailFn(0, 0);
     }

@@ -17,8 +17,8 @@ const cropperOption = ref({
     autoCrop: true, // 是否要有截圖框
     autoCropWidth: 200, // 截圖框寬
     autoCropHeight: 200, //截圖框高
-    fixed: false,
-    fixedBox: false,
+    fixed: true,//截圖框限制比例
+    fixedBox: false,//截圖框縮放
     canMove: false,
     centerBox: false,
 })

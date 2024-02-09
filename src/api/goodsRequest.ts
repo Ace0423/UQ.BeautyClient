@@ -28,6 +28,8 @@ export const addGoodsDetailReq = (data: any) =>
   postHttps(httpRequest, "/Product/ProductInfo", data);
 export const updateGoodsDetailReq = (data: any) =>
   putHttps(httpRequest, "/Product/ProductInfo?pId=" + data.pId, data);
+  export const updateGoodsStateReq = (data: any) =>
+    putHttps(httpRequest, "/Product/ProductState?pId=" + data.pId, data);
 export const delGoodsDetailReq = (pId: any) =>
   deleteHttps(httpRequest, "/Product/ProductInfo/" + pId);
 //#endregion

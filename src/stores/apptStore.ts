@@ -52,6 +52,7 @@ import {
   updateGoodsGroupReq,
   updateGoodsGroupOrderReq,
   getGoodsBrandReq,
+  updateGoodsStateReq,
 } from "@/api/goodsRequest";
 import Alert from "@/components/alertCmpt";
 import type {
@@ -754,6 +755,18 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+  /**更新商品狀態 */
+  const updateGoodsStateApi = async (data: any) => {
+    try {
+      let res = await updateGoodsStateReq(data).then((res: any) => {
+        alertStateFn(res, "更新商品狀態");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   /**刪除商品資料 */
   const delGoodsDetailApi = async (pId: any) => {
     try {
@@ -1042,6 +1055,7 @@ export const useApptStore = defineStore("apptStore", () => {
     updateGoodsBrandApi,
     updateGoodsBrandOrderApi,
     delGoodsBrandApi,
+    updateGoodsStateApi,
     //--------------------Order
     getOrderApptDetailApi,
     orderDetailListRef,

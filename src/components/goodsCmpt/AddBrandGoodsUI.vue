@@ -58,7 +58,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import closeIcon from "@/assets/Brand32.svg";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import Icon from "@/assets/Icon zocial-guest.svg";
 import { storeToRefs } from "pinia";

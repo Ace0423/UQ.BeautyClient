@@ -5,8 +5,6 @@ import { useCompanyStore } from "@/stores/company";
 import { useCounterStore } from "@/stores/counter";
 import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
-import type { Key } from '@fullcalendar/core/preact';
-import type { InternalAxiosRequestConfig } from 'axios';
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
 const companyStore = useCompanyStore();
@@ -14,21 +12,10 @@ const { getOnlineBusinessHours, postOnlineBusinessHours } = companyStore;
 const { onlineBusinessHoursList } = storeToRefs(companyStore);
 const timer: any = [{ value: 30, text: '30分鐘' }, { value: 60, text: '60分鐘' }, { value: 90, text: '90分鐘' }, { value: 120, text: '120分鐘' }]
 const dayOfWeek: any = [{ value: 0, text: '週日' }, { value: 1, text: '週一' }, { value: 2, text: '週二' }, { value: 3, text: '週三' }, { value: 4, text: '週四' }, { value: 5, text: '週五' }, { value: 6, text: '週六' },]
-const value2 = [
-    new Date(2016, 9, 10, 8, 40),
-    new Date(2016, 9, 10, 9, 40),
-]
 const businessHoursData: any = reactive({ data: [] });
-const timeVal = computed(() => {
-    return onlineBusinessHoursList.value.data.wbAppUnit;
-})
 const businessHoursList = computed(() => {
     businessHoursData.data = JSON.parse(JSON.stringify(onlineBusinessHoursList.value.data));
-    return businessHoursData.data.data;
-})
-const filterRestList = ((data: any) => {
-    let filter = data;
-    return filter;
+    return businessHoursData.data;
 })
 onMounted(() => {
     getOnlineBusinessHours()
@@ -49,32 +36,6 @@ onMounted(() => {
 const handCheckBox = (item: any) => {
     item.wbAcceptApp = !item.wbAcceptApp;
 }
-const businessDate = (item: any) => {
-    const startDate = new Date("2000-01-01T" + item.wbStartTime);
-    const endDate = new Date("2000-01-01T" + item.wbEndTime);
-    return [startDate, endDate];
-};
-const splitTimeIntoSlots = computed(() => {
-    return (startTime: any, endTime: any, appointmentUnit: any) => {
-        let start: any = new Date("2000-01-01T" + startTime);
-        let end: any = new Date("2000-01-01T" + endTime);
-        let diffMinutes = (end - start) / 60000;
-        let numSlots = Math.floor(diffMinutes / appointmentUnit);
-        let timeSlots = [];
-
-        for (let i = 0; i < numSlots; i++) {
-            let slotStartTime = new Date(start.getTime() + i * appointmentUnit * 60000);
-            let slotEndTime = new Date(slotStartTime.getTime() + appointmentUnit * 60000);
-            let slot = {
-                startTime: slotStartTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                endTime: slotEndTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            };
-            timeSlots.push(slot);
-        }
-
-        return timeSlots;
-    };
-});
 const handAaddRestTime = (data: any) => {
     let restVal = {
         start: '12:00:00',
@@ -118,14 +79,14 @@ const handSubmit = () => {
             </div>
             <div class="time-unit">
                 <p>線上營業時間的預約單位以</p>
-                <select v-model="timeVal">
+                <select v-model="businessHoursList.wbAppUnit">
                     <option v-for="item in timer" :key="item.value" :value="item.value">
                         {{ item.text }}</option>
                 </select>
                 <p>為一個間隔</p>
             </div>
             <div class="time-tab">
-                <div class="info-tab" v-for="item in businessHoursList" :key="item.wbId">
+                <div class="info-tab" v-for="item in businessHoursList.data" :key="item.wbId">
                     <div class="businessHours-block">
                         <div class="check-box">
                             <input type="checkbox" :checked="item.wbAcceptApp" v-on:change="handCheckBox(item)">

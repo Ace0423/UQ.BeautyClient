@@ -266,7 +266,11 @@ export const useCompanyStore = defineStore("company", () => {
         }
     };
     const postOnlineBusinessHours = async (data: any) => {
+        for (let index = 0; index < data.data.length; index++) {
+            data.data[index].wbUnavailPeriods = JSON.stringify(data.data[index].wbUnavailPeriods);
+        }
         try {
+            console.log(data)
             const res = await apiPostOnlineBusinessHours(data);
             if (res.data.state == 1) {
                 updataOnlineBusinessHoursList(res.data.data);

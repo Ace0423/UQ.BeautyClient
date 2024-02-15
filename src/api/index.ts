@@ -5,6 +5,7 @@ import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRole
 import { getPermissionsListRequest, putOptionRoleRequest,getApiPermissionsListRequest,postApiPermissionsListRequest,updateApiPermissionsListRequest } from "./settingRequest";
 import { getTimeTablesRequest,postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest,getCompanyInfoRequest,putCompanyInfoRequest,getMessagesRequest,insertMessagesRequest,updateMessagesRequest,getBlackListSetRequest,putBlackListSetRequest,getLineOAListRequest,putLineOAListRequest,getMessageRecords,getInfoRecord } from "./companyRequest";
 import { getTopUpCardListRequest,addTopUpCardInfoRequest,editTopUpCardInfoRequest } from "./topUpCardRequest";
+import { getOnlineBusinessHours,postOnlineBusinessHours } from "./OnlineRequest";
 
 export const apiPostLoginRequest = postLoginRequest;
 export const apiGetUserNameRequest = getUserNameRequest;
@@ -67,6 +68,7 @@ export const apiPutLineOAListRequest = putLineOAListRequest;
 export const apiGetMessageRecords = getMessageRecords;
 export const apiGetInfoRecord = getInfoRecord;
 
+
 export const apiGetCheckOutTypeRequest = getCheckOutTypeRequest;
 export const apiPostCheckOutTypeRequest = postCheckOutTypeRequest;
 export const apiPutCheckOutTypeRequest = putCheckOutTypeRequest;
@@ -74,3 +76,6 @@ export const apiPutCheckOutTypeRequest = putCheckOutTypeRequest;
 export const apiGetTopUpCardListRequest = getTopUpCardListRequest;
 export const apiAddTopUpCardInfoRequest = addTopUpCardInfoRequest;
 export const apiEditTopUpCardInfoRequest = editTopUpCardInfoRequest;
+
+export const apiGetOnlineBusinessHours = getOnlineBusinessHours;
+export const apiPostOnlineBusinessHours = postOnlineBusinessHours;

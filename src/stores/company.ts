@@ -1,12 +1,15 @@
 import { defineStore } from "pinia";
-import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest,apiGetBlackListSetRequest,apiPutBlackListSetRequest,apiGetMessageRecords,apiGetInfoRecord } from "@/api/index";
+import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest, apiGetBlackListSetRequest, apiPutBlackListSetRequest, apiGetMessageRecords, apiGetInfoRecord, apiGetOnlineBusinessHours, apiPostOnlineBusinessHours } from "@/api/index";
+import { getCompany } from "@/plugins/js-cookie";
 export const useCompanyStore = defineStore("company", () => {
     const businessHoursList: any = reactive({ data: [] });
+    const onlineBusinessHoursList: any = reactive({ data: [] });
     const checkOutTypeList: any = reactive({ data: [] });
     const companyInfoList: any = reactive({ data: [] });
     const companyBlackListSet: any = reactive({ data: [] });
     const messagesList: any = reactive({ data: [] });
     const messagesRecordList: any = reactive({ data: [] });
+
     const getTimeTablesRequest = async (data: any) => {
 
         try {
@@ -116,7 +119,7 @@ export const useCompanyStore = defineStore("company", () => {
             return Promise.reject(error);
         }
     };
-  
+
     const updataCompanyInfo = async (data: any) => {
         if (companyInfoList.data.cId == data.cId) {
             companyInfoList.data.cName = data.cName;
@@ -161,7 +164,7 @@ export const useCompanyStore = defineStore("company", () => {
         }
     };
     const updataBlackListSet = async () => {
-       
+
     };
 
 
@@ -245,6 +248,41 @@ export const useCompanyStore = defineStore("company", () => {
             return Promise.reject(error);
         }
     };
+    const getOnlineBusinessHours = async () => {
+        let data = {
+            cid: getCompany("userData"),
+            pageIndex: 0,
+            count: 0
+        }
+        try {
+            const res = await apiGetOnlineBusinessHours(data);
+            if (res.data.state == 1) {
+                updataOnlineBusinessHoursList(res.data.data);
+            }
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const postOnlineBusinessHours = async (data: any) => {
+        try {
+            const res = await apiPostOnlineBusinessHours(data);
+            if (res.data.state == 1) {
+                updataOnlineBusinessHoursList(res.data.data);
+            }
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const updataOnlineBusinessHoursList = (data: any) => {
+        onlineBusinessHoursList.data = data;
+        for (let index = 0; index < onlineBusinessHoursList.data.data.length; index++) {
+            onlineBusinessHoursList.data.data[index].wbUnavailPeriods = JSON.parse(onlineBusinessHoursList.data.data[index].wbUnavailPeriods);
+        }
+    }
     return {
         businessHoursList,
         getTimeTablesRequest,
@@ -264,6 +302,9 @@ export const useCompanyStore = defineStore("company", () => {
         companyBlackListSet,
         messagesRecordList,
         getMessageRecords,
-        getInfoRecord
+        getInfoRecord,
+        onlineBusinessHoursList,
+        getOnlineBusinessHours,
+        postOnlineBusinessHours
     }
 })

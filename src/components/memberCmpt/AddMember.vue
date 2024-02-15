@@ -286,7 +286,7 @@ onMounted(() => {
       </div>
       <div>
         <span>標籤</span>
-        <div>
+        <div style="height: 30px;">
           <el-select v-model="newMember.groupList" value-key="groupId" multiple collapse-tags collapse-tags-tooltip
             style="width: 100%" size="large">
             <el-option v-for="item in groupListData.data" :key="item.groupId" :label="item.label" :value="item" />

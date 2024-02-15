@@ -1,10 +1,113 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-const timer: any = [{ value: 30, text: '30分鐘' }, { value: 60, text: '60分鐘' }, { value: 90, text: '90分鐘' }, { value: 120, text: '120分鐘' },]
-const timeVal = ref(30)
-onMounted(() => {
-
+import { storeToRefs } from "pinia";
+import { useCompanyStore } from "@/stores/company";
+import { useCounterStore } from "@/stores/counter";
+import Alert from "@/components/alertCmpt";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
+import type { Key } from '@fullcalendar/core/preact';
+import type { InternalAxiosRequestConfig } from 'axios';
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
+const companyStore = useCompanyStore();
+const { getOnlineBusinessHours, postOnlineBusinessHours } = companyStore;
+const { onlineBusinessHoursList } = storeToRefs(companyStore);
+const timer: any = [{ value: 30, text: '30分鐘' }, { value: 60, text: '60分鐘' }, { value: 90, text: '90分鐘' }, { value: 120, text: '120分鐘' }]
+const dayOfWeek: any = [{ value: 0, text: '週日' }, { value: 1, text: '週一' }, { value: 2, text: '週二' }, { value: 3, text: '週三' }, { value: 4, text: '週四' }, { value: 5, text: '週五' }, { value: 6, text: '週六' },]
+const value2 = [
+    new Date(2016, 9, 10, 8, 40),
+    new Date(2016, 9, 10, 9, 40),
+]
+const businessHoursData: any = reactive({ data: [] });
+const timeVal = computed(() => {
+    return onlineBusinessHoursList.value.data.wbAppUnit;
 })
+const businessHoursList = computed(() => {
+    businessHoursData.data = JSON.parse(JSON.stringify(onlineBusinessHoursList.value.data));
+    return businessHoursData.data.data;
+})
+const filterRestList = ((data: any) => {
+    let filter = data;
+    return filter;
+})
+onMounted(() => {
+    getOnlineBusinessHours()
+        .then((res) => {
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        })
+})
+const handCheckBox = (item: any) => {
+    item.wbAcceptApp = !item.wbAcceptApp;
+}
+const businessDate = (item: any) => {
+    const startDate = new Date("2000-01-01T" + item.wbStartTime);
+    const endDate = new Date("2000-01-01T" + item.wbEndTime);
+    return [startDate, endDate];
+};
+const splitTimeIntoSlots = computed(() => {
+    return (startTime: any, endTime: any, appointmentUnit: any) => {
+        let start: any = new Date("2000-01-01T" + startTime);
+        let end: any = new Date("2000-01-01T" + endTime);
+        let diffMinutes = (end - start) / 60000;
+        let numSlots = Math.floor(diffMinutes / appointmentUnit);
+        let timeSlots = [];
+
+        for (let i = 0; i < numSlots; i++) {
+            let slotStartTime = new Date(start.getTime() + i * appointmentUnit * 60000);
+            let slotEndTime = new Date(slotStartTime.getTime() + appointmentUnit * 60000);
+            let slot = {
+                startTime: slotStartTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                endTime: slotEndTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+            timeSlots.push(slot);
+        }
+
+        return timeSlots;
+    };
+});
+const handAaddRestTime = (data: any) => {
+    let restVal = {
+        start: '12:00:00',
+        end: '13:00:00'
+    }
+    data.wbUnavailPeriods.push(restVal);
+}
+const handDelRestTime = (data: any, index: any) => {
+    data.wbUnavailPeriods.splice(index, 1);
+}
+const handCancel = (() => {
+    businessHoursData.data = JSON.parse(JSON.stringify(onlineBusinessHoursList.value.data));
+});
+const handSubmit = () => {
+    console.log(businessHoursData.data)
+    postOnlineBusinessHours(businessHoursData.data)
+        .then((res) => {
+            if (res.state == 1) {
+                Alert.warning("修改成功", 2000);
+            }
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        })
+};
 </script>
 <template>
     <div class="wrap">
@@ -22,75 +125,40 @@ onMounted(() => {
                 <p>為一個間隔</p>
             </div>
             <div class="time-tab">
-                <div class="info-tab">
-                    <div class="check-box">
-                        <input type="checkbox">
-                        <p>週日</p>
+                <div class="info-tab" v-for="item in businessHoursList" :key="item.wbId">
+                    <div class="businessHours-block">
+                        <div class="check-box">
+                            <input type="checkbox" :checked="item.wbAcceptApp" v-on:change="handCheckBox(item)">
+                            <p>{{ dayOfWeek[item.wbDayOfWeek].text }}</p>
+                        </div>
+                        <div v-if="item.wbAcceptApp" class="hours-info">
+                            <div>
+                                <input type="time" v-model="item.wbStartTime"> - <input type="time"
+                                    v-model="item.wbEndTime">
+                            </div>
+                            <button v-if="item.wbUnavailPeriods.length < 1" @click="handAaddRestTime(item)">加入休息時間</button>
+                        </div>
+                        <div v-if="!item.wbAcceptApp">
+                            <p>不提供預約</p>
+                        </div>
                     </div>
-                    <div>
-                        不提供預約
-                    </div>
-                </div>
-                <div class="info-tab">
-                    <div class="check-box">
-                        <input type="checkbox">
-                        <p>週日</p>
-                    </div>
-                    <div>
-                        不提供預約
-                    </div>
-                </div>
-                <div class="info-tab">
-                    <div class="check-box">
-                        <input type="checkbox">
-                        <p>週日</p>
-                    </div>
-                    <div>
-                        不提供預約
-                    </div>
-                </div>
-                <div class="info-tab">
-                    <div class="check-box">
-                        <input type="checkbox">
-                        <p>週日</p>
-                    </div>
-                    <div>
-                        不提供預約
-                    </div>
-                </div>
-                <div class="info-tab">
-                    <div class="check-box">
-                        <input type="checkbox">
-                        <p>週日</p>
-                    </div>
-                    <div>
-                        不提供預約
-                    </div>
-                </div>
-                <div class="info-tab">
-                    <div class="check-box">
-                        <input type="checkbox">
-                        <p>週日</p>
-                    </div>
-                    <div>
-                        不提供預約
-                    </div>
-                </div>
-
-                <div class="info-tab">
-                    <div class="check-box">
-                        <input type="checkbox">
-                        <p>週日</p>
-                    </div>
-                    <div>
-                        不提供預約
+                    <div v-for="i, index in item.wbUnavailPeriods" :key="index" class="businessHours-block">
+                        <div class="check-box">
+                            <p>休息時間</p>
+                        </div>
+                        <div class="hours-info">
+                            <div>
+                                <input type="time" v-model="i.start"> - <input type="time" v-model="i.end">
+                            </div>
+                            <button @click="handDelRestTime(item, index)">刪除</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="bottom-block">
-            <button>取消變更</button>
-            <button>儲存變更</button>
+            <button v-on:click="handCancel()">取消變更</button>
+            <button v-on:click="handSubmit()">儲存變更</button>
         </div>
     </div>
 </template>
@@ -138,29 +206,47 @@ onMounted(() => {
         >.time-tab {
             margin: 0px 10px;
             border: solid 1px #c1bdb8;
-            padding: 0px 10px;
+            // padding: 0px 10px;
             border-radius: 5px;
 
             >.info-tab {
-                display: flex;
-                align-items: center;
-                border-bottom: solid 1px #c1bdb8;
+                // display: flex;
+                // align-items: center;
+                // border-bottom: solid 1px #c1bdb8;
 
                 &:last-child {
                     border-bottom: none;
                 }
 
-                >.check-box {
-                    width: 15%;
+                >.businessHours-block {
+                    width: 100%;
                     display: flex;
-                    border-right: solid 1px #c1bdb8;
+                    border-bottom: solid 1px #c1bdb8;
 
-                    input {
-                        width: 20px;
-                        margin-right: 10px;
+                    >.check-box {
+                        width: 15%;
+                        display: flex;
+                        justify-content: center;
+                        border-right: solid 1px #c1bdb8;
+
+                        input {
+                            width: 20px;
+                            margin-right: 10px;
+                        }
                     }
 
+                    >.hours-info {
+                        width: 85%;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
 
+                        >button {
+                            width: 150px;
+                            border: transparent;
+                            margin: 0 10px;
+                        }
+                    }
                 }
             }
         }
@@ -182,6 +268,7 @@ onMounted(() => {
             margin: 0 10px;
             border: transparent;
             border-radius: 3px;
+
         }
     }
 }

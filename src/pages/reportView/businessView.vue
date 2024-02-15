@@ -3,7 +3,16 @@ import * as echarts from 'echarts';
 import { ref } from 'vue';
 import apexchart from 'vue3-apexcharts';
 import Echarts from "@/components/ReEcharts/index.vue";
-import type { ECharts, EChartsOption } from 'echarts'
+import zhCn from 'element-plus/es/locale/lang/zh-cn';
+import type { ECharts, EChartsOption } from 'echarts';
+const value2 = ref<Date[]>([]);
+const uId = ref();
+const options = [
+    {
+        value: '0',
+        label: '所有人',
+    }
+]
 const turnoverOption: EChartsOption = reactive({
     xAxis: {
         type: 'category',
@@ -171,9 +180,96 @@ const proportionData: any = [
     }
 
 ];
+const shortcuts = [
+    {
+        text: '本周',
+        value: () => {
+            // 創建一個表示當前日期的物件
+            const currentDate = new Date();
+
+            // 取得今天是星期幾（0 表示星期日，1 表示星期一，以此類推）
+            const currentDay = currentDate.getDay();
+
+            // 計算距離本周日還有多少天
+            const daysUntilSunday = 0 - currentDay;
+            // 複製當前日期物件以防止修改原始日期
+            const sundayDate = new Date(currentDate);
+            // 加上相應的天數以獲得本周日的日期
+            sundayDate.setDate(currentDate.getDate() + daysUntilSunday);
+            const saturDay = new Date(currentDate);
+            saturDay.setDate(currentDate.getDate() + (6 - currentDay));
+            return [sundayDate, saturDay]
+        },
+    },
+    {
+        text: '上周',
+        value: () => {
+            const currentDate = new Date();
+            const currentDay = currentDate.getDay();
+            const daysUntilSunday = 0 - currentDay - 7;
+            const sundayDate = new Date(currentDate);
+            sundayDate.setDate(currentDate.getDate() + daysUntilSunday);
+            const saturDay = new Date(sundayDate);
+            saturDay.setDate(sundayDate.getDate() + 6);
+            return [sundayDate, saturDay]
+        },
+    },
+    {
+        text: '本月',
+        value: () => {
+            // 創建一個表示當前日期的物件
+            const currentDate = new Date();
+
+            // 設置日期為本月的第一天
+            const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+
+            // 設置日期為下個月的第一天，再減去一天，即得到本月的最後一天
+            const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+            return [firstDayOfMonth, lastDayOfMonth]
+        },
+    },
+    {
+        text: '上個月',
+        value: () => {
+            // 創建一個表示當前日期的物件
+            const currentDate = new Date();
+
+            // 計算上個月的年份和月份
+            const lastMonthYear = currentDate.getMonth() === 0 ? currentDate.getFullYear() - 1 : currentDate.getFullYear();
+            const lastMonthMonth = currentDate.getMonth() === 0 ? 11 : currentDate.getMonth() - 1;
+
+            // 設置日期為上個月的第一天
+            const firstDayOfLastMonth = new Date(lastMonthYear, lastMonthMonth, 1);
+
+            // 設置日期為本月的第一天再減去一天，即得到上個月的最後一天
+            const lastDayOfLastMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+
+            return [firstDayOfLastMonth, lastDayOfLastMonth]
+        },
+    }
+]
+onMounted(() => {
+    value2.value = shortcuts[0].value();
+    filterChang();
+})
+const filterChang = () => {
+}
 </script>
 <template>
     <div class="content">
+        <div class="filter-block">
+            <div class="condition-block">
+                <el-config-provider :locale="zhCn">
+                    <el-date-picker v-model="value2" type="daterange" unlink-panels range-separator="-"
+                        start-placeholder="開始時間" end-placeholder="結束時間" :shortcuts="shortcuts" size=large />
+                </el-config-provider>
+            </div>
+            <!-- <el-select v-model="uId" class="people-screening m-2" placeholder="" style="width: 240px;"
+                :change=filterChang()>
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select> -->
+        </div>
         <div class="total-count">
             <div>
                 <h2>顧客流失率</h2>
@@ -1429,6 +1525,37 @@ const proportionData: any = [
     font-family: STXihei;
     color: #717171;
 
+    >.filter-block {
+        display: flex;
+
+        >.condition-block {
+            display: flex;
+            // margin: 0 15px;
+        }
+
+        >.people-screening {
+            display: flex;
+            margin-left: 5px;
+
+            ::v-deep {
+
+                .el-input,
+                .el-input--suffix {
+                    height: 100%;
+                }
+
+                .el-input__inner {
+                    height: 100%;
+                }
+
+                .el-input__prefix,
+                .el-input__suffix {
+                    height: 100%;
+                }
+            }
+        }
+    }
+
     >.total-count {
         display: flex;
         justify-content: space-around;
@@ -1461,9 +1588,6 @@ const proportionData: any = [
                         margin: 5px;
                     }
                 }
-
-
-
             }
         }
     }
@@ -1488,9 +1612,8 @@ const proportionData: any = [
             border: transparent;
 
             tr {
-                td{
-                    
-                }
+                td {}
+
                 >.color-td {
                     background-color: #faf9f8;
                     border: solid 1px #ffffff;

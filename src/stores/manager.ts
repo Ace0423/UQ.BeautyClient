@@ -71,7 +71,7 @@ export const useManagerStore = defineStore("manager", () => {
         try {
             const res = await apiPostAdminDataRequest(data);
             if (res.data.state) {
-                updataManagerList(res.data.data.table[0]);
+                updateManagerList(res.data.data.table[0]);
             }
             return res.data;
         } catch (error) {
@@ -82,14 +82,14 @@ export const useManagerStore = defineStore("manager", () => {
     const editManagerData = async (data: any) => {
         try {
             const res = await apiPutAdminDataRequest(data);
-            updataManagerList(res.data.data.table[0])
+            updateManagerList(res.data.data.table[0])
             return res.data;
         } catch (error) {
             console.log(error);
             return Promise.reject(error);
         }
     };
-    const updataManagerList = (data: any) => {
+    const updateManagerList = (data: any) => {
         if (managerList.data.filter((item: any) => item.managerId == data.managerId).length > 0) {
             managerList.data.findIndex((item: any) => {
                 if (item.managerId == data.managerId) {
@@ -123,7 +123,7 @@ export const useManagerStore = defineStore("manager", () => {
     const createRoleData = async (data: any) => {
         try {
             const res = await apiPostRoleDataRequest(data);
-            updataRoleList(res.data.data);
+            updateRoleList(res.data.data);
             return res.data;
         } catch (error) {
             console.log(error);
@@ -133,14 +133,14 @@ export const useManagerStore = defineStore("manager", () => {
         try {
             const res = await apiPutRoleDataRequest(data);
             if (res.data.state == 1) {
-                updataRoleList(res.data.data);
+                updateRoleList(res.data.data);
             }
             return res.data;
         } catch (error) {
             console.log(error);
         }
     };
-    const updataRoleList = (data: any) => {
+    const updateRoleList = (data: any) => {
         for (let i = 0; i < data.length; i++) {
             const index = roleList.data.findIndex((e: any) => e.roleId === data[i].id);
             roleList.data[index].memo = data[i].memo
@@ -159,7 +159,7 @@ export const useManagerStore = defineStore("manager", () => {
     const addRoleManagerData = async (data: any) => {
         try {
             const res = await apiPostRoleManagerDataRequest(data);
-            // updataRoleList(res.data.data);
+            // updateRoleList(res.data.data);
             return res.data.state;
         } catch (error) {
             console.log(error);
@@ -245,14 +245,14 @@ export const useManagerStore = defineStore("manager", () => {
     const editLineOAList = async (data: any) => {
         try {
             const res = await apiPutLineOAListRequest(data);
-            updataLineOAList(res.data.data)
+            updateLineOAList(res.data.data)
             return res.data;
         } catch (error) {
             console.log(error);
             return Promise.reject(error);
         }
     };
-    const updataLineOAList = async (data: any) => {
+    const updateLineOAList = async (data: any) => {
         LineOAList.data = data;
     };
     return {

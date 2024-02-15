@@ -1,123 +1,95 @@
 <template>
-  <div class="popup-mask2" v-on:click.self="showEditForm(false)">
+  <div class="popup-AddGoodsDetailUI" v-on:click.self="showAddUIFn(false)">
     <div class="popup-content">
       <div class="top-content">
-        <img :src="icon_closeX" v-on:click="showEditForm(false)" />
-        <span>新增服務</span>
-        <button class="otherpay-btn" v-on:click="submitBtn()">確認編輯</button>
+        <img :src="icon_closeX" v-on:click="showAddUIFn(false)" />
+        <span>新增商品</span>
+        <button class="otherpay-btn" v-on:click="submitBtn()">確認新增</button>
       </div>
       <div class="main-content">
         <div class="center-main">
-          <div class="input-item" name="基本資訊">
+          <div name="基本資訊" class="input-item">
             <span class="title-content">基本資訊</span>
-            <span class="msg-content">填寫你的服務項目基本資訊。</span>
+            <span class="msg-content">填寫你的商品基本資訊。</span>
             <div class="name-content">
               <div class="name-info">
                 <div>
-                  <span>*服務名稱</span>
+                  <span>*商品名稱</span>
                   <input v-model="formInputRef.name" placeholder="請輸入服務名稱" type="text" />
-                </div>
-                <div>
-                  <span>簡稱</span>
-                  <input v-model="formInputRef.nickName" placeholder="最多輸入四個字簡稱" type="text" />
                 </div>
                 <div class="textMsg-content">
                   <span>說明</span>
-                  <textarea v-model="formInputRef.memo" placeholder="請輸入說明或注意事項"></textarea>
+                  <textarea v-model="formInputRef.memo" placeholder="請輸入商品說明"></textarea>
                 </div>
+                <div>
+                  <span>*銷售價格</span>
+                  <input v-model="formInputRef.price" placeholder="請輸入商品銷售價格" type="text" />
+                </div>
+                <span class="p_error" v-if="ruleLists.ruleItem.price.is_error">
+                  {{ ruleLists.ruleItem.price.warn }}
+                </span>
                 <span class="p_error" v-if="ruleLists.ruleItem.name.is_error">
                   {{ ruleLists.ruleItem.name.warn }}
                 </span>
               </div>
-              <div class="img-info">
+              <div name="上傳圖片" class="img-info">
                 <div :style="{ '--color': formInputRef.color }" class="img-bg">
-                  <div v-if="formInputRef.nickName == ''">
-                    <span>{{ formInputRef.name.substr(0, 2) }}</span>
-                    <span>{{ formInputRef.name.substr(2, 2) }}</span>
-                  </div>
-                  <div v-else>
-                    <span>{{ formInputRef.nickName.substr(0, 2) }}</span>
-                    <span>{{ formInputRef.nickName.substr(2, 2) }}</span>
-                  </div>
+                  <img :src="formInputRef.imageSmall" width="80" height="80" />
                 </div>
+                <!-- <span>上傳圖片 <input class="file-input" type="file" @change="fileImageSmall"></span> -->
+                <label class="button">
+                  <span>上傳圖片</span>
+                  <input class="file-input" type="file" @change="fileImageSmall">
+                </label>
               </div>
-            </div>
-          </div>
-          <div class="input-radio" name="服務顏色">
-            <span class="title-content">服務顏色</span>
-            <div>
-              <RadioColorUI v-if="showColorUIRef" :selColorIndex="formInputRef.color" :updateColorFn="updateColorFn"
-                :coloarSize="60" />
             </div>
           </div>
           <div class="input-item" name="項目類型">
-            <div>
-              <span>項目類型</span>
-              <div class="select-content">
-                <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.subType"
-                  @change="changeValue()">
-                  <el-option v-for="(item, index) in subTab" :key="index" :value="item.id" :label="item.name">
-                    {{ item.name }}
-                  </el-option>
-                </el-select>
-              </div>
-            </div>
-            <div v-if="formInputRef.subType == 0">
-              <span>價格</span>
-              <input v-model="formInputRef.price" placeholder="請輸入價格" type="text" />
-            </div>
-            <div v-if="formInputRef.subType == 0">
-              <span>服務時長</span>
-              <div class="select-content">
-                <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.servicesTime"
-                  placeholder="請選擇服務時數" @change="changeValue()">
-                  <el-option v-for="(item, index) in timeGroup" :key="index" :label="item" :value="item">
-                    {{ item }}
-                  </el-option>
-                </el-select>
-              </div>
-            </div>
-            <span class="p_error" v-if="ruleLists.ruleItem.price.is_error && formInputRef.subType == 0">
-              {{ ruleLists.ruleItem.price.warn }}
-            </span>
-            <span class="p_error" v-if="ruleLists.ruleItem.servicesTime.is_error && formInputRef.subType == 0">
-              {{ ruleLists.ruleItem.servicesTime.warn }}
-            </span>
-            <div class="link-btn" v-if="formInputRef.subType == 1">
-              <span @click="showAddSubUIFn(true)">新增服務子項目</span>
-            </div>
-            <div class="form-info" v-if="formInputRef.subType == 1">
-              <div class="form-item">
-                <div v-if="formInputRef.subList.length > 0">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th align="left">子項目({{ formInputRef.subList.length }})</th>
-                        <th align="left">時長</th>
-                        <th align="left">價格</th>
-                        <th align="left">操作</th>
-                      </tr>
-                    </thead>
-                    <tbody v-for="(item, index) in formInputRef.subList" :key="item.sId">
-                      <tr>
-                        <td>
-                          <span>{{ item.name }}</span>
-                        </td>
-                        <td>
-                          <span>{{ item.servicesTime }}</span>
-                        </td>
-                        <td>
-                          <span>{{ item.price }}</span>
-                        </td>
-                        <td>
-                          <img class="delete_img" :src="icon_cancleItem" @click="cancleSubListFn(item, index)" />
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+            <div class="horizontal-content">
+              <div>
+                <span>單位</span>
+                <div>
+                  <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.unit"
+                    placeholder="請選擇單位" @change="changeValue()">
+                    <el-option v-for="(item, index) in goodsUnitGroup" :key="item" :value="index" :label="item">
+                      {{ item }}
+                    </el-option>
+                  </el-select>
                 </div>
               </div>
+              <div>
+                <span>容量</span>
+                <input v-model="formInputRef.capacity" placeholder="請輸入價格" type="text" />
+              </div>
             </div>
+          </div>
+          <div class="input-item" name="商品群組">
+            <div class="bottom-item" v-if="false">
+              <span>商品群組</span>
+              <div class="link">
+                <span @click="showCbGroupsUIFn(true)">加入群組</span>
+              </div>
+            </div>
+            <div class="bottom-item">
+              <span>商品品牌</span>
+              <div class="link">
+                <span @click="showCbBrandUIFn(true)">加入品牌</span>
+              </div>
+            </div>
+          </div>
+          <div class="input-item" name="庫存管理">
+            <span class="title-content">庫存管理</span>
+            <span class="msg-content">管理商品的多項規格及庫存數量</span>
+            <div class="bottom-item">
+              <span>*SKU編號</span>
+              <input v-model="formInputRef.nameNo" placeholder="請輸入編號" type="text"
+                onkeyup="value=value.replace(' ','')" />
+              <span class="auto-link" @click="changeNameNo()">自動產生</span>
+              <!-- <input v-model="formInputRef.NameNo" placeholder="請輸入編號" type="text" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"/> -->
+            </div>
+            <span class="p_error" v-if="ruleLists.ruleItem.NameNo.is_error">
+              {{ ruleLists.ruleItem.NameNo.warn }}
+            </span>
           </div>
           <div class="input-switch" name="其他設定">
             <span class="title-switch">其他設定</span>
@@ -135,7 +107,7 @@
                 <input type="checkbox" id="switch3" v-model="formInputRef.display" /><label for="switch3">Toggle2</label>
               </div>
               <div class="label-info">
-                <label>上架 </label>
+                <label>上架</label>
                 <span>開啟後，你的顧客即可透過線上預約瀏覽此項目</span>
               </div>
             </div>
@@ -150,26 +122,17 @@
               </div>
             </div> -->
           </div>
-          <div class="input-item" name="服務群組">
-            <div class="bottom-item">
-              <span>服務群組</span>
-              <div class="link">
-                <span @click="showCGroupsUIFn(true)">加入群組</span>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div class="bottom-content"></div>
     </div>
   </div>
-  <SelectItemUI v-if="showSelItemUIRef" :showUIFn="showSelItemUIFn">
-  </SelectItemUI>
-  <CbServiceGroupsUI v-if="showSelGroupsUIRef" :selData="formInputRef.SGIdList" :getDataFn="getCGroupsFn"
-    :showCGroupsUIFn="showCGroupsUIFn">
-  </CbServiceGroupsUI>
-  <AddSubDetailUI v-if="showSubDetailUIRef" :showAddSubUIFn="showAddSubUIFn" :getSubDetailFn="getSubDetailFn">
-  </AddSubDetailUI>
+  <CbGoodsGroupsUI v-if="showCbGoodsUIRef" :selData="formInputRef.groupsItem" :getDataFn="getCbGroupsFn"
+    :showCbGroupsUIFn="showCbGroupsUIFn" />
+  <CbGoodsBrandUI v-if="showCbBrandUIRef" :selData="formInputRef.brandItem" :getDataFn="getCbBrandFn"
+    :showCbUIFn="showCbBrandUIFn" />
+  <CropperImg-UI v-if="cropperImgUI" :cropperData="cropperData" :handCropperImgView="handCropperImgView"
+    @handCropperSubmit="resImgCropper" />
 </template>
   
 <script setup lang="ts">
@@ -177,153 +140,95 @@ import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import icon_ticket from "@/assets/images/icon_cancle.png";
-import { checkVerify_all, formatZeroDate } from "@/utils/utils";
+import img_goods from "@/assets/images/img_goods.png";
+import { GetRandomChar, GetRandomNumStr, checkVerify_all, formatZeroDate, goodsUnitGroup, goods_basicImg } from "@/utils/utils";
 import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
 
 let store = useApptStore();
 let { } = storeToRefs(store);
-let { getServiceDetailApi, updateServiceDetailApi } = store;
+let { addGoodsDetailApi } = store;
 
 const props = defineProps<{
-  selData: any;
-  showEditForm: Function;
+  showAddUIFn: Function;
 }>();
-let showSelItemUIRef = ref(false);
-let showSelGroupsUIRef = ref(false);
-let showColorUIRef = ref(false);
-let showSubDetailUIRef = ref(false);
+let showCbGoodsUIRef = ref(false);
+let showCbBrandUIRef = ref(false);
 
-
-
-let subTab = [
-  {
-    id: 0,
-    name: "無子項目",
-  },
-  {
-    id: 1,
-    name: "多項子項目",
-  },
-];
-let timeGroup: any = ref(["30", "60", "90", "120", "150", "180", "210", "240"]);
+const cropperImgUI = ref(false);
+const cropperData: any = reactive({
+  type: "",
+  width: 80,
+  height: 80,
+  imgResult: ''
+})
 let formInputRef: any = ref({
-  sId: 0,
   name: "",
-  nickName: "",
-  memo: "",
-  display: false,
-  servicesTime: 0,
-  price: 0,
-  isBonusOpen: false,
-  isEditAccounting: false,
-  color: "#fb9ea6",
-  subType: 0,
-  SGIdList: [],
-  subList: [],
+  unit: "",
+  capacity: "",
+  nameNo: "",
+  groupsItem: [],
+  brandItem: [],
+  price: "",
+  total: 0,
+  state: 0,
+  msg: "",
+  imageSmall: goods_basicImg,
+  imageBig: "",
 });
 
-
-onBefore();
-function onBefore() {
-  getServiceDetailApi(props.selData.sId, 0).then((res: any) => {
-    setInputData(res[0])
-  });
-}
-
-let curColor = ref(props.selData.color);
-function setInputData(params: any) {
-  formInputRef.value.sId = params.sId;
-  formInputRef.value.name = params.name;
-  formInputRef.value.nickName = params.nickName;
-  formInputRef.value.memo = params.memo;
-  formInputRef.value.display = params.display;
-  formInputRef.value.servicesTime = params.servicesTime;
-  formInputRef.value.price = params.price;
-  formInputRef.value.isBonusOpen = params.isBonusOpen;
-  formInputRef.value.isEditAccounting = params.isEditAccounting;
-  formInputRef.value.color = params.color;
-  formInputRef.value.SGIdList = params.sgIdList;
-  formInputRef.value.subType = params.subType;
-  formInputRef.value.subList = params.subList;
-  showColorUIRef.value = true;
+onBeforeFn();
+function onBeforeFn() {
+  formInputRef.value.nameNo =
+    GetRandomChar(3) + "-" + GetRandomNumStr(1, 99999);
 }
 onMounted(() => {
   // console.log('onMounted');
 });
 
-var date = new Date();
-
-formInputRef.value.startDate =
-  date.getFullYear() +
-  "-" +
-  formatZeroDate(date.getMonth() + 1) +
-  "-" +
-  formatZeroDate(date.getDate());
-formInputRef.value.endDate =
-  date.getFullYear() +
-  "-" +
-  formatZeroDate(date.getMonth() + 1) +
-  "-" +
-  formatZeroDate(date.getDate());
-
-function showSelItemUIFn(state: boolean) {
-  showSelItemUIRef.value = state;
-}
-function showAddSubUIFn(state: boolean) {
-  console.log(111, state);
-
-  showSubDetailUIRef.value = state;
-}
-function getSubDetailFn(data: any) {
-  formInputRef.value.subList.push(data);
-  showAddSubUIFn(false)
-}
-function cancleSubListFn(item: any, index: number) {
-  formInputRef.value.subList.splice(index, 1);
-}
 
 function submitBtn() {
-
   ruleLists.ruleItem.name.value = formInputRef.value.name;
   ruleLists.ruleItem.price.value = formInputRef.value.price;
-  ruleLists.ruleItem.servicesTime.value = formInputRef.value.servicesTime;
-
-  if (formInputRef.value.subType == 1) {
-    ruleLists.ruleItem.price.value = 1;
-    ruleLists.ruleItem.servicesTime.value = 1;
-  }
+  ruleLists.ruleItem.NameNo.value = formInputRef.value.nameNo;
   if (!checkVerify_all(ruleLists)) return;
 
+  // let curGroupMaps = formInputRef.value.groupsItem;
+  // let curGroupMaps = [];
+  // for (let i = 0; i < formInputRef.value.groupsItem.length; i++) {
+  //   const element = formInputRef.value.groupsItem[i];
+  //   curGroupMaps.push(element.pgId);
+  // }
 
-  let curGroupMaps = [];
-  for (let i = 0; i < formInputRef.value.SGIdList.length; i++) {
-    const element = formInputRef.value.SGIdList[i];
-    curGroupMaps.push(element.sgId);
-  }
-  let apiData = {
-    sId: formInputRef.value.sId,
-    name: formInputRef.value.name,
-    nickName: formInputRef.value.nickName,
-    memo: formInputRef.value.memo,
-    display: formInputRef.value.display,
-    servicesTime: formInputRef.value.servicesTime,
+  let curdata: any = {
+    pCode: formInputRef.value.nameNo,
+    pName: formInputRef.value.name,
+    memo: formInputRef.value.msg,
     price: formInputRef.value.price,
-    discount: formInputRef.value.discount,
-    isBonusOpen: formInputRef.value.isBonusOpen,
-    isEditAccounting: formInputRef.value.isEditAccounting,
-    sgIdList: curGroupMaps,
-    color: formInputRef.value.color,
-    subType: formInputRef.value.subType,
-    subList: formInputRef.value.subList,
+    imageBig: "",
+    imageSmall: formInputRef.value.imageSmall,
+    unit: formInputRef.value.unit ? formInputRef.value.unit : 0,
+    amount: formInputRef.value.capacity ? formInputRef.value.capacity : 0,
+    brand: 0,
+    stockOpen: false,
+    stock: formInputRef.value.total,
+    stockTrace: false,
+    bonusOpen: formInputRef.value.isBonusOpen,
+    updateOpen: formInputRef.value.isEditAccounting,
+    display: formInputRef.value.state == 1,
+    productGroup: groupsIdList,
+    productBrand: brandIdList,
+    productDiscount: [],
+    productProvider: [],
   };
-  /**編輯 */
-  updateServiceDetailApi(apiData).then((res: any) => {
+
+  /**新增明細 */
+  addGoodsDetailApi(curdata).then((res: any) => {
     if (res.state == 1) {
       Alert.sussess("成功", 1000);
       setTimeout(() => {
-        props.showEditForm(false);
+        props.showAddUIFn(false);
       }, 1000);
     } else {
       Alert.warning(showErrorMsg(res.msg), 1000);
@@ -337,17 +242,95 @@ function changeValue() {
   // console.log(formInputRef.value.subType);
   // formInputRef.value.subType = formInputRef.value.subType == 0 ? 1 : 0;
 }
-function getCGroupsFn(data: any) {
-  formInputRef.value.SGIdList = data;
-  showCGroupsUIFn(false)
-}
 
-function showCGroupsUIFn(data: boolean) {
-  showSelGroupsUIRef.value = data;
+let groupsIdList: string[] = []
+//取回群組資料
+function getCbGroupsFn(itemList: any, idList: any = []) {
+  formInputRef.value.groupsItem = itemList;
+  groupsIdList = idList;
+  showCbGroupsUIFn(false)
+}
+let brandIdList: string[] = []
+//取回品牌資料
+function getCbBrandFn(itemList: any, idList: any = []) {
+  formInputRef.value.brandItem = itemList;
+  brandIdList = idList;
+  showCbBrandUIFn(false)
+}
+function showCbGroupsUIFn(data: boolean) {
+  showCbGoodsUIRef.value = data;
+}
+function showCbBrandUIFn(data: boolean) {
+  showCbBrandUIRef.value = data;
+}
+function changeNameNo() {
+  formInputRef.value.nameNo =
+    GetRandomChar(3) + "-" + GetRandomNumStr(1, 99999);
 }
 function updateColorFn(params: any) {
   formInputRef.value.color = params
 }
+//---------------------------------------------------------------上傳圖片
+const dataURLtoFile = ((dataurl: any, filename: any) => {
+  var arr = dataurl.split(','),
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]),
+    n = bstr.length,
+    u8arr = new Uint8Array(n);
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, { type: mime });
+})
+const handCropperImgView = (() => {
+  cropperImgUI.value = !cropperImgUI.value;
+})
+const fileImageSmall = ((e: any) => {
+  const file = e.target.files.item(0);
+  let suffixName = file.name.substring(file.name.lastIndexOf('.') + 1);
+  if (suffixName !== 'jpg' && suffixName !== 'png' && suffixName !== 'JPG' && suffixName !== 'PNG') {
+    Alert.warning("上傳檔案只能是 jpg、png 格式!", 2000);
+    return;
+  }
+  const reader = new FileReader();
+  reader.addEventListener('load', (e: any) => {
+    let file: any = dataURLtoFile(e.target.result, suffixName);
+    cropperData.type = 'small'
+    cropperData.width = 200;
+    cropperData.height = 200;
+    cropperData.imgResult = e.target.result;
+    handCropperImgView();
+  });
+  reader.readAsDataURL(file);
+})
+const fileImageBig = ((e: any) => {
+  const file = e.target.files.item(0);
+  let suffixName = file.name.substring(file.name.lastIndexOf('.') + 1);
+  if (suffixName !== 'jpg' && suffixName !== 'png' && suffixName !== 'JPG' && suffixName !== 'PNG') {
+    Alert.warning("上傳檔案只能是 jpg、png 格式!", 2000);
+    return;
+  }
+  const reader = new FileReader();
+  reader.addEventListener('load', (e: any) => {
+    let file: any = dataURLtoFile(e.target.result, suffixName);
+    cropperData.type = 'big'
+    cropperData.width = 800;
+    cropperData.height = 800;
+    cropperData.imgResult = e.target.result;
+    handCropperImgView();
+  });
+  reader.readAsDataURL(file);
+})
+const resImgCropper = ((res: any) => {
+  console.log(222, res)
+  if (res.type == "small") {
+    formInputRef.value.imageSmall = res.res
+  } else if (res.type == "big") {
+    formInputRef.value.imageBig = res.res
+  }
+  handCropperImgView();
+})
+
 //#region 規則
 const ruleLists: any = reactive({
   ruleItem: {
@@ -355,7 +338,7 @@ const ruleLists: any = reactive({
       label: "名稱",
       rules: {
         required: {
-          warn: "此項為必填",
+          warn: " 名稱為必填",
         },
       },
       is_error: false,
@@ -365,17 +348,17 @@ const ruleLists: any = reactive({
       label: "價格",
       rules: {
         required: {
-          warn: "此項為必填",
+          warn: " 價格為必填",
         },
       },
       is_error: false,
       warn: "",
     },
-    servicesTime: {
-      label: "時長",
+    NameNo: {
+      label: "編號",
       rules: {
         required: {
-          warn: "此項為必填",
+          warn: " 編號為必填",
         },
       },
       is_error: false,
@@ -392,7 +375,7 @@ const ruleLists: any = reactive({
 }
 </style>
 <style scoped lang="scss">
-.popup-mask2 {
+.popup-AddGoodsDetailUI {
   position: fixed;
   top: 0;
   left: 0;
@@ -446,6 +429,7 @@ const ruleLists: any = reactive({
         top: 10px;
         right: 10px;
         border-radius: 5px;
+        box-sizing: border-box;
         border: none;
         background-color: #84715c;
         color: #fff;
@@ -470,7 +454,7 @@ const ruleLists: any = reactive({
       /* IE 10+ */
 
       .center-main {
-        width: 60%;
+        width: 70%;
         height: 100%;
         // border-right: solid 0.5px #ddd;
         box-sizing: border-box;
@@ -480,19 +464,65 @@ const ruleLists: any = reactive({
         .input-item {
           display: grid;
           width: 100%;
-          // margin-left: 5%;
           margin: 15px 0;
+
+          >div {
+            display: flex;
+            height: 80px;
+            width: 100%;
+            border: solid 0.5px #ddd;
+            box-sizing: border-box;
+
+            // margin: 15px 0;
+            .link {
+              display: flex;
+              height: 100%;
+              width: calc(100% - 180px);
+              justify-content: center;
+              align-items: center;
+              color: #87ceeb;
+            }
+
+            >span {
+              height: 100%;
+              width: 180px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              background-color: #faf9f8;
+              font-size: 24px;
+            }
+
+            >input {
+              border: solid 0px #c1bdb8;
+              box-sizing: border-box;
+              height: 100%;
+              width: calc(100% - 180px);
+              font-size: 22px;
+            }
+
+            >p {
+              color: #87ceeb;
+              width: calc(100% - 180px);
+            }
+
+            ::placeholder {
+              color: #c1bdb8;
+            }
+          }
+
+          .auto-link {
+            display: flex;
+            height: 100%;
+            // width: calc(100% - 180px);
+            justify-content: center;
+            align-items: center;
+            color: #87ceeb;
+          }
 
           .title-content {
             font-size: 28px;
             width: 100%;
-          }
-
-
-          .msg-content {
-            font-size: 20px;
-            color: #c1bdb8;
-            margin-bottom: 10px;
           }
 
           .name-content {
@@ -551,36 +581,49 @@ const ruleLists: any = reactive({
             }
 
             .img-info {
-              display: flex;
-              align-items: center;
-              justify-content: center;
               width: 160px;
-              height: 160px;
-              background-color: #f5f5f5;
+              height: 100%;
 
-              .img-bg {
-                display: grid;
-                width: 100px;
-                height: 100px;
-                background: var(--color);
-                border-radius: 12px;
+              >div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 160px;
+                height: 160px;
+                background-color: #f5f5f5;
 
-                >div {
-                  width: 100px;
-                  height: 100px;
+                >img {
+                  width: 80px;
+                  height: 80px;
+                }
+              }
 
-                  >span {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 100px;
-                    height: 50px;
-                    font-size: 40px;
-                    color: #ffffff;
-                  }
+              .button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                >span {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  width: 160px;
+                  height: 80px;
+                  font-size: 24px;
+                  color: #18bdff;
+                }
+
+                .file-input {
+                  display: none;
                 }
               }
             }
+          }
+
+          .msg-content {
+            font-size: 20px;
+            color: #c1bdb8;
+            margin-bottom: 10px;
           }
 
           .select-content {
@@ -596,6 +639,7 @@ const ruleLists: any = reactive({
 
                 :deep(.el-select-dropdown) {
                   border: 1px solid #ff0000 !important;
+                  box-sizing: border-box !important;
                 }
               }
 
@@ -609,6 +653,60 @@ const ruleLists: any = reactive({
             }
           }
 
+          .horizontal-content {
+            border: 0px solid #000000;
+            width: 100%;
+            height: 60px;
+            justify-content: space-between;
+
+            >div {
+              display: flex;
+              height: 100%;
+              width: calc(50% - 10px);
+              border: solid 0.5px #ddd;
+              box-sizing: border-box;
+
+              >span {
+                height: 100%;
+                width: 180px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: #faf9f8;
+                font-size: 24px;
+              }
+
+              .el-select {
+                // width:  calc(100%);
+                height: 100%;
+
+                :deep(.el-input__wrapper) {
+                  // width: calc(100%);
+                  height: 57px;
+                  font-size: 24px;
+
+                  :deep(.el-select-dropdown) {
+                    border: 1px solid #ff0000 !important;
+                    box-sizing: border-box !important;
+                  }
+                }
+
+                input {
+                  font-size: 12px;
+                  border: none;
+                  background: none;
+                  text-align: center;
+                  font-weight: bold;
+                  border: 0px solid #000000;
+                }
+              }
+
+              >input {
+                // width: calc(100% - 180px);
+                border: 0px solid #000000;
+              }
+            }
+          }
 
           .input-timer {
             width: calc(100% - 180px);
@@ -639,50 +737,6 @@ const ruleLists: any = reactive({
             }
           }
 
-          >div {
-            display: flex;
-            height: 80px;
-            width: 100%;
-            border: solid 0.5px #ddd;
-            box-sizing: border-box;
-
-            // margin: 15px 0;
-            .link {
-              display: flex;
-              height: 100%;
-              width: calc(100% - 180px);
-              justify-content: center;
-              align-items: center;
-              color: #87ceeb;
-            }
-
-            >span {
-              height: 100%;
-              width: 180px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              background-color: #faf9f8;
-              font-size: 24px;
-            }
-
-            >input {
-              border: solid 0px #c1bdb8;
-              box-sizing: border-box;
-              height: 100%;
-              width: calc(100% - 180px);
-              font-size: 22px;
-            }
-
-            >p {
-              color: #87ceeb;
-              width: calc(100% - 180px);
-            }
-
-            ::placeholder {
-              color: #c1bdb8;
-            }
-          }
 
           .link-btn {
             font-size: 28px;
@@ -728,6 +782,7 @@ const ruleLists: any = reactive({
                 margin: 5;
                 height: 30px;
                 border: solid 1px #707070;
+                box-sizing: border-box !important;
                 background-color: #fff;
               }
             }
@@ -735,6 +790,7 @@ const ruleLists: any = reactive({
             .form-item {
               width: 100%;
               border-bottom: 0px solid #fff;
+              box-sizing: border-box !important;
 
               >span {
                 display: flex;
@@ -760,6 +816,7 @@ const ruleLists: any = reactive({
                     color: #797979;
                     width: 100%;
                     border-bottom: 2px;
+                    box-sizing: border-box !important;
 
                     >tr>th {
                       font-size: 16px;
@@ -786,6 +843,7 @@ const ruleLists: any = reactive({
 
                   >tbody {
                     border-bottom: 2px solid #dadada;
+                    box-sizing: border-box !important;
 
                     >tr>td>span {
                       display: block;
@@ -821,8 +879,8 @@ const ruleLists: any = reactive({
             }
           }
 
-
         }
+
 
 
         .input-radio {
@@ -847,8 +905,10 @@ const ruleLists: any = reactive({
 
 
         .input-switch {
+          // padding: 0px 15px;
           width: 100%;
           height: 300px;
+          // border: 1px solid #000;
 
           .title-switch {
             display: block;
@@ -860,6 +920,7 @@ const ruleLists: any = reactive({
             color: #877059;
             font-weight: bold;
             border-bottom: 1px solid #000;
+            box-sizing: border-box !important;
           }
 
           .box-switch {
@@ -872,6 +933,7 @@ const ruleLists: any = reactive({
             box-sizing: border-box;
             // border-top: 1px solid #000;
             border-bottom: 1px solid #000;
+            box-sizing: border-box !important;
 
             .label-info {
               display: grid;
@@ -962,6 +1024,11 @@ const ruleLists: any = reactive({
   }
 }
 
+.p_error {
+  color: #fc0505;
+  width: 100%;
+}
+
 .link-bottom {
   padding: 0 5px;
   opacity: 0.5;
@@ -969,12 +1036,6 @@ const ruleLists: any = reactive({
   width: 80%;
   height: 2px;
   background-color: #707070;
-}
-
-.p_error {
-  color: #fc0505;
-  width: 100%;
-  font-size: 16px;
 }
 </style>
   

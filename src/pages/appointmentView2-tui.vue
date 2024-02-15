@@ -147,9 +147,9 @@
   <AddRestTimeUI v-if="showAddRestUIRef" :showAddRestUIFn="showAddRestUIFn"></AddRestTimeUI>
   <FastCheckOutUI v-if="showFastCheckOutRef" :showUIFn="showFastCheckOutUIHdr" :selData="'快速結帳'" />
 
-  <LittleDateUI v-if="showLittleDateRef" :showUIFn="updataShowLittleDate" :selDate="selDate"
+  <LittleDateUI v-if="showLittleDateRef" :showUIFn="updateShowLittleDate" :selDate="selDate"
     :selLittleDateFn="selLittleDateFn" />
-  <InfoApptUI v-if="showApptInfoRef" :showUIHdr="updataShowApptInfoRef" :selItemData="oldSelList" />
+  <InfoApptUI v-if="showApptInfoRef" :showUIHdr="updateShowApptInfoRef" :selItemData="oldSelList" />
   <FullCalendarUI v-if="showApptInfoRef" />
   
   <!-- <div :class="tuiOptions.tuiType == 2 ? ' Tui_calendar_date' : 'Tui_calendar_main'
@@ -348,7 +348,7 @@ const handleCommand = (command: string | number | object) => {
 //新增分類-顯示
 let showFastCheckOutUIHdr = (state: boolean) => {
   showFastCheckOutRef.value = state;
-  // getGoodsTypeApi(0);
+  // getGoodsGroupApi(0);
 };
 onFirstTime();
 function onFirstTime() {
@@ -678,16 +678,16 @@ function handleDetail(row: any) {
 
   if (row.serviceInfo) {
     onWeekSeldate(row.dateBooking.split("T")[0]);
-    updataShowApptInfoRef(true);
+    updateShowApptInfoRef(true);
   }
 }
-const updataShowApptInfoRef = (state: boolean) => {
+const updateShowApptInfoRef = (state: boolean) => {
   showApptInfoRef.value = state;
   if (!state) {
     getApptInfoFn(currentYear.value, currentMonth.value + 1);
   }
 };
-const updataShowLittleDate = (state: boolean) => {
+const updateShowLittleDate = (state: boolean) => {
   showLittleDateRef.value = state;
 };
 

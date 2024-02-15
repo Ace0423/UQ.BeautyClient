@@ -13,7 +13,7 @@ const httpRequest = axios.create({
   // headers: { "content-type": "application/json; charset=utf-8" },
 });
 
-export const updataToken = (instance: any) => {
+export const updateToken = (instance: any) => {
   let token: any = getToken("token");
   instance.defaults.headers.common["Authorization"] =
     "bearer " + JSON.parse(token).token;
@@ -21,7 +21,7 @@ export const updataToken = (instance: any) => {
 
 //get請求
 export function getHttps(instance: any = httpRequest, url: any, params = {}) {
-  updataToken(instance);
+  updateToken(instance);
   // instance.defaults.withCredentials = true;
   return new Promise((resolve, reject) => {
     instance
@@ -37,7 +37,7 @@ export function getHttps(instance: any = httpRequest, url: any, params = {}) {
 }
 //post請求
 export function postHttps(instance: any = httpRequest, url: any, data = {}) {
-  updataToken(instance);
+  updateToken(instance);
   return new Promise((resolve, reject) => {
     instance.post(url, data).then(
       (response: any) => {
@@ -52,7 +52,7 @@ export function postHttps(instance: any = httpRequest, url: any, data = {}) {
 }
 //post請求
 export function putHttps(instance: any = httpRequest, url: any, data = {}) {
-  updataToken(instance);
+  updateToken(instance);
   return new Promise((resolve, reject) => {
     instance.put(url, data).then(
       (response: any) => {
@@ -68,7 +68,7 @@ export function putHttps(instance: any = httpRequest, url: any, data = {}) {
 
 //post請求
 export function deleteHttps(instance: any = httpRequest, url: any, data = {}) {
-  updataToken(instance);
+  updateToken(instance);
   return new Promise((resolve, reject) => {
     instance.delete(url, data).then(
       (response: any) => {

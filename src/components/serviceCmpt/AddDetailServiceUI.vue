@@ -47,7 +47,7 @@
             <span class="title-content">服務顏色</span>
             <!-- <span class="msg-content">選擇呈現於行事曆的預約顏色</span> -->
             <div>
-              <RadioColorUI :selColorIndex="formInputRef.color" :updataColorFn="updataColorFn" :coloarSize="60" />
+              <RadioColorUI :selColorIndex="formInputRef.color" :updateColorFn="updateColorFn" :coloarSize="60" />
             </div>
           </div>
           <div class="input-item" name="項目類型">
@@ -322,7 +322,7 @@ function getCGroupsFn(data: any) {
 function showCGroupsUIFn(data: boolean) {
   showSelGroupsUIRef.value = data;
 }
-function updataColorFn(params: any) {
+function updateColorFn(params: any) {
   formInputRef.value.color = params
 }
 //#region 規則

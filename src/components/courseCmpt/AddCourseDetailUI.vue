@@ -78,7 +78,7 @@
             </div>
           </div>
         </div> -->
-        <RadioColorUI :selColorIndex="formInputRef.color" :updataColorFn="updataColorFn" />
+        <RadioColorUI :selColorIndex="formInputRef.color" :updateColorFn="updateColorFn" />
         <div class="switch-info">
           <span>上架</span>
           <div class="online">
@@ -197,7 +197,7 @@ let confirmAddCourseDataForm = () => {
   });
 };
 
-function updataColorFn(params: any) {
+function updateColorFn(params: any) {
   formInputRef.value.color = params
 }
 //-------------------------------------form驗證

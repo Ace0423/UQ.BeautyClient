@@ -150,6 +150,14 @@ export const getRestReq = (id: any, yy: any, mm: any, dd: any) =>
   getHttps(httpRequest, "/manager/GetBookingRest?managerId=" + id + "&year=" + yy + "&month=" + mm + "&day=" + dd + "&pageIndex=" + 0 + "&count=" + 0);
 
 
+//-----------------------------------------通知
+/**獲取訂單資訊 */
+export const getNoticeListReq = ( id: any) =>
+getHttps(httpRequest, "Notice/NoticeList?uid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
+/**更新明細 */
+export const updateNoticeIsReadReq = (data: any) =>
+  putHttps(httpRequest,"/Notice/NoticeIsRead?Id=" + data.Id,data);
+  
 
 
 

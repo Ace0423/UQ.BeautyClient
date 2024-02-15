@@ -1,133 +1,138 @@
 <template>
-  <div class="popup-mask" v-on:click.self="showCServiceUIFn(false)">
+  <div class="popup-mask" v-on:click.self="showCbGroupsUIFn(false)">
     <div class="popup-content">
       <div class="top-content">
         <p>加入服務</p>
       </div>
       <div class="main-content">
-        <p>已選擇({{ formInputRef.service.length }})項服務</p>
+        <p>已選擇({{ formInputRef.groups.length }})項服務</p>
         <input v-model="formInputRef.search" />
         <div class="div-item">
           <div>
             <label class="label-group">
-              <input class="input-group" type="checkbox" id="sId" value="item" v-model="clickGroupRef"
-                @click="clickAll" />
-              <label for="sId"></label>
-              <span> 全選 </span>
+              <input class="input-group" type="checkbox" id="pgId" value="item" v-model="clickGoodssGroupRef"
+                @click="clickGoodssGroup" />
+              <label for="pgId"></label>
+              <span> 全選(商品) </span>
             </label>
           </div>
-          <div v-for="item in filterServiceData" :key="item">
+          <div v-for="item in filterGoodsGroupsData" :key="item.pgId">
             <label class="label-item" :value="item">
-              <input class="input-item" type="checkbox" :id="'CheckboxService_' + item.sId" :value="item.sId"
-                v-model="formInputRef.service" @click="clickItem" />
-              <label :for="'CheckboxService_' + item.sId"></label>
+              <input class="input-item" type="checkbox" :id="'CheckboxGroups_' + item.pgId" :key="item.pgId"
+                :value="item.pgId" v-model="formInputRef.groups" @click="clickItem" />
+              <label :for="'CheckboxGroups_' + item.pgId"></label>
               <div>
-                <span value="{{item}}" name="{{item.name}}">{{
-                  item.name
+                <span value="{{item}}" name="{{item.pgTitle}}">{{
+                  item.pgTitle
                 }}</span>
-                <span class="timer-msg" value="{{item}}" name="{{item.name}}">{{ item.servicesTime + " Min" }}</span>
               </div>
             </label>
+            <!-- <input type="checkbox" name="item_001" value="1" />1 -->
           </div>
         </div>
       </div>
       <div class="bottom-content">
         <button class="submit-btn" @click="submitBtn()">確認</button>
-        <button class="cancle-btn" @click="showCServiceUIFn(false)">
-          取消
-        </button>
+        <button class="cancle-btn" @click="showCbGroupsUIFn(false)">取消</button>
       </div>
     </div>
   </div>
 </template>
-
+  
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import search_ico from "@/assets/images/icon_search.png";
 
 let store = useApptStore();
-let { serviceDetailList } = storeToRefs(store);
-let { getServiceDetailApi } = store;
+let { goodsGroupList } = storeToRefs(store);
+let { getGoodsGroupApi } = store;
 
 const props = defineProps<{
-  showCServiceUIFn: Function;
+  showCbGroupsUIFn: Function;
   getDataFn: Function;
   selData: any;
-  //   addDetailTypeID?: any;
 }>();
-let clickGroupRef = ref(false);
+let clickServicesGroupRef = ref(false);
+let clickGoodssGroupRef = ref(false);
 
 let formInputRef: any = ref({
   name: "",
   search: "",
   service: [],
+  groups: [],
 });
 onBeforeFn();
 function onBeforeFn() {
-  getServiceDetailApi();
+  // getCourseTypeApi();
+  getGoodsGroupApi().then((res: any) => {
+
+  });
+  formInputRef.value.groups = [];
   for (let i = 0; i < props.selData.length; i++) {
-    const element = props.selData[i];
-    element.sId = element.sId ? element.sId : element.lid;
-    formInputRef.value.service.push(element.sId);
+    const eleSelData = props.selData[i];
+    //pgId原本  pGid編輯數據名稱不同
+    eleSelData.pgId = eleSelData.pgId ? eleSelData.pgId : eleSelData.pGid;
+    formInputRef.value.groups.push(eleSelData.pgId);
   }
 }
 
-let filterServiceData: any = computed(() =>
-  serviceDetailList.value.filter(getRuleFn)
-);
-
-function getRuleFn(data: any) {
-  return (
-    data.display &&
-    (!formInputRef.value.search ||
-      data.nameTw
-        .toLowerCase()
-        .includes(formInputRef.value.search.toLowerCase()))
-  );
-}
-
-function clickAll() {
-  let curService = formInputRef.value.service;
-
-  if (curService.length > 0) {
-    formInputRef.value.service = [];
+let filterCourseTypesData: any = computed(() => {
+  let mixData: any = goodsGroupList.value;
+  return mixData.filter(function (item: any) {
+    return item.lessonTypeId != 0; // 取得陣列中雙數的物件
+  });
+});
+let filterGoodsGroupsData: any = computed(() => {
+  let mixData: any = goodsGroupList.value;
+  return mixData.filter(function (item: any) {
+    return item.pgId != 0; // 取得陣列中雙數的物件
+  });
+});
+function clickGoodssGroup() {
+  let curGoods = formInputRef.value.groups;
+  if (curGoods.length > 0) {
+    formInputRef.value.groups = [];
   } else {
-    for (let i = 0; i < filterServiceData.value.length; i++) {
-      const element = filterServiceData.value[i];
-      formInputRef.value.service.push(element.sId);
+    for (let i = 0; i < filterGoodsGroupsData.value.length; i++) {
+      const element = filterGoodsGroupsData.value[i];
+      formInputRef.value.groups.push(element.pgId);
     }
   }
 }
+
 watchEffect(() => {
-  clickGroupRef.value = formInputRef.value.service.length > 0;
+  clickServicesGroupRef.value = formInputRef.value.service.length > 0;
+  clickGoodssGroupRef.value = formInputRef.value.groups.length > 0;
 });
 
 function clickItem() {
-
 }
 
 function submitBtn() {
-  let curServiceData = [];
-  for (let i = 0; i < formInputRef.value.service.length; i++) {
-    const element = formInputRef.value.service[i];
-    for (let j = 0; j < filterServiceData.value.length; j++) {
-      const element2 = filterServiceData.value[j];
-      let Lid = element2.pId ? element2.pId : element2.sId;
-      if (Lid == element) {
-        element2.giftTotal = 1;
-        curServiceData.push(element2);
-        break;
+  let curGoodsData = formInputRef.value.groups;
+  let curPgItemList = [];
+  for (let i = 0; i < formInputRef.value.groups.length; i++) {
+    const eleSel = formInputRef.value.groups[i];
+    for (let j = 0; j < filterGoodsGroupsData.value.length; j++) {
+      const eleAll = filterGoodsGroupsData.value[j];
+      if (eleSel == eleAll.pgId) {
+        curPgItemList.push(eleAll)
       }
     }
+    // curPgItemList.push(hasGoodsGroupFn(eleSel))
   }
-  props.getDataFn(curServiceData);
+  props.getDataFn(curPgItemList, curGoodsData);
 }
-</script>
+function hasGoodsGroupFn(pgId: any) {
+  return (item: any) => item.pgId === pgId;
+}
 
+</script>
+  
 <style scoped lang="scss">
 .popup-mask {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
@@ -137,7 +142,7 @@ function submitBtn() {
 
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
 
   .popup-content {
     width: 325px;
@@ -175,7 +180,6 @@ function submitBtn() {
         height: 250px;
         overflow-y: auto;
 
-        // overflow: hidden;
         >div {
           display: flex;
           align-items: center;
@@ -320,4 +324,6 @@ function submitBtn() {
       }
     }
   }
-}</style>
+}
+</style>
+  

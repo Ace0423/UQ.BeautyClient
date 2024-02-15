@@ -386,7 +386,7 @@ const handChooseColor = ((params: any) => {
                         </div>
                     </div>
                     <div class="choose-color">
-                        <RadioColorUI :selColorIndex="cardData.tucolor" :updataColorFn="handChooseColor" />
+                        <RadioColorUI :selColorIndex="cardData.tucolor" :updateColorFn="handChooseColor" />
                     </div>
                     <div class="hint-content">
                         <ol>

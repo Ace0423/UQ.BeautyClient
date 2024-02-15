@@ -70,7 +70,7 @@
                     <input
                       type="checkbox"
                       :checked="item.state == selStateRef"
-                      v-on:click="updataStutusFn(index, item)"
+                      v-on:click="updateStutusFn(index, item)"
                     />
                   </td>
                   <td>
@@ -99,7 +99,7 @@
     :showUIFn="showEditDetailUIHdr"
     :formInfo="selItem"
   />
-  <AddGoodsTypeUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" /> -->
+  <AddGoodsGroupUI v-if="showAddTypeRef" :showAddUIFn="showAddTypeFormHdr" /> -->
 </template>
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
@@ -207,7 +207,7 @@ function sorttheadHdr(name: number) {
 }
 let curChangeState: any = [];
 //改變狀態
-let updataStutusFn = (index: number, item: any) => {
+let updateStutusFn = (index: number, item: any) => {
   // item.state = selStateRef;
   item.changeState = selStateRef;
   curChangeState.push(item);
@@ -241,7 +241,7 @@ let updataStutusFn = (index: number, item: any) => {
   //   }
   // });
   // getGoodsDetailApi(
-  //   goodsTypesListRef.value[goodsTypesListValueRef.value].pgId,
+  //   goodsGroupsListRef.value[goodsGroupsListValueRef.value].pgId,
   //   0
   // );
 };

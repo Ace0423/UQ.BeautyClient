@@ -65,7 +65,7 @@ let formInputRef: any = ref({
 
 onBeforeFn();
 function onBeforeFn() {
-  getGoodsDetailApi(0, 0);
+  getGoodsDetailApi(0);
   for (let i = 0; i < props.selData.length; i++) {
     const element = props.selData[i];
     element.pId = element.pId ? element.pId : element.pid;
@@ -117,8 +117,7 @@ function submitBtn() {
       }
     }
   }
-
-  props.getDataFn(curGoodsData);
+  props.getDataFn(curGoodsData,formInputRef.value.goods);
   props.showCGoodsUIFn(false);
 }
 </script>

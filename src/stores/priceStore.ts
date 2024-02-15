@@ -357,7 +357,7 @@ export const usePriceStore = defineStore("priceStore", () => {
     try {
       const res = await apiAddTopUpCardInfoRequest(data);
       if (res.data.state == 1) {
-        updataTopUpCardList(res.data.data.table[0]);
+        updateTopUpCardList(res.data.data.table[0]);
       }
       return res.data;
     } catch (error) {
@@ -369,7 +369,7 @@ export const usePriceStore = defineStore("priceStore", () => {
     try {
       const res = await apiEditTopUpCardInfoRequest(data);
       if (res.data.state == 1) {
-        updataTopUpCardList(res.data.data.table[0]);
+        updateTopUpCardList(res.data.data.table[0]);
       }
       return res.data;
     } catch (error) {
@@ -377,7 +377,7 @@ export const usePriceStore = defineStore("priceStore", () => {
       return Promise.reject(error);
     }
   };
-  const updataTopUpCardList = (data: any) => {
+  const updateTopUpCardList = (data: any) => {
     if (topUpCardList.data.filter((item: any) => item.tuId == data.tuId).length > 0) {
       topUpCardList.data.findIndex((item: any) => {
         if (item.tuId == data.tuId) {

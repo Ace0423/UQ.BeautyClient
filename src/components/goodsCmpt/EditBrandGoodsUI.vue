@@ -1,21 +1,21 @@
 <template>
-  <div class="popup-mask2" v-on:click.self="showEditUI(false)">
+  <div class="popup-EditBrandGoodsUI" v-on:click.self="showEditUI(false)">
     <div>
       <div class="header">
-        <img :src="closeIcon" v-on:click="showEditUI(false)" />
-        <span>編輯商品群組</span>
+        <img :src="icon_closeX" v-on:click="showEditUI(false)" />
+        <span>編輯商品品牌</span>
       </div>
       <div class="main-content">
         <div class="input-item">
           <div class="link-bottom"></div>
           <div class="text-input">
-            <span>*群組名稱</span>
+            <span>*品牌名稱</span>
             <input v-model="formInputRef.name" placeholder="請輸入名稱" type="text" />
           </div>
-          <span class="p_error" v-if="ruleLists.ruleItem.groupName.is_error">
-            {{ ruleLists.ruleItem.groupName.warn }}
+          <span class="p_error" v-if="ruleLists.ruleItem.brandName.is_error">
+            {{ ruleLists.ruleItem.brandName.warn }}
           </span>
-          <div class="group-input">
+          <div class="brand-input">
             <span>服務列表</span>
             <div class="link-bottom"></div>
             <div class="check-item" name="check_item">
@@ -36,7 +36,7 @@
                   </tbody>
                 </table>
               </div>
-              <span class="link-url" v-on:click="showGroupUIFn(true)">加入服務列表</span>
+              <span class="link-url" v-on:click="showBrandUIFn(true)">加入商品列表</span>
               <div class="link-bottom"></div>
             </div>
           </div>
@@ -51,12 +51,12 @@
     </div>
   </div>
   <div v-if="showCGoodsRef" style="justify-content: center;">
-    <CbGoodsdDetailUI :showCGoodsUIFn="showGroupUIFn" :selData="formInputRef.selGoodsItems" :getDataFn="getCheckGoodsFn">
+    <CbGoodsdDetailUI :showCGoodsUIFn="showBrandUIFn" :selData="formInputRef.selGoodsItems" :getDataFn="getCheckGoodsFn">
     </CbGoodsdDetailUI>
   </div>
 </template>
 <script setup lang="ts">
-import closeIcon from "@/assets/Group32.svg";
+import icon_closeX from "@/assets/images/icon_closeX.png";
 import Icon from "@/assets/Icon zocial-guest.svg";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
@@ -66,9 +66,9 @@ import Alert from "../alertCmpt";
 import { showErrorMsg } from "@/types/IMessage";
 
 let apptstore = useApptStore();
-const { goodsGroupList } = storeToRefs(apptstore);
+const { } = storeToRefs(apptstore);
 const {
-  getGoodsGroupApi, updateGoodsGroupApi } = apptstore;
+  getGoodsBrandApi, updateGoodsBrandApi } = apptstore;
 const props = defineProps<{
   selData: any;
   showEditUI: Function;
@@ -81,7 +81,7 @@ let formInputRef: any = ref({
 
 onBefore();
 function onBefore() {
-  getGoodsGroupApi(props.selData.pgId, 1).then((res: any) => {
+  getGoodsBrandApi(props.selData.pbId, 1).then((res: any) => {
     setInputData(res[0]);
   });
 }
@@ -90,7 +90,7 @@ onMounted(() => {
 });
 
 function setInputData(params: any) {
-  formInputRef.value.name = params.pgTitle;
+  formInputRef.value.name = params.pbTitle;
   formInputRef.value.selGoodsItems = params.pIdList;
 }
 
@@ -99,7 +99,7 @@ function cancleGoodsFn(item: any, index: number) {
 }
 function submitBtn() {
   console.log("提交formInputRef", formInputRef.value);
-  ruleLists.ruleItem.groupName.value = formInputRef.value.name;
+  ruleLists.ruleItem.brandName.value = formInputRef.value.name;
   // if (!verify_all()) return;
   if (!checkVerify_all(ruleLists)) return;
 
@@ -110,14 +110,14 @@ function submitBtn() {
   }
 
   let apiData = {
-    pgId: props.selData.pgId,
-    pgTitle: formInputRef.value.name,
+    pbId: props.selData.pbId,
+    pbTitle: formInputRef.value.name,
     pIdList: goodsNums,
   };
   console.log("提交apiData", apiData);
 
   /**新增 */
-  updateGoodsGroupApi(apiData).then((res: any) => {
+  updateGoodsBrandApi(apiData).then((res: any) => {
     if (res.state == 1) {
       Alert.sussess("成功", 1000);
       setTimeout(() => {
@@ -129,7 +129,7 @@ function submitBtn() {
   });
 }
 
-function showGroupUIFn(params: any) {
+function showBrandUIFn(params: any) {
   showCGoodsRef.value = params;
 }
 
@@ -140,12 +140,12 @@ function getCheckGoodsFn(data: any) {
   console.log(111, data);
   formInputRef.value.selGoodsItems = data;
   // props.getDataFn(formInputRef.value);
-  showGroupUIFn(false);
+  showBrandUIFn(false);
 }
 //-------------------------------------form驗證
 const ruleLists: any = reactive({
   ruleItem: {
-    groupName: {
+    brandName: {
       label: "名稱",
       rules: {
         required: {
@@ -160,7 +160,7 @@ const ruleLists: any = reactive({
 </script>
 
 <style scoped lang="scss">
-.popup-mask2 {
+.popup-EditBrandGoodsUI {
   position: fixed;
   top: 0;
   left: 0;
@@ -297,7 +297,7 @@ const ruleLists: any = reactive({
           }
         }
 
-        .group-input {
+        .brand-input {
 
           >span {
             display: block;

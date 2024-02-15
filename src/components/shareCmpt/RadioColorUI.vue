@@ -45,10 +45,10 @@ let { allDiscountList } = storeToRefs(store);
 let { getAllDiscountApi } = store;
 let colorIndex = ref(1)
 const props = defineProps<{
-  updataColorFn: Function;
+  updateColorFn: Function;
   selColorIndex: any;
   coloarSize?: number;
-  // updataColorFn?: any;
+  // updateColorFn?: any;
 }>();
 
 const curColorIndex = ref(1);
@@ -85,7 +85,7 @@ let formInputRef: any = ref({
 function clickColorFn(data: any) {
   // props.selColorIndex = data
   colorIndex.value = data
-  props.updataColorFn(colorValues[colorIndex.value])
+  props.updateColorFn(colorValues[colorIndex.value])
 }
 </script>
 

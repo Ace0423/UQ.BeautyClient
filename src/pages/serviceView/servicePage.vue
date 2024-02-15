@@ -33,8 +33,9 @@
           <el-table-column label="操作" width="150">
             <template #default="scope">
               <div class="handle-drag">
-                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;"  @click="selectDataFn(filterServiceData[scope.$index])"/>
-                <img class="del_img" :src="Icon_del" @click="deleteHdr(scope.$index, filterServiceData[scope.$index])" />
+                <img class="edit_img" :src="Icon_edit" style=" width: 27px; margin:0px 10px ;"
+                  @click="selectDataFn(scope.row)" />
+                <img class="del_img" :src="Icon_del" @click="deleteHdr(scope.$index, scope.row)" />
               </div>
             </template>
           </el-table-column>
@@ -109,7 +110,8 @@ function showEditUIFn(index: number, item: any) {
 }
 function showEditDetailHdr(state: boolean) {
   showEditDetail.value = state;
-  getServiceDetailApi(0);
+  if (!state)
+    getServiceDetailApi(0);
 }
 
 //改變課程狀態
@@ -117,17 +119,17 @@ let changeStutusHdr = (index: number, item: any) => {
   let curdata: any = {
     sId: item.sId,
     display: !item.display,
-    color:item.color,
-    isBonusOpen:item.isBonusOpen,
-    isEditAccounting:item.isEditAccounting,
-    memo:item.memo,
-    nickName:item.nickName,
-    sgIdList:item.sgIdList,
-    subType:item.subType,
+    color: item.color,
+    isBonusOpen: item.isBonusOpen,
+    isEditAccounting: item.isEditAccounting,
+    memo: item.memo,
+    nickName: item.nickName,
+    sgIdList: item.sgIdList,
+    subType: item.subType,
     name: item.name,
     servicesTime: item.servicesTime,
     price: item.price,
-    subList:item.subList,
+    subList: item.subList,
   };
   updateServiceDetailApi(curdata).then((res: any) => {
     getServiceDetailApi(0);

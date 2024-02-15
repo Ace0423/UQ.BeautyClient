@@ -608,7 +608,7 @@ const addCouponBtn = () => {
   handAddCouponView();
 };
 const choiceImg = (e: any) => {
-  let a = document.querySelector(".updata-input");
+  let a = document.querySelector(".update-input");
   (a as HTMLElement).click();
 };
 const handkeFileChange = (e: any) => {
@@ -690,9 +690,9 @@ const handCancelTicketBtn = () => {
             </div>
             <div class="news-img">
               <p>附加圖片</p>
-              <input class="updata-input" type="file" ref="img" accept="image/gif,image/jpeg,image/jpg,image/png"
+              <input class="update-input" type="file" ref="img" accept="image/gif,image/jpeg,image/jpg,image/png"
                 @change="handkeFileChange" />
-              <div class="updata-btn">
+              <div class="update-btn">
                 <button @click="choiceImg">上傳圖片</button>
               </div>
             </div>
@@ -1011,9 +1011,9 @@ const handCancelTicketBtn = () => {
             </div>
             <div class="line-img">
               <p>附加圖片</p>
-              <input class="updata-input" type="file" ref="img" accept="image/gif,image/jpeg,image/jpg,image/png"
+              <input class="update-input" type="file" ref="img" accept="image/gif,image/jpeg,image/jpg,image/png"
                 @change="handkeFileChange" />
-              <div class="updata-btn">
+              <div class="update-btn">
                 <button @click="choiceImg">上傳圖片</button>
               </div>
             </div>
@@ -1490,7 +1490,7 @@ const handCancelTicketBtn = () => {
               width: 20%;
             }
 
-            >.updata-input {
+            >.update-input {
               text-align: center;
               border: transparent;
               display: none;
@@ -1500,7 +1500,7 @@ const handCancelTicketBtn = () => {
               border-radius: 0 5px 5px 0;
             }
 
-            >.updata-btn {
+            >.update-btn {
               text-align: center;
               border: transparent;
               border-left: solid 0.5px #a19f9f;
@@ -1974,7 +1974,7 @@ const handCancelTicketBtn = () => {
               width: 20%;
             }
 
-            >.updata-input {
+            >.update-input {
               text-align: center;
               border: transparent;
               display: none;
@@ -1984,7 +1984,7 @@ const handCancelTicketBtn = () => {
               border-radius: 0 5px 5px 0;
             }
 
-            >.updata-btn {
+            >.update-btn {
               text-align: center;
               border: transparent;
               border-left: solid 0.5px #a19f9f;

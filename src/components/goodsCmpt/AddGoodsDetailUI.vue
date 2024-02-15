@@ -219,7 +219,7 @@ function changeNameNo() {
   formInputRef.value.nameNo =
     GetRandomChar(3) + "-" + GetRandomNumStr(1, 99999);
 }
-function updataColorFn(params: any) {
+function updateColorFn(params: any) {
   formInputRef.value.color = params
 }
 //#region 規則

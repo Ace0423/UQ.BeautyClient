@@ -45,7 +45,7 @@ export const useMemberStore = defineStore("member", () => {
         try {
             const res = await apiPostMemberDataRequest(memberVal);
             if (res.data.state == 1) {
-                updataMemberList(res.data.data.table[0]);
+                updateMemberList(res.data.data.table[0]);
             }
             return res.data;
         } catch (error) {
@@ -79,7 +79,7 @@ export const useMemberStore = defineStore("member", () => {
         try {
             const res = await apiPostUpdateMemberDataRequest(memberVal);
             if (res.data.state == 1) {
-                updataMemberList(res.data.data.table[0]);
+                updateMemberList(res.data.data.table[0]);
             }
             return res.data
         } catch (error) {
@@ -88,7 +88,7 @@ export const useMemberStore = defineStore("member", () => {
         }
     };
 
-    const updataMemberList = (data: any) => {
+    const updateMemberList = (data: any) => {
         if (memberList.data.filter((item: any) => item.userId == data.userId).length > 0) {
             memberList.data.findIndex((item: any) => {
                 if (item.userId == data.userId) {
@@ -130,7 +130,7 @@ export const useMemberStore = defineStore("member", () => {
         try {
             const res = await apiPostGroupDataRequest(data);
             if (res.data.state == 1) {
-                updataGroupList(res.data.data);
+                updateGroupList(res.data.data);
             }
             return res.data
         } catch (error) {
@@ -142,7 +142,7 @@ export const useMemberStore = defineStore("member", () => {
         try {
             const res = await apiPutGroupDataRequest(data);
             if (res.data.state == 1) {
-                updataGroupList(res.data.data);
+                updateGroupList(res.data.data);
             }
             return res.data
         } catch (error) {
@@ -150,7 +150,7 @@ export const useMemberStore = defineStore("member", () => {
             return Promise.reject(error);
         }
     };
-    const updataGroupList = (data: any) => {
+    const updateGroupList = (data: any) => {
         if (groupListData.data.filter((item: any) => item.groupId == data.groupId).length > 0) {
             groupListData.data.findIndex((item: any) => {
                 if (item.groupId == data.groupId) {
@@ -191,7 +191,7 @@ export const useMemberStore = defineStore("member", () => {
             }]
             const res = await apiPostGroupInfoRequest(val);
             if (res.data.state == 1) {
-                updataGroupInfoData(data, res.data.data[0]);
+                updateGroupInfoData(data, res.data.data[0]);
             }
             return res.data.state;
         } catch (error) {
@@ -212,7 +212,7 @@ export const useMemberStore = defineStore("member", () => {
             console.log(error);
         }
     };
-    const updataGroupInfoData = (data: any, res: any) => {
+    const updateGroupInfoData = (data: any, res: any) => {
         let val = {
             groupId: res.groupId,
             label: data.label,

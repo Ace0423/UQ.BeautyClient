@@ -98,7 +98,8 @@ const handCancel = (() => {
                     <h1>店內時間不影響線上營業時間</h1>
                     <p>店內營業時間為店家端行事曆使用，消費者線上預約須分別設定</p>
                 </div>
-                <button>前往設定</button>
+                <button><router-link
+                        to="/settingView/onlineWebSettingsView/reservationSettingsView/onlineBusinessHoursView">前往設定</router-link></button>
             </div>
             <table>
                 <tbody>
@@ -209,6 +210,10 @@ const handCancel = (() => {
                 background-color: #84715c;
                 color: #fff;
                 font-size: 18px;
+
+                >a {
+                    color: #fff;
+                }
             }
         }
 

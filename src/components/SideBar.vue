@@ -57,7 +57,7 @@ onMounted(() => {
             <img :src="bankImg" /><router-link to="/memberBankView/memberBankView">儲值金</router-link>
           </li> -->
           <li>
-            <img :src="reportImg" /><router-link to="/reportView/realTimeView">報表</router-link>
+            <img :src="reportImg" /><router-link to="/reportView/businessView">報表</router-link>
           </li>
           <li>
             <img :src="settingImg" /><router-link to="/settingView">設定</router-link>

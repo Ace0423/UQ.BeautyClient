@@ -115,14 +115,14 @@ onMounted(() => {
                         @click="headWitchBox(1)" >營業報表</router-link>
                 </div>
                 <div class="condition-block" v-if="idx == 1">
-                    <el-config-provider :locale="zhCn">
+                    <!-- <el-config-provider :locale="zhCn">
                         <el-date-picker v-model="value2" type="daterange" unlink-panels range-separator="-"
                             start-placeholder="開始時間" end-placeholder="結束時間" :shortcuts="shortcuts" size=large />
-                    </el-config-provider>
+                    </el-config-provider> -->
                 </div>
-                <el-select v-model="uId" class="filter-block m-2" placeholder="" style="width: 240px;">
+                <!-- <el-select v-model="uId" class="filter-block m-2" placeholder="" style="width: 240px;">
                     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-                </el-select>
+                </el-select> -->
             </div>
             <router-view />
         </div>

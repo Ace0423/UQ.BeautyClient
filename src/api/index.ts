@@ -5,7 +5,7 @@ import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRole
 import { getPermissionsListRequest, putOptionRoleRequest,getApiPermissionsListRequest,postApiPermissionsListRequest,updateApiPermissionsListRequest } from "./settingRequest";
 import { getTimeTablesRequest,postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest,getCompanyInfoRequest,putCompanyInfoRequest,getMessagesRequest,insertMessagesRequest,updateMessagesRequest,getBlackListSetRequest,putBlackListSetRequest,getLineOAListRequest,putLineOAListRequest,getMessageRecords,getInfoRecord } from "./companyRequest";
 import { getTopUpCardListRequest,addTopUpCardInfoRequest,editTopUpCardInfoRequest } from "./topUpCardRequest";
-import { getOnlineBusinessHours,postOnlineBusinessHours } from "./OnlineRequest";
+import { getOnlineBusinessHours,postOnlineBusinessHours,getOnlinePayMeth,postOnlinePayMeth } from "./OnlineRequest";
 
 export const apiPostLoginRequest = postLoginRequest;
 export const apiGetUserNameRequest = getUserNameRequest;
@@ -79,3 +79,5 @@ export const apiEditTopUpCardInfoRequest = editTopUpCardInfoRequest;
 
 export const apiGetOnlineBusinessHours = getOnlineBusinessHours;
 export const apiPostOnlineBusinessHours = postOnlineBusinessHours;
+export const apiGetOnlinePayMeth = getOnlinePayMeth;
+export const apiPostOnlinePayMeth = postOnlinePayMeth;

@@ -19,7 +19,7 @@ const businessHoursList = computed(() => {
 })
 onMounted(() => {
     getOnlineBusinessHours()
-        .then((res) => {
+        .then((res:any) => {
             if (res.state == 2) {
                 Alert.warning(showErrorMsg(res.msg), 2000);
             }
@@ -50,9 +50,8 @@ const handCancel = (() => {
     businessHoursData.data = JSON.parse(JSON.stringify(onlineBusinessHoursList.value.data));
 });
 const handSubmit = () => {
-    console.log(businessHoursData.data)
     postOnlineBusinessHours(businessHoursData.data)
-        .then((res) => {
+        .then((res:any) => {
             if (res.state == 1) {
                 Alert.warning("修改成功", 2000);
             }

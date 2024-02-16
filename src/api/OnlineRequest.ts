@@ -16,3 +16,15 @@ export const postOnlineBusinessHours = (data: any) => {
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return managerRequest.post("/OnlineWeb/OnlineBusinessHours", data);
 }
+
+export const getOnlinePayMeth = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.get("/OnlineWeb/OnlinePayMeth", { params: data });
+}
+
+export const postOnlinePayMeth = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.post("/OnlineWeb/OnlinePayMeth", data);
+}

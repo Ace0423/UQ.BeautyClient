@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
-import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest, apiGetBlackListSetRequest, apiPutBlackListSetRequest, apiGetMessageRecords, apiGetInfoRecord, apiGetOnlineBusinessHours, apiPostOnlineBusinessHours } from "@/api/index";
+import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest, apiGetBlackListSetRequest, apiPutBlackListSetRequest, apiGetMessageRecords, apiGetInfoRecord, apiGetOnlineBusinessHours, apiPostOnlineBusinessHours, apiGetOnlinePayMeth,apiPostOnlinePayMeth } from "@/api/index";
 import { getCompany } from "@/plugins/js-cookie";
 export const useCompanyStore = defineStore("company", () => {
     const businessHoursList: any = reactive({ data: [] });
     const onlineBusinessHoursList: any = reactive({ data: [] });
+    const onlinePayMethList: any = reactive({ data: [] });
     const checkOutTypeList: any = reactive({ data: [] });
     const companyInfoList: any = reactive({ data: [] });
     const companyBlackListSet: any = reactive({ data: [] });
@@ -270,7 +271,6 @@ export const useCompanyStore = defineStore("company", () => {
             data.data[index].wbUnavailPeriods = JSON.stringify(data.data[index].wbUnavailPeriods);
         }
         try {
-            console.log(data)
             const res = await apiPostOnlineBusinessHours(data);
             if (res.data.state == 1) {
                 updataOnlineBusinessHoursList(res.data.data);
@@ -287,6 +287,35 @@ export const useCompanyStore = defineStore("company", () => {
             onlineBusinessHoursList.data.data[index].wbUnavailPeriods = JSON.parse(onlineBusinessHoursList.data.data[index].wbUnavailPeriods);
         }
     }
+    const getOnlinePayMeth = async () => {
+        let data = {
+            cid: getCompany("userData"),
+            pageIndex: 0,
+            count: 0
+        }
+        try {
+            const res = await apiGetOnlinePayMeth(data);
+            if (res.data.state == 1) {
+                onlinePayMethList.data = res.data.data;
+            }
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const postOnlinePayMeth = async (data: any) => {
+        try {
+            const res = await apiPostOnlinePayMeth(data);
+            if (res.data.state == 1) {
+                onlinePayMethList.data = res.data.data;
+            }
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
     return {
         businessHoursList,
         getTimeTablesRequest,
@@ -309,6 +338,9 @@ export const useCompanyStore = defineStore("company", () => {
         getInfoRecord,
         onlineBusinessHoursList,
         getOnlineBusinessHours,
-        postOnlineBusinessHours
+        postOnlineBusinessHours,
+        onlinePayMethList,
+        getOnlinePayMeth,
+        postOnlinePayMeth
     }
 })

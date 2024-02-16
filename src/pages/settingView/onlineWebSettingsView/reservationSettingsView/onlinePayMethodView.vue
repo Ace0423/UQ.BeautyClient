@@ -1,10 +1,59 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import { storeToRefs } from "pinia";
+import Alert from "@/components/alertCmpt";
+import { useCompanyStore } from "@/stores/company";
+import { useCounterStore } from "@/stores/counter";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
+const companyStore = useCompanyStore();
+const { getOnlinePayMeth,postOnlinePayMeth } = companyStore;
+const { onlinePayMethList } = storeToRefs(companyStore);
 const timer: any = [{ value: 1, text: '1天前' }, { value: 2, text: '2天前' }, { value: 3, text: '3天前' }, { value: 4, text: '4天前' },]
-const timeVal = ref(1)
-onMounted(() => {
-
+const payMethListData: any = reactive({ data: [] });
+const payMethList = computed(() => {
+    payMethListData.data = JSON.parse(JSON.stringify(onlinePayMethList.value.data));
+    return payMethListData.data;
 })
+onMounted(() => {
+    getOnlinePayMeth()
+        .then((res: any) => {
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        })
+})
+const handCancel = (() => {
+    payMethListData.data = JSON.parse(JSON.stringify(onlinePayMethList.value.data));
+});
+const handSubmit = () => {
+    postOnlinePayMeth(payMethListData.data)
+        .then((res: any) => {
+            if (res.state == 1) {
+                Alert.warning("修改成功", 2000);
+            }
+            if (res.state == 2) {
+                Alert.warning(showErrorMsg(res.msg), 2000);
+            }
+        })
+        .catch((e: any) => {
+            Alert.warning(showHttpsStatus(e.response.status), 2000);
+            if (e.response.status == 401) {
+                setTimeout(() => {
+                    handLogOut();
+                }, 2000);
+            }
+        })
+};
 </script>
 <template>
     <div class="wrap">
@@ -15,14 +64,14 @@ onMounted(() => {
             </div>
             <div class="pay-setting">
                 <div class="switch">
-                    <label><input class="mui-switch" type="checkbox"></label>
+                    <label><input class="mui-switch" type="checkbox" v-model="payMethList.onSitePayment"></label>
                     <div class="switch-content">
                         <p><strong>啟用現場到付</strong></p>
                         <p>開啟後將提供限駔到付選項，消費者需現場付款。</p>
                     </div>
                 </div>
                 <div class="switch">
-                    <label><input class="mui-switch" type="checkbox"></label>
+                    <label><input class="mui-switch" type="checkbox" v-model="payMethList.cancellation"></label>
                     <div class="switch-content">
                         <p><strong>啟用現場到付允許取消預約</strong></p>
                         <p>現場到付預約成立後，是否允許消費者取消預約。</p>
@@ -31,7 +80,7 @@ onMounted(() => {
                 <div class="deadline">
                     <p>取消期限</p>
                     <div class="deadline-select">
-                        <select v-model="timeVal">
+                        <select v-model="payMethList.deadlineDays">
                             <option disabled value="">請選擇優惠方式</option>
                             <option v-for="item in timer" :key="item.value" :value="item.value">
                                 {{ item.text }}</option>
@@ -54,8 +103,8 @@ onMounted(() => {
             </div>
         </div>
         <div class="bottom-block">
-            <button>取消變更</button>
-            <button>儲存變更</button>
+            <button v-on:click="handCancel()">取消變更</button>
+            <button v-on:click="handSubmit()">儲存變更</button>
         </div>
     </div>
 </template>
@@ -204,7 +253,7 @@ onMounted(() => {
                 }
 
                 >button {
-                width: 10%;
+                    width: 10%;
                     border: transparent;
                 }
             }

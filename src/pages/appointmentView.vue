@@ -5,7 +5,7 @@
       </Header>
       <div class="top_menu">
         <div>
-          <img :src="btn_msg_ico" @click="showNoticeFn(true)"/>
+          <img :src="btn_msg_ico" @click="showNoticeFn(true)" />
           <el-dropdown trigger="click" @command="handleCommand">
             <span class="el-dropdown-link">
               <img :src="btn_add_ico" />
@@ -260,6 +260,7 @@ function getApptInfoFn(year: number = 0, month: number = 0, date: number = curre
   });
   //預先呼叫api獲取數據
   getApptDataApi("", "", year, month).then((res: any) => {
+    showFullUIFn(false);
     // resetApptTable(year, month, date)
     tuiList.value = [];
     for (let i = 0; i < tuiBookingListRef.value.length; i++) {
@@ -279,6 +280,7 @@ function getApptInfoFn(year: number = 0, month: number = 0, date: number = curre
       })
     }
     // getRestList(0, year, month, date);
+  showFullUIFn(true);
   });
   getDayOffList(0, year, month, date);
   getRestList(0, year, month, date);
@@ -464,7 +466,7 @@ const showApptInfoHdr = (state: boolean) => {
     getApptInfoFn(currentYear.value, currentMonth.value + 1);
   }
 };
-function showNoticeFn(state:boolean) {
+function showNoticeFn(state: boolean) {
   showNoticeRef.value = state;
 }
 //改變預約狀態

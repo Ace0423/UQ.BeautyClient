@@ -179,6 +179,12 @@ function onBefore() {
     } else {
         getOrderInfoApi("", props.selItemData.bkListNo).then((res) => {
             formInputRef.value.orderInfo = res;
+            
+            let amount = formInputRef.value.orderInfo.coAmount;
+            if (formInputRef.value.orderInfo.coUseTopUpInfo) {
+                amount -= formInputRef.value.orderInfo.coUseTopUpInfo.usePrice;
+            }
+            totalAmountRef.value = amount;
         })
     }
 }

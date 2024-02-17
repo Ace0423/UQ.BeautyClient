@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
-import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest, apiGetBlackListSetRequest, apiPutBlackListSetRequest, apiGetMessageRecords, apiGetInfoRecord, apiGetOnlineBusinessHours, apiPostOnlineBusinessHours, apiGetOnlinePayMeth,apiPostOnlinePayMeth } from "@/api/index";
+import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest, apiGetBlackListSetRequest, apiPutBlackListSetRequest, apiGetMessageRecords, apiGetInfoRecord, apiGetOnlineBusinessHours, apiPostOnlineBusinessHours, apiGetOnlinePayMeth,apiPostOnlinePayMeth,apiGetOnlineOtherSettings } from "@/api/index";
 import { getCompany } from "@/plugins/js-cookie";
 export const useCompanyStore = defineStore("company", () => {
     const businessHoursList: any = reactive({ data: [] });
     const onlineBusinessHoursList: any = reactive({ data: [] });
     const onlinePayMethList: any = reactive({ data: [] });
+    const onlineOtherSettingList: any = reactive({ data: [] });
     const checkOutTypeList: any = reactive({ data: [] });
     const companyInfoList: any = reactive({ data: [] });
     const companyBlackListSet: any = reactive({ data: [] });
@@ -316,6 +317,23 @@ export const useCompanyStore = defineStore("company", () => {
             return Promise.reject(error);
         }
     };
+    const getOnlineOtherSettings = async () => {
+        let data = {
+            cid: getCompany("userData"),
+            pageIndex: 0,
+            count: 0
+        }
+        try {
+            const res = await apiGetOnlineOtherSettings(data);
+            if (res.data.state == 1) {
+                onlineOtherSettingList.data = res.data.data;
+            }
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
     return {
         businessHoursList,
         getTimeTablesRequest,
@@ -341,6 +359,8 @@ export const useCompanyStore = defineStore("company", () => {
         postOnlineBusinessHours,
         onlinePayMethList,
         getOnlinePayMeth,
-        postOnlinePayMeth
+        postOnlinePayMeth,
+        onlineOtherSettingList,
+        getOnlineOtherSettings
     }
 })

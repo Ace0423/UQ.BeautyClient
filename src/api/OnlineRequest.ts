@@ -28,3 +28,9 @@ export const postOnlinePayMeth = (data: any) => {
     managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return managerRequest.post("/OnlineWeb/OnlinePayMeth", data);
 }
+
+export const getOnlineOtherSettings = (data: any) => {
+    let token: any = getToken('token');
+    managerRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return managerRequest.get("/OnlineWeb/OnlineOtherSettings", { params: data });
+}

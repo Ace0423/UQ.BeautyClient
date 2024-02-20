@@ -2,10 +2,11 @@ import { postLoginRequest, getUserNameRequest } from "./authRequest";
 import { getMemberListRequest, postMemberDataRequest, postUpdateMemberDataRequest, getGroupDataRequest, putGroupDataRequest, postGroupDataRequest, getGroupInfoRequest, postGroupInfoRequest, deleteGroupInfoRequest, } from "./memberRequest";
 import { getMemberBankListRequest, postMemberBankRequest, getMemberBankInfoListRequest, getMemberBankDetailRequest, putMemberBankInfoRequest } from "./memberBankRequest";
 import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest, getWorkingHoursRequest, postWorkingHoursRequest, getWorkingDefaultRequest, postWorkingDefaultRequest, putWorkingDefaultRequest } from "./managerRequest";
-import { getPermissionsListRequest, putOptionRoleRequest,getApiPermissionsListRequest,postApiPermissionsListRequest,updateApiPermissionsListRequest } from "./settingRequest";
-import { getTimeTablesRequest,postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest,getCompanyInfoRequest,putCompanyInfoRequest,getMessagesRequest,insertMessagesRequest,updateMessagesRequest,getBlackListSetRequest,putBlackListSetRequest,getLineOAListRequest,putLineOAListRequest,getMessageRecords,getInfoRecord } from "./companyRequest";
-import { getTopUpCardListRequest,addTopUpCardInfoRequest,editTopUpCardInfoRequest } from "./topUpCardRequest";
-import { getOnlineBusinessHours,postOnlineBusinessHours,getOnlinePayMeth,postOnlinePayMeth,getOnlineOtherSettings } from "./OnlineRequest";
+import { getPermissionsListRequest, putOptionRoleRequest, getApiPermissionsListRequest, postApiPermissionsListRequest, updateApiPermissionsListRequest } from "./settingRequest";
+import { getTimeTablesRequest, postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest, getCompanyInfoRequest, putCompanyInfoRequest, getMessagesRequest, insertMessagesRequest, updateMessagesRequest, getBlackListSetRequest, putBlackListSetRequest, getLineOAListRequest, putLineOAListRequest, getMessageRecords, getInfoRecord } from "./companyRequest";
+import { getTopUpCardListRequest, addTopUpCardInfoRequest, editTopUpCardInfoRequest } from "./topUpCardRequest";
+import { getOnlineBusinessHours, postOnlineBusinessHours, getOnlinePayMeth, postOnlinePayMeth, getOnlineOtherSettings, postOnlineOtherSettings } from "./onlineRequest";
+import { getTotalSalesRequest, getManagerSalesRequest, getTotalBookingRequest, getAverageOrderRequest, getVisitorCountRequest, getVisitorHoursRequest, getServiceProportionRequest } from "./reportRequest";
 
 export const apiPostLoginRequest = postLoginRequest;
 export const apiGetUserNameRequest = getUserNameRequest;
@@ -82,3 +83,12 @@ export const apiPostOnlineBusinessHours = postOnlineBusinessHours;
 export const apiGetOnlinePayMeth = getOnlinePayMeth;
 export const apiPostOnlinePayMeth = postOnlinePayMeth;
 export const apiGetOnlineOtherSettings = getOnlineOtherSettings;
+export const apiPostOnlineOtherSettings = postOnlineOtherSettings;
+
+export const apiGetTotalSalesRequest = getTotalSalesRequest;
+export const apiGetTotalBookingRequest = getTotalBookingRequest;
+export const apiGetManagerSalesRequest = getManagerSalesRequest;
+export const apiGetAverageOrderRequest = getAverageOrderRequest;
+export const apiGetVisitorCountRequest = getVisitorCountRequest;
+export const apiGetVisitorHoursRequest = getVisitorHoursRequest;
+export const apiGetServiceProportionRequest = getServiceProportionRequest;

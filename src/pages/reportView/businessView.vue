@@ -311,7 +311,7 @@ const getReportDate = () => {
             }
         })
     getManagerSales(date).then((res: any) => {
-        managerSalesOption.xAxis.data = managerSalesList.value.data.data;
+        managerSalesOption.xAxis.data = managerSalesList.value.data.managerName;
         managerSalesOption.series[0].data = managerSalesList.value.data.servicesPrice;
         managerSalesOption.series[1].data = managerSalesList.value.data.productPrice;
         if (res.state == 2) {

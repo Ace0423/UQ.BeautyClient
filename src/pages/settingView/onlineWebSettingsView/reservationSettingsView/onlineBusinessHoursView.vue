@@ -187,6 +187,7 @@ const handSubmit = () => {
                         width: 15%;
                         display: flex;
                         justify-content: center;
+                        align-items: center;
                         border-right: solid 1px #c1bdb8;
 
                         input {

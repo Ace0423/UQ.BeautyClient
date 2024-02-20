@@ -296,7 +296,7 @@ const getReportDate = () => {
             }
         })
     getTotalBooking(date).then((res: any) => {
-        totalBookingOption.xAxis.data = totalSalesList.value.data.date;
+        totalBookingOption.xAxis.data = totalBookingList.value.data.date;
         totalBookingOption.series[0].data = totalBookingList.value.data.count;
         if (res.state == 2) {
             Alert.warning(showErrorMsg(res.msg), 2000);
@@ -507,7 +507,6 @@ const filterChang = () => {
                 <h2>你的顧客都是哪些人呢?</h2>
                 <div class="count-block">
                     <h2>來客數</h2>
-                    <p>今日的來客數</p>
                     <h1>{{ visitorCountList.data.visitorTotal }}</h1>
                     <div class="sale-info">
                         <img style="background-color: #1a73e8" />
@@ -535,7 +534,7 @@ const filterChang = () => {
                     <p>平日熱門時段 週一12:00</p>
                     <p>假日熱門時段 週日10:00</p>
                     <div id="time-period" style="height: 500px; overflow: auto;" v-if="visitorHoursList.data.hourWeekList">
-                        <apexchart type="heatmap" height="400" :options="chartOptions"
+                        <apexchart type="heatmap" height="1000" :options="chartOptions"
                             :series="visitorHoursList.data.hourWeekList"></apexchart>
                     </div>
                 </div>
@@ -550,7 +549,7 @@ const filterChang = () => {
                         <el-table :data="serviceProportionList.data.serviceList" height="250" style="width: 100%">
                             <el-table-column prop="name" label="服務排行佔比" width='150' />
                             <el-table-column prop="price" label="淨值" />
-                            <el-table-column prop="proportion" label="佔比" />
+                            <el-table-column prop="quantityPct" label="佔比" />
                             <el-table-column prop="quantity" label="數量" />
                         </el-table>
                     </div>

@@ -14,7 +14,14 @@
       <div class="content-main">
         <el-table :data="filterGoodsData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
           :header-cell-style="headerRowStyle">
-          <el-table-column prop="pCode" label="產品編號" min-width="30%" :sort-by="['pCode']" sortable />
+          <el-table-column prop="pCode" label="產品編號" min-width="30%" :sort-by="['pCode']" sortable>
+            <template #default="scope">
+              <div class="pCode-msg">
+                <img v-if="scope.row.imageSmall" :src="scope.row.imageSmall" width="30" height="30" />
+                <span>{{ scope.row.pCode }}</span>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column prop="pName" label="產品名稱" min-width="30%" sortable />
           <el-table-column prop="price" label="售價(NT)" min-width="20%" sortable />
           <el-table-column label="上架" min-width="10%">
@@ -445,6 +452,17 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
           >tr>td:nth-child(5) {
             width: 15%;
             min-width: 85px;
+          }
+
+        }
+      }
+
+      .el-table {
+        .pCode-msg {
+          display: flex;
+          align-items: center;
+          >span{
+            margin-left: 5px;
           }
         }
       }

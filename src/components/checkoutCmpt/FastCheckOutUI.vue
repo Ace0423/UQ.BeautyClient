@@ -158,7 +158,7 @@
             </div>
             <div class="link-bottom"></div>
             <div class="pay-msg">
-              <span>應收金額</span>
+              <span>應收金額<span v-if="formInputRef.customerCount>1">({{ formInputRef.customerCount }}人)</span></span>
               <span class="price-msg"> ${{ finalAmountCpt }}</span>
             </div>
             <div class="customer-submit">
@@ -263,6 +263,7 @@ function onBeforeFn() {
     getApptDataApi("", props.selData.bkListNo).then((res) => {
       for (let i = 0; i < res.length; i++) {
         const element = res[i];
+        formInputRef.value.customerCount = element.customerCount;
         element.serviceInfo.managerInfo = element.managerInfo
         getItemInfoFn({ selectService: element.serviceInfo })
       }
@@ -310,7 +311,7 @@ let payAmountCpt = computed(() => {
   //   }
   //   amount -= formInputRef.value.useTopUpPrice;
   // }
-
+  amount = amount * formInputRef.value.customerCount;
   return amount
 });
 let finalAmountCpt = computed(() => {
@@ -324,8 +325,9 @@ let finalAmountCpt = computed(() => {
     } else {
       formInputRef.value.useTopUpPrice = curUseBalance;
     }
-    finalAmount -= formInputRef.value.useTopUpPrice;
   }
+  finalAmount= finalAmount-formInputRef.value.useTopUpPrice;
+  // finalAmount = finalAmount * parseInt(formInputRef.value.customerCount);
 
   return finalAmount
 });

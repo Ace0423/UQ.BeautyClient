@@ -174,6 +174,9 @@ onMounted(() => {
 //新增分類-顯示
 let showCheckOutUIHdr = (state: boolean) => {
   showCheckOutRef.value = state;
+  if (!state) {
+    props.showUIHdr(state)
+  }
   // getGoodsGroupApi(0);
 };
 

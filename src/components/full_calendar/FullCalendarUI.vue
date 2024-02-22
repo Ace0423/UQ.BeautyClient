@@ -6,6 +6,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import { INITIAL_EVENTS, INITIAL_RESOURCES, createEventId } from './event-utils';
 import type { DateSelectArg, EventApi, EventClickArg } from '@fullcalendar/core';
+import { goods_basicImg } from '@/utils/utils';
 
 export default {
   components: {
@@ -88,6 +89,14 @@ export default {
         slotDuration: "00:15", // 事件轴以15分钟为一刻度
         eventMinHeight: "15", // 事件最小高度
         resources: [],
+        resourceLabelDidMount: function (info: any) {
+          ////大頭貼
+          // var questionMark = document.createElement('img');
+          // questionMark.src = goods_basicImg;
+          // questionMark.width = 20;
+          // questionMark.height = 20;
+          // info.el.appendChild(questionMark);
+        },
         events: [],
         select: this.handleDateSelect,
         eventClick: this.handleEventClick,
@@ -295,9 +304,9 @@ export default {
     <div class='content-main'>
       <FullCalendar id="box1" class='content-calendar' :options='calendarOptions' ref="fullCalendar">
         <template v-slot:eventContent='arg'>
-          <!-- <b>{{ arg.timeText }}</b>
-          <i>{{ arg.event.title }}</i> -->
-          <!-- <span>{{ }}</span> -->
+          <!-- <b>{{ arg }}</b>
+          <i>{{ arg.event.title }}</i>
+          <span>{{ }}</span> -->
         </template>
       </FullCalendar>
     </div>

@@ -117,13 +117,16 @@ onMounted(() => {
       <div class="consumption-frame" v-if="simpleView">
         <div class="item-tab">
           <button :class="currentIndex == 0 ? 'active' : ''" v-on:click="changeTab(0)">
-            消費表現
+            <nobr>消費表現</nobr>
           </button>
           <button :class="currentIndex == 1 ? 'active' : ''" v-on:click="changeTab(1)">
-            消費紀錄
+            <nobr>消費紀錄</nobr>
           </button>
           <button :class="currentIndex == 2 ? 'active' : ''" v-on:click="changeTab(2)">
-            儲值紀錄
+            <nobr>儲值紀錄</nobr>
+          </button>
+          <button :class="currentIndex == 2 ? 'active' : ''" v-on:click="changeTab(2)">
+            <nobr>儲值紀錄</nobr>
           </button>
         </div>
         <div class="consumption-content">
@@ -207,12 +210,13 @@ onMounted(() => {
       display: flex;
       height: 100%;
       flex-direction: column;
-      min-width: 360px;
+      min-width: 300px;
       margin: 0 10px;
 
       >.info-head {
         justify-content: space-between;
         display: flex;
+        height: 65px;
 
         >img {
           justify-content: center;
@@ -224,7 +228,7 @@ onMounted(() => {
         position: relative;
         border-radius: 10px;
         box-shadow: inset 0 10px 6px 0 rgba(0, 0, 0, 0.16);
-        min-width: 360px;
+        min-width: 300px;
         border: solid 1px #707070;
         height: calc(99% - 65px);
 
@@ -269,7 +273,7 @@ onMounted(() => {
             width: 60px;
             height: 60px;
             clip-path: circle(50% at 50% 50%);
-           
+
           }
 
           .edit-btn {
@@ -339,19 +343,20 @@ onMounted(() => {
 
       >.item-tab {
         display: flex;
-
-        margin: 20px 10px 8px;
-
+        overflow: auto;
+        width: 300px;
+        height: 65px;
         >button {
           // display: flex;
           justify-content: center;
           align-items: center;
           border: none;
+          margin: 5px;
           // width: 120px;
           // height: 45px;
-          border-radius: 10px 10px 0 0;
+          // border-radius: 10px 10px 0 0;
           background: transparent;
-          font-size: 26px;
+          font-size: 20px;
           font-weight: bold;
           font-family: HeitiTC;
           color: #717171;
@@ -369,7 +374,7 @@ onMounted(() => {
       >.consumption-content {
         border-radius: 10px;
         box-shadow: inset 0 10px 6px 0 rgba(0, 0, 0, 0.16);
-        min-width: 360px;
+        min-width: 300px;
         border: solid 1px #707070;
         height: calc(99% - 65px);
 
@@ -383,7 +388,7 @@ onMounted(() => {
             color: #717171;
 
             >h1 {
-              font-size: 30px;
+              font-size: 20px;
             }
 
             >p {

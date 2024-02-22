@@ -2,9 +2,8 @@
 import { ref } from 'vue';
 import { storeToRefs } from "pinia";
 import apexchart from 'vue3-apexcharts';
-import Echarts from "@/components/ReEcharts/index.vue";
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
-import type { ECharts, EChartsOption } from 'echarts';
+import * as echarts from 'echarts';
 import { useReportStore } from "@/stores/report";
 import { useCounterStore } from "@/stores/counter";
 import Alert from "@/components/alertCmpt";
@@ -16,92 +15,110 @@ const { getTotalSales, getTotalBooking, getManagerSales, getAverageOrder, getVis
 const { totalSalesList, totalBookingList, managerSalesList, averageOrderList, visitorCountList, visitorHoursList, serviceProportionList, } = storeToRefs(reportStore);
 const time = ref<Date[]>([]);
 const isShowEcharts = ref(true);
-const salesOption = ref();
-const totalSalesOption: EChartsOption = reactive({
-    xAxis: {
-        type: 'category',
-        data: totalSalesList.value.data.date
-    },
-    yAxis: {
-        type: 'value'
-    },
-    series: [
-        {
-            itemStyle: {
-                color: '#1a73e8'
-            },
-            data: totalSalesList.value.data.servicePriceList,
-            type: 'bar'
+const totalSalesChart = ref<HTMLElement>();
+const myChart1 = ref<any>();
+const initTotalSalesEcharts = (() => {
+    myChart1.value = echarts.init(totalSalesChart.value!);
+    myChart1.value.setOption({
+        xAxis: {
+            data: totalSalesList.value.data.date
         },
-        {
-            itemStyle: {
-                color: '#d1687f'
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                itemStyle: {
+                    color: '#1a73e8'
+                },
+                data: totalSalesList.value.data.servicePriceList,
+                type: 'bar'
             },
-            data: totalSalesList.value.data.productPriceList,
-            type: 'bar'
-        }
-    ]
-});
-const totalBookingOption: EChartsOption = reactive({
-    xAxis: {
-        type: 'category',
-        data: totalBookingList.value.data.date
-    },
-    yAxis: {
-        type: 'value'
-    },
-    series: [
-        {
-            data: totalBookingList.value.data.count,
-            type: 'line'
-        }
-    ]
+            {
+                itemStyle: {
+                    color: '#d1687f'
+                },
+                data: totalSalesList.value.data.productPriceList,
+                type: 'bar'
+            }
+        ]
+    });
+})
+const totalBookingChart = ref<HTMLElement>();
+const myChart2 = ref<any>();
+const initTotalBookingEcharts = (() => {
+    myChart2.value = echarts.init(totalBookingChart.value!);
+    myChart2.value.setOption({
+        xAxis: {
+            data: totalBookingList.value.data.date
+        },
+        yAxis: {
+        },
+        series: [
+            {
+                data: totalBookingList.value.data.count,
+                type: 'line'
+            }
+        ]
+    });
 })
 const turnoverData: any = [
 
 ];
-const managerSalesOption: EChartsOption = reactive({
-    xAxis: {
-        type: 'category',
-        data: managerSalesList.value.data.managerName
-    },
-    yAxis: {
-        type: 'value'
-    },
-    series: [
-        {
-            itemStyle: {
-                color: '#1a73e8'
-            },
-            data: managerSalesList.value.data.servicesPrice,
-            type: 'bar'
+const managerSalesChart = ref<HTMLElement>();
+const myChart3 = ref<any>();
+const initManagerSalesEcharts = (() => {
+    myChart3.value = echarts.init(managerSalesChart.value!);
+    myChart3.value.setOption({
+        xAxis: {
+            data: managerSalesList.value.data.managerName
         },
-        {
-            itemStyle: {
-                color: '#d1687f'
+        yAxis: {
+        },
+        series: [
+            {
+                itemStyle: {
+                    color: '#1a73e8'
+                },
+                data: managerSalesList.value.data.servicesPrice,
+                type: 'bar'
             },
-            data: managerSalesList.value.data.productPrice,
-            type: 'bar'
-        }
-    ]
-});
-const averageOrderOption: EChartsOption = reactive({
-    xAxis: {
-        type: 'category',
-        data: averageOrderList.value.data.date
-    },
-    yAxis: {
-        type: 'value'
-    },
-    series: [
-        {
-            data: averageOrderList.value.data.averagePrice,
-            type: 'line'
-        }
-    ]
+            {
+                itemStyle: {
+                    color: '#d1687f'
+                },
+                data: managerSalesList.value.data.productPrice,
+                type: 'bar'
+            }
+        ]
+    });
 })
-const visitorCountOption: EChartsOption = reactive({
-    tooltip: {
+const averageOrderChart = ref<HTMLElement>();
+const myChart4 = ref<any>();
+const initAverageOrderEcharts = (() => {
+    myChart4.value = echarts.init(averageOrderChart.value!);
+    myChart4.value.setOption({
+        xAxis: {
+            type: 'category',
+            data: averageOrderList.value.data.date
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: averageOrderList.value.data.averagePriceList,
+                type: 'line'
+            }
+        ]
+    });
+})
+const visitorCountChart = ref<HTMLElement>();
+const myChart5 = ref<any>();
+const initVisitorCountEcharts = (() => {
+    myChart5.value = echarts.init(visitorCountChart.value!);
+    myChart5.value.setOption({
+        tooltip: {
         trigger: 'axis',
         axisPointer: {
             type: 'shadow'
@@ -145,7 +162,8 @@ const visitorCountOption: EChartsOption = reactive({
             data: visitorCountList.value.data.personalList
         }
     ]
-});
+    });
+})
 const chartOptions: any = {
     chart: {
         id: 'vuechart-example',
@@ -261,16 +279,12 @@ const shortcuts = [
     }
 ]
 onMounted(() => {
+
     time.value = shortcuts[0].value();
     getReportDate();
-
     filterChang();
 })
 onUnmounted(() => {
-    isShowEcharts.value = false;
-})
-watchEffect(() => {
-
 })
 const getReportDate = () => {
     const date = {
@@ -280,9 +294,7 @@ const getReportDate = () => {
         count: 0
     }
     getTotalSales(date).then((res: any) => {
-        totalSalesOption.xAxis.data = totalSalesList.value.data.date;
-        totalSalesOption.series[0].data = totalSalesList.value.data.servicePriceList;
-        totalSalesOption.series[1].data = totalSalesList.value.data.productPriceList;
+        initTotalSalesEcharts();
         if (res.state == 2) {
             Alert.warning(showErrorMsg(res.msg), 2000);
         }
@@ -296,8 +308,7 @@ const getReportDate = () => {
             }
         })
     getTotalBooking(date).then((res: any) => {
-        totalBookingOption.xAxis.data = totalBookingList.value.data.date;
-        totalBookingOption.series[0].data = totalBookingList.value.data.count;
+        initTotalBookingEcharts();
         if (res.state == 2) {
             Alert.warning(showErrorMsg(res.msg), 2000);
         }
@@ -311,9 +322,7 @@ const getReportDate = () => {
             }
         })
     getManagerSales(date).then((res: any) => {
-        managerSalesOption.xAxis.data = managerSalesList.value.data.managerName;
-        managerSalesOption.series[0].data = managerSalesList.value.data.servicesPrice;
-        managerSalesOption.series[1].data = managerSalesList.value.data.productPrice;
+        initManagerSalesEcharts();
         if (res.state == 2) {
             Alert.warning(showErrorMsg(res.msg), 2000);
         }
@@ -327,9 +336,7 @@ const getReportDate = () => {
             }
         })
     getAverageOrder(date).then((res: any) => {
-        averageOrderOption.xAxis.data = averageOrderList.value.data.date;
-        averageOrderOption.series[0].data = averageOrderList.value.data.averagePrice;
-
+        initAverageOrderEcharts();
         if (res.state == 2) {
             Alert.warning(showErrorMsg(res.msg), 2000);
         }
@@ -343,10 +350,7 @@ const getReportDate = () => {
             }
         })
     getVisitorCount(date).then((res: any) => {
-        visitorCountOption.yAxis.data = visitorCountList.value.data.title;
-        visitorCountOption.series[0].data = visitorCountList.value.data.maleList;
-        visitorCountOption.series[1].data = visitorCountList.value.data.femaleList;
-        visitorCountOption.series[2].data = visitorCountList.value.data.personalList;
+        initVisitorCountEcharts();
         if (res.state == 2) {
             Alert.warning(showErrorMsg(res.msg), 2000);
         }
@@ -429,14 +433,14 @@ const filterChang = () => {
                     <h1>${{ totalSalesList.data.totalPrice }}</h1>
                     <div class="sale-info">
                         <img style="background-color: #1a73e8" />
-                        <p>服務${{ totalSalesList.data.servicePrice }}({{ totalSalesList.data.servicePct }})</p>
+                        <p>服務 ${{ totalSalesList.data.servicePrice }} ({{ totalSalesList.data.servicePct }})</p>
                     </div>
                     <div class="sale-info">
                         <img style="background-color: #d1687f" />
-                        <p>商品${{ totalSalesList.data.productPrice }}({{ totalSalesList.data.productPct }})</p>
+                        <p>商品 ${{ totalSalesList.data.productPrice }} ({{ totalSalesList.data.productPct }})</p>
                     </div>
                     <div>
-                        <Echarts id="salesChart" :option="totalSalesOption" :height="'350px'" />
+                        <div ref="totalSalesChart" :style="{ height: '350px' }"></div>
                     </div>
                 </div>
             </div>
@@ -445,16 +449,16 @@ const filterChang = () => {
                     <h2>總預約數</h2>
                     <h1> {{ totalBookingList.data.totalBooking }}</h1>
                     <div class="sale-info">
-                        <p>新預約(0%)</p>
+                        <p>新預約 {{ totalBookingList.data.newBooking }} ({{ totalBookingList.data.newBookingPct }})</p>
                     </div>
                     <div class="sale-info">
-                        <p>已完成(0%)</p>
+                        <p>已完成 {{ totalBookingList.data.finishBooking }} ({{ totalBookingList.data.finishBookingPct }})</p>
                     </div>
                     <div class="sale-info">
-                        <p>店家取消(0%)</p>
+                        <p>店家取消 {{ totalBookingList.data.cancelBooking }} ({{ totalBookingList.data.cancelBookingPct }})</p>
                     </div>
                     <div id="reserve-chart">
-                        <Echarts :option="totalBookingOption" :height="'350px'" />
+                        <div ref="totalBookingChart" :style="{ height: '350px' }"></div>
                     </div>
                 </div>
             </div>
@@ -473,7 +477,7 @@ const filterChang = () => {
                         <p>商品</p>
                     </div>
                     <div>
-                        <Echarts :option="managerSalesOption" :height="'350px'" />
+                        <div ref="managerSalesChart" :style="{ height: '350px' }"></div>
                     </div>
                 </div>
             </div>
@@ -497,9 +501,9 @@ const filterChang = () => {
                 <h2>你的顧客平均消費了多少?</h2>
                 <div class="count-block">
                     <h2>客單價</h2>
-                    <h1>$10004</h1>
+                    <h1>${{ averageOrderList.data.averagePrice }}</h1>
                     <div id="reserve-chart">
-                        <Echarts :option="averageOrderOption" :height="'350px'" />
+                        <div ref="averageOrderChart" :style="{ height: '350px' }"></div>
                     </div>
                 </div>
             </div>
@@ -521,7 +525,7 @@ const filterChang = () => {
                         <p>不透漏{{ visitorCountList.data.personalTotal }}({{ visitorCountList.data.personalPct }})</p>
                     </div>
                     <div id="customer-chart">
-                        <Echarts :option="visitorCountOption" :height="'350px'" />
+                        <div ref="visitorCountChart" :style="{ height: '350px' }"></div>
                     </div>
                 </div>
             </div>
@@ -546,7 +550,8 @@ const filterChang = () => {
                     <h1>${{ serviceProportionList.data.priceList }}</h1>
                     <h2>總銷售數量 {{ serviceProportionList.data.quantityList }}</h2>
                     <div class="tab">
-                        <el-table :data="serviceProportionList.data.serviceList" height="250" style="width: 100%">
+                        <el-table :data="serviceProportionList.data.serviceList" height="250" style="width: 100%"
+                            :header-cell-style="{ background: '#e6e2de' }">
                             <el-table-column prop="name" label="服務排行佔比" width='150' />
                             <el-table-column prop="price" label="淨值" />
                             <el-table-column prop="quantityPct" label="佔比" />

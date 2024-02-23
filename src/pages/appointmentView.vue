@@ -31,8 +31,8 @@
             </button>
           </div>
           <el-select v-if="showManagerSelect && mainTabIndexRef == 0" v-model="selectManager" multiple clearable
-            collapse-tags value-key="id" placeholder="人員" popper-class="custom-header" :max-collapse-tags="1"
-            style="width: 240px">
+            collapse-tags value-key="id" placeholder="人員" popper-class="custom-select" :max-collapse-tags="1"
+            class="my-select">
             <template #header>
               <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">
                 All
@@ -280,7 +280,7 @@ function getApptInfoFn(year: number = 0, month: number = 0, date: number = curre
       })
     }
     // getRestList(0, year, month, date);
-  showFullUIFn(true);
+    showFullUIFn(true);
   });
   getDayOffList(0, year, month, date);
   getRestList(0, year, month, date);
@@ -636,11 +636,18 @@ $borderCoder: #eaedf2;
           }
         }
 
-        .el-select {
+        // .el-select {
+        //   height: 32px;
+        // }
+
+        .my-select {
           height: 32px;
-          // width: 214px;
-          // background-color: #baf;
+          width: 214px;
+          :deep(.el-select__wrapper) {
+            width: 100%;
+          }
         }
+
       }
 
       .appt_box {

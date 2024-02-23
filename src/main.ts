@@ -11,6 +11,7 @@ import i18n from "./i18n/i18n";
 import VueCropper from 'vue-cropper';
 import 'vue-cropper/dist/index.css';
 import * as echarts from 'echarts';
+import "default-passive-events"
 // import $ form 'jquery';
 
 // import('jquery').then(res => {

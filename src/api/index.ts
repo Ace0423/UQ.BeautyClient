@@ -1,5 +1,5 @@
 import { postLoginRequest, getUserNameRequest } from "./authRequest";
-import { getMemberListRequest, postMemberDataRequest, postUpdateMemberDataRequest, getGroupDataRequest, putGroupDataRequest, postGroupDataRequest, getGroupInfoRequest, postGroupInfoRequest, deleteGroupInfoRequest, } from "./memberRequest";
+import { getMemberListRequest, postMemberDataRequest, postUpdateMemberDataRequest, getGroupDataRequest, putGroupDataRequest, postGroupDataRequest, getGroupInfoRequest, postGroupInfoRequest, deleteGroupInfoRequest, getMemberExpenseInfoRequest } from "./memberRequest";
 import { getMemberBankListRequest, postMemberBankRequest, getMemberBankInfoListRequest, getMemberBankDetailRequest, putMemberBankInfoRequest } from "./memberBankRequest";
 import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest, getWorkingHoursRequest, postWorkingHoursRequest, getWorkingDefaultRequest, postWorkingDefaultRequest, putWorkingDefaultRequest } from "./managerRequest";
 import { getPermissionsListRequest, putOptionRoleRequest, getApiPermissionsListRequest, postApiPermissionsListRequest, updateApiPermissionsListRequest } from "./settingRequest";
@@ -7,21 +7,24 @@ import { getTimeTablesRequest, postTimeTablesRequest, getCheckOutTypeRequest, po
 import { getTopUpCardListRequest, addTopUpCardInfoRequest, editTopUpCardInfoRequest } from "./topUpCardRequest";
 import { getOnlineBusinessHours, postOnlineBusinessHours, getOnlinePayMeth, postOnlinePayMeth, getOnlineOtherSettings, postOnlineOtherSettings } from "./onlineRequest";
 import { getTotalSalesRequest, getManagerSalesRequest, getTotalBookingRequest, getAverageOrderRequest, getVisitorCountRequest, getVisitorHoursRequest, getServiceProportionRequest } from "./reportRequest";
+import { getBookingByUIdRequest } from "./bookingRequest";
+import { getOrderByUIdRequest } from "./orederRequest";
 
 export const apiPostLoginRequest = postLoginRequest;
 export const apiGetUserNameRequest = getUserNameRequest;
 
+
 export const apiGetMemberListRequest = getMemberListRequest;
 export const apiPostMemberDataRequest = postMemberDataRequest;
 export const apiPostUpdateMemberDataRequest = postUpdateMemberDataRequest;
-
 export const apiGetGroupDataRequest = getGroupDataRequest;
 export const apiPostGroupDataRequest = postGroupDataRequest;
 export const apiPutGroupDataRequest = putGroupDataRequest;
-
 export const apiGetGroupInfoRequest = getGroupInfoRequest;
 export const apiPostGroupInfoRequest = postGroupInfoRequest;
 export const apiDeleteGroupInfoRequest = deleteGroupInfoRequest;
+export const apiGetMemberExpenseInfoRequest = getMemberExpenseInfoRequest;
+
 
 export const apiGetMemberBankListRequest = getMemberBankListRequest;
 export const apiPostMemberBankRequest = postMemberBankRequest;
@@ -92,3 +95,7 @@ export const apiGetAverageOrderRequest = getAverageOrderRequest;
 export const apiGetVisitorCountRequest = getVisitorCountRequest;
 export const apiGetVisitorHoursRequest = getVisitorHoursRequest;
 export const apiGetServiceProportionRequest = getServiceProportionRequest;
+
+export const apiGetBookingByUIdRequest = getBookingByUIdRequest;
+
+export const apiGetOrderByUIdRequest = getOrderByUIdRequest;

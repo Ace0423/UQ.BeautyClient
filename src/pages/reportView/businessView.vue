@@ -14,7 +14,6 @@ const reportStore = useReportStore();
 const { getTotalSales, getTotalBooking, getManagerSales, getAverageOrder, getVisitorCount, getVisitorHours, getServiceProportion } = reportStore;
 const { totalSalesList, totalBookingList, managerSalesList, averageOrderList, visitorCountList, visitorHoursList, serviceProportionList, } = storeToRefs(reportStore);
 const time = ref<Date[]>([]);
-const isShowEcharts = ref(true);
 const totalSalesChart = ref<HTMLElement>();
 const myChart1 = ref<any>();
 const initTotalSalesEcharts = (() => {

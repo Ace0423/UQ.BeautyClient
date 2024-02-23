@@ -36,3 +36,8 @@ export const putGroupInfoRequest = (data: any) =>
   memberRequest.put("/member/grouplist", data.groupId, data);
 export const deleteGroupInfoRequest = (data: any) =>
   memberRequest.delete("/member/grouplist" + data);
+export const getMemberExpenseInfoRequest = (data: any) => {
+  let token: any = getToken('token');
+  memberRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+  return memberRequest.get("/Member/ExpenseInfo", { params: data });
+}

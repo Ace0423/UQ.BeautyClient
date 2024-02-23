@@ -4,22 +4,33 @@ import bitmapIcon from "@/assets/bitmap.svg";
 import Icon from "@/assets/Icon zocial-guest.svg";
 import birthdayIcon from "@/assets/Icon awesome-birthday-cake.svg";
 import addressIcon from "@/assets/Icon awesome-address-book.svg";
-import lineIcon from "@/assets/Icon awesome-line.svg";
 import mailIcon from "@/assets/Icon feather-mail.svg";
-import gMailIcon from "@/assets/g-mail.svg";
 import editIcon from "@/assets/Icon awesome-edit.svg";
 import addIcon from "@/assets/images/icon_add.png"
-import { useMemberBankStore } from "@/stores/memberBank";
-
-const memberBankStore = useMemberBankStore();
-const { getMemberBankDetail } = memberBankStore;
+import Alert from "@/components/alertCmpt";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
+import { useCounterStore } from "@/stores/counter";
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
+import { useMemberStore } from "@/stores/member";
+import { useBookingStore } from "@/stores/booking";
+import { useOrderStore } from "@/stores/order";
+const memberStore = useMemberStore();
+const { getExpenseInfo } = memberStore;
+const bookingStore = useBookingStore();
+const { getBookingByUId } = bookingStore;
+const orderStore = useOrderStore();
+const { getOrderByUId } = orderStore;
 const simpleView = ref(true);
-const currentIndex = ref(2);
-const memberDetailData: any = reactive({
-  accountBalance: 0,
-  recentConsumption: { amount: "-", date: "-" },
-  recentDeposit: { amount: "-", date: "-" },
+const currentIndex = ref(0);
+const memberExpenseInfo: any = reactive({
+  averageAmount: '',
+  bookingAmount: 0,
+  bookingCount: 0,
+  lastBookingTime: '',
 });
+const memberBookingInfo: any = reactive({ data: [] });
+const memberOrderInfo: any = reactive({ data: [] });
 const props = defineProps<{
   selectMemberItem: any;
   handMemberInfoView: Function;
@@ -34,32 +45,83 @@ const changeTab = (index: number) => {
   getmemberInfoApi();
 };
 const getmemberInfoApi = () => {
+  let data = {
+    uid: props.selectMemberItem.userId,
+    pageIndex: 0,
+    count: 0
+  };
   switch (currentIndex.value) {
+
+    case 0:
+      getExpenseInfo(data)
+        .then((res: any) => {
+          if (res.data.state == 1) {
+            memberExpenseInfo.averageAmount = res.data.data.table.averageAmount
+            memberExpenseInfo.bookingAmount = res.data.data.table.bookingAmount
+            memberExpenseInfo.bookingCount = res.data.data.table.bookingCount
+            memberExpenseInfo.lastBookingTime = new Date(res.data.data.table.lastBookingTime).toISOString().split('T')[0]
+          } else if (res.data.state == 2) {
+            Alert.warning(showErrorMsg(res.data.msg), 2000);
+          }
+        })
+        .catch((e: any) => {
+          Alert.warning(showHttpsStatus(e.response.status), 2000);
+          if (e.response.status == 401) {
+            setTimeout(() => {
+              handLogOut();
+            }, 2000);
+          }
+        });
+      break;
+    case 1:
+      getBookingByUId(data)
+        .then((res: any) => {
+          if (res.data.state == 1) {
+            memberBookingInfo.data = res.data.data.table;
+          } else if (res.data.state == 2) {
+            Alert.warning(showErrorMsg(res.data.msg), 2000);
+          }
+        })
+        .catch((e: any) => {
+          Alert.warning(showHttpsStatus(e.response.status), 2000);
+          if (e.response.status == 401) {
+            setTimeout(() => {
+              handLogOut();
+            }, 2000);
+          }
+        });
+      break;
     case 2:
-      let data = {
-        id: props.selectMemberItem.userId,
-      };
-      getMemberBankDetail(data).then((res) => {
-        memberDetailData.accountBalance = res.accountBalance;
-        if (res.recentConsumption != null) {
-          memberDetailData.recentConsumption.amount =
-            res.recentConsumption.amount;
-          memberDetailData.recentConsumption.date = res.recentConsumption.date;
-        }
-        if (res.recentDeposit != null) {
-          memberDetailData.recentDeposit.amount = res.recentDeposit.amount;
-          memberDetailData.recentDeposit.date = res.recentDeposit.date;
-        }
-      });
+      getOrderByUId(data)
+        .then((res: any) => {
+          if (res.data.state == 1) {
+            memberOrderInfo.data = res.data.data.table;
+          } else if (res.data.state == 2) {
+            Alert.warning(showErrorMsg(res.data.msg), 2000);
+          }
+        })
+        .catch((e: any) => {
+          Alert.warning(showHttpsStatus(e.response.status), 2000);
+          if (e.response.status == 401) {
+            setTimeout(() => {
+              handLogOut();
+            }, 2000);
+          }
+        });
       break;
 
     default:
       break;
   }
 };
+const parseDate = ((time: any) => {
+  const date = new Date(time);
+  return `${date.getFullYear()}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+})
 onMounted(() => {
   getmemberInfoApi();
 });
+
 </script>
 
 <template>
@@ -123,57 +185,45 @@ onMounted(() => {
             <nobr>消費紀錄</nobr>
           </button>
           <button :class="currentIndex == 2 ? 'active' : ''" v-on:click="changeTab(2)">
-            <nobr>儲值紀錄</nobr>
-          </button>
-          <button :class="currentIndex == 2 ? 'active' : ''" v-on:click="changeTab(2)">
-            <nobr>儲值紀錄</nobr>
+            <nobr>紀錄訂單</nobr>
           </button>
         </div>
         <div class="consumption-content">
           <div class="consumption-performance" :class="currentIndex != 0 ? 'current' : ''">
             <div>
-              <h1>0</h1>
-              <p>平均消費金額</p>
+              <h1>{{ memberExpenseInfo.bookingCount }}</h1>
+              <p>完成預約數</p>
             </div>
             <div>
-              <h1>0</h1>
+              <h1>{{ memberExpenseInfo.bookingAmount }}</h1>
               <p>總消費金額</p>
             </div>
             <div>
-              <h1>-</h1>
-              <p>近期回購</p>
+              <h1>{{ memberExpenseInfo.averageAmount }}</h1>
+              <p>平均消費金額</p>
             </div>
             <div>
-              <h1>0</h1>
-              <p>訂單完成次數</p>
-            </div>
-            <div>
-              <h1>0</h1>
-              <p>棄單次數</p>
+              <h1>{{ memberExpenseInfo.lastBookingTime }}</h1>
+              <p>最後來訪時間</p>
             </div>
           </div>
-          <div class="consumption-performance" :class="currentIndex != 1 ? 'current' : ''">
+          <div class="consumption-record" :class="currentIndex != 1 ? 'current' : ''">
+            <div v-for="item in memberBookingInfo.data" :key="item.bookingNo">
+              <div>
+                <p>{{ parseDate(item.dateBooking) }}</p>
+                <p>{{ item.serviceName }}</p>
+                <p>{{ item.timer }}分鐘</p>
+              </div>
+              <h3>$ {{ item.price }}</h3>
+            </div>
           </div>
-          <div class="consumption-performance" :class="currentIndex != 2 ? 'current' : ''">
-            <div>
-              <h1>{{ memberDetailData.accountBalance }}</h1>
-              <p>儲值金餘額</p>
-            </div>
-            <div>
-              <h1>{{ memberDetailData.recentConsumption.amount }}</h1>
-              <p>最後消費金額</p>
-            </div>
-            <div>
-              <h1>{{ memberDetailData.recentConsumption.date }}</h1>
-              <p>最後消費日期</p>
-            </div>
-            <div>
-              <h1>{{ memberDetailData.recentDeposit.amount }}</h1>
-              <p>最後儲值金額</p>
-            </div>
-            <div>
-              <h1>{{ memberDetailData.recentDeposit.date }}</h1>
-              <p>最後儲值日期</p>
+          <div class="order-record" :class="currentIndex != 2 ? 'current' : ''">
+            <div v-for="item in memberOrderInfo.data" :key="item.bookingNo">
+              <div>
+                <p>{{ item.coNo }}</p>
+                <p>{{ parseDate(item.coCheckTime) }}</p>
+              </div>
+              <h3>$ {{ item.coTotalPrice }}</h3>
             </div>
           </div>
         </div>
@@ -346,15 +396,12 @@ onMounted(() => {
         overflow: auto;
         width: 300px;
         height: 65px;
+
         >button {
-          // display: flex;
           justify-content: center;
           align-items: center;
           border: none;
           margin: 5px;
-          // width: 120px;
-          // height: 45px;
-          // border-radius: 10px 10px 0 0;
           background: transparent;
           font-size: 20px;
           font-weight: bold;
@@ -366,7 +413,6 @@ onMounted(() => {
         >button.active {
           box-shadow: 0 2px;
           padding-bottom: 3px;
-          // text-decoration: underline;
           color: #877059;
         }
       }
@@ -377,6 +423,7 @@ onMounted(() => {
         min-width: 300px;
         border: solid 1px #707070;
         height: calc(99% - 65px);
+        overflow: auto;
 
         >.consumption-performance {
           >div {
@@ -398,197 +445,61 @@ onMounted(() => {
           }
         }
 
+        >.consumption-record {
+          >div {
+            margin: 20px 30px;
+            padding: 5px 15px;
+            border: solid 1px #707070;
+            background-color: #e6e2de;
+            border-radius: 10px;
+            color: #717171;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            >div {
+              >h3 {
+                font-size: 20px;
+              }
+
+              >p {
+                font-size: 16px;
+                margin: 0;
+              }
+            }
+          }
+        }
+
+        >.order-record {
+          >div {
+            margin: 20px 30px;
+            padding: 5px 15px;
+            border: solid 1px #707070;
+            background-color: #e6e2de;
+            border-radius: 10px;
+            color: #717171;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            >div {
+              >h3 {
+                font-size: 20px;
+              }
+
+              >p {
+                font-size: 16px;
+                margin: 0;
+              }
+            }
+          }
+        }
+
         .current {
           display: none;
         }
       }
     }
-
-    // > .bitmap-img {
-    //   position: relative;
-    //   left: 220px;
-    // }
-
-    // > img {
-    //   cursor: pointer;
-    //   margin: 10px 20px;
-    // }
-
-    // > .content {
-    //   // display: flex;
-    //   // height: 90%;
-    //   // margin: 0px 10px 10px 10px;
-    //   // height: calc(99% - 65px);
-
-    //   > div {
-    //     border-radius: 10px;
-    //     box-shadow: inset 0 10px 6px 0 rgba(0, 0, 0, 0.16);
-    //     min-width: 360px;
-    //     // min-height: 650px;
-    //     margin: 0 10px;
-    //     border: solid 1px #707070;
-    //   }
-
-    //   .info-content {
-    //     display: flex;
-    //     flex-direction: column;
-    //     text-align: center;
-
-    //     .head-shot {
-    //       position: relative;
-    //       // top: -35px;
-    //       width: 15%;
-    //       margin: auto;
-    //     }
-
-    //     > h1 {
-    //       font-family: STXihei;
-    //       font-size: 25px;
-    //       color: #717171;
-    //     }
-
-    //     > p {
-    //       margin: 5px;
-    //       font-family: STXigei;
-    //       font-size: 20px;
-    //       color: #717171;
-    //     }
-
-    //     > div {
-    //       button {
-    //         width: 115px;
-    //         height: 55px;
-    //         opacity: 0.5;
-    //         border-radius: 10px;
-    //         box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.16);
-    //         border: solid 1px #707070;
-    //         background-color: #e6e2de;
-    //         margin: 10px;
-    //       }
-    //     }
-
-    //     .content-box {
-    //       margin: 5px 30px 18px;
-    //       color: #877059;
-
-    //       P {
-    //         margin: 0 0 5px 0;
-    //       }
-
-    //       > div {
-    //         border: solid 1px #707070;
-    //         background-color: #e6e2de;
-    //         border-radius: 10px;
-    //       }
-
-    //       .flex-box {
-    //         display: flex;
-    //         height: 40px;
-    //         margin: 10px 10px;
-    //         align-items: center;
-
-    //         p {
-    //           margin: 10px;
-    //         }
-
-    //         img {
-    //           width: 20px;
-    //           height: 20px;
-    //         }
-    //       }
-    //     }
-
-    //     .memo-box {
-    //       margin: 5px 30px;
-    //       color: #877059;
-
-    //       // flex: 1;
-    //       > p {
-    //         margin: 0;
-    //       }
-
-    //       textarea {
-    //         border: solid 1px #707070;
-    //         background-color: #e6e2de;
-    //         border-radius: 10px;
-    //         width: 100%;
-    //         min-height: 120px;
-    //         margin-top: 5px;
-    //       }
-    //     }
-
-    //     // .info-content>div:last-child {
-    //     //     flex: 1;
-    //     // }
-    //   }
-
-    //   .onsumption-content {
-    //     > .item-tab {
-    //       display: flex;
-    //       margin: 20px 30px 5px;
-
-    //       > button {
-    //         // display: flex;
-    //         justify-content: center;
-    //         align-items: center;
-    //         border: none;
-    //         // width: 120px;
-    //         // height: 45px;
-    //         border-radius: 10px 10px 0 0;
-    //         background: transparent;
-    //         font-size: 20px;
-    //         font-weight: bold;
-    //         font-family: HeitiTC;
-    //         color: #717171;
-    //         text-decoration: none;
-    //       }
-
-    //       > button.active {
-    //         box-shadow: 0 2px;
-    //         padding-bottom: 3px;
-    //         // text-decoration: underline;
-    //         color: #877059;
-    //       }
-    //     }
-
-    //     > .consumption-performance {
-    //       > div {
-    //         margin: 20px 30px;
-    //         padding: 5px 15px;
-    //         border: solid 1px #707070;
-    //         background-color: #e6e2de;
-    //         border-radius: 10px;
-    //         color: #717171;
-
-    //         > h1 {
-    //           font-size: 30px;
-    //         }
-
-    //         > p {
-    //           font-size: 16px;
-    //           margin: 0;
-    //         }
-    //       }
-    //     }
-    //   }
-
-    //   .link-bottom {
-    //     padding: 0 10px;
-    //     opacity: 0.5;
-    //     margin: auto;
-    //     width: 80%;
-    //     height: 2px;
-    //     background-color: #707070;
-    //   }
-
-    //   .current {
-    //     display: none;
-    //   }
-    // }
   }
-
-  // > div > div:last-child {
-  //   flex: 1;
-  // }
 }
 </style>

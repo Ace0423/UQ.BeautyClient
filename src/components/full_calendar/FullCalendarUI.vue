@@ -168,7 +168,7 @@ export default {
 
                   htmlStr += "<br/><span  style='white-space: nowrap; font-weight: normal;color:" + fontColor + ";'>" + event.title + "</span>"
                   if (info.bookingMemo != "") {
-                    htmlStr += "<br/><span  style='white-space: nowrap; font-weight: normal;color:" + fontColor + ";'>" + "(P.S. " + info.bookingMemo + ")" + "</span>"
+                    htmlStr += "<br/><span  style='white-space: nowrap; font-weight: normal;color:" + fontColor + ";'>" + "備註- " + info.bookingMemo + "" + "</span>"
                   }
                   htmlStr += "</div>";
                   break;

@@ -14,13 +14,15 @@
                 v-model="formInputRef.courses" @click="clickItem(item, item.SId)" />
               <!-- <label :for="'RadioServicesUI_' + item.SId"></label> -->
               <div class="title-input">
-                <span value="{{item}}" name="{{item.name}}">{{
+                <span>{{
                   item.name
                 }}</span>
-                <span class="pCode-msg" value="{{item}}" name="{{item.name}}">{{ item.servicesTime + "分" }}</span>
+                <span class="pCode-msg" v-if="item.servicesTime==0">{{getServicesTimeMin(item.subList)  + "分起" }}</span>
+                <span class="pCode-msg" v-else>{{ item.servicesTime + "分" }}</span>
               </div>
               <div class="price-input">
-                <span>{{ "$" + item.price }}</span>
+                <span v-if="item.servicesTime==0">{{ "$" +getServicesPriceMin(item.subList)+"起"}}</span>
+                <span v-else>{{ "$" + item.price }}</span>
               </div>
             </label>
           </div>
@@ -80,6 +82,18 @@ function getCourseFn(data: any) {
         .toLowerCase()
         .includes(formInputRef.value.search.toLowerCase()))
   );
+}
+let getServicesMax2: any = computed((params:any) =>{
+  Math.max.apply(null, params.map(function (o:any) {
+    return o.servicesTime;
+}))
+});
+
+function getServicesPriceMin(params:any) {
+ return Math.max(...params.map((a:any) => a.price))
+}
+function getServicesTimeMin(params:any) {
+ return Math.max(...params.map((a:any) => a.servicesTime))
 }
 
 function submitBtn() {
@@ -328,7 +342,9 @@ function showRdSubFn(type: boolean) {
             }
 
             .price-input {
-              width: 50px;
+              display: flex;
+              justify-content: right;
+              width: 100px;
             }
           }
         }

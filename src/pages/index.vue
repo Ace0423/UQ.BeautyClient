@@ -6,7 +6,7 @@ import settingImg from "@/assets/Icon material-settings.svg";
 import orderImg from "@/assets/Icon metro-shop.svg";
 import customerImg from "@/assets/Icon zocial-guest.svg";
 import Icon_logo from "@/assets/images/logo.png";
-
+import reportImg from "@/assets/file-text-fill.svg";
 import { useCounterStore } from "@/stores/counter";
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
@@ -45,6 +45,10 @@ function logoutFn() {
         <img :src="orderImg" />
         <p>訂單紀錄</p>
       </router-link> -->
+      <router-link class="router-btn" to="/reportView/businessView">
+        <img class="" :src="reportImg" />
+        <p>設定</p>
+      </router-link>
       <router-link class="router-btn" to="/settingView">
         <img class="" :src="settingImg" />
         <p>設定</p>
@@ -98,11 +102,12 @@ function logoutFn() {
     }
 
     > .router-btn {
-      width: 195px;
-      height: 190px;
+      
+      width: 175px;
+      height: 175px;
       max-width: 195px;
       max-height: 190px;
-      margin: 10px;
+      margin: 15px;
       color: #707070;
       border: solid 1px #707070;
       background-color: #e6e2de;
@@ -118,7 +123,7 @@ function logoutFn() {
 
       > p {
         font-family: STXihei;
-        font-size: 26px;
+        font-size: 20px;
         // line-height: 1.23;
         text-align: center;
         color: #707070;

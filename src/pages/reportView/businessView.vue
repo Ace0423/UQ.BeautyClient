@@ -295,7 +295,7 @@ const getReportDate = () => {
     getTotalSales(date).then((res: any) => {
         initTotalSalesEcharts();
         if (res.state == 2) {
-            Alert.warning(showErrorMsg(res.msg), 2000);
+            // Alert.warning(showErrorMsg(res.msg), 2000);
         }
     })
         .catch((e: any) => {
@@ -309,7 +309,7 @@ const getReportDate = () => {
     getTotalBooking(date).then((res: any) => {
         initTotalBookingEcharts();
         if (res.state == 2) {
-            Alert.warning(showErrorMsg(res.msg), 2000);
+            // Alert.warning(showErrorMsg(res.msg), 2000);
         }
     })
         .catch((e: any) => {
@@ -323,7 +323,7 @@ const getReportDate = () => {
     getManagerSales(date).then((res: any) => {
         initManagerSalesEcharts();
         if (res.state == 2) {
-            Alert.warning(showErrorMsg(res.msg), 2000);
+            // Alert.warning(showErrorMsg(res.msg), 2000);
         }
     })
         .catch((e: any) => {
@@ -337,7 +337,7 @@ const getReportDate = () => {
     getAverageOrder(date).then((res: any) => {
         initAverageOrderEcharts();
         if (res.state == 2) {
-            Alert.warning(showErrorMsg(res.msg), 2000);
+            // Alert.warning(showErrorMsg(res.msg), 2000);
         }
     })
         .catch((e: any) => {
@@ -351,7 +351,7 @@ const getReportDate = () => {
     getVisitorCount(date).then((res: any) => {
         initVisitorCountEcharts();
         if (res.state == 2) {
-            Alert.warning(showErrorMsg(res.msg), 2000);
+            // Alert.warning(showErrorMsg(res.msg), 2000);
         }
     })
         .catch((e: any) => {
@@ -364,7 +364,7 @@ const getReportDate = () => {
         })
     getVisitorHours(date).then((res: any) => {
         if (res.state == 2) {
-            Alert.warning(showErrorMsg(res.msg), 2000);
+            // Alert.warning(showErrorMsg(res.msg), 2000);
         }
     })
         .catch((e: any) => {
@@ -377,7 +377,7 @@ const getReportDate = () => {
         })
     getServiceProportion(date).then((res: any) => {
         if (res.state == 2) {
-            Alert.warning(showErrorMsg(res.msg), 2000);
+            // Alert.warning(showErrorMsg(res.msg), 2000);
         }
     })
         .catch((e: any) => {

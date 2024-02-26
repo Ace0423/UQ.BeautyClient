@@ -6,10 +6,13 @@ import birthdayIcon from "@/assets/Icon awesome-birthday-cake.svg";
 import addressIcon from "@/assets/Icon awesome-address-book.svg";
 import mailIcon from "@/assets/Icon feather-mail.svg";
 import editIcon from "@/assets/Icon awesome-edit.svg";
-import addIcon from "@/assets/images/icon_add.png"
+import cardIcon from "@/assets/credit-card.svg";
+import addIcon from "@/assets/images/icon_add.png";
+import receiptIcon from "@/assets/receipt.svg";
 import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
 import { useCounterStore } from "@/stores/counter";
+import { usePriceStore } from "@/stores/priceStore";
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
 import { useMemberStore } from "@/stores/member";
@@ -21,6 +24,8 @@ const bookingStore = useBookingStore();
 const { getBookingByUId } = bookingStore;
 const orderStore = useOrderStore();
 const { getOrderByUId } = orderStore;
+const priceStore = usePriceStore();
+const { getTopUpUseDetailApi } = priceStore;
 const simpleView = ref(true);
 const currentIndex = ref(0);
 const memberExpenseInfo: any = reactive({
@@ -31,12 +36,38 @@ const memberExpenseInfo: any = reactive({
 });
 const memberBookingInfo: any = reactive({ data: [] });
 const memberOrderInfo: any = reactive({ data: [] });
+const TopUpUseDetail: any = reactive({ data: [] });
 const props = defineProps<{
   selectMemberItem: any;
   handMemberInfoView: Function;
   handAddMemberView: Function;
 }>();
-
+const limitDay: any = [
+  {
+    value: 1,
+    label: '1周',
+  },
+  {
+    value: 2,
+    label: '2周',
+  },
+  {
+    value: 3,
+    label: '3周',
+  },
+  {
+    value: 4,
+    label: '1月',
+  },
+  {
+    value: 5,
+    label: '3月',
+  },
+  {
+    value: 6,
+    label: '6月',
+  }
+]
 const handsimpleViewBtn = () => {
   simpleView.value = !simpleView.value;
 };
@@ -109,7 +140,20 @@ const getmemberInfoApi = () => {
           }
         });
       break;
-
+    case 3:
+      getTopUpUseDetailApi(props.selectMemberItem.userId, 0, 0)
+        .then((res: any) => {
+          TopUpUseDetail.data = res;
+        })
+        .catch((e: any) => {
+          Alert.warning(showHttpsStatus(e.response.status), 2000);
+          if (e.response.status == 401) {
+            setTimeout(() => {
+              handLogOut();
+            }, 2000);
+          }
+        });
+      break;
     default:
       break;
   }
@@ -187,6 +231,9 @@ onMounted(() => {
           <button :class="currentIndex == 2 ? 'active' : ''" v-on:click="changeTab(2)">
             <nobr>紀錄訂單</nobr>
           </button>
+          <button :class="currentIndex == 3 ? 'active' : ''" v-on:click="changeTab(3)">
+            <nobr>儲值卡</nobr>
+          </button>
         </div>
         <div class="consumption-content">
           <div class="consumption-performance" :class="currentIndex != 0 ? 'current' : ''">
@@ -214,16 +261,33 @@ onMounted(() => {
                 <p>{{ item.serviceName }}</p>
                 <p>{{ item.timer }}分鐘</p>
               </div>
-              <h3>$ {{ item.price }}</h3>
+              <h3 v-if="item.price != 0">$ {{ item.price }}</h3>
+              <h3 v-if="item.price == 0">$ {{ item.subInfo.price }}</h3>
             </div>
           </div>
           <div class="order-record" :class="currentIndex != 2 ? 'current' : ''">
             <div v-for="item in memberOrderInfo.data" :key="item.bookingNo">
+              <div style="width: 40px;">
+                <img style="width: 70%;" :src="receiptIcon">
+              </div>
               <div>
                 <p>{{ item.coNo }}</p>
                 <p>{{ parseDate(item.coCheckTime) }}</p>
               </div>
               <h3>$ {{ item.coTotalPrice }}</h3>
+            </div>
+          </div>
+          <div class="order-record" :class="currentIndex != 3 ? 'current' : ''">
+            <div v-for="item in TopUpUseDetail.data" :key="item.id">
+              <div style="width: 40px;">
+                <img style="width: 70%;" :src="cardIcon">
+              </div>
+              <div>
+                <p>{{ item.topUpCardInfo.tuTitle }}</p>
+                <p v-if="item.topUpCardInfo.tuLimitDay == 0">不限期</p>
+                <p v-if="item.topUpCardInfo.tuLimitDay != 0">{{ limitDay[item.topUpCardInfo.tuLimitDay].label }}</p>
+              </div>
+              <h3>$ {{ item.topUpCardInfo.tuSellPrice }}</h3>
             </div>
           </div>
         </div>

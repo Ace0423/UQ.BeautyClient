@@ -88,6 +88,26 @@
                                             <span class="fontBlack">{{ "x" + bItem.quantity }}</span>
                                         </div>
                                     </div>
+                                    <div name="儲值卡Item" v-if="bItem.itemType == 3" class="info-service">
+                                        <div class="info-img"></div>
+                                        <div class="info-name">
+                                            <span class="fontBlack">{{ bItem.name }}</span>
+                                            <span>
+                                                <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , "
+                                                }}</span>
+                                                {{
+                                                    bItem.quantity +
+                                                    "個" + "," +
+                                                    bItem.nickName
+
+                                                }}
+                                            </span>
+                                        </div>
+                                        <div class="info-price">
+                                            <span>{{ "$" + bItem.salesPrice }}</span>
+                                            <span class="fontBlack">{{ "x" + bItem.quantity }}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -191,8 +191,6 @@ function countCoustomerFn(data: number) {
     formInputRef.value.customerCount += data;
 }
 function submitBtn() {
-  console.log(333, formInputRef.value);
-
   ruleLists.ruleItem.name.value = formInputRef.value.memberInfo.userId;
   ruleLists.ruleItem.timeBooking.value = formInputRef.value.timeBooking;
 
@@ -203,8 +201,6 @@ function submitBtn() {
 
   // if (!verify_all()) return;
   if (!checkVerify_all(ruleLists)) return;
-
-  console.log(workingHoursList.value);
 
   //判斷是否與休息時間重疊
   for (let i = 0; i < workingHoursList.value.data.length; i++) {
@@ -239,7 +235,6 @@ function submitBtn() {
     state: 0,
     bookingMemo: formInputRef.value.bookingMemo,
   };
-  console.log("新增", addApiData);
   //新增預約
   postAddApptDataApi(addApiData).then((res: any) => {
     let resData = res;
@@ -250,7 +245,6 @@ function submitBtn() {
 }
 
 function getItemInfoFn(data: any) {
-  console.log("獲取", data);
   if (data.selectGood) {
     formInputRef.value.buyGoodsGroup = data.selectGood;
   }
@@ -267,13 +261,11 @@ function getItemInfoFn(data: any) {
     priceTotal += element.price;
   }
   formInputRef.value.priceTotal = priceTotal;
-  console.log("選擇", formInputRef.value);
 }
 function cancleServiceFn(item: any, index: number) {
   formInputRef.value.courses.splice(index, 1);
 }
 function getRadioSListFn(data: any) {
-  console.log(data, "獲取getRadioSListFn");
   showItemTypeFn(0);
   formInputRef.value.courses.push(data);
 }
@@ -285,7 +277,6 @@ function showManagerUIFn(type: boolean) {
   showRdManagerRef.value = type;
 }
 function getRdManagerFn(data: any) {
-  console.log(data, "獲取getRadioSListFn");
   showManagerUIFn(false);
   formInputRef.value.managerInfo = data;
 

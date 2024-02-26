@@ -135,9 +135,8 @@ const onDeleteAlertBtn = (state: any, id: number) => {
 function dateChange() {
   let start: Date = formInputRef.value.datePicker[0]
   let end: Date = formInputRef.value.datePicker[1]
-  let startDate: string = start.getFullYear() + "-" + start.getMonth() + 1 + "-" + formatZeroDate(start.getDate());
-  let endDate: string = end.getFullYear() + "-" + end.getMonth() + 1 + "-" + formatZeroDate(end.getDate());
-
+  let startDate: string = start.getFullYear() + "-" + (start.getMonth() + 1) + "-" + formatZeroDate(start.getDate());
+  let endDate: string = end.getFullYear() + "-" + (end.getMonth() + 1) + "-" + formatZeroDate(end.getDate());
   getOrderListApi(0, startDate, endDate);
 }
 

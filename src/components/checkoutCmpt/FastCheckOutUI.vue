@@ -359,7 +359,7 @@ function mathAllPercentFn(params: any) {
         }
       //無單品折扣
       if (!havePercent) {
-        curP += Math.floor(params.discount * (element.price - cMinus))
+        curP += Math.floor(params.discount * ((element.price - cMinus)*element.quantity))
       }
     }
   }
@@ -485,11 +485,11 @@ function updatePrice() {
   for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
     const element = formInputRef.value.buyItemsList[i];
     if (element.ItemType == 2) {
-      priceTotal += element.salesPrice;
+      priceTotal += element.salesPrice*element.quantity;
     } else if (element.ItemType == 1) {
-      priceTotal += element.salesPrice;
+      priceTotal += element.salesPrice*element.quantity;
     } else if (element.ItemType == 3) {
-      priceTotal += element.salesPrice;
+      priceTotal += element.salesPrice*element.quantity;
     }
   }
   formInputRef.value.priceTotal = priceTotal;

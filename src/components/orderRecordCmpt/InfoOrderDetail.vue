@@ -236,7 +236,7 @@ function mathAllPercentFn(params: any) {
 
             //無單品折扣
             if (!havePercent) {
-                curP += Math.floor(params.discount * (element.price - cMinus))
+                curP += Math.floor(params.discount * (element.price - cMinus)*element.quantity)
             }
         }
     }

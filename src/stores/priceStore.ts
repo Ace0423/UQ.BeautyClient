@@ -170,7 +170,7 @@ export const usePriceStore = defineStore("priceStore", () => {
       sgDcListByItemRef.value = [];
       let res: any = await getSgDiscountByItemReq(itemType, id, page, count).then(
         (res: any) => {
-          if (res.data.data.table) {
+          if (res.data.state == 1) {
             sgDcListByItemRef.value = res.data.data.table;
           }
           return res;
@@ -408,7 +408,7 @@ export const usePriceStore = defineStore("priceStore", () => {
 
   let useTopUpDetailRef: any = ref([]);
   /**獲取可以使用儲值卡明細 */
-  const getTopUpUseDetailApi = async (UId: any = "",page: any = 0,count: any = 0) => {
+  const getTopUpUseDetailApi = async (UId: any = "", page: any = 0, count: any = 0) => {
     try {
       useTopUpDetailRef.value = [];
       let res: any = await getTopUpUseDetailReq(UId, page, count).then((res: any) => {

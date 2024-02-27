@@ -83,7 +83,7 @@ let editServiceInfo: any = ref([]);
 const datePickerSize = ref<'default' | 'large' | 'small'>('large')
 
 let formInputRef: any = ref({
-  datePicker: "",
+  datePicker: ["2024-01-17","2024-01-17"],
 });
 
 let search = ref("");
@@ -98,10 +98,16 @@ function getOrderFn(data: any) {
   );
 }
 
+var nowDate= new Date();
+var addDate = new Date(nowDate.getTime() - 14*24*60*60*1000);
+var endDate = nowDate.getFullYear()+"-"+(nowDate.getMonth()+1)+"-"+nowDate.getDate();
+var startDate = addDate.getFullYear()+"-"+(addDate.getMonth()+1)+"-"+addDate.getDate();
+formInputRef.value.datePicker[0]=startDate
+formInputRef.value.datePicker[1]=endDate
 
 onBefore();
 function onBefore() {
-  getOrderListApi(0);
+  getOrderListApi(0,formInputRef.value.datePicker[0],formInputRef.value.datePicker[1]);
 }
 onMounted(() => { });
 

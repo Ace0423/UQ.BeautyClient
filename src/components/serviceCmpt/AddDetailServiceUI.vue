@@ -256,8 +256,6 @@ function cancleSubListFn(item: any, index: number) {
 }
 
 function submitBtn() {
-  console.log(formInputRef.value.sgList);
-
   ruleLists.ruleItem.name.value = formInputRef.value.name;
   ruleLists.ruleItem.price.value = formInputRef.value.price;
   ruleLists.ruleItem.servicesTime.value = formInputRef.value.servicesTime;
@@ -628,6 +626,12 @@ const ruleLists: any = reactive({
                 :deep(.el-select-dropdown) {
                   border: 1px solid #ff0000 !important;
                 }
+              }
+
+              :deep(.el-select__wrapper) {
+                width: 100%;
+                height: 77px;
+                font-size: 24px;
               }
 
               input {

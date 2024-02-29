@@ -7,8 +7,8 @@
       <div class="main-content">
         <p>已選擇({{ formInputRef.serviceGroups.length }})項服務</p>
         <input v-model="formInputRef.search" />
-        <div class="div-item">
-          <div>
+        <div class="div-item" >
+          <div v-if="filterServiceGroups.length>1">
             <label class="label-group">
               <input class="input-group" type="checkbox" id="allCService" value="item" v-model="clickAllRef"
                 @click="clickAll" />

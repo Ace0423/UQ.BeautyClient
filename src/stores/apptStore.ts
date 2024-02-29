@@ -91,15 +91,19 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       serviceGroupList.value = [];
       let res: any = await getServiceGroupReq(id, isList).then((res: any) => {
-        if (res.data.data && !id) {
-          let detailVo: IServiceGroupVo = res.data.data.table;
-          serviceGroupList.value = detailVo;
-          serviceGroupList.value.sort(function (a: any, b: any) {
-            return a.order > b.order ? 1 : -1;
-          });
-          return serviceGroupList.value;
+        if (res.data.data) {
+          if (!id) {
+            let detailVo: IServiceGroupVo = res.data.data.table;
+            serviceGroupList.value = detailVo;
+            serviceGroupList.value.sort(function (a: any, b: any) {
+              return a.order > b.order ? 1 : -1;
+            });
+            return serviceGroupList.value;
+          } else {
+            return res.data.data.table;
+          }
         } else {
-          return res.data.data.table;
+          return res.data.data;
         }
       });
       return res
@@ -113,12 +117,16 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       serviceDetailList.value = [];
       let res: any = await getServiceDetailReq(id, isList).then((res: any) => {
-        if (res.data.data && !id) {
-          let detailVo: IServiceDetailVo = res.data.data.table;
-          serviceDetailList.value = detailVo;
-          return serviceDetailList.value;
+        if (res.data.data) {
+          if (!id) {
+            let detailVo: IServiceDetailVo = res.data.data.table;
+            serviceDetailList.value = detailVo;
+            return serviceDetailList.value;
+          } else {
+            return res.data.data.table;
+          }
         } else {
-          return res.data.data.table;
+          return res.data.data;
         }
       });
       return res
@@ -563,15 +571,19 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       goodsGroupList.value = [];
       let res: any = await getGoodsGroupReq(id, isList).then((res: any) => {
-        if (res.data.data && !id) {
-          let detailVo: IServiceGroupVo = res.data.data.table;
-          goodsGroupList.value = detailVo;
-          goodsGroupList.value.sort(function (a: any, b: any) {
-            return a.order > b.order ? 1 : -1;
-          });
-          return goodsGroupList.value;
+        if (res.data.data) {
+          if (!id) {
+            let detailVo: IServiceGroupVo = res.data.data.table;
+            goodsGroupList.value = detailVo;
+            goodsGroupList.value.sort(function (a: any, b: any) {
+              return a.order > b.order ? 1 : -1;
+            });
+            return goodsGroupList.value;
+          } else {
+            return res.data.data.table;
+          }
         } else {
-          return res.data.data.table;
+          return res.data.data;
         }
       });
       return res;
@@ -637,15 +649,19 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       goodsBrandListRef.value = [];
       let res: any = await getGoodsBrandReq(id, isList).then((res: any) => {
-        if (res.data.data && !id) {
-          let detailVo: IServiceGroupVo = res.data.data.table;
-          goodsBrandListRef.value = detailVo;
-          goodsBrandListRef.value.sort(function (a: any, b: any) {
-            return a.order > b.order ? 1 : -1;
-          });
-          return goodsBrandListRef.value;
+        if (res.data.data) {
+          if (!id) {
+            let detailVo: IServiceGroupVo = res.data.data.table;
+            goodsBrandListRef.value = detailVo;
+            goodsBrandListRef.value.sort(function (a: any, b: any) {
+              return a.order > b.order ? 1 : -1;
+            });
+            return goodsBrandListRef.value;
+          } else {
+            return res.data.data.table;
+          }
         } else {
-          return res.data.data.table;
+          return res.data.data;
         }
       });
       return res;
@@ -714,12 +730,16 @@ export const useApptStore = defineStore("apptStore", () => {
       goodsDetailListRef.value = [];
       //查全部
       res = await getGoodsDetailReq(id).then((res: any) => {
-        if (res.data.data && !id) {
-          let detailVo: any = res.data.data.table;
-          goodsDetailListRef.value = detailVo;
-          return goodsDetailListRef.value;
+        if (res.data.data) {
+          if (!id) {
+            let detailVo: any = res.data.data.table;
+            goodsDetailListRef.value = detailVo;
+            return goodsDetailListRef.value;
+          } else {
+            return res.data.data.table;
+          }
         } else {
-          return res.data.data.table;
+          return res.data.data;
         }
       });
       return res;
@@ -870,12 +890,16 @@ export const useApptStore = defineStore("apptStore", () => {
     try {
       orderList.value = [];
       let res: any = await getOrderListReq(id, startDate, endDate, isList).then((res: any) => {
-        if (res.data.data && !id) {
-          let detailVo: any = res.data.data.table;
-          orderList.value = detailVo;
-          return orderList.value;
+        if (res.data.data) {
+          if (!id) {
+            let detailVo: any = res.data.data.table;
+            orderList.value = detailVo;
+            return orderList.value;
+          } else {
+            return res.data.data.table;
+          }
         } else {
-          return res.data.data.table;
+          return res.data.data;
         }
       });
       return res
@@ -999,7 +1023,7 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
-  
+
   return {
     //--------------------服務S
     addServiceGroupApi,

@@ -19,12 +19,14 @@
           </div>
           <div class="form-info">
             <div class="formprice">
-              <span>*售價(NT)</span>
+              <span>*折扣金額</span>
               <div>
                 <div>
-                  <el-input class="input-price" v-model="formInputRef.discount" placeholder="請輸入折扣"
-                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')">
-                  </el-input>
+                  <input v-if="!formInputRef.dType"  class="input-price" type="text" v-model="formInputRef.discount" maxlength="2" max="100" min="1"
+                  onkeyup="value=value.replace(/[^\d]/g,'');if(value>99){value=99;}" />
+                  <input v-else class="input-price" type="text" v-model="formInputRef.discount" 
+                  onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"/>
+                  <span v-if="!formInputRef.dType&&formInputRef.discount!=0">{{ (100 - parseInt(formInputRef.discount)) / 10 + "折" }}</span>
                   <div class="switch">
                     <span class="box_item" :class="{ actived_box: formInputRef.dType }"></span>
                     <span class="left" :class="{ actived_Area: !formInputRef.dType }"
@@ -139,9 +141,9 @@ let showGoodsUIRef: any = ref(false);
 let selServiceGroupRef: any = ref([]);
 let selGoodsGroupRef: any = ref([]);
 let formInputRef: any = ref({
-  name: null,
-  type: null,
-  price: null,
+  name: "",
+  dType: false,
+  discount:0,
 });
 
 onMounted(() => {
@@ -385,9 +387,19 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
 
             >div {
               display: flex;
+              width: 210px;
+              justify-content: space-between;
 
               .input-price {
-                width: 150px;
+                width: 110px;
+                border: none;
+              }
+
+              >span {
+                display: flex;
+                width: 40px;
+                justify-content: center;
+                align-items: center;
               }
 
               .switch {

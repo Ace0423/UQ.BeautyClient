@@ -48,7 +48,7 @@
             <div class="horizontal-content">
               <div>
                 <span>單位</span>
-                <div>
+                <div class="select-content">
                   <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.unit"
                     placeholder="請選擇單位" @change="changeValue()">
                     <el-option v-for="(item, index) in goodsUnitGroup" :key="item" :value="index" :label="item">
@@ -172,7 +172,7 @@ let formInputRef: any = ref({
   brandItem: [],
   price: "",
   total: 0,
-  state: 0,
+  display: 0,
   msg: "",
   imageSmall: goods_basicImg,
   imageBig: "",
@@ -216,7 +216,7 @@ function submitBtn() {
     stockTrace: false,
     bonusOpen: formInputRef.value.isBonusOpen,
     updateOpen: formInputRef.value.isEditAccounting,
-    display: formInputRef.value.state == 1,
+    display: formInputRef.value.display == 1,
     productGroup: groupsIdList,
     productBrand: brandIdList,
     productDiscount: [],
@@ -628,19 +628,24 @@ const ruleLists: any = reactive({
 
           .select-content {
             width: calc(100% - 180px);
+            height: 100%;
 
             .el-select {
               width: 100%;
 
               :deep(.el-input__wrapper) {
                 width: 100%;
-                height: 77px;
                 font-size: 24px;
 
                 :deep(.el-select-dropdown) {
                   border: 1px solid #ff0000 !important;
                   box-sizing: border-box !important;
                 }
+              }
+              :deep(.el-select__wrapper) {
+                width: 100%;
+                height: 100%;
+                font-size: 24px;
               }
 
               input {

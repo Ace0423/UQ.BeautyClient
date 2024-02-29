@@ -255,7 +255,6 @@ function onBeforeFn() {
   getPayTypeListFn()
 
   if (props.selData == '快速結帳') {
-    console.log(111, props.selData);
     formInputRef.value.bkListNo = "";
   } else {
     formInputRef.value.memberInfo = props.selData.memberInfo;
@@ -290,7 +289,7 @@ let payAmountCpt = computed(() => {
   let curPrice = formInputRef.value.priceTotal;
   let dcPrice = 0;
   let amount = 0;
-  //計算全單折扣
+  //計算全單折扣dType 1-3-百分比優惠
   for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
     const element = formInputRef.value.allDiscount[i];
     if (element.dType == 1 || element.dType == 3) {
@@ -300,18 +299,7 @@ let payAmountCpt = computed(() => {
     }
   }
   amount = (curPrice < dcPrice) ? 0 : (curPrice - dcPrice)
-  // //計算使用儲值卡
-  // if (formInputRef.value.useTopUpCard) {
-  //   formInputRef.value.useTopUpPrice = 0;
-  //   let curUseBalance = formInputRef.value.useTopUpCard.balance;
-  //   if (amount < curUseBalance) {
-  //     formInputRef.value.useTopUpPrice = amount;
-  //   } else {
-  //     formInputRef.value.useTopUpPrice = curUseBalance;
-  //   }
-  //   amount -= formInputRef.value.useTopUpPrice;
-  // }
-  amount = amount * formInputRef.value.customerCount;
+  amount = amount * formInputRef.value.customerCount;//人數
   return amount
 });
 let finalAmountCpt = computed(() => {
@@ -342,26 +330,31 @@ let percentPriceCpt = computed(() => {
 });
 //計算全單折扣排除單品折扣(%數折扣)
 function mathAllPercentFn(params: any) {
+      console.log(params);
   let curP = 0;
   if (params.dType == 1) {
     for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
       const element = formInputRef.value.buyItemsList[i];
-      let havePercent = false;
+      let haveSglPercent = false;
       let cMinus = 0;
       if (element.sglDiscountList)
         for (let j = 0; j < element.sglDiscountList.length; j++) {
           const sdList = element.sglDiscountList[j];
+          //已使用單品折扣%
           if (sdList.dType == 3) {
-            havePercent = true;
+            haveSglPercent = true;
           } else {
             cMinus += sdList.discount;
           }
         }
       //無單品折扣
-      if (!havePercent) {
+      if (!haveSglPercent) {
         curP += Math.floor(params.discount * ((element.price - cMinus)*element.quantity))
       }
     }
+  }else if (params.dType == 2) {
+      console.log(params);
+      
   }
   return curP
 }
@@ -476,6 +469,7 @@ function getItemInfoFn(data: any) {
   odDetail.quantity = 1;
   odDetail.isManual = null;
   odDetail.percentSgDC = null;
+  odDetail.amount = 0;
 
   formInputRef.value.buyItemsList.push(odDetail);
   updatePrice();

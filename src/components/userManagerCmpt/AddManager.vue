@@ -271,7 +271,6 @@ const getRoleName = () => {
 }
 const filterRoleLis = computed(() => {
     const filter: any = props.roleType != 0 ? roleList.value.data.filter((e: any) => e.roleId != 1) : roleList.value.data;
-    console.log(filter)
     return filter;
 });
 onMounted(() => {
@@ -294,7 +293,6 @@ onMounted(() => {
         // newManager.roleList = props.selectManagerItem.roleList.length == 0 ? "" : props.selectManagerItem.roleList[0].roleId;
         title.value = "修改使用者";
     }
-    console.log(newManager.password)
     getRoleName();
 });
 </script>

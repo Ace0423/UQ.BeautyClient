@@ -19,12 +19,14 @@
           </div>
           <div class="form-info">
             <div class="formprice">
-              <span>*售價(NT)</span>
+              <span>*折扣金額</span>
               <div>
                 <div>
-                  <el-input class="input-price" v-model="formInputRef.discount" placeholder="請輸入折扣"
-                    onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')">
-                  </el-input>
+                  <input v-if="formInputRef.dType"  class="input-price" type="text" v-model="formInputRef.discount" maxlength="2" max="100" min="1"
+                  onkeyup="value=value.replace(/[^\d]/g,'');if(value>99){value=99;}" />
+                  <input v-else class="input-price" type="text" v-model="formInputRef.discount" 
+                  onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"/>
+                  <span v-if="formInputRef.dType&&formInputRef.discount!=0">{{ (100 - parseInt(formInputRef.discount)) / 10 + "折" }}</span>
                   <div class="switch">
                     <span class="box_item" :class="{ actived_box: formInputRef.dType }"></span>
                     <span class="left" :class="{ actived_Area: !formInputRef.dType }"
@@ -139,13 +141,12 @@ const props = defineProps<{
 let showServiceUIRef: any = ref(false);
 let showGoodsUIRef: any = ref(false);
 let formInputRef: any = ref({
-  name: null,
-  type: null,
-  price: null,
+  name: "",
   discountNo: null,
   goodsGroup: [],
   serviceGroup: [],
   dType: false,//false=2=%數,true=3=金額
+  discount:0,
 });
 onBeforeFn();
 function onBeforeFn() {
@@ -386,9 +387,12 @@ let { ruleItem } = toRefs(ruleLists);
 
             >div {
               display: flex;
+              width: 210px;
+              justify-content: space-between;
 
               .input-price {
-                width: 150px;
+                width: 110px;
+                border: none;
               }
 
               .switch {

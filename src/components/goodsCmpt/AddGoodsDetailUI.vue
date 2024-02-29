@@ -44,7 +44,7 @@
             <div class="horizontal-content">
               <div>
                 <span>單位</span>
-                <div>
+                <div class="select-content">
                   <el-select :popper-append-to-body="false" popper-class="select" v-model="formInputRef.unit"
                     placeholder="請選擇單位" @change="changeValue()">
                     <el-option v-for="(item, index) in goodsUnitGroup" :key="item" :value="index" :label="item">
@@ -260,11 +260,7 @@ const ruleLists: any = reactive({
 //#endregion
 </script>
   
-<style lang="scss">
-.el-select-dropdown {
-  top: 0px;
-}
-</style>
+<style lang="scss"></style>
 <style scoped lang="scss">
 .popup-AddGoodsDetailUI {
   position: fixed;
@@ -527,6 +523,11 @@ const ruleLists: any = reactive({
                 }
               }
 
+              :deep(.el-select__wrapper) {
+                height: 57px;
+                font-size: 24px;
+              }
+
               input {
                 font-size: 12px;
                 border: none;
@@ -560,28 +561,38 @@ const ruleLists: any = reactive({
                 font-size: 24px;
               }
 
-              .el-select {
-                // width:  calc(100%);
+              .select-content {
                 height: 100%;
+                width: 5555px;
 
-                :deep(.el-input__wrapper) {
-                  // width: calc(100%);
-                  height: 57px;
-                  font-size: 24px;
+                .el-select {
+                  // width:  calc(100%);
+                  height: 100%;
 
-                  :deep(.el-select-dropdown) {
-                    border: 1px solid #ff0000 !important;
-                    box-sizing: border-box !important;
+                  :deep(.el-input__wrapper) {
+                    // width: calc(100%);
+                    height: 57px;
+                    font-size: 24px;
+
+                    :deep(.el-select-dropdown) {
+                      border: 1px solid #ff0000 !important;
+                      box-sizing: border-box !important;
+                    }
                   }
-                }
 
-                input {
-                  font-size: 12px;
-                  border: none;
-                  background: none;
-                  text-align: center;
-                  font-weight: bold;
-                  border: 0px solid #000000;
+                  :deep(.el-select__wrapper) {
+                    height: 57px;
+                    font-size: 24px;
+                  }
+
+                  input {
+                    font-size: 12px;
+                    border: none;
+                    background: none;
+                    text-align: center;
+                    font-weight: bold;
+                    border: 0px solid #000000;
+                  }
                 }
               }
 

@@ -5,5 +5,6 @@
   "AddService": "新增服務",
   "AddGoodsGroup": "新增群組",
   "goodsMgmt": "商品",
-  "edit": "編輯"
+  "edit": "編輯",
+  "username is not valid":"使用者名稱無效"
 }

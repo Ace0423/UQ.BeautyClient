@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { useCounterStore } from "@/stores/counter";
 import { useRouter } from "vue-router";
-// import { any, IMethods } from '../types/form'
+import { Form, Field, ErrorMessage, defineRule } from 'vee-validate';
+import { required, email, min } from '@vee-validate/rules';
+import Alert from "@/components/alertCmpt";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
+defineRule('required', required);
+defineRule('email', email);
 const store = useCounterStore();
 const { authHandler } = store;
 const user = reactive({
-  username: "testadmin@gamil.com",
+  username: "aaa@gmail.com",
   password: "1qazXSW@",
 });
 const error_message = reactive({
@@ -22,7 +27,7 @@ const state: any = reactive({
       icon: "fa-solid fa-user",
       placeholder: "輸入使用者信箱",
       is_readonly: false,
-      value: "testadmin@gamil.com",
+      value: "aaa@gmail.com",
       tip: "",
       rules: {
         required: {
@@ -43,7 +48,7 @@ const state: any = reactive({
       icon: "fa-solid fa-key",
       placeholder: "請輸入密碼",
       is_readonly: false,
-      value: "1qazXSW@",
+      value: "",
       tip: "",
       rules: {
         required: {
@@ -180,19 +185,46 @@ const loginFn = () => {
     user.username = state.form_items.email.value;
     user.password = state.form_items.password.value;
     authHandler(user).then((res) => {
+      console.log(res)
       if (res.state == 2) {
         error_message.request = "帳號或密碼錯誤";
+        Alert.warning(showErrorMsg(res.msg), 2000);
       }
     });
   }
   // const router = useRouter();
   // router.push({ path: "/memberView" });
 };
+const validateEmai = (value: any) => {
+  if (!value) {
+    return '此欄位必填';
+  }
+  // if the field is not a valid email
+  const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+  if (!regex.test(value)) {
+    return '請輸入有效的電子郵件格式';
+  }
+  return true;
+}
+const validatePassword = (value: any) => {
+  if (!value) {
+    return '此欄位必填';
+  }
+  return true;
+}
 </script>
 <template>
   <div class="loginBox">
     <div class="container">
       <img src="@/assets/images/logo.png" />
+      <!-- <Form>
+        <Field v-model="user.username" name="username" type="email" placeholder="請輸入E-mail" :rules="validateEmai" />
+        <ErrorMessage name="username" />
+      </Form>
+      <Form>
+        <Field v-model="user.password" name="password" type="Password " placeholder="請輸入密碼" :rules="validatePassword" />
+        <ErrorMessage name="password" />
+      </Form> -->
       <div class="input-box" v-for="item in form_items" :key="item.label">
         <p>{{ item.label }}</p>
         <input :type="item.type" :placeholder="item.placeholder" v-model="item.value" />
@@ -229,6 +261,11 @@ const loginFn = () => {
       // padding-top: 79px;
       width: 324px;
       height: 122px;
+    }
+
+    >form {
+      display: flex;
+      flex-direction: column;
     }
 
     >.input-box {

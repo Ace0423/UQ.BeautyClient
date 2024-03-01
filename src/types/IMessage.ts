@@ -59,6 +59,9 @@ export const showErrorMsg = (status: string): string => {
     case "TU01":
       message = "該儲值卡已被領取，故無法動作";
       break;
+    case "LI01":
+      message = "帳號密碼錯誤";
+      break;
     default:
       message = status;
   }

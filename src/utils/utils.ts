@@ -121,9 +121,10 @@ export const verify_methods: any = {
     }
   },
 };
+
 export const validateEmai = (value: any) => {
-  if (!value) {
-    return '此欄位必填';
+  if (!validateRequired) {
+    return validateRequired;
   }
   // if the field is not a valid email
   const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
@@ -132,6 +133,61 @@ export const validateEmai = (value: any) => {
   }
   return true;
 }
+export const validatePassword = (value: any) => {
+  let msg: any
+  if (validateRequired(value) != true) {
+    let msg: any = validateRequired(value)
+    return msg;
+  }
+  if (validateLength(value) != true) {
+    let msg: any = validateLength(value)
+    return msg;
+  }
+  if (validateCapital(value) != true) {
+    let msg: any = validateCapital(value)
+    return msg;
+  }
+  if (validateSpecial(value) != true) {
+    let msg: any = validateSpecial(value)
+    return msg;
+  }
+  return true;
+}
+export const validateRequired = (value: any) => {
+  if (!value) {
+    return '此欄位必填';
+  }
+  return true;
+}
+export const validateLength = (value: any, length: any = 6) => {
+  if (value.length < length) {
+    return '不得少於' + length + '位';
+  }
+  return true;
+}
+export const validateCapital = (value: any) => {
+  const stringArray = value.split("");
+  let capitalState = false;
+  stringArray.forEach((t: any) => {
+    if (/[A-Z]/.test(t)) {
+      capitalState = true;
+    }
+  });
+  if (!capitalState) {
+    return '必須含一個大寫英文字母';
+  }
+  return capitalState;
+}
+export const validateSpecial = (value: any) => {
+  let rep = new RegExp(
+    "[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]"
+  );
+  if (!rep.test(value)) {
+    return '必須含一個特殊字元';
+  }
+  return true;
+}
+
 // 计算时间（基准时间yyyy-MM-dd HH:mm:ss，增加或减少(add|minus)，天，小时，分钟，秒）
 export function countTimeUtil(
   times: any,

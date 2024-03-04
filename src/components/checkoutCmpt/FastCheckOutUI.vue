@@ -148,7 +148,8 @@
               </div>
               <div v-for="(dItem, index) in allDCListCpt" :key="dItem">
                 <span>{{ dItem.title }}</span>
-                <span v-if="dItem.dType == 1">{{ "($ - " + mathAllPercentFn(dItem) + ")" }}</span>
+                <!-- <span v-if="dItem.dType == 1">{{ "($ - " + mathAllPercentFn(dItem) + ")" }}</span> -->
+                <span v-if="dItem.dType == 1">{{ "($ - " + percentAllDC + ")" }}</span>
                 <span v-if="dItem.dType == 2">{{ "($ - " + (dItem.discount) + ")" }}</span>
               </div>
               <div v-if="formInputRef.useTopUpCard">
@@ -158,7 +159,7 @@
             </div>
             <div class="link-bottom"></div>
             <div class="pay-msg">
-              <span>應收金額<span v-if="formInputRef.customerCount>1">({{ formInputRef.customerCount }}人)</span></span>
+              <span>應收金額<span v-if="formInputRef.customerCount > 1">({{ formInputRef.customerCount }}人)</span></span>
               <span class="price-msg"> ${{ finalAmountCpt }}</span>
             </div>
             <div class="customer-submit">
@@ -289,15 +290,18 @@ let payAmountCpt = computed(() => {
   let curPrice = formInputRef.value.priceTotal;
   let dcPrice = 0;
   let amount = 0;
-  //計算全單折扣dType 1-3-百分比優惠
-  for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
-    const element = formInputRef.value.allDiscount[i];
-    if (element.dType == 1 || element.dType == 3) {
-      dcPrice += Math.floor(mathAllPercentFn(element))
-    } else {
-      dcPrice += element.discount
-    }
-  }
+  // //計算全單折扣dType 1-3-百分比優惠
+  // for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
+  //   const element = formInputRef.value.allDiscount[i];
+  //   if (element.dType == 1 || element.dType == 3) {
+  //   dcPrice += Math.floor(mathAllPercentFn(element))
+  //   } else {
+  //     dcPrice += element.discount
+  //   }
+  // }
+
+  // mathDiscountFn()
+  dcPrice = percentAllDC.value + priceAllDC.value;
   amount = (curPrice < dcPrice) ? 0 : (curPrice - dcPrice)
   amount = amount * formInputRef.value.customerCount;//人數
   return amount
@@ -314,7 +318,7 @@ let finalAmountCpt = computed(() => {
       formInputRef.value.useTopUpPrice = curUseBalance;
     }
   }
-  finalAmount= finalAmount-formInputRef.value.useTopUpPrice;
+  finalAmount = finalAmount - formInputRef.value.useTopUpPrice;
   // finalAmount = finalAmount * parseInt(formInputRef.value.customerCount);
 
   return finalAmount
@@ -330,33 +334,89 @@ let percentPriceCpt = computed(() => {
 });
 //計算全單折扣排除單品折扣(%數折扣)
 function mathAllPercentFn(params: any) {
-      console.log(params);
   let curP = 0;
-  if (params.dType == 1) {
+  if (params.dType == 1) {//全單百分比折扣
     for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
       const element = formInputRef.value.buyItemsList[i];
+      element.allDcPrice = 0;
       let haveSglPercent = false;
       let cMinus = 0;
-      if (element.sglDiscountList)
-        for (let j = 0; j < element.sglDiscountList.length; j++) {
-          const sdList = element.sglDiscountList[j];
-          //已使用單品折扣%
-          if (sdList.dType == 3) {
-            haveSglPercent = true;
-          } else {
-            cMinus += sdList.discount;
-          }
+      for (let j = 0; j < element.sglDiscountList.length; j++) {
+        const sdList = element.sglDiscountList[j];
+        //已使用單品折扣%
+        if (sdList.dType == 3) {//單品百分比折扣
+          haveSglPercent = true;
+        } else {
+          cMinus += sdList.discount;
         }
+      }
       //無單品折扣
       if (!haveSglPercent) {
-        curP += Math.floor(params.discount * ((element.price - cMinus)*element.quantity))
+        curP += Math.floor(params.discount * ((element.price - cMinus) * element.quantity))
       }
+      element.allDcPrice = curP
     }
-  }else if (params.dType == 2) {
-      console.log(params);
-      
+  } else if (params.dType == 2) {//全單現金折扣
+    curP = params.discount;
+    for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
+      const element = formInputRef.value.buyItemsList[i];
+      element.allDcPrice = 0;
+      element.allDcPrice = (curP / formInputRef.value.buyItemsList.length)
+    }
   }
   return curP
+}
+let percentAllDC = ref(0);
+let priceAllDC = ref(0);
+function mathDiscountFn() {
+  let curPrice = 0;
+  percentAllDC.value = 0;
+  priceAllDC.value = 0;
+  let curPriceTotal = 0;
+  for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
+    const curItem = formInputRef.value.buyItemsList[i];
+    let priceSglDC = 0;
+    let percentSglDC = 0;
+    for (let j = 0; j < formInputRef.value.allDiscount.length; j++) {
+      let isSglPercent = false;
+      const curAllDc = formInputRef.value.allDiscount[j];
+      if (curAllDc.dType == 1) {//全單百分比折扣
+        for (let k = 0; k < curItem.sglDiscountList.length; k++) {
+          const curSingleDC = curItem.sglDiscountList[k];
+          if (curSingleDC.dType == 3) {//單品百分比折扣
+            isSglPercent = true;
+            percentSglDC += Math.floor(curItem.price * curSingleDC.discount);
+          } else if (curSingleDC.dType == 4) {//單品金額折扣
+            priceSglDC += curSingleDC.discount;
+          }
+        }
+        //無單品折扣
+        if (!isSglPercent) {
+          curPrice = Math.floor(curAllDc.discount * ((curItem.price - priceSglDC) * curItem.quantity));
+          // curPrice=Math.floor(curPrice * 100) / 100
+          percentAllDC.value += curPrice
+          curItem.allDcPrice += curPrice;//計算全單折扣
+        }
+      } else if (curAllDc.dType == 2) {//全單金額折扣
+        let curP = priceAllDC.value = curAllDc.discount;
+        //計算全單折扣
+        curItem.allDcPrice += (curP / formInputRef.value.buyItemsList.length)
+      }
+      //計算單品折扣
+      if (curItem.price > (percentSglDC + priceSglDC)) {
+        curItem.salesPrice = curItem.price - (percentSglDC + priceSglDC);
+      }
+      else {
+        curItem.salesPrice = 0
+      }
+    }
+    //計算扣除單品折扣後的總額
+    curPriceTotal += curItem.salesPrice * curItem.quantity;
+  }
+  //扣除單品折扣後的總額
+  formInputRef.value.priceTotal = curPriceTotal;
+
+  return curPrice
 }
 
 function showMemberUIFn(state: boolean) {
@@ -378,15 +438,16 @@ function getRdDiscountFn(data: any) {
   for (let i = 0; i < formInputRef.value.allDiscount.length; i++) {
     const element = formInputRef.value.allDiscount[i];
     if (element.dType != data.dType) {
-      curAllDiscount.push(element)
+      curAllDiscount.push(element);
     }
   }
   curAllDiscount.push(data);
   formInputRef.value.allDiscount = curAllDiscount;
+
+  updatePrice();
   showRdAllDiscountFn(false);
 }
 function getRdTopUpCardFn(data: any) {
-  console.log("儲值卡", data);
   formInputRef.value.useTopUpCard = data;
   showRdTopUpCardFn(false);
 }
@@ -399,6 +460,7 @@ function delDiscount(type: any) {
     }
   }
   formInputRef.value.allDiscount = curAllDiscount;
+  updatePrice();
 }
 function getMembersFn(data: any) {
   formInputRef.value.memberInfo = data;
@@ -464,29 +526,26 @@ function getItemInfoFn(data: any) {
     odDetail.tuViewPrice = curItemData.tuViewPrice;
   }
   odDetail.managerInfo = curItemData.managerInfo;
-  odDetail.salesPrice = odDetail.price;
   odDetail.stock = 0;
   odDetail.quantity = 1;
   odDetail.isManual = null;
   odDetail.percentSgDC = null;
   odDetail.amount = 0;
+  odDetail.salesPrice = odDetail.price;
+  odDetail.allDcPrice = 0;
+  odDetail.sglDiscountList = [];
 
   formInputRef.value.buyItemsList.push(odDetail);
   updatePrice();
 }
 function updatePrice() {
-  let priceTotal = 0;
-  for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
-    const element = formInputRef.value.buyItemsList[i];
-    if (element.ItemType == 2) {
-      priceTotal += element.salesPrice*element.quantity;
-    } else if (element.ItemType == 1) {
-      priceTotal += element.salesPrice*element.quantity;
-    } else if (element.ItemType == 3) {
-      priceTotal += element.salesPrice*element.quantity;
-    }
-  }
-  formInputRef.value.priceTotal = priceTotal;
+  mathDiscountFn();
+  // let curPriceTotal = 0;
+  // for (let i = 0; i < formInputRef.value.buyItemsList.length; i++) {
+  //   const element = formInputRef.value.buyItemsList[i];
+  //   curPriceTotal += element.salesPrice * element.quantity;
+  // }
+  // formInputRef.value.priceTotal = curPriceTotal;
 }
 function showEditGdInfoUIFn(state: any) {
   showEditItemGoodsUIRef.value = state;
@@ -525,26 +584,26 @@ function getEditTuInfoFn(data: any) {
   showEditGdInfoUIFn(false);
 }
 function setSglDiscountItem(params: any) {
-  let curPercent = 0;
-  let curMinus = 0;
-  for (let i = 0; i < params.sglDiscountList.length; i++) {
-    const element = params.sglDiscountList[i];
-    if (element.dType == 3) {
-      curPercent = Math.floor(params.price * element.discount);
-    }
-  }
-  for (let i = 0; i < params.sglDiscountList.length; i++) {
-    const element = params.sglDiscountList[i];
-    if (element.dType == 4) {
-      curMinus = (element.discount);
-    }
-  }
-  if (params.price > (curPercent + curMinus))
-    params.salesPrice = params.price - (curPercent + curMinus);
-  else
-    params.salesPrice = 0
+  // let curPercent = 0;
+  // let curMinus = 0;
+  // for (let i = 0; i < params.sglDiscountList.length; i++) {
+  //   const element = params.sglDiscountList[i];
+  //   if (element.dType == 3) {
+  //     curPercent = Math.floor(params.price * element.discount);
+  //   }
+  // }
+  // for (let i = 0; i < params.sglDiscountList.length; i++) {
+  //   const element = params.sglDiscountList[i];
+  //   if (element.dType == 4) {
+  //     curMinus = (element.discount);
+  //   }
+  // }
+  // if (params.price > (curPercent + curMinus))
+  //   params.salesPrice = params.price - (curPercent + curMinus);
+  // else
+  //   params.salesPrice = 0
 
-  return params.salesPrice;
+  // return params.salesPrice;
 }
 //刪除商品
 function delItemGdFn(data: any) {
@@ -608,7 +667,6 @@ function cancleGoodsFn(item: any, index: number) {
 }
 
 function submitBtn() {
-  console.log("結帳確認", formInputRef.value);
   ruleLists.ruleItem.name.value = formInputRef.value.memberInfo.userId;
   ruleLists.ruleItem.buyItem.value = formInputRef.value.buyItemsList.length;
 

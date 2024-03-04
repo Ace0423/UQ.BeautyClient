@@ -11,7 +11,7 @@
           <div v-for="item in filterTopUpData" :key="item">
             <label class="label-item" :value="item">
               <input class="input-item" type="radio" :key="item" :value="item" :id="'RadioTopUps_' + item"
-                v-model="formInputRef.courses" @click="clickItem(item, item.pId)" />
+                v-model="formInputRef.TopUpCards" @click="clickItem(item, item.pId)" />
               <!-- <label :for="'RadioTopUps_' + item.SId"></label> -->
               <div class="title-input">
                 <span value="{{item}}" name="{{item.tuTitle}}">{{
@@ -72,7 +72,7 @@ const getTopUpCardData = ((id: any) => {
 
       }
       if (res.state == 2) {
-        Alert.warning(showErrorMsg(res.msg), 2000);
+        // Alert.warning(showErrorMsg(res.msg), 2000);
       }
     })
     .catch((e: any) => {
@@ -97,6 +97,7 @@ let formInputRef: any = ref({
   name: "",
   search: "",
   TopUps: null,
+  TopUpCards: null,
 });
 
 

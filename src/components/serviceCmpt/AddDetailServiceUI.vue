@@ -617,21 +617,13 @@ const ruleLists: any = reactive({
 
             .el-select {
               width: 100%;
-
-              :deep(.el-input__wrapper) {
-                width: 100%;
-                height: 77px;
-                font-size: 24px;
-
-                :deep(.el-select-dropdown) {
-                  border: 1px solid #ff0000 !important;
-                }
-              }
+              height: 100%;
 
               :deep(.el-select__wrapper) {
-                width: 100%;
-                height: 77px;
+                height: 100%;
                 font-size: 24px;
+                border: none;
+                box-shadow: none;
               }
 
               input {

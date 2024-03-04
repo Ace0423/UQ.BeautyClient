@@ -3,7 +3,7 @@
     <div class="add-discount-form">
       <div class="add-discountdetail-bg Column">
         <div class="top-form">
-          <p>新增</p>
+          <p>編輯</p>
         </div>
         <div class="main-form">
           <div class="form-info">

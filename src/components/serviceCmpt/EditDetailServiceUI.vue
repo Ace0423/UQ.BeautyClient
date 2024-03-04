@@ -3,7 +3,7 @@
     <div class="popup-content">
       <div class="top-content">
         <img :src="icon_closeX" v-on:click="showEditForm(false)" />
-        <span>新增服務</span>
+        <span>編輯服務</span>
         <button class="otherpay-btn" v-on:click="submitBtn()">確認編輯</button>
       </div>
       <div class="main-content">
@@ -588,15 +588,13 @@ const ruleLists: any = reactive({
 
             .el-select {
               width: 100%;
+              height: 100%;
 
-              :deep(.el-input__wrapper) {
-                width: 100%;
-                height: 77px;
+              :deep(.el-select__wrapper) {
+                height: 100%;
                 font-size: 24px;
-
-                :deep(.el-select-dropdown) {
-                  border: 1px solid #ff0000 !important;
-                }
+                border: none;
+                box-shadow: none;
               }
 
               input {

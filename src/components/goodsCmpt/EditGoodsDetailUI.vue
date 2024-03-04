@@ -3,7 +3,7 @@
     <div class="add-form">
       <div class="add-bg Column">
         <div class="top-form">
-          <p>新增</p>
+          <p>編輯</p>
         </div>
         <div class="main-form">
           <div class="main-img"></div>

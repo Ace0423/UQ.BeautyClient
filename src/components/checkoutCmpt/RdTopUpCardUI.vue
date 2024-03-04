@@ -6,7 +6,7 @@
         <img :src="icon_closeX" @click="showUIFn(false)">
       </div>
       <div class="main-content">
-        <div v-for="uItem in useTopUpDetailRef" :key="uItem"  @click="clickItem(uItem, uItem.Id)">
+        <div v-for="uItem in filterTopUpsData" :key="uItem" @click="clickItem(uItem, uItem.Id)">
           <div class="main-title">
             <span class="name">{{ uItem.topUpCardInfo.tuTitle }}</span>
             <span v-if="uItem.topUpCardInfo.tuLimitType == 0">不限期</span>
@@ -75,6 +75,13 @@ onMounted(() => {
 });
 //1:服務，2:商品，
 let itemTypeRef: any = ref(0);
+
+let filterTopUpsData: any = computed(() =>
+  useTopUpDetailRef.value.filter(getTopUpsFn)
+);
+function getTopUpsFn(data: any) {
+  return (data.balance > 0);
+}
 
 function submitBtn() {
 }

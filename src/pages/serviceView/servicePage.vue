@@ -16,8 +16,24 @@
         <el-table :data="filterServiceData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
           :header-cell-style="headerRowStyle" @sort-change="goclick">
           <el-table-column prop="name" label="產品名稱" min-width="30%" :sort-by="['name']" sortable />
-          <el-table-column prop="servicesTime" label="服務時長" min-width="30%" sortable />
-          <el-table-column prop="price" label="售價" min-width="20%" sortable />
+          <el-table-column prop="servicesTime" label="服務時長" min-width="30%" sortable>
+            <template #default="scope">
+              <div class="handle-drag">
+                <span v-if="scope.row.servicesTime == 0">{{ 0 + '(' + MathMinServiceTimeFn(scope.row.subList) + '起)'
+                }}</span>
+                <span v-else>{{ scope.row.servicesTime }}</span>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="price" label="售價" min-width="20%" sortable >
+            <template #default="scope">
+              <div class="handle-drag">
+                <span v-if="scope.row.servicesTime == 0">{{ 0 + '(' + MathMinPriceFn(scope.row.subList) + '起)'
+                }}</span>
+                <span v-else>{{ scope.row.servicesTime }}</span>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column prop="display" label="上架" min-width="20%">
             <template #default="scope">
               <div class="handle-drag">
@@ -183,6 +199,15 @@ function sortthreadFn(name: number) {
       });
       sortUpDown = sortName;
     }
+}
+
+function MathMinServiceTimeFn(data: any) {
+  let least=Math.min(...data.map((a:any) => a.servicesTime)) //12
+  return least;
+}
+function MathMinPriceFn(data: any) {
+  let least=Math.min(...data.map((a:any) => a.price)) //12
+  return least;
 }
 //-------------------------------------------------------------------------表格css
 //內容css

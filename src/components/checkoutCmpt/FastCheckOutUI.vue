@@ -1,5 +1,5 @@
 <template>
-  <div class="popup-mask" v-on:click.self="showUIFn(false)">
+  <div class="popup-FastCheckOutUI" v-on:click.self="showUIFn(false)">
     <div class="popup-content">
       <div class="header-content">
         <img :src="icon_closeX" v-on:click="showUIFn(false)" />
@@ -100,7 +100,7 @@
               <div>
                 <div class="discount-link">
                   <span class="name-link">全單折扣</span>
-                  <span class="a-link" v-on:click="showRdAllDiscountFn(true)">新增折扣</span>
+                  <span class="islink" v-on:click="showRdAllDiscountFn(true)">新增折扣</span>
                 </div>
                 <div class="discount-btn">
                   <button v-for="(dItem, index) in formInputRef.allDiscount" :key="dItem"
@@ -113,8 +113,11 @@
               <div>
                 <div class="discount-link">
                   <span class="name-link">儲值卡</span>
-                  <span :class="formInputRef.memberInfo.userId == 0 ? 'a-nolink' : 'a-link'"
-                    v-on:click="showRdTopUpCardFn(true)">使用儲值卡</span>
+                  <span :class="{ 
+                    islink: formInputRef.memberInfo.userId != 0,
+                    notlink: formInputRef.memberInfo.userId == 0
+                  }"
+                    @click="showRdTopUpCardFn(true)">使用儲值卡</span>
                 </div>
               </div>
             </div>
@@ -143,12 +146,12 @@
             <div class="link-bottom"></div>
             <div class=" trade-record">
               <div>
-                <span class="customer-headcount">人數 位</span>
-                <span class="customer-headcount">人數  位</span>
+                <span class="customer-headcount">{{ "0" }}</span>
+                <span class="customer-headcount">{{ "總預約數" }}</span>
               </div>
               <div>
-                <span class="customer-headcount">人數 位</span>
-                <span class="customer-headcount">人數  位</span>
+                <span class="customer-headcount">{{ "0" }}</span>
+                <span class="customer-headcount">{{ "消費金額" }}</span>
               </div>
 
             </div>
@@ -797,7 +800,7 @@ let { ruleItem } = toRefs(ruleLists);
 </script>
 
 <style scoped lang="scss">
-.popup-mask {
+.popup-FastCheckOutUI {
   position: absolute;
   top: 0;
   left: 0;
@@ -905,10 +908,6 @@ let { ruleItem } = toRefs(ruleLists);
                     border: solid 1px #707070;
                     background-color: #e6e2de;
                     border-radius: 10px;
-
-                    P {
-                      //margin: 0 0 5px 0;
-                    }
                   }
 
                   .info-service {
@@ -1051,7 +1050,17 @@ let { ruleItem } = toRefs(ruleLists);
                   font-size: 24px;
                 }
 
-                .a-link {
+                // >span {
+                //   display: flex;
+                //   height: 60px;
+                //   align-items: center;
+                //   color: #707070;
+                //   font-size: 18px;
+                //   cursor: pointer;
+                //   pointer-events: none;
+                // }
+
+                .islink {
                   display: flex;
                   height: 60px;
                   align-items: center;
@@ -1059,7 +1068,7 @@ let { ruleItem } = toRefs(ruleLists);
                   font-size: 18px;
                 }
 
-                .a-nolink {
+                .notlink {
                   display: flex;
                   height: 60px;
                   align-items: center;
@@ -1068,6 +1077,16 @@ let { ruleItem } = toRefs(ruleLists);
                   cursor: pointer;
                   pointer-events: none;
                 }
+
+                // .a-notlink {
+                //   display: flex;
+                //   height: 60px;
+                //   align-items: center;
+                //   color: #707070;
+                //   font-size: 18px;
+                //   cursor: pointer;
+                //   pointer-events: none;
+                // }
               }
 
               .discount-btn {
@@ -1195,8 +1214,9 @@ let { ruleItem } = toRefs(ruleLists);
             justify-content: center;
             align-items: center;
             border-radius: 5px;
-            >div{
-            height: 100%;
+
+            >div {
+              height: 100%;
 
             }
 

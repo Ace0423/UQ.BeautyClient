@@ -141,6 +141,17 @@
               <span v-on:click="countCoustomerFn(+1)">+</span>
             </div>
             <div class="link-bottom"></div>
+            <div class=" trade-record">
+              <div>
+                <span class="customer-headcount">人數 位</span>
+                <span class="customer-headcount">人數  位</span>
+              </div>
+              <div>
+                <span class="customer-headcount">人數 位</span>
+                <span class="customer-headcount">人數  位</span>
+              </div>
+
+            </div>
             <div class="customer-msg">
               <div>
                 <span>銷售總計</span>
@@ -1175,6 +1186,20 @@ let { ruleItem } = toRefs(ruleLists);
               justify-content: center;
               font-size: 20px;
             }
+          }
+
+          .trade-record {
+            display: flex;
+            height: 60px;
+            background-color: #faf9f8;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            >div{
+            height: 100%;
+
+            }
+
           }
 
           .customer-msg {

@@ -100,7 +100,7 @@ function getOrderFn(data: any) {
 
 var nowDate= new Date();
 // var addDate = new Date(nowDate.getTime() - 14*24*60*60*1000);
-var startDate = nowDate.getFullYear()+"-"+(nowDate.getMonth())+"-"+nowDate.getDate();
+var startDate = nowDate.getFullYear()+"-"+(nowDate.getMonth()+1)+"-"+nowDate.getDate();
 var endDate = nowDate.getFullYear()+"-"+(nowDate.getMonth()+1)+"-"+nowDate.getDate();
 formInputRef.value.datePicker[0]=startDate
 formInputRef.value.datePicker[1]=endDate

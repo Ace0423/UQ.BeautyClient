@@ -11,9 +11,15 @@ defineRule('email', email);
 const store = useCounterStore();
 const { authHandler } = store;
 const user = reactive({
-  username: "aaa@gmail.com",
+  username: "test@gmail.com",
   password: "",
 });
+let url = location.href;
+let isDebug = url.indexOf("localhost") > 0;
+if (isDebug) {
+  user.username = 'aaa@gmail.com';
+  user.password = '1qazXSW@';
+}
 const loginFn = () => {
   authHandler(user).then((res) => {
     if (res.state == 2) {

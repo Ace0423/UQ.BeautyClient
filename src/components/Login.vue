@@ -15,6 +15,10 @@ const user = reactive({
   password: "",
 });
 const loginFn = () => {
+  if (user.username == "" || user.password == "") {
+    Alert.warning(showErrorMsg('請輸入帳號密碼'), 2000);
+    return
+  }
   authHandler(user).then((res) => {
     if (res.state == 2) {
       Alert.warning(showErrorMsg(res.msg), 2000);

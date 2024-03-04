@@ -236,8 +236,6 @@ const handSubmit = () => {
                         text-align: center;
                     }
                 }
-
-
             }
 
             >.online-setting {

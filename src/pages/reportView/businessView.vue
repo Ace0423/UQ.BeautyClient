@@ -118,49 +118,49 @@ const initVisitorCountEcharts = (() => {
     myChart5.value = echarts.init(visitorCountChart.value!);
     myChart5.value.setOption({
         tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-            type: 'shadow'
-        }
-    },
-    legend: {},
-    grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-    },
-    xAxis: {
-        type: 'value',
-        boundaryGap: [0, 5]
-    },
-    yAxis: {
-        type: 'category',
-        data: visitorCountList.value.data.title
-    },
-    series: [
-        {
-            type: 'bar',
-            itemStyle: {
-                color: '#1a73e8'
-            },
-            data: visitorCountList.value.data.maleList
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
         },
-        {
-            type: 'bar',
-            itemStyle: {
-                color: '#d1687f'
-            },
-            data: visitorCountList.value.data.femaleList
+        legend: {},
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
         },
-        {
-            type: 'bar',
-            itemStyle: {
-                color: '#dadce0'
+        xAxis: {
+            type: 'value',
+            boundaryGap: [0, 5]
+        },
+        yAxis: {
+            type: 'category',
+            data: visitorCountList.value.data.title
+        },
+        series: [
+            {
+                type: 'bar',
+                itemStyle: {
+                    color: '#1a73e8'
+                },
+                data: visitorCountList.value.data.maleList
             },
-            data: visitorCountList.value.data.personalList
-        }
-    ]
+            {
+                type: 'bar',
+                itemStyle: {
+                    color: '#d1687f'
+                },
+                data: visitorCountList.value.data.femaleList
+            },
+            {
+                type: 'bar',
+                itemStyle: {
+                    color: '#dadce0'
+                },
+                data: visitorCountList.value.data.personalList
+            }
+        ]
     });
 })
 const chartOptions: any = {
@@ -587,17 +587,17 @@ const filterChang = () => {
 
             ::v-deep {
 
-                .el-input,
-                .el-input--suffix {
+                ::v-deep(.el-input),
+                ::v-deep(.el-input--suffix) {
                     height: 100%;
                 }
 
-                .el-input__inner {
+                ::v-deep(.el-input__inner) {
                     height: 100%;
                 }
 
-                .el-input__prefix,
-                .el-input__suffix {
+                ::v-deep(.el-input__prefix),
+                ::v-deep(.el-input__suffix) {
                     height: 100%;
                 }
             }
@@ -646,7 +646,7 @@ const filterChang = () => {
         margin: 15px 0;
     }
 
-    ::v-deep .el-table {
+    ::v-deep(.el-table) {
         background-color: transparent;
         --el-table-tr-bg-color: transparent;
         border: solid 1px #707070;

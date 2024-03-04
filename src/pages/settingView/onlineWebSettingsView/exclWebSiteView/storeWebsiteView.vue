@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-
-
+const selectWebItem = ref();
+const editWebView = ref(false);
+const handEditWebView = () => {
+  editWebView.value = !editWebView.value;
+};
 onMounted(() => {
 
 })
@@ -22,14 +25,14 @@ onMounted(() => {
           </div>
         </div>
         <div class="store-content">
-          <p>飯店銷售</p>
+          <p>店販銷售</p>
           <div>
             <p>已關閉接單</p>
           </div>
         </div>
         <hr style="border: 1 solid #c1bdb8;">
         <div class="store-content">
-          <a>編輯網站 ></a>
+          <a @click="handEditWebView">編輯網站 ></a>
         </div>
       </div>
     </div>
@@ -80,8 +83,8 @@ onMounted(() => {
         </div>
       </div>
     </div>
-
   </div>
+  <EditWeb v-if="editWebView" :webItem="selectWebItem" :handEditWebView="handEditWebView" />
 </template>
 
 <style lang="scss" scoped>

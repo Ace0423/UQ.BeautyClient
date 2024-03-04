@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Icon from "@/assets/Icon material-settings.svg";
 
-const aaa = ref();
+const aaa = ref(true);
 onMounted(() => {
 })
 
@@ -9,14 +9,14 @@ onMounted(() => {
 <template>
   <div class="container">
     <div class="switch">
-      <label><input class="mui-switch" type="checkbox"></label>
+      <label><input class="mui-switch" type="checkbox" v-model="aaa"></label>
       <div class="switch-content">
         <p><strong>啟用網站服務</strong></p>
         <p>你的商店與服務人員都將雍有客製化網站，皆可提供預約與銷售商品，並可管理想要呈現給消費者的內容。</p>
       </div>
       <div class="hint-tag">
         <label class="label-item">
-          <input class="input-item" type="checkbox" v-model="aaa" />
+          <input class="input-item" type="checkbox" v-model="aaa" disabled="true" />
           <label for="item"></label>
           <div>
             <nobr>網站未公開</nobr>

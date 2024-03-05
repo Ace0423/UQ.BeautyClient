@@ -113,11 +113,10 @@
               <div>
                 <div class="discount-link">
                   <span class="name-link">儲值卡</span>
-                  <span :class="{ 
+                  <span :class="{
                     islink: formInputRef.memberInfo.userId != 0,
                     notlink: formInputRef.memberInfo.userId == 0
-                  }"
-                    @click="showRdTopUpCardFn(true)">使用儲值卡</span>
+                  }" @click="showRdTopUpCardFn(true)">使用儲值卡</span>
                 </div>
               </div>
             </div>
@@ -146,11 +145,11 @@
             <div class="link-bottom"></div>
             <div class=" trade-record">
               <div>
-                <span class="customer-headcount">{{ "0" }}</span>
+                <span class="customer-headcount">{{ formInputRef.bookingCount }}</span>
                 <span class="customer-headcount">{{ "總預約數" }}</span>
               </div>
               <div>
-                <span class="customer-headcount">{{ "0" }}</span>
+                <span class="customer-headcount">{{ formInputRef.bookingAmount }}</span>
                 <span class="customer-headcount">{{ "消費金額" }}</span>
               </div>
 
@@ -173,7 +172,9 @@
             </div>
             <div class="link-bottom"></div>
             <div class="pay-msg">
-              <span>應收金額<span v-if="formInputRef.customerCount > 1">({{ formInputRef.customerCount }}人)</span></span>
+              <span>應收金額
+                <!-- <span v-if="formInputRef.customerCount > 1">({{ formInputRef.customerCount }}人)</span> -->
+              </span>
               <span class="price-msg"> ${{ finalAmountCpt }}</span>
             </div>
             <div class="customer-submit">
@@ -235,8 +236,8 @@ let selctItemInfoRef = ref(null);
 let showRdTopUpCardUIRef = ref(false);
 
 let store = useApptStore();
-let { payTypeListRef } = storeToRefs(store);
-let { addCheckOutApi, getPayTypeListApi, getApptDataApi, getApptDataByUserApi } = store;
+let { payTypeListRef, expenseInfoRef } = storeToRefs(store);
+let { addCheckOutApi, getPayTypeListApi, getApptDataApi, getExpenseInfoApi } = store;
 
 let formInputRef: any = ref({
   memberInfo: { userId: 0, nameView: "顧客", phone: "請選擇顧客" },
@@ -251,6 +252,8 @@ let formInputRef: any = ref({
   bkListNo: "",
   useTopUpCard: null,
   useTopUpPrice: 0,
+  bookingCount: 0,
+  bookingAmount: 0,
 });
 
 let subTab = [
@@ -317,14 +320,17 @@ let payAmountCpt = computed(() => {
   // mathDiscountFn()
   dcPrice = percentAllDC.value + priceAllDC.value;
   amount = (curPrice < dcPrice) ? 0 : (curPrice - dcPrice)
-  amount = amount * formInputRef.value.customerCount;//人數
+  // amount = amount * formInputRef.value.customerCount;//人數
   return amount
 });
 let finalAmountCpt = computed(() => {
   let finalAmount: any = payAmountCpt.value;
+  console.log(777, formInputRef.value.useTopUpCard);
+  console.log(888, payAmountCpt.value);
+
+  formInputRef.value.useTopUpPrice = 0;
   //計算使用儲值卡
   if (formInputRef.value.useTopUpCard) {
-    formInputRef.value.useTopUpPrice = 0;
     let curUseBalance = formInputRef.value.useTopUpCard.balance;
     if (finalAmount < curUseBalance) {
       formInputRef.value.useTopUpPrice = finalAmount;
@@ -332,6 +338,7 @@ let finalAmountCpt = computed(() => {
       formInputRef.value.useTopUpPrice = curUseBalance;
     }
   }
+  console.log(888, formInputRef.value.useTopUpPrice);
   finalAmount = finalAmount - formInputRef.value.useTopUpPrice;
   // finalAmount = finalAmount * parseInt(formInputRef.value.customerCount);
 
@@ -463,6 +470,7 @@ function getRdDiscountFn(data: any) {
 }
 function getRdTopUpCardFn(data: any) {
   formInputRef.value.useTopUpCard = data;
+  updatePrice();
   showRdTopUpCardFn(false);
 }
 function delDiscount(type: any) {
@@ -478,6 +486,14 @@ function delDiscount(type: any) {
 }
 function getMembersFn(data: any) {
   formInputRef.value.memberInfo = data;
+  if (data) {
+    getExpenseInfoApi(data.userId).then((table: any) => {
+      if (table) {
+        formInputRef.value.bookingCount = table.bookingCount;
+        formInputRef.value.bookingAmount = table.bookingAmount;
+      }
+    });
+  }
   showMemberUIFn(false);
 }
 function countCoustomerFn(data: number) {
@@ -1209,14 +1225,22 @@ let { ruleItem } = toRefs(ruleLists);
 
           .trade-record {
             display: flex;
-            height: 60px;
+            height: 80px;
             background-color: #faf9f8;
             justify-content: center;
             align-items: center;
             border-radius: 5px;
 
             >div {
+              display: grid;
               height: 100%;
+              width: 45%;
+
+              >span {
+                display: flex;
+                justify-content: left;
+                align-items: center;
+              }
 
             }
 

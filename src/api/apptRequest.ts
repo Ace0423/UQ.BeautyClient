@@ -14,6 +14,9 @@ const httpRequest = axios.create({
 /**獲取會員 */
 export const getMemberListReq = (data: any) =>
   getHttps(httpRequest, "/member/user", data);
+/**獲取會員預約統計 */
+export const getExpenseInfoReq = (id: any) =>
+getHttps(httpRequest, "/member/ExpenseInfo?uid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
 //-----------------------------------------預約
 //#region 預約
 /**獲取預約 */
@@ -152,12 +155,12 @@ export const getRestReq = (id: any, yy: any, mm: any, dd: any) =>
 
 //-----------------------------------------通知
 /**獲取訂單資訊 */
-export const getNoticeListReq = ( id: any) =>
-getHttps(httpRequest, "Notice/NoticeList?uid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
+export const getNoticeListReq = (id: any) =>
+  getHttps(httpRequest, "Notice/NoticeList?uid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
 /**更新明細 */
 export const updateNoticeIsReadReq = (data: any) =>
-  putHttps(httpRequest,"/Notice/NoticeIsRead?Id=" + data.Id,data);
-  
+  putHttps(httpRequest, "/Notice/NoticeIsRead?Id=" + data.Id, data);
+
 
 
 

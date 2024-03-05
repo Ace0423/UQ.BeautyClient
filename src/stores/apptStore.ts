@@ -36,6 +36,7 @@ import {
   getRestReq,
   getNoticeListReq,
   updateNoticeIsReadReq,
+  getExpenseInfoReq,
 } from "@/api/apptRequest";
 import {
   addGoodsBrandReq,
@@ -415,6 +416,24 @@ export const useApptStore = defineStore("apptStore", () => {
             memberList.value = listVo;
           }
           return res;
+        }
+      );
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  let expenseInfoRef: any = ref();
+  /**獲取會員預約統計 */
+  const getExpenseInfoApi = async (uid: any, pageindex: any = 0, count: any = 0,) => {
+    try {
+      const res = await getExpenseInfoReq(uid).then(
+        (res: any) => {
+          console.log(666, res);
+          if (res.data.data) {
+            expenseInfoRef = res.data.data.table;
+            return res.data.data.table;
+          }
         }
       );
       return res;
@@ -1090,6 +1109,8 @@ export const useApptStore = defineStore("apptStore", () => {
     //--------------------會員
     memberList,
     getMemberListApi,
+    expenseInfoRef,
+    getExpenseInfoApi,
     //--------------------結帳
     addCheckOutApi,
     //--------------------訂單

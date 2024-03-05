@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="bottom-content">
-        <button class="cancle-btn" @click="clearAll()">移除儲值卡</button>
+        <button class="cancle-btn" @click="clearAll()">取消使用儲值卡</button>
       </div>
       <div class="service-content" v-show="itemTypeRef == 1">
         <RadioServicesUI :showServiceUIFn="showItemTypeFn" :selData="formInputRef.selectService"

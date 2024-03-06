@@ -21,7 +21,7 @@
                 <span class="limitday-msg" v-else>{{ getLimitDay(item) }}</span>
               </div>
               <div class="price-input">
-                <span>{{ "$" + item.tuViewPrice }}</span>
+                <span>{{ "$" + item.tuSellPrice }}</span>
               </div>
             </label>
           </div>

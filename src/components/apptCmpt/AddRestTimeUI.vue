@@ -258,6 +258,9 @@ const verify_all = () => {
 
         .error-msg {
           display: grid;
+          .el-select{
+            width: 181px;
+          }
         }
 
         span {

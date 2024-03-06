@@ -5,7 +5,12 @@
       </Header>
       <div class="top_menu">
         <div>
-          <img :src="btn_msg_ico" @click="showNoticeFn(true)" />
+          <div>
+            <img :src="btn_msg_ico" @click="showNoticeFn(true)" />
+            <div class="msg-count" v-if="newApptDataRef.noticeCount > 0">
+              <span>{{ newApptDataRef.noticeCount }}</span>
+            </div>
+          </div>
           <el-dropdown trigger="click" @command="handleCommand">
             <span class="el-dropdown-link">
               <img :src="btn_add_ico" />
@@ -152,6 +157,7 @@ let {
   postEditApptStateApi,
   getManagerListApi,
   getRestApi,
+  getNoticeCountApi,
 } = store;
 
 let searchList = ref("");
@@ -201,6 +207,7 @@ let newApptDataRef: any = ref({
   beauticianId: 0,
   courses: [],
   selDate: selDate,
+  noticeCount: 0,
 });
 //列表資訊
 let filterApptData: any = computed(() => {
@@ -237,10 +244,12 @@ let managerListRef: any = ref([]);
 onBefore();
 function onBefore() {
   getApptInfoFn(new Date().getFullYear(), new Date().getMonth() + 1);
+  updateNoticeCount();
 }
 onMounted(() => {
   // resetApptTable();
 });
+
 /**抓取預約紀錄 */
 function getApptInfoFn(year: number = 0, month: number = 0, date: number = currentDay.value) {
   bookingListRef.value = [];
@@ -258,7 +267,6 @@ function getApptInfoFn(year: number = 0, month: number = 0, date: number = curre
     }
     //預設全選
   });
-  //預先呼叫api獲取數據
   getApptDataApi("", "", year, month).then((res: any) => {
     showFullUIFn(false);
     // resetApptTable(year, month, date)
@@ -284,8 +292,11 @@ function getApptInfoFn(year: number = 0, month: number = 0, date: number = curre
   });
   getDayOffList(0, year, month, date);
   getRestList(0, year, month, date);
+  updateNoticeCount();
 }
+
 let dayOffList: any = ref([]);
+/**取休息日 */
 function getDayOffList(id: any, yy: any, mm: any, dd: any) {
   getDayOffApi(id, yy, mm, dd).then((res: any) => {
     for (let i = 0; i < res.length; i++) {
@@ -303,7 +314,7 @@ function getDayOffList(id: any, yy: any, mm: any, dd: any) {
     }
   })
 }
-
+/**取休息時間 */
 function getRestList(id: any, yy: any, mm: any, dd: any) {
   getRestApi(id, yy, mm, dd).then((res: any) => {
     for (let i = 0; i < res.length; i++) {
@@ -323,10 +334,8 @@ function getRestList(id: any, yy: any, mm: any, dd: any) {
   })
 }
 
-
-
 let restList: any = ref([]);
-//獲取休息日
+///**獲取休息日 */
 function getRestList1(id: any, y: any, m: any, d: any) {
   let data = {
     managerId: id,
@@ -350,7 +359,7 @@ function getRestList1(id: any, y: any, m: any, d: any) {
       }
     });
 }
-//格式化休息日
+///**格式化休息日 */
 function setRestTimeFn(data: any) {
   // showTuiApptRef.value = false;
   showFullUIFn(false);
@@ -410,8 +419,14 @@ function setRestTimeFn(data: any) {
 
   showFullUIFn(true);
 }
+/**取未讀訊息數量 */
+function updateNoticeCount() {
+  getNoticeCountApi().then((res) => {
+    newApptDataRef.value.noticeCount = res.unReadCount;
+  });
+}
 let selBookData: any = null;
-//選單 新增預約 休息 快速結帳
+///**選單 新增預約 休息 快速結帳 */
 const handleCommand = (command: string | number | object) => {
   switch (command) {
     case "addAppt":
@@ -429,6 +444,7 @@ const handleCommand = (command: string | number | object) => {
     default:
       break;
   }
+  updateNoticeCount();
 };
 function resetAddReserveForm() {
   newApptDataRef.value.courses = [];
@@ -445,17 +461,24 @@ function addAddReserveBtn() {
 //新增預約表單-顯示
 let showAddApptFn = (state: boolean) => {
   showAddRef.value = state;
-  if (!state) getApptInfoFn(currentYear.value, currentMonth.value + 1);
+  if (!state) {
+    getApptInfoFn(currentYear.value, currentMonth.value + 1);
+    updateNoticeCount();
+  }
 };
 //休息時間-顯示
 function showAddRestUIFn(state: boolean) {
   showAddRestUIRef.value = state;
-  if (!state) getApptInfoFn(currentYear.value, currentMonth.value + 1);
+  if (!state) {
+    getApptInfoFn(currentYear.value, currentMonth.value + 1);
+    updateNoticeCount();
+  }
 }
 //新增分類-顯示
 let showFastCheckOutUIHdr = (state: boolean) => {
   showFastCheckOutRef.value = state;
   // getGoodsGroupApi(0);
+  updateNoticeCount();
 };
 //更新預約資訊
 const showApptInfoHdr = (state: boolean) => {
@@ -464,6 +487,7 @@ const showApptInfoHdr = (state: boolean) => {
     selBookData = null;
     bookingListRef.value = null;
     getApptInfoFn(currentYear.value, currentMonth.value + 1);
+    updateNoticeCount();
   }
 };
 function showNoticeFn(state: boolean) {
@@ -483,12 +507,12 @@ let changeStutusFn = (state: number, item: any) => {
 };
 //切換列表獲取資訊
 function changeWeekToday(data: number) {
-  // showFullUIFn(false);
   getApptInfoFn(currentYear.value, currentMonth.value + 1);
-  // showFullUIFn(true);
+  updateNoticeCount();
 }
 function showFullUIFn(params: boolean) {
   showFullUIRef.value = params;
+  updateNoticeCount();
 }
 //刪除課程
 let delApptListHdr = (index: number, itemId: string) => {
@@ -575,10 +599,13 @@ $borderCoder: #eaedf2;
       display: flex;
       width: calc(100%);
       justify-content: right;
-      height: 70px;
+      height: 29px;
 
       >div {
-        height: 29px;
+        // height: 29px;
+        width: 58px;
+        justify-content: right;
+        display: flex;
         position: relative;
         right: 15px;
         top: 15px;
@@ -587,6 +614,38 @@ $borderCoder: #eaedf2;
           margin-right: 10px;
           height: 29px;
           width: 29px;
+        }
+
+        >div {
+          >img {
+            // margin-right: 10px;
+            height: 29px;
+            width: 26px;
+          }
+
+          width: 29px;
+
+          .msg-count {
+            width: 20px;
+            height: 15px;
+            border-radius: 50px;
+            // border: 1px solid #8b6f6d;
+            background: #ff1100;
+            position: absolute;
+            top: -5px;
+            left: 5px;
+
+            >span {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 100%;
+              height: 100%;
+              color: #fff;
+              font-weight: bold;
+              font-size: 12px;
+            }
+          }
         }
       }
     }
@@ -643,6 +702,7 @@ $borderCoder: #eaedf2;
         .my-select {
           height: 32px;
           width: 214px;
+
           :deep(.el-select__wrapper) {
             width: 100%;
           }

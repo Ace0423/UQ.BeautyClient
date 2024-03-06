@@ -164,6 +164,7 @@ function updateNoticeListFn(data: any) {
                 height: auto;
                 border-bottom: solid 1px #ddd;
                 box-sizing: border-box;
+                padding: 10px 0;
 
                 .read-ico {
                     width: 30px;

@@ -43,7 +43,7 @@
               <button :class="{
                 finish: selItemData.state == 1 || selItemData.state == 4,
               }" @click="infoBtnState(1)">
-                預約完成
+                預約確認
               </button>
               <!-- <button :class="{
                 finish: selItemData.state == 1 || selItemData.state == 4,

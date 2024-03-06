@@ -137,7 +137,6 @@ function showGroupUIFn(params: any) {
 let showCGoodsRef: any = ref(false);
 
 function getCheckGoodsFn(data: any) {
-  console.log(111, data);
   formInputRef.value.selGoodsItems = data;
   // props.getDataFn(formInputRef.value);
   showGroupUIFn(false);

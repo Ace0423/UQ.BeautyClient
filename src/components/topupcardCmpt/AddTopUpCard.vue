@@ -257,8 +257,8 @@ const handChooseColor = ((params: any) => {
                         <p>填寫儲值卡上的內容。</p>
                         <div class="stored-card-input">
                             <div>
-                                <p>*儲值卡主體</p>
-                                <input placeholder="請輸入儲值卡主體" v-model="cardData.tuTitle" />
+                                <p>*儲值卡主題</p>
+                                <input placeholder="請輸入儲值卡主題" v-model="cardData.tuTitle" />
                             </div>
                             <div>
                                 <p>*販賣價格</p>

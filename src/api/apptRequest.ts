@@ -154,9 +154,12 @@ export const getRestReq = (id: any, yy: any, mm: any, dd: any) =>
 
 
 //-----------------------------------------通知
-/**獲取訂單資訊 */
+/**獲取訊息明細 */
 export const getNoticeListReq = (id: any) =>
   getHttps(httpRequest, "Notice/NoticeList?uid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
+  /**獲取訂單資訊 */
+  export const getNoticeCountReq = (id: any) =>
+    getHttps(httpRequest, "Notice/NoticeCount?uid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
 /**更新明細 */
 export const updateNoticeIsReadReq = (data: any) =>
   putHttps(httpRequest, "/Notice/NoticeIsRead?Id=" + data.Id, data);

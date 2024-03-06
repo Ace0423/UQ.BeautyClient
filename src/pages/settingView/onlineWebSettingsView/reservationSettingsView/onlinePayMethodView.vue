@@ -67,7 +67,7 @@ const handSubmit = () => {
                     <label><input class="mui-switch" type="checkbox" v-model="payMethList.onSitePayment"></label>
                     <div class="switch-content">
                         <p><strong>啟用現場到付</strong></p>
-                        <p>開啟後將提供限駔到付選項，消費者需現場付款。</p>
+                        <p>開啟後將提供現場到付選項，消費者需現場付款。</p>
                     </div>
                 </div>
                 <div class="switch">
@@ -95,7 +95,7 @@ const handSubmit = () => {
             <div class="pay-setting">
                 <div class="online-setting">
                     <div class="online-text">
-                        <h3>您在找線上刷卡及ATM轉帳的收款放事嗎?</h3>
+                        <h3>您在找線上刷卡及ATM轉帳的收款方式嗎?</h3>
                         <p>已開放提供線上刷卡及ATM轉帳收款方式，只需要填寫申請開通後立即使用。</p>
                     </div>
                     <button>立即申請</button>

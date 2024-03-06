@@ -15,7 +15,7 @@
                 <el-table :data="filterBrandBrand" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
                     :header-cell-style="headerRowStyle">
                     <el-table-column prop="pbTitle" label="群組名稱" min-width="50%" />
-                    <el-table-column prop="pIdList.length" label="服務數量" min-width="30%" align="center" />
+                    <el-table-column prop="pIdList.length" label="商品數量" min-width="30%" align="center" />
                     <el-table-column label="操作" min-width="20%">
                         <template #default="scope">
                             <div class="handle-drag">

@@ -272,8 +272,6 @@ function showSelItemUIFn(state: boolean) {
   showSelItemUIRef.value = state;
 }
 function showAddSubUIFn(state: boolean) {
-  console.log(111, state);
-
   showSubDetailUIRef.value = state;
 }
 function getSubDetailFn(data: any) {

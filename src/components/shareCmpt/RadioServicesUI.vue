@@ -17,11 +17,11 @@
                 <span>{{
                   item.name
                 }}</span>
-                <span class="pCode-msg" v-if="item.servicesTime==0">{{getServicesTimeMin(item.subList)  + "分起" }}</span>
+                <span class="pCode-msg" v-if="item.servicesTime == 0">{{ getServicesTimeMin(item.subList) + "分起" }}</span>
                 <span class="pCode-msg" v-else>{{ item.servicesTime + "分" }}</span>
               </div>
               <div class="price-input">
-                <span v-if="item.servicesTime==0">{{ "$" +getServicesPriceMin(item.subList)+"起"}}</span>
+                <span v-if="item.servicesTime == 0">{{ "$" + getServicesPriceMin(item.subList) + "起" }}</span>
                 <span v-else>{{ "$" + item.price }}</span>
               </div>
             </label>
@@ -83,17 +83,17 @@ function getCourseFn(data: any) {
         .includes(formInputRef.value.search.toLowerCase()))
   );
 }
-let getServicesMax2: any = computed((params:any) =>{
-  Math.max.apply(null, params.map(function (o:any) {
+let getServicesMax2: any = computed((params: any) => {
+  Math.max.apply(null, params.map(function (o: any) {
     return o.servicesTime;
-}))
+  }))
 });
 
-function getServicesPriceMin(params:any) {
- return Math.max(...params.map((a:any) => a.price))
+function getServicesPriceMin(params: any) {
+  return Math.max(...params.map((a: any) => a.price))
 }
-function getServicesTimeMin(params:any) {
- return Math.max(...params.map((a:any) => a.servicesTime))
+function getServicesTimeMin(params: any) {
+  return Math.max(...params.map((a: any) => a.servicesTime))
 }
 
 function submitBtn() {
@@ -114,7 +114,8 @@ function clickItem(item: any, id: number) {
 function getRdSubIdFn(data: any) {
   showRdSubFn(false);
   formInputRef.value.serviceSub = data;
-  formInputRef.value.courses.SubList = data
+  formInputRef.value.courses.subList = [];
+  formInputRef.value.courses.subList.push(data);
   props.getDataFn(formInputRef.value.courses);
 
 }

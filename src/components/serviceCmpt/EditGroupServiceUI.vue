@@ -134,7 +134,6 @@ function showGroupUIFn(params: any) {
 let showCServiceRef: any = ref(false);
 
 function getCheckServiceFn(data: any) {
-  console.log(111, data);
   formInputRef.value.selServiceItems = data;
   // props.getDataFn(formInputRef.value);
   showGroupUIFn(false);

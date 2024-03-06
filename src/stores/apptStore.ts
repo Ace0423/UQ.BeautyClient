@@ -37,6 +37,7 @@ import {
   getNoticeListReq,
   updateNoticeIsReadReq,
   getExpenseInfoReq,
+  getNoticeCountReq,
 } from "@/api/apptRequest";
 import {
   addGoodsBrandReq,
@@ -1010,7 +1011,7 @@ export const useApptStore = defineStore("apptStore", () => {
 
   //#region 明細
   let noticeListRef: any = ref([]);
-  /**獲取商品資料 */
+  /**獲取訊息明細 */
   const getNoticeListApi = async (uid: any = 0) => {
     try {
       let res: any = null;
@@ -1030,11 +1031,30 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+  /**獲取未讀訊息 */
+  const getNoticeCountApi = async (uid: any = 0) => {
+    try {
+      let res: any = null;
+      noticeListRef.value = [];
+      //查全部
+      res = await getNoticeCountReq(uid).then((res: any) => {
+        if (res.data.data && !uid) {
+          let detailVo: any = res.data.data.table;
+          return detailVo;
+        } else {
+          return res.data.data.table;
+        }
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   /**更新通知閱讀狀態 */
   const updateNoticeIsReadApi = async (data: any) => {
     try {
       let res = await updateNoticeIsReadReq(data).then((res: any) => {
-        alertStateFn(res, "更新通知讀取狀態");
+        // alertStateFn(res, "更新通知讀取狀態");
         return res;
       });
       return res.data;
@@ -1127,5 +1147,6 @@ export const useApptStore = defineStore("apptStore", () => {
     getNoticeListApi,
     noticeListRef,
     updateNoticeIsReadApi,
+    getNoticeCountApi
   };
 });

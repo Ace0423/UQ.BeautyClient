@@ -254,7 +254,6 @@ function submitBtn() {
   }
 
   let curService = formInputRef.value.courses[0];
-  console.log(111, formInputRef.value);
   let editApptDate = {
     bookingNo: props.oldSelList.bookingNo,
     bkListNo: props.oldSelList.bkListNo,

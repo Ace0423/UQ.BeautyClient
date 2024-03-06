@@ -59,7 +59,7 @@
               </div>
               <div>
                 <span>容量</span>
-                <input v-model="formInputRef.capacity" placeholder="請輸入價格" type="text" />
+                <input v-model="formInputRef.capacity" placeholder="請輸入數量" type="text" />
               </div>
             </div>
           </div>

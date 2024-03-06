@@ -287,7 +287,7 @@ onMounted(() => {
                 <p v-if="item.topUpCardInfo.tuLimitDay == 0">不限期</p>
                 <p v-if="item.topUpCardInfo.tuLimitDay != 0">{{ limitDay[item.topUpCardInfo.tuLimitDay].label }}</p>
               </div>
-              <h3>$ {{ item.topUpCardInfo.tuSellPrice }}</h3>
+              <h3>$ {{ item.balance }}</h3>
             </div>
           </div>
         </div>

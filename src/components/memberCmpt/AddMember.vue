@@ -390,7 +390,7 @@ onMounted(() => {
         >input {
           max-width: 200px;
           height: 30px;
-          text-align: center;
+          // text-align: center;
           border-radius: 6px;
           border: solid 1px #707070;
         }

@@ -87,6 +87,8 @@ onMounted(() => {
           <th>
             <p>最後消費時間</p>
           </th>
+          <th>
+          </th>
           <th class="header-btn"></th>
         </tr>
       </thead>
@@ -208,6 +210,31 @@ onMounted(() => {
           width: 5%;
         }
       }
+
+      >tr>th:nth-child(1) {
+        width:25%;
+      }
+
+      >tr>th:nth-child(2) {
+        width: 10%;
+      }
+
+      >tr>th:nth-child(3) {
+        width: 35%;
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        >p{
+          text-align: center;
+        }
+      }
+      >tr>th:nth-child(4) {
+        width:25%;
+      }
+
+      >tr>th:nth-child(5) {
+        width: 5%;
+      }
     }
 
     >.content-tab {
@@ -247,7 +274,7 @@ onMounted(() => {
             justify-content: center;
             align-items: center;
             font-size: 14px;
-            border: solid 1px #707070;
+            border: solid 0px #707070;
             background-color: #e6e2de;
             padding: 1px 1px;
             margin: 2px 2px;
@@ -274,7 +301,7 @@ onMounted(() => {
         }
 
         .content-btn {
-          width:  5%;
+          width: 5%;
         }
 
 
@@ -293,6 +320,29 @@ onMounted(() => {
             margin: 0 0;
           }
         }
+      }
+
+      >tr>td:nth-child(1) {
+        width: 25%;
+      }
+
+      >tr>td:nth-child(2) {
+        width: 10%;
+      }
+
+      >tr>td:nth-child(3) {
+        width: 35%;
+        display: flex;
+        text-align: center;
+        justify-content: center;
+      }
+
+      >tr>td:nth-child(4) {
+        width: 25%;
+      }
+
+      >tr>td:nth-child(5) {
+        width: 5%;
       }
     }
   }

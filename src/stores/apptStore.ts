@@ -1042,7 +1042,7 @@ export const useApptStore = defineStore("apptStore", () => {
           let detailVo: any = res.data.data.table;
           return detailVo;
         } else {
-          return res.data.data.table;
+          return res.data.data;
         }
       });
       return res;

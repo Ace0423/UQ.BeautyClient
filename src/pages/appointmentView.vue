@@ -244,7 +244,6 @@ let managerListRef: any = ref([]);
 onBefore();
 function onBefore() {
   getApptInfoFn(new Date().getFullYear(), new Date().getMonth() + 1);
-  updateNoticeCount();
 }
 onMounted(() => {
   // resetApptTable();
@@ -422,7 +421,8 @@ function setRestTimeFn(data: any) {
 /**取未讀訊息數量 */
 function updateNoticeCount() {
   getNoticeCountApi().then((res) => {
-    newApptDataRef.value.noticeCount = res.unReadCount;
+    if (res)
+      newApptDataRef.value.noticeCount = res.unReadCount;
   });
 }
 let selBookData: any = null;
@@ -444,7 +444,7 @@ const handleCommand = (command: string | number | object) => {
     default:
       break;
   }
-  updateNoticeCount();
+  // updateNoticeCount();
 };
 function resetAddReserveForm() {
   newApptDataRef.value.courses = [];
@@ -463,7 +463,7 @@ let showAddApptFn = (state: boolean) => {
   showAddRef.value = state;
   if (!state) {
     getApptInfoFn(currentYear.value, currentMonth.value + 1);
-    updateNoticeCount();
+    // updateNoticeCount();
   }
 };
 //休息時間-顯示
@@ -471,14 +471,14 @@ function showAddRestUIFn(state: boolean) {
   showAddRestUIRef.value = state;
   if (!state) {
     getApptInfoFn(currentYear.value, currentMonth.value + 1);
-    updateNoticeCount();
+    // updateNoticeCount();
   }
 }
 //新增分類-顯示
 let showFastCheckOutUIHdr = (state: boolean) => {
   showFastCheckOutRef.value = state;
   // getGoodsGroupApi(0);
-  updateNoticeCount();
+  if (!state) updateNoticeCount();
 };
 //更新預約資訊
 const showApptInfoHdr = (state: boolean) => {
@@ -492,6 +492,7 @@ const showApptInfoHdr = (state: boolean) => {
 };
 function showNoticeFn(state: boolean) {
   showNoticeRef.value = state;
+  if (!state) updateNoticeCount();
 }
 //改變預約狀態
 let changeStutusFn = (state: number, item: any) => {
@@ -508,11 +509,9 @@ let changeStutusFn = (state: number, item: any) => {
 //切換列表獲取資訊
 function changeWeekToday(data: number) {
   getApptInfoFn(currentYear.value, currentMonth.value + 1);
-  updateNoticeCount();
 }
 function showFullUIFn(params: boolean) {
   showFullUIRef.value = params;
-  updateNoticeCount();
 }
 //刪除課程
 let delApptListHdr = (index: number, itemId: string) => {

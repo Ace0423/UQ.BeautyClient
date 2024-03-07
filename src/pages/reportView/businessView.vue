@@ -283,8 +283,6 @@ onMounted(() => {
     getReportDate();
     filterChang();
 })
-onUnmounted(() => {
-})
 const getReportDate = () => {
     const date = {
         startDate: time.value[0].toISOString().split("T")[0].toString(),
@@ -392,6 +390,7 @@ const getReportDate = () => {
 const filterChang = () => {
 }
 </script>
+
 <template>
     <div class="content">
         <div class="filter-block">
@@ -451,10 +450,12 @@ const filterChang = () => {
                         <p>新預約 {{ totalBookingList.data.newBooking }} ({{ totalBookingList.data.newBookingPct }})</p>
                     </div>
                     <div class="sale-info">
-                        <p>已完成 {{ totalBookingList.data.finishBooking }} ({{ totalBookingList.data.finishBookingPct }})</p>
+                        <p>已完成 {{ totalBookingList.data.finishBooking }} ({{ totalBookingList.data.finishBookingPct }})
+                        </p>
                     </div>
                     <div class="sale-info">
-                        <p>店家取消 {{ totalBookingList.data.cancelBooking }} ({{ totalBookingList.data.cancelBookingPct }})</p>
+                        <p>店家取消 {{ totalBookingList.data.cancelBooking }} ({{ totalBookingList.data.cancelBookingPct }})
+                        </p>
                     </div>
                     <div id="reserve-chart">
                         <div ref="totalBookingChart" :style="{ height: '350px' }"></div>
@@ -536,7 +537,8 @@ const filterChang = () => {
                     <h2>來客時段分析</h2>
                     <p>平日熱門時段 週一12:00</p>
                     <p>假日熱門時段 週日10:00</p>
-                    <div id="time-period" style="height: 500px; overflow: auto;" v-if="visitorHoursList.data.hourWeekList">
+                    <div id="time-period" style="height: 500px; overflow: auto;"
+                        v-if="visitorHoursList.data.hourWeekList">
                         <apexchart type="heatmap" height="1000" :options="chartOptions"
                             :series="visitorHoursList.data.hourWeekList"></apexchart>
                     </div>
@@ -679,4 +681,3 @@ const filterChang = () => {
     }
 }
 </style>
-

@@ -5,8 +5,8 @@ import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRole
 import { getPermissionsListRequest, putOptionRoleRequest, getApiPermissionsListRequest, postApiPermissionsListRequest, updateApiPermissionsListRequest } from "./settingRequest";
 import { getTimeTablesRequest, postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest, getCompanyInfoRequest, putCompanyInfoRequest, getMessagesRequest, insertMessagesRequest, updateMessagesRequest, getBlackListSetRequest, putBlackListSetRequest, getLineOAListRequest, putLineOAListRequest, getMessageRecords, getInfoRecord } from "./companyRequest";
 import { getTopUpCardListRequest, addTopUpCardInfoRequest, editTopUpCardInfoRequest } from "./topUpCardRequest";
-import { getOnlineBusinessHours, postOnlineBusinessHours, getOnlinePayMeth, postOnlinePayMeth, getOnlineOtherSettings, postOnlineOtherSettings,getOnlineStoreWebInfo } from "./onlineRequest";
-import { getTotalSalesRequest, getManagerSalesRequest, getTotalBookingRequest, getAverageOrderRequest, getVisitorCountRequest, getVisitorHoursRequest, getServiceProportionRequest } from "./reportRequest";
+import { getOnlineBusinessHours, postOnlineBusinessHours, getOnlinePayMeth, postOnlinePayMeth, getOnlineOtherSettings, postOnlineOtherSettings, getOnlineStoreWebInfo } from "./onlineRequest";
+import { getTotalSalesByTodayRequest, getTotalBookingByWeekRequest, getManagerSalesByTodayRequest, getVisitorCountByTodayRequest, getServiceProportionByTodayRequest, getProductProportionByTodayRequest, getTotalTopUpByTodayRequest, getTotalPayTypeByTodayRequest, getTotalSalesRequest, getManagerSalesRequest, getTotalBookingRequest, getAverageOrderRequest, getVisitorCountRequest, getVisitorHoursRequest, getServiceProportionRequest } from "./reportRequest";
 import { getBookingByUIdRequest } from "./bookingRequest";
 import { getOrderByUIdRequest } from "./orederRequest";
 
@@ -88,6 +88,15 @@ export const apiPostOnlinePayMeth = postOnlinePayMeth;
 export const apiGetOnlineOtherSettings = getOnlineOtherSettings;
 export const apiPostOnlineOtherSettings = postOnlineOtherSettings;
 export const apiGetOnlineStoreWebInfo = getOnlineStoreWebInfo;
+//報表
+export const apiGetTotalSalesByTodayRequest = getTotalSalesByTodayRequest;
+export const apiGetTotalBookingByWeekRequest = getTotalBookingByWeekRequest;
+export const apiGetManagerSalesByTodayRequest = getManagerSalesByTodayRequest;
+export const apiGetVisitorCountByTodayRequest = getVisitorCountByTodayRequest;
+export const apiGetServiceProportionByTodayRequest = getServiceProportionByTodayRequest;
+export const apiGetProductProportionByTodayRequest = getProductProportionByTodayRequest;
+export const apiGetTotalTopUpByTodayRequest = getTotalTopUpByTodayRequest;
+export const apiGetTotalPayTypeByTodayRequest = getTotalPayTypeByTodayRequest;
 
 export const apiGetTotalSalesRequest = getTotalSalesRequest;
 export const apiGetTotalBookingRequest = getTotalBookingRequest;

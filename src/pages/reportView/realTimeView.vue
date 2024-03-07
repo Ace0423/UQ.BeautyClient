@@ -1,47 +1,213 @@
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
+import * as echarts from 'echarts';
 import apexchart from 'vue3-apexcharts'
-
-const saleChart = {
-    chart: {
-        type: 'bar',
-        height: 350
-    },
-    plotOptions: {
-        bar: {
-            horizontal: false,
-            columnWidth: '55%',
-            endingShape: 'rounded'
-        },
-    },
-    dataLabels: {
-        enabled: false
-    },
-    stroke: {
-        show: true,
-        width: 1,
-        colors: ['transparent']
-    },
-    xaxis: {
-        categories: ['01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'],
-    },
-    yaxis: {
-        title: {
-            text: ''
-        },
-        max: 1,
-    },
-    fill: {
-        opacity: 1
-    },
-    colors: ['#f3f3f3', '#dadce0'],
-    tooltip: {
-        y: {
-            formatter: function (val: any) {
-                return "$ " + val + " thousands"
+import { useReportStore } from "@/stores/report";
+const reportStore = useReportStore();
+const { getTotalSalesByToday, getTotalBookingByWeek, getManagerSalesByToday, getVisitorCountByToday, getServiceProportionByToday, getProductProportionByToday, getTotalTopUpByToday, getTotalPayTypeByToday } = reportStore;
+const serviceProportionByToday = reactive({ data: [] });
+const productProportionByToday = reactive({ data: [] });
+const TotalTopUpByToday = reactive({ data: [] });
+const totalSales_servicePrice = ref();
+const totalSales_productPrice = ref();
+const totalSales_servicePct = ref();
+const totalSales_productPct = ref();
+const totalSales_totalPrice = ref();
+const totalSalesTodayChart = ref<HTMLElement>();
+const myChart1 = ref<any>();
+const initTotalSalesTodayEcharts = ((data: any) => {
+    totalSales_servicePrice.value = data.servicePrice;
+    totalSales_productPrice.value = data.productPrice;
+    totalSales_servicePct.value = data.servicePct;
+    totalSales_productPct.value = data.productPct;
+    totalSales_totalPrice.value = data.totalPrice;
+    myChart1.value = echarts.init(totalSalesTodayChart.value!);
+    myChart1.value.setOption({
+        xAxis: {
+            type: 'category',
+            data: data.date,
+            axisPointer: {
+                type: 'shadow'
             }
-        }
-    }
-}
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                itemStyle: {
+                    color: '#1a73e8'
+                },
+                data: data.servicePriceList,
+                type: 'bar'
+            },
+            {
+                itemStyle: {
+                    color: '#d1687f'
+                },
+                data: data.productPriceList,
+                type: 'bar'
+            }
+        ]
+    });
+})
+const totalBooking_totalBooking = ref();
+const TotalBookingByWeekChart = ref<HTMLElement>();
+const myChart2 = ref<any>();
+const initTotalBookingByWeekEcharts = ((data: any) => {
+    totalBooking_totalBooking.value = data.totalBooking
+    myChart2.value = echarts.init(TotalBookingByWeekChart.value!);
+    myChart2.value.setOption({
+        xAxis: {
+            data: data.date
+        },
+        yAxis: {
+        },
+        series: [
+            {
+                data: data.count,
+                type: 'line'
+            }
+        ]
+    });
+})
+const managerSales_totalPrice = ref();
+const ManagerSalesByTodayChart = ref<HTMLElement>();
+const myChart3 = ref<any>();
+const initManagerSalesByTodayEcharts = ((data: any) => {
+    managerSales_totalPrice.value = data.totalPrice;
+    myChart3.value = echarts.init(ManagerSalesByTodayChart.value!);
+    myChart3.value.setOption({
+        xAxis: {
+            type: 'category',
+            data: data.managerName,
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                itemStyle: {
+                    color: '#1a73e8'
+                },
+                data: data.servicesPrice,
+                type: 'bar'
+            },
+            {
+                itemStyle: {
+                    color: '#d1687f'
+                },
+                data: data.productPrice,
+                type: 'bar'
+            }
+        ]
+    });
+})
+const visitorTotal = ref();
+const maleTotal = ref();
+const malePct = ref();
+const femaleTotal = ref();
+const femalePct = ref();
+const personalTotal = ref();
+const personalPct = ref();
+const VisitorCountByTodayChart = ref<HTMLElement>();
+const myChart4 = ref<any>();
+const initVisitorCountByTodayEcharts = ((data: any) => {
+    visitorTotal.value = data.visitorTotal;
+    maleTotal.value = data.maleTotal;
+    malePct.value = data.malePct;
+    femaleTotal.value = data.femaleTotal;
+    femalePct.value = data.femalePct;
+    personalTotal.value = data.personalTotal;
+    personalPct.value = data.personalPct;
+    myChart4.value = echarts.init(VisitorCountByTodayChart.value!);
+    myChart4.value.setOption({
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'shadow'
+            }
+        },
+        legend: {},
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'value',
+            boundaryGap: [0, 5]
+        },
+        yAxis: {
+            type: 'category',
+            data: data.title
+        },
+        series: [
+            {
+                type: 'bar',
+                itemStyle: {
+                    color: '#1a73e8'
+                },
+                data: data.maleList
+            },
+            {
+                type: 'bar',
+                itemStyle: {
+                    color: '#d1687f'
+                },
+                data: data.femaleList
+            },
+            {
+                type: 'bar',
+                itemStyle: {
+                    color: '#dadce0'
+                },
+                data: data.personalList
+            }
+        ]
+    });
+})
+const TotalPayTypeByTodayChart = ref<HTMLElement>();
+const myChart5 = ref<any>();
+const initTotalPayTypeByTodayEcharts = ((data: any) => {
+    myChart5.value = echarts.init(TotalPayTypeByTodayChart.value!);
+    myChart5.value.setOption({
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            top: '5%',
+            left: 'center'
+        },
+        series: [
+            {
+                name: 'Access From',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: 40,
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: data
+            }
+        ]
+    });
+})
 const saleData = [{
     name: '服務',
     data: [],
@@ -240,7 +406,53 @@ const payChart = {
 const payData = [
     44, 55, 41, 17
 ]
+const getReportDate = () => {
+    getTotalSalesByToday().then((res: any) => {
+        if (res.state == 1) {
+            initTotalSalesTodayEcharts(res.data.table);
+        }
+    })
+    getTotalBookingByWeek().then((res: any) => {
+        if (res.state == 1) {
+            initTotalBookingByWeekEcharts(res.data.table);
+        }
+    })
+    getManagerSalesByToday().then((res: any) => {
+        if (res.state == 1) {
+            initManagerSalesByTodayEcharts(res.data.table);
+        }
+    })
+    getVisitorCountByToday().then((res: any) => {
+        if (res.state == 1) {
+            initVisitorCountByTodayEcharts(res.data.table);
+        }
+    })
+    getServiceProportionByToday().then((res: any) => {
+        if (res.state == 1) {
+            serviceProportionByToday.data = res.data.table;
+        }
+    })
+    getProductProportionByToday().then((res: any) => {
+        if (res.state == 1) {
+            productProportionByToday.data = res.data.table;
+        }
+    })
+    getTotalTopUpByToday().then((res: any) => {
+        if (res.state == 1) {
+            TotalTopUpByToday.data = res.data.table;
+        }
+    })
+    getTotalPayTypeByToday().then((res: any) => {
+        if (res.state == 1) {
+            initTotalPayTypeByTodayEcharts(res.data.table);
+        }
+    })
+}
+onMounted(() => {
+    getReportDate();
+})
 </script>
+
 <template>
     <div class="content">
         <div class="row">
@@ -249,17 +461,17 @@ const payData = [
                 <div class="count-block">
                     <h2>營業總額</h2>
                     <p>今日的營業狀況</p>
-                    <h1>$0</h1>
+                    <h1>${{ totalSales_totalPrice }}</h1>
                     <div class="sale-info">
                         <img style="background-color: #1a73e8" />
-                        <p>服務$0(0%)</p>
+                        <p>服務${{ totalSales_servicePrice }}({{ totalSales_servicePct }}%)</p>
                     </div>
                     <div class="sale-info">
                         <img style="background-color: #dadce0" />
-                        <p>商品$0(0%)</p>
+                        <p>商品${{ totalSales_productPrice }}({{ totalSales_productPrice }}%)</p>
                     </div>
-                    <div id="sale-chart">
-                        <apexchart type="bar" height="350" :options="saleChart" :series="saleData"></apexchart>
+                    <div>
+                        <div ref="totalSalesTodayChart" :style="{ height: '350px' }"></div>
                     </div>
                 </div>
             </div>
@@ -268,9 +480,9 @@ const payData = [
                 <div class="count-block">
                     <h2>即將到來的預約數</h2>
                     <p>未來一周的預約狀況</p>
-                    <h1>14</h1>
-                    <div id="reserve-chart">
-                        <apexchart type="line" height="350" :options="reserveChart" :series="reserveDate"></apexchart>
+                    <h1>{{ totalBooking_totalBooking }}</h1>
+                    <div>
+                        <div ref="TotalBookingByWeekChart" :style="{ height: '350px' }"></div>
                     </div>
                 </div>
             </div>
@@ -281,7 +493,7 @@ const payData = [
                 <div class="count-block">
                     <h2>人員業績</h2>
                     <p>今日的人員業績狀況</p>
-                    <h1>$0</h1>
+                    <h1>${{ managerSales_totalPrice }}</h1>
                     <div class="sale-info">
                         <img style="background-color: #1a73e8" />
                         <p>服務</p>
@@ -290,9 +502,8 @@ const payData = [
                         <img style="background-color: #dadce0" />
                         <p>商品</p>
                     </div>
-                    <div id="sale-chart">
-                        <apexchart type="bar" height="350" :options="personalSaleChart" :series="personalSaleData">
-                        </apexchart>
+                    <div>
+                        <div ref="ManagerSalesByTodayChart" :style="{ height: '350px' }"></div>
                     </div>
                 </div>
             </div>
@@ -301,21 +512,21 @@ const payData = [
                 <div class="count-block">
                     <h2>來客數</h2>
                     <p>今日的來客數</p>
-                    <h1>$0</h1>
+                    <h1>{{ visitorTotal }}</h1>
                     <div class="sale-info">
                         <img style="background-color: #1a73e8" />
-                        <p>男性0(0%)</p>
+                        <p>男性{{ maleTotal }}({{ malePct }})</p>
                     </div>
                     <div class="sale-info">
                         <img style="background-color: #dadce0" />
-                        <p>女性0(0%)</p>
+                        <p>女性{{ femaleTotal }}({{ femalePct }})</p>
                     </div>
                     <div class="sale-info">
                         <img style="background-color: #d1687f" />
-                        <p>不透漏0(0%)</p>
+                        <p>不透漏{{ personalTotal }}({{ personalPct }})</p>
                     </div>
-                    <div id="customer-chart">
-                        <apexchart type="bar" height="350" :options="customerChart" :series="customerData"></apexchart>
+                    <div>
+                        <div ref="VisitorCountByTodayChart" :style="{ height: '350px' }"></div>
                     </div>
                 </div>
             </div>
@@ -326,33 +537,15 @@ const payData = [
                 <div class="count-block">
                     <h2>服務排行佔比</h2>
                     <p>今日的服務狀況</p>
-                    <h1>$0</h1>
-                    <p>總銷售數量0</p>
-                    <table class="tab">
-                        <thead class="header-tab">
-                            <tr>
-                                <th class="col-4-th">
-                                    <p>服務排行前五名 </p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>淨額</p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>佔比</p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>數量</p>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="content-tab">
-                            <tr>
-                                <td class="col-4-th">
-                                    <p>無資料 </p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <h1>${{ serviceProportionByToday.data.priceList }}</h1>
+                    <p>總銷售數量{{ serviceProportionByToday.data.quantityList }}</p>
+                    <el-table :data="serviceProportionByToday.data.serviceList" style="width: 100%" height="250"
+                        :header-cell-style="{ background: '#e6e2de' }">
+                        <el-table-column prop="name" label="服務排行前五名" width="200" />
+                        <el-table-column prop="price" label="淨額" />
+                        <el-table-column prop="quantityPct" label="佔比" />
+                        <el-table-column prop="quantity" label="數量" />
+                    </el-table>
                 </div>
             </div>
             <div class="count-box">
@@ -360,68 +553,19 @@ const payData = [
                 <div class="count-block">
                     <h2>商品排行佔比</h2>
                     <p>今日的商品銷售</p>
-                    <h1>$0</h1>
-                    <p>總銷售數量0</p>
-                    <table class="tab">
-                        <thead class="header-tab">
-                            <tr>
-                                <th class="col-4-th">
-                                    <p>服務排行前五名 </p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>淨額</p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>佔比</p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>數量</p>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="content-tab">
-                            <tr>
-                                <td class="col-4-th">
-                                    <p>ˋ暫無資料 </p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <h1>${{ productProportionByToday.data.priceList }}</h1>
+                    <p>總銷售數量{{ productProportionByToday.data.quantityList }}</p>
+                    <el-table :data="productProportionByToday.data.productList" style="width: 100%" height="250"
+                        :header-cell-style="{ background: '#e6e2de' }">
+                        <el-table-column prop="name" label="商品排行前五名" width="200" />
+                        <el-table-column prop="price" label="淨額" />
+                        <el-table-column prop="quantityPct" label="佔比" />
+                        <el-table-column prop="quantity" label="數量" />
+                    </el-table>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="count-box">
-                <h3>優惠卷使用狀況如何?</h3>
-                <div class="count-block">
-                    <h2>優惠卷排行佔比</h2>
-                    <p>今日的優惠卷的排行佔比</p>
-                    <h1>$0</h1>
-                    <p>總使用數量0</p>
-                    <table class="tab">
-                        <thead class="header-tab">
-                            <tr>
-                                <th class="col-6-th">
-                                    <p>優惠卷排行 </p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>優惠卷成本</p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>使用數</p>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="content-tab">
-                            <tr>
-                                <td class="col-4-th">
-                                    <p>暫無資料 </p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
             <div class="count-box">
                 <h3>儲值卡使用狀況如何?</h3>
                 <div class="count-block">
@@ -429,76 +573,16 @@ const payData = [
                     <p>儲值卡的銷售銷售</p>
                     <h1>$0</h1>
                     <div>
-                        <p>總累積未收額 $0 </p>
-                        <p>已實收總面額 $0</p>
+                        <p>總累積未收額 ${{ TotalTopUpByToday.data.totalPrice }} </p>
+                        <p>已實收總面額 ${{ TotalTopUpByToday.data.totalBalance }}</p>
                     </div>
-                    <table class="tab">
-                        <thead class="header-tab">
-                            <tr>
-                                <th class="col-4-th">
-                                    <p>服務排行前五名 </p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>淨額</p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>佔比</p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>數量</p>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="content-tab">
-                            <tr>
-                                <td class="col-4-th">
-                                    <p>ˋ暫無資料 </p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="count-box">
-                <h3>計次卷使用狀況如何?</h3>
-                <div class="count-block">
-                    <h2>總銷售額</h2>
-                    <p>計次劵的總銷售額</p>
-                    <h1>$0</h1>
-                    <div>
-                        <p>總累積未收額 $0 </p>
-                        <p>已實收總面額 $0</p>
-                    </div>
-                    <table class="tab">
-                        <thead class="header-tab">
-                            <tr>
-                                <th class="col-4-th">
-                                    <p>計次劵排行 </p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>銷售額</p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>佔比</p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>數量</p>
-                                </th>
-                                <th class="col-2-th">
-                                    <p>累積未收額</p>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="content-tab">
-                            <tr>
-                                <td class="col-4-th">
-                                    <p>暫無資料 </p>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <el-table :data="TotalTopUpByToday.data.productList" style="width: 100%" height="250"
+                        :header-cell-style="{ background: '#e6e2de' }">
+                        <el-table-column prop="name" label="儲值卡排行前五名" width="200" />
+                        <el-table-column prop="price" label="淨額" />
+                        <el-table-column prop="quantityPct" label="佔比" />
+                        <el-table-column prop="quantity" label="數量" />
+                    </el-table>
                 </div>
             </div>
             <div class="count-box">
@@ -506,8 +590,8 @@ const payData = [
                 <div class="count-block">
                     <h2>收款方式</h2>
                     <p>今日的收款方式</p>
-                    <div id="chart">
-                        <apexchart type="donut" width="380" :options="payChart" :series="payData"></apexchart>
+                    <div>
+                        <div ref="TotalPayTypeByTodayChart" :style="{ height: '350px' }"></div>
                     </div>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { apiGetTotalSalesRequest, apiGetTotalBookingRequest, apiGetManagerSalesRequest, apiGetAverageOrderRequest, apiGetVisitorCountRequest, apiGetVisitorHoursRequest, apiGetServiceProportionRequest } from "@/api/index";
+import { apiGetTotalSalesRequest, apiGetTotalBookingByWeekRequest, apiGetManagerSalesByTodayRequest,apiGetVisitorCountByTodayRequest,apiGetServiceProportionByTodayRequest,apiGetProductProportionByTodayRequest,apiGetTotalTopUpByTodayRequest,apiGetTotalPayTypeByTodayRequest,apiGetTotalBookingRequest, apiGetManagerSalesRequest, apiGetAverageOrderRequest, apiGetVisitorCountRequest, apiGetVisitorHoursRequest, apiGetServiceProportionRequest, apiGetTotalSalesByTodayRequest } from "@/api/index";
 export const useReportStore = defineStore("report", () => {
     const totalSalesList: any = reactive({ data: [] });
     const totalBookingList: any = reactive({ data: [] });
@@ -93,6 +93,79 @@ export const useReportStore = defineStore("report", () => {
             return Promise.reject(error);
         }
     };
+    const getTotalSalesByToday = async () => {
+        try {
+            const res = await apiGetTotalSalesByTodayRequest();
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const getTotalBookingByWeek = async () => {
+        try {
+            const res = await apiGetTotalBookingByWeekRequest();
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const getManagerSalesByToday = async () => {
+        try {
+            const res = await apiGetManagerSalesByTodayRequest();
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const getVisitorCountByToday = async () => {
+        try {
+            const res = await apiGetVisitorCountByTodayRequest();
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const getServiceProportionByToday = async () => {
+        try {
+            const res = await apiGetServiceProportionByTodayRequest();
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const getProductProportionByToday = async () => {
+        try {
+            const res = await apiGetProductProportionByTodayRequest();
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const getTotalTopUpByToday = async () => {
+        try {
+            const res = await apiGetTotalTopUpByTodayRequest();
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const getTotalPayTypeByToday = async () => {
+        try {
+            const res = await apiGetTotalPayTypeByTodayRequest();
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+
     return {
         totalSalesList,
         totalBookingList,
@@ -103,10 +176,18 @@ export const useReportStore = defineStore("report", () => {
         serviceProportionList,
         getTotalSales,
         getTotalBooking,
+        getManagerSalesByToday,
+        getVisitorCountByToday,
+        getServiceProportionByToday,
+        getProductProportionByToday,
+        getTotalTopUpByToday,
+        getTotalPayTypeByToday,
         getManagerSales,
         getAverageOrder,
         getVisitorCount,
         getVisitorHours,
-        getServiceProportion
+        getServiceProportion,
+        getTotalSalesByToday,
+        getTotalBookingByWeek
     }
 })

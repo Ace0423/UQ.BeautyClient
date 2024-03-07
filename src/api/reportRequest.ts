@@ -5,7 +5,46 @@ const reportRequest = axios.create({
     withCredentials: true,
 
 });
-
+export const getTotalSalesByTodayRequest = () => {
+    let token: any = getToken('token');
+    reportRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return reportRequest.get("/Analysis/TotalSalesByToday");
+}
+export const getTotalBookingByWeekRequest = () => {
+    let token: any = getToken('token');
+    reportRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return reportRequest.get("/Analysis/TotalBookingByWeek");
+}
+export const getManagerSalesByTodayRequest = () => {
+    let token: any = getToken('token');
+    reportRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return reportRequest.get("/Analysis/ManagerSalesByToday");
+}
+export const getVisitorCountByTodayRequest = () => {
+    let token: any = getToken('token');
+    reportRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return reportRequest.get("/Analysis/VisitorCountByToday");
+}
+export const getServiceProportionByTodayRequest = () => {
+    let token: any = getToken('token');
+    reportRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return reportRequest.get("/Analysis/ServiceProportionByToday");
+}
+export const getProductProportionByTodayRequest = () => {
+    let token: any = getToken('token');
+    reportRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return reportRequest.get("/Analysis/ProductProportionByToday");
+}
+export const getTotalTopUpByTodayRequest = () => {
+    let token: any = getToken('token');
+    reportRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return reportRequest.get("/Analysis/TotalTopUpByToday");
+}
+export const getTotalPayTypeByTodayRequest = () => {
+    let token: any = getToken('token');
+    reportRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return reportRequest.get("/Analysis/TotalPayTypeByToday");
+}
 export const getTotalSalesRequest = (data: any) => {
     let token: any = getToken('token');
     reportRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;

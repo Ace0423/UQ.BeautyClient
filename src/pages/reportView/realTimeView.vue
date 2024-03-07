@@ -5,9 +5,9 @@ import apexchart from 'vue3-apexcharts'
 import { useReportStore } from "@/stores/report";
 const reportStore = useReportStore();
 const { getTotalSalesByToday, getTotalBookingByWeek, getManagerSalesByToday, getVisitorCountByToday, getServiceProportionByToday, getProductProportionByToday, getTotalTopUpByToday, getTotalPayTypeByToday } = reportStore;
-const serviceProportionByToday = reactive({ data: [] });
-const productProportionByToday = reactive({ data: [] });
-const TotalTopUpByToday = reactive({ data: [] });
+const serviceProportionByToday = reactive<any>({ data: [] });
+const productProportionByToday = reactive<any>({ data: [] });
+const TotalTopUpByToday = reactive<any>({ data: [] });
 const totalSales_servicePrice = ref();
 const totalSales_productPrice = ref();
 const totalSales_servicePct = ref();

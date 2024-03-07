@@ -157,7 +157,7 @@ export default {
                   break;
                 case 'timeGridWeek'://週曆
                 case 'resourceTimeGridDay'://日曆
-                  htmlStr += "<div class='fc-event-main' style='overflow:hidden;' >"
+                  htmlStr += "<div class='fc-event-main' style='overflow-y:auto;' >"
                   htmlStr += "<span style='white-space: nowrap; font-weight: bolder; font-size: 14px;color:" + fontColor + ";'>" + event.startStr.slice(11, 16) + "</span>"
                   htmlStr += "<br/><span style='white-space: nowrap; font-weight: bolder; font-size: 14px;color:" + fontColor + ";'>" + info.memberInfo.nameView + "</span>"
 

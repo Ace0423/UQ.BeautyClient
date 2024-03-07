@@ -158,15 +158,23 @@ export default {
                 case 'timeGridWeek'://週曆
                 case 'resourceTimeGridDay'://日曆
                   htmlStr += "<div class='fc-event-main' style='overflow-y:auto;' >"
+                  htmlStr += "<div style='display: flex; justify-content: space-between;'  >"
                   htmlStr += "<span style='white-space: nowrap; font-weight: bolder; font-size: 14px;color:" + fontColor + ";'>" + event.startStr.slice(11, 16) + "</span>"
-                  htmlStr += "<br/><span style='white-space: nowrap; font-weight: bolder; font-size: 14px;color:" + fontColor + ";'>" + info.memberInfo.nameView + "</span>"
+                  if (!info.isAssign)//指定
+                  htmlStr += "<span style='background: #444444; white-space: nowrap; font-weight: bolder; font-size: 14px;color:" + "#FFFFFF" + ";'>" + "不指定" + "</span>"
+                  htmlStr += "</div>";
+                  htmlStr += "<span style='white-space: nowrap; font-weight: bolder; font-size: 14px;color:" + fontColor + ";'>" + info.memberInfo.nameView + "</span>"
 
-                  if (info.isAssign)//指定
-                    htmlStr += "<br/><strong  style='  border-radius:20%;  font-weight: normal; color:" + fontColor + ";'>" + serverName + "</strong> "
-                  else//不指定
-                    htmlStr += "<br/><span style='white-space: nowrap;  background-color:#5B5B5B; font-weight: normal; color:white;'>" + serverName + "</span>"
+                  // if (info.isAssign)//指定
+                  //   htmlStr += "<br/><strong  style='  border-radius:20%;  font-weight: normal; color:" + fontColor + ";'>" + serverName + "</strong> "
+                  // else//不指定
+                  //   htmlStr += "<br/><span style='white-space: nowrap;  background-color:#5B5B5B; font-weight: normal; color:white;'>" + serverName + "</span>"
 
                   htmlStr += "<br/><span  style='white-space: nowrap; font-weight: normal;color:" + fontColor + ";'>" + event.title + "</span>"
+                  console.log();
+                  if (info.serviceInfo.subInfo)
+                  htmlStr += "<span  style='white-space: nowrap; font-weight: normal;color:" + fontColor + ";'>" +" - "+ info.serviceInfo.subInfo.name + "</span>"
+
                   if (info.bookingMemo != "") {
                     htmlStr += "<br/><span  style='white-space: nowrap; font-weight: normal;color:" + fontColor + ";'>" + "備註- " + info.bookingMemo + "" + "</span>"
                   }

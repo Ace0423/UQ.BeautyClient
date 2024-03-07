@@ -724,7 +724,7 @@ function submitBtn() {
   apiData.COCustomerCount = formData.customerCount;
   apiData.COBuyItemsList = formData.buyItemsList;
   apiData.COMemberId = formData.memberInfo.userId;
-  apiData.payTypeId = formData.memberInfo.payTypeId;
+  apiData.payTypeId = formData.payTypeId;
   apiData.COMemo = formData.memo;
   apiData.COTotalPrice = formData.priceTotal;
   apiData.COAllDCList = formInputRef.value.allDiscount;

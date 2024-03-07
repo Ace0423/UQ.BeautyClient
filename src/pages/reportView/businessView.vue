@@ -397,7 +397,7 @@ const filterChang = () => {
         <div class="filter-block">
             <div class="condition-block">
                 <el-config-provider :locale="zhCn">
-                    <el-date-picker v-model="time" type="daterange" unlink-panels range-separator="-"
+                    <el-date-picker v-model="time" type="daterange" unlink-panels range-separator="一"
                         start-placeholder="開始時間" end-placeholder="結束時間" :shortcuts="shortcuts" size=large
                         @change="getReportDate()" />
                 </el-config-provider>
@@ -578,7 +578,12 @@ const filterChang = () => {
 
         >.condition-block {
             display: flex;
+
             // margin: 0 15px;
+            :deep(.el-range-input) {
+                font-size: 20px;
+                // color: rgb(0, 0, 0);
+            }
         }
 
         >.people-screening {

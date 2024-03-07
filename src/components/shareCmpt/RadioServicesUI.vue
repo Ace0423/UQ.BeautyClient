@@ -90,10 +90,10 @@ let getServicesMax2: any = computed((params: any) => {
 });
 
 function getServicesPriceMin(params: any) {
-  return Math.max(...params.map((a: any) => a.price))
+  return Math.min(...params.map((a: any) => a.price))
 }
 function getServicesTimeMin(params: any) {
-  return Math.max(...params.map((a: any) => a.servicesTime))
+  return Math.min(...params.map((a: any) => a.servicesTime))
 }
 
 function submitBtn() {

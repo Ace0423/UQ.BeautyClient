@@ -87,8 +87,6 @@ onMounted(() => {
           <th>
             <p>最後消費時間</p>
           </th>
-          <th>
-          </th>
           <th class="header-btn"></th>
         </tr>
       </thead>
@@ -180,6 +178,7 @@ onMounted(() => {
     height: 100%;
 
     >.header-tab {
+      width: 100%;
       display: block;
       // height: 50px;
       color: #717171;
@@ -191,6 +190,7 @@ onMounted(() => {
         display: flex;
         align-items: center;
         height: 50px;
+        width: 100%;
         justify-content: space-between;
 
         >th {
@@ -212,7 +212,7 @@ onMounted(() => {
       }
 
       >tr>th:nth-child(1) {
-        width:25%;
+        width: 25%;
       }
 
       >tr>th:nth-child(2) {
@@ -224,12 +224,14 @@ onMounted(() => {
         display: flex;
         text-align: center;
         justify-content: center;
-        >p{
+
+        >p {
           text-align: center;
         }
       }
+
       >tr>th:nth-child(4) {
-        width:25%;
+        width: 25%;
       }
 
       >tr>th:nth-child(5) {

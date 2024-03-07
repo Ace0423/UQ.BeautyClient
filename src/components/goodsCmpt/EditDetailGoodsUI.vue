@@ -59,7 +59,7 @@
                 </div>
               </div>
               <div>
-                <span>容量</span>
+                <span>數量</span>
                 <input v-model="formInputRef.capacity" placeholder="請輸入數量" type="text" />
               </div>
             </div>

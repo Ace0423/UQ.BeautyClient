@@ -5,7 +5,7 @@
       <div class="demo-date-picker">
         <div class="block">
           <span class="demonstration"></span>
-          <el-date-picker v-model="formInputRef.datePicker" type="daterange" range-separator="To" start-placeholder="開始日期"
+          <el-date-picker v-model="formInputRef.datePicker" type="daterange" range-separator="一" start-placeholder="開始日期"
             end-placeholder="結束日期" :size="datePickerSize" @change="dateChange" />
         </div>
       </div>
@@ -40,7 +40,13 @@
             </template>
           </el-table-column>
           <el-table-column prop="memberInfo.name" label="顧客" min-width="30%" sortable />
-          <el-table-column prop="coAmount" label="金額" min-width="10%" sortable />
+          <el-table-column prop="coAmount" label="金額" min-width="10%" sortable>
+            <template #default="scope">
+              <div class="handle-price">
+                <span>{{ scope.row.coAmount }}</span>
+              </div>
+            </template>
+          </el-table-column>
           <el-table-column label="" min-width="10%">
             <template #default="scope">
               <div class="handle-drag" @click="selectDataFn(scope.row)">
@@ -83,7 +89,7 @@ let editServiceInfo: any = ref([]);
 const datePickerSize = ref<'default' | 'large' | 'small'>('large')
 
 let formInputRef: any = ref({
-  datePicker: ["2024-01-17","2024-01-17"],
+  datePicker: ["2024-01-17", "2024-01-17"],
 });
 
 let search = ref("");
@@ -98,16 +104,16 @@ function getOrderFn(data: any) {
   );
 }
 
-var nowDate= new Date();
+var nowDate = new Date();
 // var addDate = new Date(nowDate.getTime() - 14*24*60*60*1000);
-var startDate = nowDate.getFullYear()+"-"+(nowDate.getMonth()+1)+"-"+nowDate.getDate();
-var endDate = nowDate.getFullYear()+"-"+(nowDate.getMonth()+1)+"-"+nowDate.getDate();
-formInputRef.value.datePicker[0]=startDate
-formInputRef.value.datePicker[1]=endDate
+var startDate = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+var endDate = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+formInputRef.value.datePicker[0] = startDate
+formInputRef.value.datePicker[1] = endDate
 
 onBefore();
 function onBefore() {
-  getOrderListApi(0,formInputRef.value.datePicker[0],formInputRef.value.datePicker[1]);
+  getOrderListApi(0, formInputRef.value.datePicker[0], formInputRef.value.datePicker[1]);
 }
 onMounted(() => { });
 
@@ -286,7 +292,7 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
         width: 88%;
 
         .search-control {
-          width: auto;
+          width: 200px;
           height: 60%;
           border-radius: 6px;
           border: solid 1px #707070;
@@ -296,7 +302,7 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
 
           background: url("@/assets/images/icon_search.png") no-repeat;
           background-color: #fff;
-          background-position: 97%;
+          background-position: 99%;
           background-origin: content-box;
           text-indent: 5px;
         }
@@ -394,6 +400,7 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
             }
           }
         }
+
         .handle-drag {
           display: flex;
           justify-content: end;
@@ -411,6 +418,16 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
         .del_img {
           width: 20px;
           height: 27px;
+        }
+
+
+
+        .handle-price {
+
+          >span {
+            width: 100%;
+            margin-left: 2px;
+          }
         }
       }
     }
@@ -434,6 +451,11 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
   text-align: left;
   border-right: solid 1px var(--el-border-color);
   flex: 1;
+
+  :deep(.el-range-input) {
+    font-size: 20px;
+    // color: rgb(0, 0, 0);
+  }
 }
 
 .demo-date-picker .block:last-child {

@@ -67,7 +67,7 @@
                         <span class="fontBlack">{{ bItem.name }}</span>
                         <span>
                           <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , " }}</span>
-                          {{ getLimitDay(bItem) + " , " + "面額$ " + bItem.tuViewPrice }}
+                          {{ getLimitDay(bItem) + " , " + "面額$ " + bItem.tuSellPrice }}
 
                         </span>
                         <span v-for="(sglItem, index) in bItem.sglDiscountList" :key="sglItem">
@@ -552,7 +552,7 @@ function getItemInfoFn(data: any) {
     odDetail.subInfo = null;
     odDetail.stock = 0;
     odDetail.color = curItemData.color;
-    odDetail.price = curItemData.tuViewPrice;
+    odDetail.price = curItemData.tuSellPrice;
     odDetail.tuViewPrice = curItemData.tuViewPrice;
   }
   odDetail.managerInfo = curItemData.managerInfo;

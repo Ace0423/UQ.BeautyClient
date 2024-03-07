@@ -25,7 +25,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="price" label="售價" min-width="20%" sortable >
+          <el-table-column prop="price" label="售價" min-width="20%" sortable>
             <template #default="scope">
               <div class="handle-drag">
                 <span v-if="scope.row.servicesTime == 0">{{ 0 + '(' + MathMinPriceFn(scope.row.subList) + '起)'
@@ -132,6 +132,12 @@ function showEditDetailHdr(state: boolean) {
 
 //改變課程狀態
 let changeStutusHdr = (index: number, item: any) => {
+  let curSgIdList = [];
+  for (let i = 0; i < item.sgIdList.length; i++) {
+    const element = item.sgIdList[i];
+    curSgIdList.push(element.sgId);
+  }
+
   let curdata: any = {
     sId: item.sId,
     display: !item.display,
@@ -140,13 +146,14 @@ let changeStutusHdr = (index: number, item: any) => {
     isEditAccounting: item.isEditAccounting,
     memo: item.memo,
     nickName: item.nickName,
-    sgIdList: item.sgIdList,
+    sgIdList: curSgIdList,
     subType: item.subType,
     name: item.name,
     servicesTime: item.servicesTime,
     price: item.price,
     subList: item.subList,
   };
+
   updateServiceDetailApi(curdata).then((res: any) => {
     getServiceDetailApi(0);
   });
@@ -202,11 +209,11 @@ function sortthreadFn(name: number) {
 }
 
 function MathMinServiceTimeFn(data: any) {
-  let least=Math.min(...data.map((a:any) => a.servicesTime)) //12
+  let least = Math.min(...data.map((a: any) => a.servicesTime)) //12
   return least;
 }
 function MathMinPriceFn(data: any) {
-  let least=Math.min(...data.map((a:any) => a.price)) //12
+  let least = Math.min(...data.map((a: any) => a.price)) //12
   return least;
 }
 //-------------------------------------------------------------------------表格css

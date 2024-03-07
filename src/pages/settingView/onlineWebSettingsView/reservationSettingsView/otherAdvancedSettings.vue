@@ -21,7 +21,6 @@ const timeVal = ref(0)
 const otherSettingData: any = reactive({ data: [] });
 const otherSettingList = computed(() => {
     otherSettingData.data = JSON.parse(JSON.stringify(onlineOtherSettingList.value.data));
-    console.log(otherSettingData.data)
     return otherSettingData.data;
 })
 onMounted(() => {

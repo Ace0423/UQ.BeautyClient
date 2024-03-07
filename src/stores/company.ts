@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest, apiGetBlackListSetRequest, apiPutBlackListSetRequest, apiGetMessageRecords, apiGetInfoRecord, apiGetOnlineBusinessHours, apiPostOnlineBusinessHours, apiGetOnlinePayMeth,apiPostOnlinePayMeth,apiGetOnlineOtherSettings,apiPostOnlineOtherSettings } from "@/api/index";
+import { apiGetTimeTablesRequest, apiPostTimeTablesRequest, apiGetCheckOutTypeRequest, apiPostCheckOutTypeRequest, apiPutCheckOutTypeRequest, apiGetCompanyInfoRequest, apiPutCompanyInfoRequest, apiGetMessagesRequest, apiInsertMessagesRequest, apiUpdateMessagesRequest, apiGetBlackListSetRequest, apiPutBlackListSetRequest, apiGetMessageRecords, apiGetInfoRecord, apiGetOnlineBusinessHours, apiPostOnlineBusinessHours, apiGetOnlinePayMeth, apiPostOnlinePayMeth, apiGetOnlineOtherSettings, apiPostOnlineOtherSettings,apiGetOnlineStoreWebInfo } from "@/api/index";
 import { getCompany } from "@/plugins/js-cookie";
 export const useCompanyStore = defineStore("company", () => {
     const businessHoursList: any = reactive({ data: [] });
@@ -11,7 +11,7 @@ export const useCompanyStore = defineStore("company", () => {
     const companyBlackListSet: any = reactive({ data: [] });
     const messagesList: any = reactive({ data: [] });
     const messagesRecordList: any = reactive({ data: [] });
-
+    const onlineStoreWebInfo: any = reactive({ data: [] });
     const getTimeTablesRequest = async (data: any) => {
 
         try {
@@ -336,9 +336,21 @@ export const useCompanyStore = defineStore("company", () => {
     };
     const postOnlineOtherSettings = async (data: any) => {
         try {
-            const res = await apiPostOnlineOtherSettings (data);
+            const res = await apiPostOnlineOtherSettings(data);
             if (res.data.state == 1) {
                 onlineOtherSettingList.data = res.data.data;
+            }
+            return res.data;
+        } catch (error) {
+            console.log(error);
+            return Promise.reject(error);
+        }
+    };
+    const getOnlineStoreWebInfo = async (data: any) => {
+        try {
+            const res = await apiGetOnlineStoreWebInfo(data);
+            if (res.data.state == 1) {
+                onlineStoreWebInfo.data = res.data.data;
             }
             return res.data;
         } catch (error) {
@@ -374,6 +386,8 @@ export const useCompanyStore = defineStore("company", () => {
         postOnlinePayMeth,
         onlineOtherSettingList,
         getOnlineOtherSettings,
-        postOnlineOtherSettings
+        postOnlineOtherSettings,
+        onlineStoreWebInfo,
+        getOnlineStoreWebInfo
     }
 })

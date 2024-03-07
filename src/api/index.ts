@@ -5,7 +5,7 @@ import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRole
 import { getPermissionsListRequest, putOptionRoleRequest, getApiPermissionsListRequest, postApiPermissionsListRequest, updateApiPermissionsListRequest } from "./settingRequest";
 import { getTimeTablesRequest, postTimeTablesRequest, getCheckOutTypeRequest, postCheckOutTypeRequest, putCheckOutTypeRequest, getCompanyInfoRequest, putCompanyInfoRequest, getMessagesRequest, insertMessagesRequest, updateMessagesRequest, getBlackListSetRequest, putBlackListSetRequest, getLineOAListRequest, putLineOAListRequest, getMessageRecords, getInfoRecord } from "./companyRequest";
 import { getTopUpCardListRequest, addTopUpCardInfoRequest, editTopUpCardInfoRequest } from "./topUpCardRequest";
-import { getOnlineBusinessHours, postOnlineBusinessHours, getOnlinePayMeth, postOnlinePayMeth, getOnlineOtherSettings, postOnlineOtherSettings } from "./onlineRequest";
+import { getOnlineBusinessHours, postOnlineBusinessHours, getOnlinePayMeth, postOnlinePayMeth, getOnlineOtherSettings, postOnlineOtherSettings,getOnlineStoreWebInfo } from "./onlineRequest";
 import { getTotalSalesRequest, getManagerSalesRequest, getTotalBookingRequest, getAverageOrderRequest, getVisitorCountRequest, getVisitorHoursRequest, getServiceProportionRequest } from "./reportRequest";
 import { getBookingByUIdRequest } from "./bookingRequest";
 import { getOrderByUIdRequest } from "./orederRequest";
@@ -87,6 +87,7 @@ export const apiGetOnlinePayMeth = getOnlinePayMeth;
 export const apiPostOnlinePayMeth = postOnlinePayMeth;
 export const apiGetOnlineOtherSettings = getOnlineOtherSettings;
 export const apiPostOnlineOtherSettings = postOnlineOtherSettings;
+export const apiGetOnlineStoreWebInfo = getOnlineStoreWebInfo;
 
 export const apiGetTotalSalesRequest = getTotalSalesRequest;
 export const apiGetTotalBookingRequest = getTotalBookingRequest;

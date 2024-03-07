@@ -5,31 +5,218 @@ import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
 import { usePriceStore } from "@/stores/priceStore";
 import type { TabsPaneContext } from 'element-plus'
+import { ElTable } from 'element-plus'
 const priceStore = usePriceStore();
-const { getTopUpCardList, addTopUpCardInfo, editTopUpCardInfo } = priceStore;
 const submitNameBtn = ref('確認');
 const title = ref("");
-const activeName = ref('first')
-const timer: any = [{ value: 0, text: '1小時' }, { value: 1, text: '1天' }, { value: 2, text: '1周' }]
-const handleClick = (tab: TabsPaneContext, event: Event) => {
-  
+const activeName = ref('first');
+const timer: any = [{ value: 0, text: '1小時' }, { value: 1, text: '1天' }, { value: 2, text: '1周' }];
+const personnelDesignation: any = [{ value: 0, text: '不指定人員' },];
+const multipleServiceTableRef = ref<InstanceType<typeof ElTable>>();
+const multipleServiceSelection = ref([]);
+const multipleBookingPersonnelTableRef = ref<InstanceType<typeof ElTable>>();
+const multipleShopProductTableRef = ref<InstanceType<typeof ElTable>>();
+const multipleShopProductSelection = ref([]);
+const toggleServiceSelection = () => {
+    setTimeout(() => {
+        infoData.serviceList.forEach((item: any) => {
+            let resullt = infoData.obServiceItems.find((row: any) => {
+                if (row.sId == item.sId) {
+                    return true
+                } else {
+                    return false
+                }
+            })
+            if (resullt) {
+                multipleServiceTableRef.value!.toggleRowSelection(item, true)
+            }
+        })
+    }, 300)
 }
-
-
-
+const toggleBookingPersonnelSelection = () => {
+    setTimeout(() => {
+        infoData.managerList.forEach((item: any) => {
+            let resullt = infoData.obBookingPersonnel.find((row: any) => {
+                if (row.managerId == item.managerId) {
+                    return true
+                } else {
+                    return false
+                }
+            })
+            if (resullt) {
+                multipleBookingPersonnelTableRef.value!.toggleRowSelection(item, true)
+            }
+        })
+    }, 300)
+}
+const toggleShopProductSelection = () => {
+    setTimeout(() => {
+        infoData.productsList.forEach((item: any) => {
+            let resullt = infoData.obShopProduct.find((row: any) => {
+                if (row.pId == item.pId) {
+                    return true
+                } else {
+                    return false
+                }
+            })
+            if (resullt) {
+                multipleShopProductTableRef.value!.toggleRowSelection(item, true)
+            }
+        })
+    }, 300)
+}
+const cropperImgUI = ref(false);
+const cropperData: any = reactive({
+    type: "",
+    width: 200,
+    height: 200,
+    imgResult: ''
+})
+const infoData = reactive({
+    cId: 0,
+    obActive: false,
+    obAllowCancellation: true,
+    obAllowOnSitePayment: false,
+    obAllowOnlineConsultation: false,
+    obAppUnit: 0,
+    obAppointmentPictures: "",
+    obAutoOpen: false,
+    obAutomaticallyOpenForTime: 0,
+    obBookingPrecautions: "",
+    obCancellationDeadlineDays: 0,
+    obCustomAppointmentDate: "2024-02-09T00:00:00",
+    obEnable: true,
+    obEnableMultipleBookings: true,
+    obEnablePickupTimes: true,
+    obId: 1,
+    obLastAppointmentTime: 0,
+    obOpenDaily: 0,
+    obOpenDate: 1,
+    obOpenStoreOnlineReservation: true,
+    obOpenTime: "10:00:00",
+    obPersonnelDesignationMethod: 0,
+    obRequireConfirmation: true,
+    obShopPictures: "",
+    obShopPrecautions: "",
+    obStartSellingProducts: true,
+    obWebDescription: "1",
+    obWebName: "1",
+    obWebsHomePicture: "",
+    managerList: [],
+    productsList: [],
+    serviceList: [],
+    obBookingPersonnel: [],
+    obServiceItems: [],
+    obShopProduct: [],
+})
 const props = defineProps<{
-    webItem: any;
+    webInfoData: any;
     handEditWebView: Function;
 }>();
-
+const dataURLtoFile = ((dataurl: any, filename: any) => {
+    var arr = dataurl.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+})
 onMounted(() => {
-
+    infoData.cId = props.webInfoData.data.cId;
+    infoData.obActive = props.webInfoData.data.obActive;
+    infoData.obAllowCancellation = props.webInfoData.data.obAllowCancellation;
+    infoData.obAllowOnSitePayment = props.webInfoData.data.obAllowOnSitePayment;
+    infoData.obAllowOnlineConsultation = props.webInfoData.data.obAllowOnlineConsultation;
+    infoData.obAppUnit = props.webInfoData.data.obAppUnit;
+    infoData.obAppointmentPictures = props.webInfoData.data.obAppointmentPictures;
+    infoData.obAutoOpen = props.webInfoData.data.obAutoOpen;
+    infoData.obAutomaticallyOpenForTime = props.webInfoData.data.obAutomaticallyOpenForTime;
+    infoData.obBookingPrecautions = props.webInfoData.data.obBookingPrecautions;
+    infoData.obCancellationDeadlineDays = props.webInfoData.data.obCancellationDeadlineDays;
+    infoData.obCustomAppointmentDate = props.webInfoData.data.obCustomAppointmentDate;
+    infoData.obEnable = props.webInfoData.data.obEnable;
+    infoData.obEnableMultipleBookings = props.webInfoData.data.obEnableMultipleBookings;
+    infoData.obEnablePickupTimes = props.webInfoData.data.obEnablePickupTimes;
+    infoData.obId = props.webInfoData.data.obId;
+    infoData.obLastAppointmentTime = props.webInfoData.data.obLastAppointmentTime;
+    infoData.obOpenDaily = props.webInfoData.data.obOpenDaily;
+    infoData.obOpenDate = props.webInfoData.data.obOpenDate;
+    infoData.obOpenStoreOnlineReservation = props.webInfoData.data.obOpenStoreOnlineReservation;
+    infoData.obOpenTime = props.webInfoData.data.obOpenTime;
+    infoData.obPersonnelDesignationMethod = props.webInfoData.data.obPersonnelDesignationMethod;
+    infoData.obRequireConfirmation = props.webInfoData.data.obRequireConfirmation;
+    infoData.obShopPictures = props.webInfoData.data.obShopPictures;
+    infoData.obShopPrecautions = props.webInfoData.data.obShopPrecautions;
+    infoData.obStartSellingProducts = props.webInfoData.data.obStartSellingProducts;
+    infoData.obWebDescription = props.webInfoData.data.obWebDescription;
+    infoData.obWebName = props.webInfoData.data.obWebName;
+    infoData.obWebsHomePicture = props.webInfoData.data.obWebsHomePicture;
+    infoData.managerList = props.webInfoData.data.managerList;
+    infoData.productsList = props.webInfoData.data.productsList;
+    infoData.serviceList = props.webInfoData.data.serviceList;
+    infoData.obBookingPersonnel = props.webInfoData.data.obBookingPersonnel;
+    infoData.obServiceItems = props.webInfoData.data.obServiceItems;
+    infoData.obShopProduct = props.webInfoData.data.obShopProduct;
+    toggleServiceSelection();
+    toggleBookingPersonnelSelection();
+    toggleShopProductSelection();
 });
-
+const fileHomeImage = ((e: any) => {
+    const file = e.target.files.item(0);
+    let suffixName = file.name.substring(file.name.lastIndexOf('.') + 1);
+    if (suffixName !== 'jpg' && suffixName !== 'png' && suffixName !== 'JPG' && suffixName !== 'PNG') {
+        Alert.warning("上傳檔案只能是 jpg、png 格式!", 2000);
+        return;
+    }
+    const reader = new FileReader();
+    reader.addEventListener('load', (e: any) => {
+        let file: any = dataURLtoFile(e.target.result, suffixName);
+        cropperData.type = 'home'
+        cropperData.width = 800;
+        cropperData.height = 800;
+        cropperData.imgResult = e.target.result;
+        handCropperImgView();
+    });
+    reader.readAsDataURL(file);
+})
+const fileShopImage = ((e: any) => {
+    const file = e.target.files.item(0);
+    let suffixName = file.name.substring(file.name.lastIndexOf('.') + 1);
+    if (suffixName !== 'jpg' && suffixName !== 'png' && suffixName !== 'JPG' && suffixName !== 'PNG') {
+        Alert.warning("上傳檔案只能是 jpg、png 格式!", 2000);
+        return;
+    }
+    const reader = new FileReader();
+    reader.addEventListener('load', (e: any) => {
+        let file: any = dataURLtoFile(e.target.result, suffixName);
+        cropperData.type = 'shop'
+        cropperData.width = 800;
+        cropperData.height = 800;
+        cropperData.imgResult = e.target.result;
+        handCropperImgView();
+    });
+    reader.readAsDataURL(file);
+})
+const handCropperImgView = (() => {
+    cropperImgUI.value = !cropperImgUI.value;
+})
+const resImgCropper = ((res: any) => {
+    if (res.type == "home") {
+        infoData.obWebsHomePicture = res.res
+    } else if (res.type == "shop") {
+        infoData.obShopPictures = res.res
+    }
+    handCropperImgView();
+})
 const handSubmit = () => {
 
 };
-
+const handleSelectionServiceChange = (val: any) => {
+    multipleServiceSelection.value = val;
+}
 </script>
 
 <template>
@@ -43,18 +230,20 @@ const handSubmit = () => {
             </div>
             <div class="content">
                 <div class="tabs-container">
-                    <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+                    <el-tabs v-model="activeName" class="demo-tabs">
                         <el-tab-pane label="基本資訊" name="first">
                             <div class="basic-content">
                                 <div class="switch">
-                                    <label><input class="mui-switch" type="checkbox"></label>
+                                    <label><input class="mui-switch" type="checkbox"
+                                            v-model="infoData.obOpenStoreOnlineReservation"></label>
                                     <div class="switch-content">
                                         <p><strong>開啟商店線上預約</strong></p>
                                         <p>允許後消費者可愛網站上瀏覽及預約項目</p>
                                     </div>
                                 </div>
                                 <div class="switch">
-                                    <label><input class="mui-switch" type="checkbox"></label>
+                                    <label><input class="mui-switch" type="checkbox"
+                                            v-model="infoData.obStartSellingProducts"></label>
                                     <div class="switch-content">
                                         <p><strong>開啟販售商品</strong></p>
                                         <p>允許後消費者可在線上店販內瀏覽及購買商品</p>
@@ -66,7 +255,8 @@ const handSubmit = () => {
                                     <div class="shop-img">
                                         <p>網站首圖</p>
                                         <div class="btn-img">
-                                            <p>上傳圖片</p>
+                                            <label class="button"><span>上傳圖片</span><input class="file-input" type="file"
+                                                    @change="fileHomeImage"></label>
                                         </div>
                                     </div>
                                 </div>
@@ -76,13 +266,13 @@ const handSubmit = () => {
                                     <div class="basic-info">
                                         <div class="info-content">
                                             <p>*網站名稱</p>
-                                            <input />
+                                            <input v-model="infoData.obWebName" />
                                         </div>
                                     </div>
                                     <div class="basic-info">
                                         <div class="info-content">
                                             <p>網站說明</p>
-                                            <input />
+                                            <input v-model="infoData.obWebDescription" />
                                         </div>
 
                                     </div>
@@ -91,7 +281,8 @@ const handSubmit = () => {
                                     <h3>其它</h3>
                                     <hr style=" border-width:1px;">
                                     <div class="switch">
-                                        <label><input class="mui-switch" type="checkbox"></label>
+                                        <label><input class="mui-switch" type="checkbox"
+                                                v-model="infoData.obAllowOnlineConsultation"></label>
                                         <div class="switch-content">
                                             <p><strong>允許線上諮詢</strong></p>
                                             <p>啟用後，顧客將可透過您提供的社群工具與您聯繫</p>
@@ -107,34 +298,37 @@ const handSubmit = () => {
                                     <p style="margin: 2px 0px 20px 0px;">填寫您的服務項目基本資訊</p>
                                     <div class="booking-info">
                                         <p>預約圖片</p>
-                                        <input />
+                                        <input v-model="infoData.obAppointmentPictures" />
                                     </div>
                                     <div class="booking-info">
                                         <p>注意事項</p>
-                                        <input />
+                                        <input v-model="infoData.obBookingPrecautions" />
                                     </div>
                                 </div>
                                 <div>
                                     <h3>選擇可預約的服務的項目</h3>
                                     <div class="tab">
-                                        <el-table style="width: 100%" :header-cell-style="{ background: '#e6e2de' }">
-                                            <el-table-column prop="name" label="" />
-                                            <el-table-column prop="price" label="商品項目" />
-                                            <el-table-column prop="quantityPct" label="商品價格" width='300' />
-                                            <el-table-column prop="quantity" label="" fixed="right" />
+                                        <el-table ref="multipleServiceTableRef" :data="infoData.serviceList"
+                                            style="width: 100%" height="250"
+                                            @selection-change="handleSelectionServiceChange"
+                                            :header-cell-style="{ background: '#e6e2de' }">
+                                            <el-table-column type="selection"></el-table-column>/>
+                                            <el-table-column prop="name" label="服務項目" />
+                                            <el-table-column prop="price" label="服務價格" width='300' />
+                                            <el-table-column prop="servicesTime" label="時間" fixed="right"> <template
+                                                    #default="scope">{{ scope.row.servicesTime
+                                                    }}分</template></el-table-column>
                                         </el-table>
-                                        <el-button class="mt-4" style="width: 100%; border: transparent;">加入服務項目</el-button>
                                     </div>
                                 </div>
                                 <div>
                                     <h3>允許預約人員</h3>
                                     <div class="tab">
-                                        <el-table ref="multipleTableRef" style="width: 100%"
+                                        <el-table ref="multipleBookingPersonnelTableRef" :data="infoData.managerList"
+                                            style="width: 100%" height="250"
                                             :header-cell-style="{ background: '#e6e2de' }">
                                             <el-table-column type="selection" width="55" />
-                                            <el-table-column label="列表">
-                                                <template #default="scope">{{ scope.row.date }}</template>
-                                            </el-table-column>
+                                            <el-table-column prop="nameView" label="名子" />
                                         </el-table>
                                     </div>
                                 </div>
@@ -142,7 +336,11 @@ const handSubmit = () => {
                                     <h3 style="margin: 20px 0px 20px 0px;">線上預約人員選擇</h3>
                                     <div class="booking-info">
                                         <p>人員指定方式</p>
-                                        <input />
+                                        <select style="width: 100%; margin: 0px; border-radius: 0 5px 5px 0;">
+                                            <option v-for="item in personnelDesignation" :key="item.value"
+                                                :value="item.value">
+                                                {{ item.text }}</option>
+                                        </select>
                                     </div>
                                     <p style="text-align: right;">顧客無法選擇人員，系統將隨機指派設計師。</p>
                                 </div>
@@ -150,7 +348,7 @@ const handSubmit = () => {
                                     <h3 style="margin: 20px 0px 20px 0px;">其它設定</h3>
                                     <div class="booking-info" style="background-color: #ffffff;">
                                         <p>顧客最晚須提早</p>
-                                        <select>
+                                        <select v-model="infoData.obLastAppointmentTime">
                                             <option v-for="item in timer" :key="item.value" :value="item.value">
                                                 {{ item.text }}</option>
                                         </select>
@@ -162,7 +360,8 @@ const handSubmit = () => {
                         <el-tab-pane label="商品銷售" name="third">
                             <div class="goods-content">
                                 <div class="switch">
-                                    <label><input class="mui-switch" type="checkbox"></label>
+                                    <label><input class="mui-switch" type="checkbox"
+                                            v-model="infoData.obEnablePickupTimes"></label>
                                     <div class="switch-content">
                                         <p><strong>啟用取貨時間</strong></p>
                                         <p>啟用後，消費者線上購物結帳時需選擇取貨時間</p>
@@ -174,25 +373,25 @@ const handSubmit = () => {
                                     <div class="goods-info">
                                         <p>店販圖片</p>
                                         <div class="btn-img">
-                                            <p>上傳圖片</p>
+                                            <label class="button"><span>上傳圖片</span><input class="file-input" type="file"
+                                                    @change="fileShopImage"></label>
                                         </div>
                                     </div>
                                     <div class="goods-info">
                                         <p>注意事項</p>
-                                        <input />
+                                        <input v-model="infoData.obShopPrecautions" />
                                     </div>
                                 </div>
                                 <div>
                                     <h3>選擇可販售的項目</h3>
                                     <div class="tab">
-                                        <el-table style="width: 100%" :header-cell-style="{ background: '#e6e2de' }">
-                                            <el-table-column prop="name" label="" />
-                                            <el-table-column prop="price" label="商品項目" />
-                                            <el-table-column prop="quantityPct" label="商品價格" width='300' />
-                                            <el-table-column prop="quantity" label="" fixed="right" />
+                                        <el-table ref="multipleShopProductTableRef" :data="infoData.productsList"
+                                            style="width: 100%" height="250"
+                                            :header-cell-style="{ background: '#e6e2de' }">
+                                            <el-table-column type="selection" width="55" />
+                                            <el-table-column prop="pName" label="商品項目" />
+                                            <el-table-column prop="pPrice" label="商品價格" width='300' />
                                         </el-table>
-                                        <el-button class="mt-4"
-                                            style="width: 100%; border: transparent;">加入可販售項目</el-button>
                                     </div>
                                 </div>
                             </div>
@@ -203,6 +402,8 @@ const handSubmit = () => {
             </div>
         </div>
     </div>
+    <CropperImg-UI v-if="cropperImgUI" :cropperData="cropperData" :handCropperImgView="handCropperImgView"
+        @handCropperSubmit="resImgCropper" />
 </template>
 
 <style scoped lang="scss">
@@ -406,6 +607,12 @@ const handSubmit = () => {
                     background-color: #ffffff;
                     flex: 1;
                     margin: 0 0;
+                    display: flex;
+                    align-items: center;
+
+                    .file-input {
+                        display: none;
+                    }
                 }
             }
 
@@ -429,6 +636,12 @@ const handSubmit = () => {
                     background-color: #ffffff;
                     flex: 1;
                     margin: 0 0;
+                    display: flex;
+                    align-items: center;
+
+                    .file-input {
+                        display: none;
+                    }
                 }
 
                 input {
@@ -462,6 +675,12 @@ const handSubmit = () => {
                     background-color: #ffffff;
                     flex: 1;
                     margin: 0 0;
+                    display: flex;
+                    align-items: center;
+
+                    .file-input {
+                        display: none;
+                    }
                 }
 
                 input {

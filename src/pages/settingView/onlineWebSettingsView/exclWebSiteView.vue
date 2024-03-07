@@ -1,22 +1,25 @@
 <script setup lang="ts">
-import Icon from "@/assets/Icon material-settings.svg";
+import { storeToRefs } from "pinia";
+import { useCompanyStore } from "@/stores/company";
+const companyStore = useCompanyStore();
+const { onlineStoreWebInfo } = storeToRefs(companyStore);
 
-const aaa = ref(true);
 onMounted(() => {
 })
 
 </script>
+
 <template>
   <div class="container">
     <div class="switch">
-      <label><input class="mui-switch" type="checkbox" v-model="aaa"></label>
+      <label><input class="mui-switch" type="checkbox" v-model="onlineStoreWebInfo.data.obEnable"></label>
       <div class="switch-content">
         <p><strong>啟用網站服務</strong></p>
         <p>你的商店與服務人員都將雍有客製化網站，皆可提供預約與銷售商品，並可管理想要呈現給消費者的內容。</p>
       </div>
       <div class="hint-tag">
         <label class="label-item">
-          <input class="input-item" type="checkbox" v-model="aaa" disabled="true" />
+          <input class="input-item" type="checkbox" v-model="onlineStoreWebInfo.data.obEnable" disabled="true" />
           <label for="item"></label>
           <div>
             <nobr>網站未公開</nobr>
@@ -27,7 +30,8 @@ onMounted(() => {
     <div class="item-tab">
       <div class="nav">
         <router-link to="/settingView/onlineWebSettingsView/exclWebSiteView/storeWebsiteView">商店網站</router-link>
-        <router-link to="/settingView/onlineWebSettingsView/exclWebSiteView/serviceStaffWebsiteView">服務人員網站</router-link>
+        <router-link
+          to="/settingView/onlineWebSettingsView/exclWebSiteView/serviceStaffWebsiteView">服務人員網站</router-link>
       </div>
       <router-view />
     </div>

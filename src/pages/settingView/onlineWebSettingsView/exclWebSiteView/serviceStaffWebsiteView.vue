@@ -1,14 +1,79 @@
 <script setup lang="ts">
+import Icon from "@/assets/Icon zocial-guest.svg";
 import { onMounted } from 'vue';
-
+import { storeToRefs } from "pinia";
+import { useManagerStore } from "@/stores/manager";
+import Alert from "@/components/alertCmpt";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
+import { time } from "echarts";
+const managerstore = useManagerStore();
+const { managerList, roleList } = storeToRefs(managerstore);
+const { getManagerList, getRoleList } = managerstore;
 
 onMounted(() => {
+  let allManager = {
+    id: 0,
+    pageindex: 0,
+    count: 0,
+  };
 
+  getRoleList(allManager)
+    .then(() => {
+    })
+    .catch((e: any) => {
+      Alert.warning(showHttpsStatus(e.response.status), 2000);
+    })
+
+  getManagerList(allManager)
+    .then((res) => {
+      if (res.state == 2) {
+        Alert.warning(showErrorMsg(res.msg), 2000);
+      }
+    })
+    .catch((e: any) => {
+      Alert.warning(showHttpsStatus(e.response.status), 2000);
+      if (e.response.status == 401) {
+      }
+    });
+})
+const filterManagerListData = computed(() => {
+  let data: any = managerList.value.data.filter((e: any) => e.roleList[0].roleId != 1);
+  return data;
+});
+const filterRoleName = ((val: any) => {
+  let info = roleList.value.data.filter((item: any) => {
+    if (item.roleId == val) {
+      return item.memo
+    }
+  })
+  return info[0]?.memo
 })
 </script>
+
 <template>
   <div class="container">
-    <div class="function-area">
+    <el-table :data="filterManagerListData" style="width: 100%;" height="450" :header-cell-style="{ background: '#e6e2de' }">
+      <el-table-column #default="props" width="50">
+        <img v-if="!props.row.photo" class="img-name" :src="Icon" />
+        <img v-if="props.row.photo" class="img-name" :src="props.row.photo" />
+      </el-table-column>
+      <el-table-column #default="props" label="個人網站">
+        <p>{{ props.row.nameView }}</p>
+        <p>{{ filterRoleName(props.row.roleList[0].roleId) }}</p>
+      </el-table-column>
+      <el-table-column label="" prop="name" />
+      <el-table-column align="right">
+        <template #header>
+          <!-- <el-input v-model="search" size="small" placeholder="Type to search" /> -->
+        </template>
+
+        <template #default="scope">
+          <el-button size="small">分享連結</el-button>
+          <el-button size="small">編輯網站</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- <div class="function-area">
       <input placeholder="🔍搜尋姓名" />
     </div>
     <table>
@@ -59,7 +124,7 @@ onMounted(() => {
           </td>
         </tr>
       </tbody>
-    </table>
+    </table> -->
   </div>
 </template>
 
@@ -69,6 +134,12 @@ onMounted(() => {
   position: absolute;
   top: 50px;
   bottom: 0px;
+
+  .img-name {
+    width: 35px;
+    height: 35px;
+    clip-path: circle(50% at 50% 50%);
+  }
 
   >.function-area {
     display: flex;

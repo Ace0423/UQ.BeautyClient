@@ -1,14 +1,47 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import { storeToRefs } from "pinia";
+import Alert from "@/components/alertCmpt";
+import { useCounterStore } from "@/stores/counter";
+import { useCompanyStore } from "@/stores/company";
+import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
+const counterStore = useCounterStore();
+const { handLogOut } = counterStore;
+const companyStore = useCompanyStore();
+const { getOnlineStoreWebInfo } = companyStore;
+const { onlineStoreWebInfo } = storeToRefs(companyStore);
 const selectWebItem = ref();
 const editWebView = ref(false);
+const onlineStoreWebInfoData: any = reactive({ data: [] });
+const storeWebInfoData = computed(() => {
+  onlineStoreWebInfoData.data = JSON.parse(JSON.stringify(onlineStoreWebInfo.value.data));
+  return onlineStoreWebInfoData.data;
+})
 const handEditWebView = () => {
   editWebView.value = !editWebView.value;
 };
 onMounted(() => {
-
+  const date = {
+    cId: 1,
+    pageIndex: 0,
+    count: 0
+  }
+  getOnlineStoreWebInfo(date).then((res: any) => {
+    if (res.state == 2) {
+      Alert.warning(showErrorMsg(res.msg), 2000);
+    }
+  })
+    .catch((e: any) => {
+      Alert.warning(showHttpsStatus(e.response.status), 2000);
+      if (e.response.status == 401) {
+        setTimeout(() => {
+          handLogOut();
+        }, 2000);
+      }
+    })
 })
 </script>
+
 <template>
   <div class="container">
     <div>
@@ -22,12 +55,14 @@ onMounted(() => {
           <p>線上預約 (0位)</p>
           <div>
             <p>開放預約</p>
+            <input type="radio" v-model="storeWebInfoData.OBOpenStoreOnlineReservation"/>
           </div>
         </div>
         <div class="store-content">
           <p>店販銷售</p>
           <div>
             <p>已關閉接單</p>
+            <input type="radio" v-model="storeWebInfoData.OBStartSellingProducts"/>
           </div>
         </div>
         <hr style="border: 1 solid #c1bdb8;">
@@ -84,7 +119,7 @@ onMounted(() => {
       </div>
     </div>
   </div>
-  <EditWeb v-if="editWebView" :webItem="selectWebItem" :handEditWebView="handEditWebView" />
+  <EditWeb v-if="editWebView" :webInfoData="onlineStoreWebInfoData" :handEditWebView="handEditWebView" />
 </template>
 
 <style lang="scss" scoped>
@@ -106,6 +141,14 @@ onMounted(() => {
       display: flex;
       justify-content: space-between;
       margin: 0 10px;
+
+      >div {
+        p {
+          margin-right: 5px;
+        }
+
+        display: flex;
+      }
     }
   }
 

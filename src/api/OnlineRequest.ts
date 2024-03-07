@@ -40,3 +40,9 @@ export const postOnlineOtherSettings = (data: any) => {
     onlineRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
     return onlineRequest.post("/OnlineWeb/OnlineOtherSettings", data);
 }
+
+export const getOnlineStoreWebInfo = (data: any) => {
+    let token: any = getToken('token');
+    onlineRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+    return onlineRequest.get("/OnlineWeb/OnlineStoreWebInfo", { params: data });
+}

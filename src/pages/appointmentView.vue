@@ -724,6 +724,11 @@ $borderCoder: #eaedf2;
           height: 100%;
           border: 1px solid #ddd;
           box-sizing: border-box;
+
+          >div {
+            width: 100%;
+            height: 100%;
+          }
         }
 
         .appt_list {

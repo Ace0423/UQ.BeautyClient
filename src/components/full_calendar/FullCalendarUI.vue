@@ -344,7 +344,7 @@ b {
 .fullcalendar-ui {
   display: flex;
   width: 100%;
-  height: 609px;
+  height:  100%;
   /* min-height: 100%; */
   font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
   font-size: 14px;

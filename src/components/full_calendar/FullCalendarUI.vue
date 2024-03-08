@@ -122,7 +122,7 @@ export default {
               htmlStr += "<span style='white-space: nowrap; color: black;'>" + event.title + "</span>"
               //#endregion
             } else if (event.title == "休息") {
-              console.log('休息');
+              // console.log('休息');
               switch (arg.view.type) {
                 case 'timeGridWeek'://週曆
                 case 'resourceTimeGridDay'://日曆
@@ -134,7 +134,7 @@ export default {
                   htmlStr += "</div>";
                   break;
                 default:
-                  console.log('無分類', arg.view.type);
+                  // console.log('無分類', arg.view.type);
                   break;
               }
             } else {
@@ -181,7 +181,7 @@ export default {
                   htmlStr += "</div>";
                   break;
                 default:
-                  console.log('無分類', arg.view.type);
+                  // console.log('無分類', arg.view.type);
                   break;
               }
               //#endregion

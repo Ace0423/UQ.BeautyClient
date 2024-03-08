@@ -72,8 +72,17 @@ import { getshowMap } from "@/plugins/js-cookie";
       <el-scrollbar>
         <div class="nav">
           <h1>項目管理</h1>
-          <div v-if="getshowMap('項目管理', 'ServiceInfo')" class="nav-content">
+          <!-- <div v-if="getshowMap('項目管理', 'ServiceInfo')" class="nav-content">
             <router-link to="/serviceView/servicePage">
+              <div>
+                <h1>服務管理</h1>
+                <p>管理商店內所有服務項目</p>
+              </div>
+              <img :src="icon_right_arrow" />
+            </router-link>
+          </div> -->
+          <div v-if="getshowMap('項目管理', 'ServiceInfo')" class="nav-content">
+            <router-link to="/settingView/serviceMgmt/servicePage">
               <div>
                 <h1>服務管理</h1>
                 <p>管理商店內所有服務項目</p>

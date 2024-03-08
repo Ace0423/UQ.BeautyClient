@@ -32,7 +32,7 @@ onMounted(() => {
 
     .content {
         position: absolute;
-        top: 0px;
+        top: 80px;
         bottom: 0px;
         left: 0px;
         right: 0px;

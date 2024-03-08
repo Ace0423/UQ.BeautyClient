@@ -208,7 +208,7 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
 <style lang="scss" scoped>
 .container {
   position: absolute;
-  top: 80px;
+  top: 0px;
   bottom: 10px;
   left: 20px;
   right: 20px;

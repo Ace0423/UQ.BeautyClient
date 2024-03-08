@@ -596,7 +596,8 @@ $borderCoder: #eaedf2;
 
     .top_menu {
       display: flex;
-      width: calc(100%);
+      // width: calc(50%);
+      flex: 1;
       justify-content: right;
       height: 29px;
 

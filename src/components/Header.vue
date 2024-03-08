@@ -23,17 +23,13 @@ onMounted(() => {
 <template>
   <header>
     <div class="head-title">
-      <button
-        class="memu-btn"
-        v-if="!memuState"
-        v-on:click="handmemuStateBtn()"
-      >
+      <div class="memu-btn" v-if="!memuState" v-on:click="handmemuStateBtn()">
         <img :src="memuIcon" />
-      </button>
-      <button v-on:click="handRouterLink()">
+      </div>
+      <div class="head-btn" v-on:click="handRouterLink()">
         <img :src="Icon" />
         <h1>{{ props.moduleType }}</h1>
-      </button>
+      </div>
     </div>
   </header>
 </template>
@@ -42,33 +38,29 @@ onMounted(() => {
 header {
   height: 70px;
   padding: 5px 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: absolute;
   z-index: 3;
 
-  // height: 100px;
-  // background-color: burlywood;
-  > .head-title {
+  >.head-title {
     display: flex;
     align-items: center;
+    height: 100%;
 
-    > button {
+    >.head-btn {
       display: flex;
+      justify-content: center;
+      align-items: center;
       border: none;
-      background-color: transparent;
+      height: 35px;
+      margin-left: 15px;
 
-      > img {
+      >img {
         width: 30px;
         height: 30px;
         // margin: 0 5px;
       }
 
-      > h1 {
-        // padding: 1%;
-        // min-width: 150px;
-        margin: 0 10px;
+      >h1 {
+        margin-left: 10px;
         font-family: STXihei;
         font-size: 25px;
         color: #707070;
@@ -78,7 +70,7 @@ header {
 
   .memu-btn {
     position: relative;
-    // left: 10px;
+    height: 35px;
     border: none;
     background-color: transparent;
   }

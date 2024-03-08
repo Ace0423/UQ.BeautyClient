@@ -466,6 +466,7 @@ onMounted(() => {
           align-items: center;
           border: none;
           margin: 5px;
+          padding: 0 0 0 0;
           background: transparent;
           font-size: 20px;
           font-weight: bold;

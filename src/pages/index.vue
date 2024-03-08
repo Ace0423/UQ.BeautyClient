@@ -45,9 +45,9 @@ function logoutFn() {
         <img :src="orderImg" />
         <p>訂單紀錄</p>
       </router-link> -->
-      <router-link class="router-btn" to="/reportView/businessView">
+      <router-link class="router-btn" to="/reportView/realTimeView">
         <img class="" :src="reportImg" />
-        <p>設定</p>
+        <p>報表</p>
       </router-link>
       <router-link class="router-btn" to="/settingView">
         <img class="" :src="settingImg" />

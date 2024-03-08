@@ -571,17 +571,17 @@ onMounted(() => {
                 <div class="count-block">
                     <h2>總銷售額</h2>
                     <p>儲值卡的銷售銷售</p>
-                    <h1>$0</h1>
+                    <h1>${{ TotalTopUpByToday.data.totalPriceToday }}</h1>
                     <div>
                         <p>總累積未收額 ${{ TotalTopUpByToday.data.totalPrice }} </p>
                         <p>已實收總面額 ${{ TotalTopUpByToday.data.totalBalance }}</p>
                     </div>
-                    <el-table :data="TotalTopUpByToday.data.productList" style="width: 100%" height="250"
+                    <el-table :data="TotalTopUpByToday.data.serviceList" style="width: 100%" height="250"
                         :header-cell-style="{ background: '#e6e2de' }">
-                        <el-table-column prop="name" label="儲值卡排行前五名" width="200" />
-                        <el-table-column prop="price" label="淨額" />
-                        <el-table-column prop="quantityPct" label="佔比" />
-                        <el-table-column prop="quantity" label="數量" />
+                        <el-table-column prop="name" label="儲值卡排行前五名" width="150" />
+                        <el-table-column prop="sellPrice" label="淨額" />
+                        <el-table-column prop="sellCount" label="數量" />
+                        <el-table-column prop="balance" label="累積未收額" />
                     </el-table>
                 </div>
             </div>

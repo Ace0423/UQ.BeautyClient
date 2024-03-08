@@ -703,7 +703,7 @@ const handCancelTicketBtn = () => {
             <div class="receiver">
               <p>對象</p>
               <div class="receiver-select" v-if="props.selectMessageItem.auto == 1">
-                <select v-model="messageData.mTarget">
+                <select v-model="messageData.mTarget" style="background-color: transparent;">
                   <option disabled value="">請選擇人員</option>
                   <option v-for="item in mTarget" :key="item.value" :value="item.value">
                     {{ item.label }}
@@ -728,7 +728,7 @@ const handCancelTicketBtn = () => {
             <div class="time">
               <p>發送方式</p>
               <div class="time-select">
-                <select v-model="messageData.mSendTimer">
+                <select v-model="messageData.mSendTimer" style="background-color: transparent;">
                   <option disabled value="">請選擇發送時機</option>
                   <option v-for="item in mSendMethod" :key="item.value" :value="item.value">
                     {{ item.label }}
@@ -747,7 +747,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>指定時段</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendDateT">
+                  <select v-model="messageData.mSendDateT" style="background-color: transparent;">
                     <option disabled value="">請選擇指定時段</option>
                     <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -763,7 +763,7 @@ const handCancelTicketBtn = () => {
             <div class="time">
               <p>發送時機</p>
               <div class="time-select">
-                <select v-model="messageData.mSendTimer">
+                <select v-model="messageData.mSendTimer" style="background-color: transparent;">
                   <option disabled value="">請選擇發送時機</option>
                   <option v-for="item in mSendTimer" :key="item.value" :value="item.value">
                     {{ item.label }}
@@ -776,7 +776,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>固定方式</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendTimeing">
+                  <select v-model="messageData.mSendTimeing" style="background-color: transparent;">
                     <option disabled value="">請選擇固定時間</option>
                     <option v-for="item in fixedDate" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -787,7 +787,7 @@ const handCancelTicketBtn = () => {
               <div class="time" v-if="messageData.mSendTimeing != 0">
                 <p>固定日期</p>
                 <div class="time-select" v-if="messageData.mSendTimeing == 1">
-                  <select v-model="messageData.mSendDateD">
+                  <select v-model="messageData.mSendDateD" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in weekDate" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -795,7 +795,7 @@ const handCancelTicketBtn = () => {
                   </select>
                 </div>
                 <div class="time-select" v-if="messageData.mSendTimeing == 2">
-                  <select v-model="messageData.mSendDateD">
+                  <select v-model="messageData.mSendDateD" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in dateDate" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -803,7 +803,7 @@ const handCancelTicketBtn = () => {
                   </select>
                 </div>
                 <div class="time-select" v-if="messageData.mSendTimeing == 3">
-                  <select v-model="mSend">
+                  <select v-model="mSend" style="background-color: transparent;">
                     <option disabled value="">請選擇月份</option>
                     <option v-for="item in monthDate" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -811,7 +811,7 @@ const handCancelTicketBtn = () => {
                   </select>
                 </div>
                 <div class="time-select" v-if="messageData.mSendTimeing == 3">
-                  <select v-model="dSend">
+                  <select v-model="dSend" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in dateDate" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -822,7 +822,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>時段</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendDateT">
+                  <select v-model="messageData.mSendDateT" style="background-color: transparent;">
                     <option disabled value="">請選擇指定時段</option>
                     <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -836,7 +836,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>日期</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendTimeing">
+                  <select v-model="messageData.mSendTimeing" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in birData" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -847,7 +847,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>時段</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendDateT">
+                  <select v-model="messageData.mSendDateT" style="background-color: transparent;">
                     <option disabled value="">請選擇指定時段</option>
                     <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -861,7 +861,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>日期</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendTimeing">
+                  <select v-model="messageData.mSendTimeing" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in dayData" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -872,7 +872,7 @@ const handCancelTicketBtn = () => {
               <div class="time" v-if="messageData.mSendTimeing != 0">
                 <p>時段</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendDateT">
+                  <select v-model="messageData.mSendDateT" style="background-color: transparent;">
                     <option disabled value="">請選擇指定時段</option>
                     <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -886,7 +886,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>日期</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendTimeing">
+                  <select v-model="messageData.mSendTimeing" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in dayData" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -897,7 +897,7 @@ const handCancelTicketBtn = () => {
               <div class="time" v-if="messageData.mSendTimeing != 0">
                 <p>時段</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendDateT">
+                  <select v-model="messageData.mSendDateT" style="background-color: transparent;">
                     <option disabled value="">請選擇指定時段</option>
                     <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -911,7 +911,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>日期</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendTimeing">
+                  <select v-model="messageData.mSendTimeing" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in dayData" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -922,7 +922,7 @@ const handCancelTicketBtn = () => {
               <div class="time" v-if="messageData.mSendTimeing != 0">
                 <p>時段</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendDateT">
+                  <select v-model="messageData.mSendDateT" style="background-color: transparent;">
                     <option disabled value="">請選擇指定時段</option>
                     <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1032,7 +1032,7 @@ const handCancelTicketBtn = () => {
             <div class="receiver">
               <p>對象</p>
               <div class="receiver-select" v-if="props.selectMessageItem.auto == 1">
-                <select v-model="messageData.mTarget">
+                <select v-model="messageData.mTarget" style="background-color: transparent;">
                   <option disabled value="">請選擇人員</option>
                   <option v-for="item in mTarget" :key="item.value" :value="item.value">
                     {{ item.label }}
@@ -1057,7 +1057,7 @@ const handCancelTicketBtn = () => {
             <div class="time">
               <p>發送方式</p>
               <div class="time-select">
-                <select v-model="messageData.mSendTimer">
+                <select v-model="messageData.mSendTimer" style="background-color: transparent;">
                   <option disabled value="">請選擇發送時機</option>
                   <option v-for="item in mSendMethod" :key="item.value" :value="item.value">
                     {{ item.label }}
@@ -1076,7 +1076,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>指定時段</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendDateT">
+                  <select v-model="messageData.mSendDateT" style="background-color: transparent;">
                     <option disabled value="">請選擇指定時段</option>
                     <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1092,7 +1092,7 @@ const handCancelTicketBtn = () => {
             <div class="time">
               <p>發送時機</p>
               <div class="time-select">
-                <select v-model="messageData.mSendTimer">
+                <select v-model="messageData.mSendTimer" style="background-color: transparent;">
                   <option disabled value="">請選擇發送時機</option>
                   <option v-for="item in mSendTimer" :key="item.value" :value="item.value">
                     {{ item.label }}
@@ -1105,7 +1105,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>固定方式</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendTimeing">
+                  <select v-model="messageData.mSendTimeing" style="background-color: transparent;">
                     <option disabled value="">請選擇固定時間</option>
                     <option v-for="item in fixedDate" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1116,7 +1116,7 @@ const handCancelTicketBtn = () => {
               <div class="time" v-if="messageData.mSendTimeing != 0">
                 <p>固定日期</p>
                 <div class="time-select" v-if="messageData.mSendTimeing == 1">
-                  <select v-model="messageData.mSendDateD">
+                  <select v-model="messageData.mSendDateD" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in weekDate" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1124,7 +1124,7 @@ const handCancelTicketBtn = () => {
                   </select>
                 </div>
                 <div class="time-select" v-if="messageData.mSendTimeing == 2">
-                  <select v-model="messageData.mSendDateD">
+                  <select v-model="messageData.mSendDateD" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in dateDate" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1132,7 +1132,7 @@ const handCancelTicketBtn = () => {
                   </select>
                 </div>
                 <div class="time-select" v-if="messageData.mSendTimeing == 3">
-                  <select v-model="mSend">
+                  <select v-model="mSend" style="background-color: transparent;">
                     <option disabled value="">請選擇月份</option>
                     <option v-for="item in monthDate" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1140,7 +1140,7 @@ const handCancelTicketBtn = () => {
                   </select>
                 </div>
                 <div class="time-select" v-if="messageData.mSendTimeing == 3">
-                  <select v-model="dSend">
+                  <select v-model="dSend" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in dateDate" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1151,7 +1151,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>時段</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendDateT">
+                  <select v-model="messageData.mSendDateT" style="background-color: transparent;">
                     <option disabled value="">請選擇指定時段</option>
                     <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1165,7 +1165,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>日期</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendTimeing">
+                  <select v-model="messageData.mSendTimeing" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in birData" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1176,7 +1176,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>時段</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendDateT">
+                  <select v-model="messageData.mSendDateT" style="background-color: transparent;">
                     <option disabled value="">請選擇指定時段</option>
                     <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1190,7 +1190,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>日期</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendTimeing">
+                  <select v-model="messageData.mSendTimeing" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in dayData" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1201,7 +1201,7 @@ const handCancelTicketBtn = () => {
               <div class="time" v-if="messageData.mSendTimeing != 0">
                 <p>時段</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendDateT">
+                  <select v-model="messageData.mSendDateT" style="background-color: transparent;">
                     <option disabled value="">請選擇指定時段</option>
                     <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1215,7 +1215,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>日期</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendTimeing">
+                  <select v-model="messageData.mSendTimeing" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in dayData" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1226,7 +1226,7 @@ const handCancelTicketBtn = () => {
               <div class="time" v-if="messageData.mSendTimeing != 0">
                 <p>時段</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendDateT">
+                  <select v-model="messageData.mSendDateT" style="background-color: transparent;">
                     <option disabled value="">請選擇指定時段</option>
                     <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1240,7 +1240,7 @@ const handCancelTicketBtn = () => {
               <div class="time">
                 <p>日期</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendTimeing">
+                  <select v-model="messageData.mSendTimeing" style="background-color: transparent;">
                     <option disabled value="">請選擇日期</option>
                     <option v-for="item in dayData" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1251,7 +1251,7 @@ const handCancelTicketBtn = () => {
               <div class="time" v-if="messageData.mSendTimeing != 0">
                 <p>時段</p>
                 <div class="time-select">
-                  <select v-model="messageData.mSendDateT">
+                  <select v-model="messageData.mSendDateT" style="background-color: transparent;">
                     <option disabled value="">請選擇指定時段</option>
                     <option v-for="item in periodTime" :key="item.value" :value="item.value">
                       {{ item.label }}
@@ -1412,10 +1412,10 @@ const handCancelTicketBtn = () => {
             justify-content: center;
             align-items: center;
             height: 35px;
-            padding: 10px 10px;
+            padding: 5px 5px;
             border: solid 0.5px #a19f9f;
             border-radius: 5px 5px 5px 5px;
-            font-size: 30px;
+            font-size: 20px;
 
             img {
               margin: 0 10px;
@@ -1672,17 +1672,20 @@ const handCancelTicketBtn = () => {
       }
 
       >.example-img {
-        display: flex;
+        // display: flex;
         flex-direction: column;
         align-items: center;
         width: 40%;
         text-align: center;
+        overflow: auto;
+        position: relative;
 
         >.example-bg {
           display: flex;
           justify-items: center;
           height: 370px;
-          width: 85%;
+          // width: 85%;
+          margin: 0 20px;
           border-radius: 50px 50px 0px 0px;
           background: #f6f6f6;
           position: relative;
@@ -1754,7 +1757,7 @@ const handCancelTicketBtn = () => {
         }
 
         >.test-content {
-          width: 90%;
+          margin: 0 20px;
           border-radius: 15px 15px;
           //   margin: 10px 10px;
           padding: 10px 10px;
@@ -1874,10 +1877,10 @@ const handCancelTicketBtn = () => {
             justify-content: center;
             align-items: center;
             height: 35px;
-            padding: 10px 10px;
+            padding: 5px 5px;
             border: solid 0.5px #a19f9f;
             border-radius: 5px 5px 5px 5px;
-            font-size: 30px;
+            font-size: 20px;
 
             img {
               margin: 0 10px;

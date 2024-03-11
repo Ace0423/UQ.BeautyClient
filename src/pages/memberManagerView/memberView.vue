@@ -67,7 +67,7 @@ onMounted(() => {
     <div class="function-area">
       <input placeholder="🔍搜尋名稱、暱稱或手機" v-model="keyWord" />
       <button class="header-btn" @click="handAddMemberView('')">
-        新增使用者
+        新增會員
       </button>
     </div>
     <table>
@@ -75,7 +75,7 @@ onMounted(() => {
         <tr>
           <th>
             <p class="nameview">
-              使用者(全部{{ filterMemberListData.length }}個)
+              會員(全部{{ filterMemberListData.length }}個)
             </p>
           </th>
           <th>

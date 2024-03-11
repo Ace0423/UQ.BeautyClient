@@ -44,7 +44,7 @@ onMounted(() => {
 <template>
   <div class="content">
     <div class="function-area">
-      <input placeholder="🔍搜尋顧客標籤" v-model="keyWord" />
+      <input placeholder="🔍搜尋會員標籤" v-model="keyWord" />
       <button class="header-btn" @click="handAddGroupView('')">新增標籤</button>
     </div>
     <table>
@@ -52,11 +52,11 @@ onMounted(() => {
         <tr>
           <th>
             <p class="groupview">
-              顧客標籤(全部{{ filterGroupListData.length }}個)
+              會員標籤(全部{{ filterGroupListData.length }}個)
             </p>
           </th>
           <th>
-            <p>已加入顧客數量</p>
+            <p>已加入會員數量</p>
           </th>
           <th></th>
           <th></th>

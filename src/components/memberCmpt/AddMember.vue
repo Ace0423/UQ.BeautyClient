@@ -13,7 +13,7 @@ const alertInformation = reactive({
   buttonState: 0, //按鈕顯示狀態 0:全部 1:只顯示確定按鈕 2:不顯示按鈕
   timerVal: 0, //時間計時器
 });
-const title = ref("新增顧客");
+const title = ref("新增會員");
 
 const newMember: any = reactive({
   userId: 0,
@@ -258,7 +258,7 @@ onMounted(() => {
     newMember.poto = props.selectMemberItem.poto;
     newMember.memo = props.selectMemberItem.memo;
     newMember.groupList = props.selectMemberItem.groupList;
-    title.value = "修改顧客";
+    title.value = "修改會員";
   }
 });
 </script>

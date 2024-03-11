@@ -103,17 +103,17 @@ onMounted(() => {
       <h1>{{ groupInfo.label }}</h1>
       <div class="group-information">
         <p>備註:{{ groupInfo.memo }}</p>
-        <p v-if="groupInfoData.data.length == null">顧客:0位</p>
+        <p v-if="groupInfoData.data.length == null">會員:0位</p>
         <p v-if="groupInfoData.data.length > 0">
-          顧客:{{ groupInfoData.data.length }}位
+          會員:{{ groupInfoData.data.length }}位
         </p>
-        <button @click="handAddGroupMenberView">新增顧客</button>
+        <button @click="handAddGroupMenberView">新增會員</button>
       </div>
       <div class="group-information-list">
         <table>
           <thead class="header-tab">
             <tr>
-              <th>顧客</th>
+              <th>會員</th>
               <th></th>
               <th></th>
               <th></th>
@@ -137,9 +137,9 @@ onMounted(() => {
       </div>
     </div>
     <div class="groupinfo-add-member" v-if="addGroupMemberView">
-      <h1>新增客戶</h1>
+      <h1>新增會員</h1>
       <div class="content">
-        <p>客戶</p>
+        <p>會員</p>
         <select v-model="selectMember" >
           <option v-for="item in memberList.data" :key="item.userId" :value="item">
             {{ item.nameView }}

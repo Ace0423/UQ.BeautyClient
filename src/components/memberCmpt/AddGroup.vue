@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useMemberStore } from "@/stores/member";
 import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
-
+import { validateRequired } from "@/utils/utils";
+import { useForm, Form, Field, ErrorMessage, defineRule } from 'vee-validate';
 const memberStore = useMemberStore();
 const { createGroupData, editGroupData } = memberStore;
 const alertState = ref(false);
+const subBut = ref(false)
 const alertInformation = reactive({
     messageText: '', // 提示內容
     buttonState: 0,  //按鈕顯示狀態 0:全部 1:只顯示確定按鈕 2:不顯示按鈕 
@@ -29,8 +31,10 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
     alertState.value = !alertState.value;
 }
 const handSubmit = () => {
+    subBut.value = !subBut.value;
     if (props.selectGroupItem) {
         editGroupData(newGroup).then((res) => {
+            subBut.value = !subBut.value;
             if (res.state == 1) {
                 handAlertView("修改成功", 2, 1);
                 setTimeout(() => {
@@ -40,23 +44,31 @@ const handSubmit = () => {
                 handAlertView(showErrorMsg(res.msg), 2, 1);
             }
         })
-        .catch((e: any) => {
-        handAlertView(showHttpsStatus(e.response.status), 2, 1);
-      });
+            .catch((e: any) => {
+                subBut.value = !subBut.value;
+                handAlertView(showHttpsStatus(e.response.status), 2, 1);
+            });
     } else {
+        if (newGroup.label == "") {
+            handAlertView('標籤欄位必填', 2, 1);
+            subBut.value = !subBut.value;
+            return
+        }
         createGroupData(newGroup).then((res) => {
+            subBut.value = !subBut.value;
             if (res.state == 1) {
                 handAlertView("新增成功", 2, 1);
                 setTimeout(() => {
                     props.handAddGroupView();
                 }, 1000)
-            }else{
+            } else {
                 handAlertView(showErrorMsg(res.msg), 2, 1);
             }
         })
-        .catch((e: any) => {
-        handAlertView(showHttpsStatus(e.response.status), 2, 1);
-      });
+            .catch((e: any) => {
+                subBut.value = !subBut.value;
+                handAlertView(showHttpsStatus(e.response.status), 2, 1);
+            });
     }
 }
 
@@ -83,7 +95,7 @@ onMounted(() => {
                 <textarea v-model="newGroup.memo"></textarea>
             </div>
             <div class="submi-btn">
-                <button type="submit" v-on:click="handSubmit()">確認</button>
+                <button type="submit" v-on:click="handSubmit()" :disabled="subBut">確認</button>
             </div>
         </div>
     </div>
@@ -135,6 +147,32 @@ onMounted(() => {
                 margin: 0 5px;
                 border-radius: 6px;
                 border: solid 1px #707070;
+            }
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 324px;
+            height: 80px;
+            margin: 10px 0 20px 0;
+
+            >input {
+                display: block;
+                margin: auto;
+                width: 90%;
+                height: 45px;
+                text-indent: 10px;
+                font-size: 18px;
+                border-radius: 5px;
+                border: 1px solid #707070;
+            }
+
+            >span {
+                display: block;
+                padding-left: 20px;
+                font-size: 15px;
+                color: #ff0000;
             }
         }
 

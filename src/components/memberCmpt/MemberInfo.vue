@@ -92,7 +92,7 @@ const getmemberInfoApi = () => {
             memberExpenseInfo.bookingCount = res.data.data.table.bookingCount
             memberExpenseInfo.lastBookingTime = new Date(res.data.data.table.lastBookingTime).toISOString().split('T')[0]
           } else if (res.data.state == 2) {
-            Alert.warning(showErrorMsg(res.data.msg), 2000);
+            // Alert.warning(showErrorMsg(res.data.msg), 2000);
           }
         })
         .catch((e: any) => {
@@ -110,7 +110,7 @@ const getmemberInfoApi = () => {
           if (res.data.state == 1) {
             memberBookingInfo.data = res.data.data.table;
           } else if (res.data.state == 2) {
-            Alert.warning(showErrorMsg(res.data.msg), 2000);
+            // Alert.warning(showErrorMsg(res.data.msg), 2000);
           }
         })
         .catch((e: any) => {
@@ -128,7 +128,7 @@ const getmemberInfoApi = () => {
           if (res.data.state == 1) {
             memberOrderInfo.data = res.data.data.table;
           } else if (res.data.state == 2) {
-            Alert.warning(showErrorMsg(res.data.msg), 2000);
+            // Alert.warning(showErrorMsg(res.data.msg), 2000);
           }
         })
         .catch((e: any) => {

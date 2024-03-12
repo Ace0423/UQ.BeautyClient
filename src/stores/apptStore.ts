@@ -463,22 +463,33 @@ export const useApptStore = defineStore("apptStore", () => {
         //插入預約
         if (res.data.data) {
           if (bkNo == "" && blNo == "") {// 指定時間
-            tuiBookingListRef.value = res.data.data.table.filter(function (
-              item: any,
-              index: any,
-              arr: any
-            ) {
-              //處理數據
-              if (item.managerId == 0) {
-                item.managerInfo = { managerId: 0, nameView: "不指定" }
-              }
-              item.serviceInfo.subList = [];
-              if (item.subList)
-                item.serviceInfo.subList.push(item.subList);
+            // tuiBookingListRef.value = res.data.data.table.filter(function (item: any,index: any,arr: any) {
+            //   //處理數據
+            //   if (item.managerId == 0) {
+            //     item.managerInfo = { managerId: 0, nameView: "不指定" }
+            //   }
+            //   item.serviceInfo.subList = [];
+            //   if (item.serviceInfo.subInfo){
+            //     item.serviceInfo.subList.push(item.serviceInfo.subInfo);
+            //   }
+            //   item.serverName = item.managerInfo.nameView;
+            //   console.log(333);
+            //   return item.state != 3
+            // });
+
+            tuiBookingListRef.value = res.data.data.table.filter(function (item: any,index: any,arr: any) {
+              // //處理數據
+              // if (item.managerId == 0) {
+              //   item.managerInfo = { managerId: 0, nameView: "不指定" }
+              // }
+              // item.serviceInfo.subList = [];
+              // if (item.serviceInfo.subInfo){
+              //   item.serviceInfo.subList.push(item.serviceInfo.subInfo);
+              // }
               item.serverName = item.managerInfo.nameView;
+              // console.log(333);
               return item.state != 3
             });
-
             return res.data.data.table;
           } else if (bkNo != "") {//  指定明細編號
             // let curItem = res.data.data.table[0];
@@ -498,8 +509,8 @@ export const useApptStore = defineStore("apptStore", () => {
                 element.serverName = element.managerInfo.nameView;
               }
               element.serviceInfo.subList = [];
-              if (element.subList)
-                element.serviceInfo.subList.push(element.subList);
+              if (element.serviceInfo.subList)
+                element.serviceInfo.subList.push(element.serviceInfo.subList);
               curItems.push(element);
             }
             return curItems
@@ -512,8 +523,8 @@ export const useApptStore = defineStore("apptStore", () => {
                 element.serverName = element.managerInfo.nameView;
               }
               element.serviceInfo.subList = [];
-              if (element.subList)
-                element.serviceInfo.subList.push(element.subList);
+              if (element.serviceInfo.subList)
+                element.serviceInfo.subList.push(element.serviceInfo.subList);
               curItems.push(element);
             }
             return curItems

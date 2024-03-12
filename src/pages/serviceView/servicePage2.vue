@@ -34,12 +34,12 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="display" label="上架" min-width="20%">
+          <el-table-column prop="state" label="上架2" min-width="20%">
             <template #default="scope">
               <div class="handle-drag">
                 <div class="checked_state">
                   <input class="checked_status" type="checkbox" name="sub" value="" :id="'servicePage_' + scope.$index"
-                    :checked="filterServiceData[scope.$index].display == true"
+                    :checked="filterServiceData[scope.$index].state == 1"
                     @change="changeStutusHdr(scope.$index, scope.row)" />
                   <label :for="'servicePage_' + scope.$index"></label>
                 </div>
@@ -96,6 +96,8 @@ let filterServiceData: any = computed(() =>
   serviceDetailList.value.filter(getServiceFn)
 );
 function getServiceFn(data: any) {
+  console.log(data);
+  
   return (
     !search.value ||
     data.name.toLowerCase().includes(search.value.toLowerCase())
@@ -140,7 +142,7 @@ let changeStutusHdr = (index: number, item: any) => {
 
   let curdata: any = {
     sId: item.sId,
-    display: !item.display,
+    state: item.state ? 0 : 1,
     color: item.color,
     isBonusOpen: item.isBonusOpen,
     isEditAccounting: item.isEditAccounting,
@@ -192,7 +194,7 @@ let sortUpDown: string = "";
 function sortthreadFn(name: number) {
   console.log(name);
 
-  let nameGroup = ["nameTw", "servicesTime", "price", "display"];
+  let nameGroup = ["nameTw", "servicesTime", "price", "state"];
   let sortName = nameGroup[name];
   if (sortName)
     if (sortUpDown == sortName) {

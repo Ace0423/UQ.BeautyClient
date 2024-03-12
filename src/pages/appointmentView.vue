@@ -86,7 +86,7 @@
                       </div>
                     </td>
                     <td>
-                      <p>{{ item.serviceInfo.name }}</p>
+                      <p v-if="item.serviceInfo">{{ item.serviceInfo.name }}</p>
                     </td>
                     <td>
                       <p>{{ item.memberInfo.nameView }}</p>
@@ -102,7 +102,7 @@
                       </div>
                     </td> -->
                     <td>
-                      <button v-show="item.state == 0" v-on:click="delApptListHdr(index, item.id)">
+                      <button v-show="item.state == 0" v-on:click="delApptListHdr(item)">
                         <img :src="DeleteIcon" />
                       </button>
                     </td>
@@ -294,6 +294,10 @@ function getApptInfoFn(year: number = 0, month: number = 0, date: number = curre
   updateNoticeCount();
 }
 
+function getCurDate() {
+  getApptInfoFn(currentYear.value, currentMonth.value + 1)
+}
+
 let dayOffList: any = ref([]);
 /**取休息日 */
 function getDayOffList(id: any, yy: any, mm: any, dd: any) {
@@ -462,7 +466,7 @@ function addAddReserveBtn() {
 let showAddApptFn = (state: boolean) => {
   showAddRef.value = state;
   if (!state) {
-    getApptInfoFn(currentYear.value, currentMonth.value + 1);
+    getCurDate();
     // updateNoticeCount();
   }
 };
@@ -470,7 +474,7 @@ let showAddApptFn = (state: boolean) => {
 function showAddRestUIFn(state: boolean) {
   showAddRestUIRef.value = state;
   if (!state) {
-    getApptInfoFn(currentYear.value, currentMonth.value + 1);
+    getCurDate();
     // updateNoticeCount();
   }
 }
@@ -486,7 +490,7 @@ const showApptInfoHdr = (state: boolean) => {
   if (!state) {
     selBookData = null;
     bookingListRef.value = null;
-    getApptInfoFn(currentYear.value, currentMonth.value + 1);
+    getCurDate();
     updateNoticeCount();
   }
 };
@@ -503,19 +507,31 @@ let changeStutusFn = (state: number, item: any) => {
   };
   //修改預約
   postEditApptStateApi(editApptDate).then((res: any) => {
-    getApptInfoFn(currentYear.value, currentMonth.value + 1);
+    getCurDate();
   });
 };
 //切換列表獲取資訊
 function changeWeekToday(data: number) {
-  getApptInfoFn(currentYear.value, currentMonth.value + 1);
+  getCurDate();
 }
 function showFullUIFn(params: boolean) {
   showFullUIRef.value = params;
 }
-//刪除課程
-let delApptListHdr = (index: number, itemId: string) => {
-
+//刪除預約
+let delApptListHdr = (item: any) => {
+  Alert.check("是否刪除", 0, (data: any) => {
+    if (data) {
+      let delApptDate = {
+        bookingNo: item.bookingNo,
+        state: 3,
+      };
+      //修改預約
+      postEditApptStateApi(delApptDate).then((res: any) => {
+        // props.showUIHdr(false);
+        getCurDate();
+      });
+    }
+  });
 };
 //選擇那天 yyyy-mm-dd
 function curDateFn() {

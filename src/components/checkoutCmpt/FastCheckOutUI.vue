@@ -138,9 +138,9 @@
               {{ ruleItem.name.warn }}
             </span>
             <div class="customer-total">
-              <span v-on:click="countCoustomerFn(-1)">-</span>
+              <span v-if="isFastCheckOut" v-on:click="countCoustomerFn(-1)">-</span>
               <span class="customer-headcount">人數 {{ formInputRef.customerCount }} 位</span>
-              <span v-on:click="countCoustomerFn(+1)">+</span>
+              <span v-if="isFastCheckOut" v-on:click="countCoustomerFn(+1)">+</span>
             </div>
             <div class="link-bottom"></div>
             <div class=" trade-record">
@@ -173,7 +173,7 @@
             <div class="link-bottom"></div>
             <div class="pay-msg">
               <span>應收金額
-                <!-- <span v-if="formInputRef.customerCount > 1">({{ formInputRef.customerCount }}人)</span> -->
+                <span v-if="formInputRef.customerCount > 1">({{ formInputRef.customerCount }}人)</span>
               </span>
               <span class="price-msg"> ${{ finalAmountCpt }}</span>
             </div>
@@ -234,6 +234,7 @@ let showEditItemGoodsUIRef = ref(false);
 let showEditItemTopUpUIRef = ref(false);
 let selctItemInfoRef = ref(null);
 let showRdTopUpCardUIRef = ref(false);
+let isFastCheckOut = ref(true);
 
 let store = useApptStore();
 let { payTypeListRef, expenseInfoRef } = storeToRefs(store);
@@ -274,7 +275,9 @@ function onBeforeFn() {
 
   if (props.selData == '快速結帳') {
     formInputRef.value.bkListNo = "";
+    isFastCheckOut.value = true;
   } else {
+    isFastCheckOut.value = false;
     formInputRef.value.memberInfo = props.selData.memberInfo;
     formInputRef.value.bkListNo = props.selData.bkListNo;
     getApptDataApi("", props.selData.bkListNo).then((res) => {
@@ -320,13 +323,11 @@ let payAmountCpt = computed(() => {
   // mathDiscountFn()
   dcPrice = percentAllDC.value + priceAllDC.value;
   amount = (curPrice < dcPrice) ? 0 : (curPrice - dcPrice)
-  // amount = amount * formInputRef.value.customerCount;//人數
+  amount = amount * formInputRef.value.customerCount;//人數
   return amount
 });
 let finalAmountCpt = computed(() => {
   let finalAmount: any = payAmountCpt.value;
-  console.log(777, formInputRef.value.useTopUpCard);
-  console.log(888, payAmountCpt.value);
 
   formInputRef.value.useTopUpPrice = 0;
   //計算使用儲值卡

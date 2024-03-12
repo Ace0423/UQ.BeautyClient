@@ -34,6 +34,11 @@ export default defineConfig({
       sourceMap: false, // 不生成sourcemap源文件
     }),
   ],
+  define:{
+      // Vue CLI is in maintenance mode, and probably won't merge my PR to fix this in their tooling
+      // https://github.com/vuejs/vue-cli/pull/7443
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'true',
+    },
   server: {
     proxy: {
       "/api": {

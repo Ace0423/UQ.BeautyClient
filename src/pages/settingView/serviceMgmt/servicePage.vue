@@ -34,13 +34,12 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="display" label="上架" min-width="20%">
+          <el-table-column prop="state" label="上架" min-width="20%">
             <template #default="scope">
               <div class="handle-drag">
                 <div class="checked_state">
                   <input class="checked_status" type="checkbox" name="sub" value="" :id="'servicePage_' + scope.$index"
-                    :checked="filterServiceData[scope.$index].display == true"
-                    @change="changeStutusHdr(scope.$index, scope.row)" />
+                    :checked="scope.row.state == 1" @change="changeStutusHdr(scope.$index, scope.row)" />
                   <label :for="'servicePage_' + scope.$index"></label>
                 </div>
               </div>
@@ -71,10 +70,10 @@
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
-import Alert from "@/components/alertCmpt";
 import { Sort } from '@element-plus/icons-vue'
 import Icon_edit from "@/assets/Ico_edit.svg";
 import Icon_del from "@/assets/Icon material-delete.svg";
+import Alert from "@/components/alertCmpt";
 
 let store = useApptStore();
 let { serviceDetailList } =
@@ -137,10 +136,9 @@ let changeStutusHdr = (index: number, item: any) => {
     const element = item.sgIdList[i];
     curSgIdList.push(element.sgId);
   }
-
   let curdata: any = {
     sId: item.sId,
-    display: !item.display,
+    state: item.state == 1 ? 0 : 1,
     color: item.color,
     isBonusOpen: item.isBonusOpen,
     isEditAccounting: item.isEditAccounting,
@@ -153,7 +151,6 @@ let changeStutusHdr = (index: number, item: any) => {
     price: item.price,
     subList: item.subList,
   };
-
   updateServiceDetailApi(curdata).then((res: any) => {
     getServiceDetailApi(0);
   });

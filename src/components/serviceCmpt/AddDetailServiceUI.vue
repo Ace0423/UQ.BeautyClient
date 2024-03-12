@@ -135,7 +135,7 @@
             </div> -->
             <div class="box-switch">
               <div class="switch">
-                <input type="checkbox" id="switch3" v-model="formInputRef.display" /><label for="switch3">Toggle2</label>
+                <input type="checkbox" id="switch3" v-model="formInputRef.state" /><label for="switch3">Toggle2</label>
               </div>
               <div class="label-info">
                 <label>上架 </label>
@@ -211,7 +211,7 @@ let formInputRef: any = ref({
   name: "",
   nickName: "",
   memo: "",
-  display: false,
+  state: 0,
   servicesTime: null,
   price: null,
   isBonusOpen: false,
@@ -277,13 +277,15 @@ function submitBtn() {
     const element = formInputRef.value.sgList[i];
     groupIdMaps.push(element.sgId);
   }
+console.log(formInputRef.value.state);
 
   let apiData = {
     sId: 0,
     name: formInputRef.value.name,
     nickName: formInputRef.value.nickName,
     memo: formInputRef.value.memo,
-    display: formInputRef.value.display,
+    // display: formInputRef.value.display,
+    state: formInputRef.value.state ? 1 : 0,
     servicesTime: formInputRef.value.subType == 1 ? 0 : formInputRef.value.servicesTime,
     price: formInputRef.value.subType == 1 ? 0 : formInputRef.value.price,
     discount: formInputRef.value.discount,

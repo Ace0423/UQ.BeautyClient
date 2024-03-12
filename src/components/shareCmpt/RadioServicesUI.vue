@@ -76,7 +76,7 @@ let filterCourseData: any = computed(() =>
 );
 function getCourseFn(data: any) {
   return (
-    data.display &&
+    data.state == 1 &&
     (!formInputRef.value.search ||
       data.name
         .toLowerCase()

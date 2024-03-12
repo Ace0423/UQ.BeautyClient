@@ -63,7 +63,7 @@ let formInputRef: any = ref({
 onBeforeFn();
 function onBeforeFn() {
     getNoticeListApi().then((res) => {
-        console.log(res);
+        // console.log(res);
     });
 }
 onMounted(() => {
@@ -86,7 +86,7 @@ function updateNoticeListFn(data: any) {
     if (data.isRead == 0) {
         data.isRead = 1;
         updateNoticeIsReadApi(data).then((res) => {
-            console.log(res);
+            // console.log(res);
         });
     }
 }

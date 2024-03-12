@@ -131,7 +131,9 @@
                     <div class="link-bottom"></div>
                     <div name="總計" class="info-amount">
                         <div>
-                            <span>{{ " 總計 " }}</span>
+                            <span>{{ " 總計 " }}
+                                <span v-if="formInputRef.orderInfo.coCustomerCount > 1">({{ formInputRef.orderInfo.coCustomerCount }}人)</span>
+                            </span>
                             <span>{{ " $ " + formInputRef.orderInfo.coAmount }}</span>
                         </div>
                     </div>
@@ -199,7 +201,7 @@ function onBefore() {
     } else {
         getOrderInfoApi("", props.selItemData.bkListNo).then((res) => {
             formInputRef.value.orderInfo = res;
-            
+
             let amount = formInputRef.value.orderInfo.coAmount;
             if (formInputRef.value.orderInfo.coUseTopUpInfo) {
                 amount -= formInputRef.value.orderInfo.coUseTopUpInfo.usePrice;
@@ -236,7 +238,7 @@ function mathAllPercentFn(params: any) {
 
             //無單品折扣
             if (!havePercent) {
-                curP += Math.floor(params.discount * (element.price - cMinus)*element.quantity)
+                curP += Math.floor(params.discount * (element.price - cMinus) * element.quantity)
             }
         }
     }

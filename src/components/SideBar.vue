@@ -45,7 +45,7 @@ onMounted(() => {
             >
           </li> -->
           <li>
-            <img :src="courseImg" /><router-link to="/orderRecordView/transactionPage">交易紀錄</router-link>
+            <img :src="courseImg" /><router-link to="/orderRecordView/transactionPage">訂單紀錄</router-link>
           </li>
           <!-- <li>
             <img :src="courseImg" /><router-link to="/serviceView/servicePage">服務管理</router-link>

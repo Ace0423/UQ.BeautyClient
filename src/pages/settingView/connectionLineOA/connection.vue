@@ -6,7 +6,7 @@ import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
 import { useCounterStore } from "@/stores/counter";
 import { getCompany } from "@/plugins/js-cookie";
 import { useManagerStore } from "@/stores/manager";
-
+import router from "@/router";
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
 const managerstore = useManagerStore();
@@ -43,6 +43,7 @@ onMounted(() => {
 
 const handReturn = (() => {
     OAData.data = JSON.parse(JSON.stringify(LineOAList.value.data));
+     router.go(-1)
 })
 const handSubmit = (() => {
     editLineOAList(OAData.data)

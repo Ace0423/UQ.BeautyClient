@@ -1,10 +1,10 @@
-
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
 import { useCounterStore } from "@/stores/counter";
 import { useCompanyStore } from "@/stores/company";
+import router from "@/router";
 const counterStore = useCounterStore();
 const { handLogOut } = counterStore;
 const { userInfo } = storeToRefs(counterStore);
@@ -61,6 +61,7 @@ const handReturn = (() => {
     companyInfoData.imageBig = companyInfoList.value.data.imageBig;
     companyInfoData.imageSmall = companyInfoList.value.data.imageSmall;
     companyInfoData.companyGroup = companyInfoList.value.data.companyGroup;
+    router.go(-1);
 })
 const handSubmit = (() => {
     putCompanyInfo(companyInfoData)

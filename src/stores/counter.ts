@@ -81,7 +81,7 @@ export const useCounterStore = defineStore("counter", () => {
   const sendPasswordEmail = async (data: any) => {
     try {
       const res = await apiPostSendPasswordEmailRequest(data);
-      console.log(res)
+      return res.data;
     } catch (error) {
       console.log(error);
     }

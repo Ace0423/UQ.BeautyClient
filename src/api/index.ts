@@ -1,4 +1,4 @@
-import { postLoginRequest, getUserNameRequest } from "./authRequest";
+import { postLoginRequest, getUserNameRequest,postSendPasswordEmailRequest } from "./authRequest";
 import { getMemberListRequest, postMemberDataRequest, postUpdateMemberDataRequest, getGroupDataRequest, putGroupDataRequest, postGroupDataRequest, getGroupInfoRequest, postGroupInfoRequest, deleteGroupInfoRequest, getMemberExpenseInfoRequest } from "./memberRequest";
 import { getMemberBankListRequest, postMemberBankRequest, getMemberBankInfoListRequest, getMemberBankDetailRequest, putMemberBankInfoRequest } from "./memberBankRequest";
 import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest, getWorkingHoursRequest, postWorkingHoursRequest, getWorkingDefaultRequest, postWorkingDefaultRequest, putWorkingDefaultRequest } from "./managerRequest";
@@ -12,7 +12,7 @@ import { getOrderByUIdRequest } from "./orederRequest";
 
 export const apiPostLoginRequest = postLoginRequest;
 export const apiGetUserNameRequest = getUserNameRequest;
-
+export const apiPostSendPasswordEmailRequest = postSendPasswordEmailRequest;
 
 export const apiGetMemberListRequest = getMemberListRequest;
 export const apiPostMemberDataRequest = postMemberDataRequest;

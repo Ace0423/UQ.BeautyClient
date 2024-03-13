@@ -9,3 +9,8 @@ export const postLoginRequest = (data: any) =>
   authRequest.post("/Auth/signin", data);
 
 export const getUserNameRequest = () => authRequest.get("/username");
+
+export const postSendPasswordEmailRequest = (data: any) => {
+  authRequest.post("/Mail/SendPasswordEmail", data);
+}
+

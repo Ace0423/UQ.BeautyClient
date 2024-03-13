@@ -9,7 +9,11 @@ import { validateEmai, validatePassword } from "@/utils/utils";
 defineRule('required', required);
 defineRule('email', email);
 const store = useCounterStore();
-const { authHandler } = store;
+const { authHandler, sendPasswordEmail } = store;
+const forgePassword = ref(false);
+const forgePassword_Email = reactive({
+  email: ""
+});
 const user = reactive({
   username: "test@gmail.com",
   password: "",
@@ -20,12 +24,18 @@ if (isDebug) {
   user.username = 'aaa@gmail.com';
   user.password = '1qazXSW@';
 }
+const handForgePasswordBtn = () => {
+  forgePassword.value = !forgePassword.value;
+};
 const loginFn = () => {
-  if (user.username == "" || user.password == "") {
-    Alert.warning(showErrorMsg('請輸入帳號密碼'), 2000);
-    return
-  }
   authHandler(user).then((res) => {
+    if (res.state == 2) {
+      Alert.warning(showErrorMsg(res.msg), 2000);
+    }
+  });
+};
+const forgePasswordFn = () => {
+  sendPasswordEmail(forgePassword_Email).then((res: any) => {
     if (res.state == 2) {
       Alert.warning(showErrorMsg(res.msg), 2000);
     }
@@ -34,19 +44,37 @@ const loginFn = () => {
 </script>
 <template>
   <div class="loginBox">
-    <div class="container">
+    <div class="container" v-if="!forgePassword">
       <img src="@/assets/images/logo.png" />
-      <Form>
-        <Field v-model="user.username" name="username" type="email" placeholder="請輸入E-mail" :rules="validateEmai" />
-        <ErrorMessage name="username" />
+      <Form @submit="loginFn">
+        <div class="form-input">
+          <Field v-model="user.username" name="username" type="email" placeholder="請輸入E-mail" :rules="validateEmai" />
+          <ErrorMessage name="username" />
+        </div>
+        <div class="form-input">
+          <Field v-model="user.password" name="password" type="password" placeholder="請輸入密碼"
+            :rules="validatePassword" />
+          <ErrorMessage name="password" />
+          <a @click="handForgePasswordBtn">忘記密碼</a>
+        </div>
+        <div class="login-btn">
+          <button type="loginFn">登入</button>
+        </div>
       </Form>
-      <Form>
-        <Field v-model="user.password" name="password" type="password" placeholder="請輸入密碼" :rules="validatePassword" />
-        <ErrorMessage name="password" />
+    </div>
+    <div class="container" v-if="forgePassword">
+      <img src="@/assets/images/logo.png" />
+      <h1>發送修改密碼至E-mail</h1>
+      <Form @submit="forgePasswordFn">
+        <div class="form-input">
+          <Field v-model="forgePassword_Email.email" name="username" type="email" placeholder="請輸入E-mail"
+            :rules="validateEmai" />
+          <ErrorMessage name="username" />
+        </div>
+        <div class="login-btn">
+          <button type="forgePasswordFn">發送</button>
+        </div>
       </Form>
-      <div class="login-btn">
-        <button @click="loginFn">登入</button>
-      </div>
     </div>
   </div>
 </template>
@@ -65,6 +93,11 @@ const loginFn = () => {
     display: flex;
     flex-direction: column;
 
+    h1 {
+      color: #707070;
+      margin-top: 30px;
+    }
+
     img {
       // display: block;
       margin: 79px 0 0 0;
@@ -78,28 +111,44 @@ const loginFn = () => {
       flex-direction: column;
       width: 324px;
       height: 80px;
-      margin: 10px 0 20px 0;
+      margin: 30px 0 20px 0;
 
-      >input {
+      >.form-input {
         display: block;
-        margin: auto;
-        width: 90%;
-        height: 45px;
-        text-indent: 10px;
-        font-size: 18px;
-        border-radius: 20px;
-        border: 1px solid #707070;
+        position: relative;
+        margin-bottom: 30px;
+
+        >input {
+          display: block;
+          margin: auto;
+          width: 90%;
+          height: 45px;
+          text-indent: 10px;
+          font-size: 18px;
+          border-radius: 20px;
+          border: 1px solid #707070;
+        }
+
+        >span {
+          position: absolute;
+          bottom: -20px;
+          display: block;
+          padding-left: 20px;
+          font-size: 15px;
+          color: #ff0000;
+        }
+
+        >a {
+          position: absolute;
+          margin-top: 10px;
+          right: 30px;
+          color: #707070;
+        }
       }
 
-      >span {
-        display: block;
-        padding-left: 20px;
-        font-size: 15px;
-        color: #ff0000;
-      }
     }
 
-    >.login-btn {
+    .login-btn {
       width: 100%;
       margin-top: 20px;
 

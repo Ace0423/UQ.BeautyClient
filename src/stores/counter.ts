@@ -4,6 +4,7 @@ import {
   apiGetUserNameRequest,
   apiGetMemberListRequest,
   apiPostMemberDataRequest,
+  apiPostSendPasswordEmailRequest
 } from "@/api/index";
 import { setToken, getToken, delToken } from "@/plugins/js-cookie";
 export const useCounterStore = defineStore("counter", () => {
@@ -77,7 +78,14 @@ export const useCounterStore = defineStore("counter", () => {
       console.log(error);
     }
   };
-
+  const sendPasswordEmail = async (data: any) => {
+    try {
+      const res = await apiPostSendPasswordEmailRequest(data);
+      console.log(res)
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return {
     isLogin,
     setIsLogin,
@@ -87,6 +95,7 @@ export const useCounterStore = defineStore("counter", () => {
     createMember,
     userInfo,
     setUserData,
-    handLogOut
+    handLogOut,
+    sendPasswordEmail
   };
 });

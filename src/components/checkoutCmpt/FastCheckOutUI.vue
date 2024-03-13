@@ -25,15 +25,15 @@
                           <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , " }}</span>
                           {{ bItem.timer + "分" }}
                           <span v-if="bItem.subInfo"> {{ " ," + bItem.subInfo.name
-                          }}</span>
+                            }}</span>
                         </span>
                         <span v-for="(sglItem, index) in bItem.sglDiscountList" :key="sglItem">
                           {{ sglItem.title }}
                         </span>
                       </div>
                       <div class="info-price"><span v-if="bItem.subInfo">{{ "$" +
-                        bItem.salesPrice
-                      }}</span>
+    bItem.salesPrice
+                          }}</span>
                         <span v-else>{{ "$" + bItem.salesPrice }}</span>
                       </div>
                     </div>
@@ -45,11 +45,11 @@
                         <span>
                           <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , " }}</span>
                           {{
-                            bItem.quantity +
-                            "個" + "," +
-                            bItem.nickName
+    bItem.quantity +
+    "個" + "," +
+    bItem.nickName
 
-                          }}
+  }}
                         </span>
                         <span v-for="(sglItem, index) in bItem.sglDiscountList" :key="sglItem">
                           {{ sglItem.title }}
@@ -114,9 +114,9 @@
                 <div class="discount-link">
                   <span class="name-link">儲值卡</span>
                   <span :class="{
-                    islink: formInputRef.memberInfo.userId != 0,
-                    notlink: formInputRef.memberInfo.userId == 0
-                  }" @click="showRdTopUpCardFn(true)">使用儲值卡</span>
+    islink: formInputRef.memberInfo.userId != 0,
+    notlink: formInputRef.memberInfo.userId == 0
+  }" @click="showRdTopUpCardFn(true)">使用儲值卡</span>
                 </div>
               </div>
             </div>
@@ -129,8 +129,8 @@
               <div>
                 <span>{{ formInputRef.memberInfo.nameView }}</span>
                 <span class="customer-phone">{{
-                  formInputRef.memberInfo.phone
-                }}</span>
+    formInputRef.memberInfo.phone
+  }}</span>
               </div>
               <img :src="icon_right_arrow" />
             </div>
@@ -1271,9 +1271,10 @@ let { ruleItem } = toRefs(ruleLists);
           }
 
           .customer-submit {
-            height: 70px;
             display: flex;
-            justify-content: center;
+            height: 70px;
+            justify-content: space-between;
+            align-items: center;
             border-top: solid 0.5px #ddd;
             box-sizing: border-box;
 
@@ -1319,13 +1320,10 @@ let { ruleItem } = toRefs(ruleLists);
             }
 
             .cash-btn {
-              position: relative;
               width: 150px;
               height: 50px;
-              margin: 10px;
               border-radius: 8px;
-              font-size: 20px;
-              font-weight: bold;
+              border: solid 2px #717171;
               color: #717171;
               background-color: #fff;
             }

@@ -18,6 +18,8 @@ onBeforeMount(() => {
       let token: string = route.query.token == undefined ? '' : route.query.token?.toString();
       routeVal.type = 1;
       routeVal.token = token;
+    } else {
+      routeVal.type = 0;
     }
   }, 300);
 })

@@ -2,14 +2,25 @@
 import { getToken } from "@/plugins/js-cookie";
 import { useCounterStore } from "@/stores/counter";
 import { storeToRefs } from "pinia";
+const route = useRoute();
 const store = useCounterStore();
 const { isLogin } = storeToRefs(store);
 const { setIsLogin, setUserData } = store;
+const idx = ref();
+const routeVal = reactive({ type: -1, token: '' });
 const memuState = ref(false);
 const handmemuStateBtn = () => {
   memuState.value = !memuState.value;
 };
-
+onBeforeMount(() => {
+  setTimeout(() => {
+    if (route.query.type && route.query.type == "1") {
+      let token: string = route.query.token == undefined ? '' : route.query.token?.toString();
+      routeVal.type = 1;
+      routeVal.token = token;
+    }
+  }, 300);
+})
 onMounted(() => {
   let vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty("--vh", `${vh}px`);
@@ -25,6 +36,7 @@ onMounted(() => {
     onResize,
     false
   );
+
 });
 
 function onResize() {
@@ -87,7 +99,8 @@ function changeSize() {
 </script>
 
 <template>
-  <Login v-if="!isLogin"></Login>
+  <Login v-if="!isLogin && routeVal.type == 0"></Login>
+  <ResetPassword v-if="!isLogin && routeVal.type == 1" :route-val="routeVal"></ResetPassword>
   <main v-if="isLogin" class="main-display">
     <side-bar v-if="memuState" :handmemuStateBtn="handmemuStateBtn"></side-bar>
     <div class="wraps">

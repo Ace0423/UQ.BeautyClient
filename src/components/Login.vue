@@ -45,6 +45,7 @@ const forgePasswordFn = () => {
     }
   });
 };
+
 </script>
 <template>
   <div class="loginBox">

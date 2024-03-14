@@ -4,7 +4,8 @@ import {
   apiGetUserNameRequest,
   apiGetMemberListRequest,
   apiPostMemberDataRequest,
-  apiPostSendPasswordEmailRequest
+  apiPostSendPasswordEmailRequest,
+  apiPostResetPasswordRequest
 } from "@/api/index";
 import { setToken, getToken, delToken } from "@/plugins/js-cookie";
 export const useCounterStore = defineStore("counter", () => {
@@ -86,6 +87,14 @@ export const useCounterStore = defineStore("counter", () => {
       console.log(error);
     }
   };
+  const resetPassword = async (data: any) => {
+    try {
+      const res = await apiPostResetPasswordRequest(data);
+      return res.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return {
     isLogin,
     setIsLogin,
@@ -96,6 +105,7 @@ export const useCounterStore = defineStore("counter", () => {
     userInfo,
     setUserData,
     handLogOut,
-    sendPasswordEmail
+    sendPasswordEmail,
+    resetPassword
   };
 });

@@ -9,22 +9,25 @@ defineRule('required', required);
 defineRule('email', email);
 const store = useCounterStore();
 const { resetPassword } = store;
-const val = reactive({ password1: '', password2: '', token: '' })
+const val = reactive({ Password: '', Token: '' });
+const password1 = ref('');
+const password2 = ref('');
 const props = defineProps<{
     routeVal: any;
 }>();
 onMounted(() => {
-    val.token = props.routeVal.token
+    val.Token = props.routeVal.token
     console.log(val)
 })
 const comparison = ((value: any) => {
-    if (val.password1 && val.password2 && val.password1 != value) {
+    if (password1.value && password2.value && password1.value != value) {
         return "密碼不一致"
     }
 
     return validatePassword(value)
 })
 const submit = (() => {
+    val.Password = password1.value;
     resetPassword(val).then((res: any) => {
         console.log(res)
         if (res.state == 1) {
@@ -42,12 +45,12 @@ const submit = (() => {
             <Form @submit="submit">
                 <h1>重置密碼</h1>
                 <div class="form-input">
-                    <Field v-model="val.password1" name="password1" type="password" placeholder="請輸入密碼"
+                    <Field v-model="password1" name="password1" type="password" placeholder="請輸入密碼"
                         :rules="validatePassword" />
                     <ErrorMessage name="password1" />
                 </div>
                 <div class="form-input">
-                    <Field v-model="val.password2" name="password2" type="password" placeholder="請輸入密碼"
+                    <Field v-model="password2" name="password2" type="password" placeholder="請輸入密碼"
                         :rules="comparison" />
                     <ErrorMessage name="password2" />
                 </div>

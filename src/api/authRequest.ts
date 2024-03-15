@@ -14,5 +14,5 @@ export const postSendPasswordEmailRequest = (data: any) => {
   return authRequest.post("/Mail/SendPasswordEmail", data);
 }
 export const postResetPasswordRequest = (data: any) => {
-  return authRequest.post("/Mail/ResetPassword", data);
+  return authRequest.post("/Auth/ResetPassword", data);
 }

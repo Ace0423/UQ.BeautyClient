@@ -16,7 +16,7 @@ export const getMemberListReq = (data: any) =>
   getHttps(httpRequest, "/member/user", data);
 /**獲取會員預約統計 */
 export const getExpenseInfoReq = (id: any) =>
-getHttps(httpRequest, "/member/ExpenseInfo?uid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
+  getHttps(httpRequest, "/member/ExpenseInfo?uid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
 //-----------------------------------------預約
 //#region 預約
 /**獲取預約 */
@@ -141,6 +141,12 @@ export const getOrderDetailReq = (id: any, bkListNo: any, isList: any) =>
 /**獲取付款方式 */
 export const getPayTypeListReq = (id: any) =>
   getHttps(httpRequest, "/Company/CheckOutType?cotid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
+/**獲取取貨記錄 */
+export const getPickUpListReq = (id: any, startDate: any, endDate: any, isList: any) =>
+  getHttps(httpRequest, "/Order/PickUpList?oid=" + id + "&startDate=" + startDate + "&endDate=" + endDate + "&isList=" + isList + "&pageIndex=" + 0 + "&count=" + 0);
+/**獲取匯出紀錄 */
+export const getExportListReq = (id: any, startDate: any, endDate: any, isList: any) =>
+  getHttps(httpRequest, "/Order/ExportList?oid=" + id + "&startDate=" + startDate + "&endDate=" + endDate + "&isList=" + isList + "&pageIndex=" + 0 + "&count=" + 0);
 
 
 //-----------------------------------------排休
@@ -157,9 +163,9 @@ export const getRestReq = (id: any, yy: any, mm: any, dd: any) =>
 /**獲取訊息明細 */
 export const getNoticeListReq = (id: any) =>
   getHttps(httpRequest, "Notice/NoticeList?uid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
-  /**獲取訂單資訊 */
-  export const getNoticeCountReq = (id: any) =>
-    getHttps(httpRequest, "Notice/NoticeCount?uid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
+/**獲取訂單資訊 */
+export const getNoticeCountReq = (id: any) =>
+  getHttps(httpRequest, "Notice/NoticeCount?uid=" + id + "&pageIndex=" + 0 + "&count=" + 0);
 /**更新明細 */
 export const updateNoticeIsReadReq = (data: any) =>
   putHttps(httpRequest, "/Notice/NoticeIsRead?Id=" + data.Id, data);

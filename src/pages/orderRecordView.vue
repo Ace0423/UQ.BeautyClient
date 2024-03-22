@@ -1,16 +1,19 @@
 <template>
     <div class="order-div">
-        <Header :moduleType="'訂單紀錄'" :Icon="Icon" :memuState="props.memuState" :handmemuStateBtn="props.handmemuStateBtn">
+        <Header :moduleType="'訂單紀錄'" :Icon="Icon" :memuState="props.memuState"
+            :handmemuStateBtn="props.handmemuStateBtn">
         </Header>
         <div class="content">
-            <!-- <div class="nav">
+            <div class="nav">
                 <router-link to="/orderRecordView/transactionPage">交易紀錄</router-link>
-            </div> -->
+                <router-link to="/orderRecordView/pickupPage">取貨紀錄</router-link>
+                <router-link to="/orderRecordView/exportPage">匯出紀錄</router-link>
+            </div>
             <router-view />
         </div>
     </div>
 </template>
-  
+
 <script lang="ts" setup>
 import Icon from "@/assets/Icon awesome-spa.svg";
 const props = defineProps<{
@@ -19,11 +22,11 @@ const props = defineProps<{
 }>();
 
 onMounted(() => {
-    
+
 });
 
 </script>
-  
+
 <style lang="scss" scoped>
 .order-div {
     position: relative;
@@ -41,6 +44,9 @@ onMounted(() => {
 
         >.nav {
             display: flex;
+            margin-left: 20px;
+            z-index: 1;
+
 
             >a {
                 border: none;

@@ -21,7 +21,8 @@
                         <input v-if="formInputRef.sglDiscountList.length == 0" placeholder="請選擇折扣" type="text"
                             @click="showRdSgDcFn(true)" readonly />
                         <div v-else @click="showRdSgDcFn(true)">
-                            <div class="sgdc-item" v-for="(sdItem, index) in formInputRef.sglDiscountList" :key="sdItem">
+                            <div class="sgdc-item" v-for="(sdItem, index) in formInputRef.sglDiscountList"
+                                :key="sdItem">
                                 <span>{{ sdItem.title }}</span>
                             </div>
                         </div>
@@ -30,6 +31,15 @@
                         <span>*服務人員</span>
                         <input v-model="formInputRef.managerInfo.nameView" placeholder="請選擇服務人員" type="text"
                             @click="showManagerUIFn(true)" readonly />
+                    </div>
+                    <div class="checked-div">
+                        <div class="checked_state">
+                            <input class="checked_status" type="checkbox" name="sub" value="" :id="'isPickUp'"
+                                :checked="formInputRef.isPickUp" v-model="formInputRef.isPickUp" />
+                            <label :for="'isPickUp'"></label>
+                            <!-- <label >已取貨</label> -->
+                            <span>已取貨</span>
+                        </div>
                     </div>
                     <span class="p_error">
                         {{ ruleLists.ruleItem.price.warn }}
@@ -49,7 +59,7 @@
     <RdSgDiscountUI v-if="showRdSgDcUIRef" :itemData="selData" :selData="formInputRef.sglDiscountList"
         :getDataFn="getRdDcFn" :showRdDFn="showRdSgDcFn" />
 </template>
-  
+
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { usePriceStore } from "@/stores/priceStore";
@@ -77,14 +87,20 @@ let formInputRef: any = ref({
     managerInfo: { nameView: "" },
     quantity: 0,
     sglDiscountList: [],
+    isPickUp: true,
 });
 
 onBeforeFn();
 function onBeforeFn() {
+    console.log(props.selData);
+
     formInputRef.value.name = props.selData.name;
     formInputRef.value.quantity = props.selData.quantity;
-    formInputRef.value.managerInfo = props.selData.managerInfo ? props.selData.managerInfo : formInputRef.value.managerInfo;
     formInputRef.value.sglDiscountList = props.selData.sglDiscountList ? props.selData.sglDiscountList : [];
+    if (props.selData.managerInfo)
+        formInputRef.value.managerInfo = props.selData.managerInfo;
+    if (props.selData.isPickUp)
+        formInputRef.value.isPickUp = props.selData.isPickUp;
 
     // formInputRef.value.sglDiscountList = props.selData.curSgDiscountList;
 }
@@ -122,12 +138,13 @@ function getRdDcFn(data: any) {
     showRdSgDcFn(false);
 }
 function submitBtn() {
+    console.log(formInputRef.value);
+
     if (formInputRef.value.managerInfo.nameView != "")
         props.selData.managerInfo = formInputRef.value.managerInfo;
     props.selData.sglDiscountList = formInputRef.value.sglDiscountList;
     props.selData.quantity = formInputRef.value.quantity;
-
-
+    props.selData.isPickUp = formInputRef.value.isPickUp;
     props.getDataFn(props.selData)
 }
 function delBtn() {
@@ -137,6 +154,11 @@ function countTotalBtn(data: number) {
     if (!formInputRef.value.quantity) formInputRef.value.quantity = 0;
     formInputRef.value.quantity += data;
     if (formInputRef.value.quantity < 0) formInputRef.value.quantity = 0;
+}
+
+//改變課程狀態
+let changeStutusHdr = (state: any) => {
+    formInputRef.value.isPickUp = state
 }
 //#region 規則
 const ruleLists: any = reactive({
@@ -175,7 +197,7 @@ const ruleLists: any = reactive({
 });
 //#endregion
 </script>
-  
+
 <style scoped lang="scss">
 .popup-editItemGoodsUI {
     position: fixed;
@@ -343,6 +365,58 @@ const ruleLists: any = reactive({
                         }
                     }
                 }
+
+                .checked-div {
+                    border: 0px solid #8b6f6d;
+
+                    .checked_state {
+                        margin-left: 10px;
+
+                        input {
+                            display: none;
+                        }
+
+                        label {
+                            display: inline-block;
+                            width: 20px;
+                            height: 20px;
+                            border-radius: 5px;
+                            border: 1px solid #8b6f6d;
+                            box-sizing: border-box;
+                            position: relative;
+                            cursor: pointer;
+                        }
+
+                        label::before {
+                            display: inline-block;
+                            content: " ";
+                            width: 12px;
+                            border: 2px solid #fff;
+                            box-sizing: border-box;
+                            height: 4px;
+                            border-top: none;
+                            border-right: none;
+                            transform: rotate(-45deg);
+                            top: 5px;
+                            left: 3px;
+                            position: absolute;
+                            opacity: 0;
+                        }
+
+                        input:checked+label {
+                            background: #8b6f6d;
+                        }
+
+                        input:checked+label::before {
+                            opacity: 1;
+                            transform: all 0.5s;
+                        }
+
+                        >span {
+                            margin-left: 10px;
+                        }
+                    }
+                }
             }
         }
 
@@ -378,4 +452,3 @@ const ruleLists: any = reactive({
     font-size: 16px;
 }
 </style>
-  

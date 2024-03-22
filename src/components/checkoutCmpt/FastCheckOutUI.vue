@@ -506,6 +506,7 @@ function getItemInfoFn(data: any) {
   //itemType  -   1:服務 2:商品 3:儲值卡
   let curItemData = null;
   let odDetail: any = {};
+  odDetail.isPickUp = true;
   if (data.selectService) {
     curItemData = data.selectService
     odDetail.ItemType = 1;
@@ -534,6 +535,7 @@ function getItemInfoFn(data: any) {
     odDetail.name = curItemData.pName;
     odDetail.nickName = curItemData.pCode;
     odDetail.price = curItemData.price;
+    odDetail.isPickUp = curItemData.isPickUp;
     odDetail.timer = 0;
     odDetail.subId = 0;
     odDetail.subInfo = null;
@@ -593,6 +595,7 @@ function getEditGdInfoFn(data: any) {
       element.managerInfo = data.managerInfo;
       element.quantity = data.quantity;
       element.sglDiscountList = data.sglDiscountList;
+      element.isPickUp = data.isPickUp;
       setSglDiscountItem(element);
       break;
     }
@@ -741,6 +744,7 @@ function submitBtn() {
       }, 1000);
     }
   });
+
 }
 
 function getLimitDay(params: any) {

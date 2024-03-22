@@ -4,8 +4,8 @@
       <div class="demo-date-picker">
         <div class="block">
           <span class="demonstration"></span>
-          <el-date-picker v-model="formInputRef.datePicker" type="daterange" range-separator="一"
-            start-placeholder="開始日期" end-placeholder="結束日期" :size="datePickerSize" @change="dateChange" />
+          <el-date-picker v-model="formInputRef.datePicker" type="daterange" range-separator="一" start-placeholder="開始日期"
+            end-placeholder="結束日期" :size="datePickerSize" @change="dateChange" />
         </div>
       </div>
     </div>
@@ -77,10 +77,10 @@ import {
 import { formatZeroDate } from "@/utils/utils";
 
 let store = useApptStore();
-let { orderList } =
+let { exportList } =
   storeToRefs(store);
 let {
-  getOrderListApi,
+  getExportListApi,
 } = store;
 
 let showOrderInfoRef: any = ref(false);
@@ -93,7 +93,7 @@ let formInputRef: any = ref({
 
 let search = ref("");
 let filterOrderData: any = computed(() =>
-  orderList.value.filter(getOrderFn)
+  exportList.value.filter(getOrderFn)
 );
 function getOrderFn(data: any) {
   return (
@@ -112,7 +112,7 @@ formInputRef.value.datePicker[1] = endDate
 
 onBefore();
 function onBefore() {
-  getOrderListApi(0, formInputRef.value.datePicker[0], formInputRef.value.datePicker[1]);
+  getExportListApi(0, formInputRef.value.datePicker[0], formInputRef.value.datePicker[1]);
 }
 onMounted(() => { });
 
@@ -148,7 +148,7 @@ function dateChange() {
   let end: Date = formInputRef.value.datePicker[1]
   let startDate: string = start.getFullYear() + "-" + (start.getMonth() + 1) + "-" + formatZeroDate(start.getDate());
   let endDate: string = end.getFullYear() + "-" + (end.getMonth() + 1) + "-" + formatZeroDate(end.getDate());
-  getOrderListApi(0, startDate, endDate);
+  getExportListApi(0, startDate, endDate);
 }
 
 function showEditUIFn(index: number, item: any) {

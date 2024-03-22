@@ -38,6 +38,8 @@ import {
   updateNoticeIsReadReq,
   getExpenseInfoReq,
   getNoticeCountReq,
+  getExportListReq,
+  getPickUpListReq,
 } from "@/api/apptRequest";
 import {
   addGoodsBrandReq,
@@ -477,7 +479,7 @@ export const useApptStore = defineStore("apptStore", () => {
             //   return item.state != 3
             // });
 
-            tuiBookingListRef.value = res.data.data.table.filter(function (item: any,index: any,arr: any) {
+            tuiBookingListRef.value = res.data.data.table.filter(function (item: any, index: any, arr: any) {
               // //處理數據
               // if (item.managerId == 0) {
               //   item.managerInfo = { managerId: 0, nameView: "不指定" }
@@ -977,6 +979,53 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+
+  let pickUpList: any = ref([]);
+  /**獲取取貨紀錄 */
+  const getPickUpListApi = async (id: any = 0, startDate: any = "", endDate: any = "", isList: any = 0) => {
+    try {
+      pickUpList.value = [];
+      let res: any = await getPickUpListReq(id, startDate, endDate, isList).then((res: any) => {
+        if (res.data.data) {
+          if (!id) {
+            let detailVo: any = res.data.data.table;
+            pickUpList.value = detailVo;
+            return pickUpList.value;
+          } else {
+            return res.data.data.table;
+          }
+        } else {
+          return res.data.data;
+        }
+      });
+      return res
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  let exportList: any = ref([]);
+  /**獲取匯出紀錄 */
+  const getExportListApi = async (id: any = 0, startDate: any = "", endDate: any = "", isList: any = 0) => {
+    try {
+      exportList.value = [];
+      let res: any = await getExportListReq(id, startDate, endDate, isList).then((res: any) => {
+        if (res.data.data) {
+          if (!id) {
+            let detailVo: any = res.data.data.table;
+            exportList.value = detailVo;
+            return exportList.value;
+          } else {
+            return res.data.data.table;
+          }
+        } else {
+          return res.data.data;
+        }
+      });
+      return res
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //#endregion
 
   //#region 排休
@@ -1151,6 +1200,10 @@ export const useApptStore = defineStore("apptStore", () => {
     orderInfoRef,
     getPayTypeListApi,
     payTypeListRef,
+    getPickUpListApi,
+    pickUpList,
+    getExportListApi,
+    exportList,
     //-----------------休息日
     getDayOffApi,
     getRestApi,

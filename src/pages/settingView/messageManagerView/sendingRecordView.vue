@@ -4,7 +4,10 @@ import Icon from "@/assets/Icon material-settings.svg";
 const aaa = ref();
 onMounted(() => {
 })
-
+const openPage = ()=>{
+    console.log(111)
+    window.open('https://manager.line.biz/')
+}
 </script>
 <template>
     <div class="container">
@@ -14,11 +17,11 @@ onMounted(() => {
                     <p>簡訊發送點數</p>
                     <p>0</p>
                 </div>
-                <button>前往儲值中心</button>
+                <button >前往儲值中心</button>
             </div>
             <div class="line-point">
                 <p>LINE點數請前往你的LINE...</p>
-                <button>LINE點數儲值</button>
+                <button @click="openPage()">LINE點數儲值</button>
             </div>
         </div>
         <div class="item-tab">

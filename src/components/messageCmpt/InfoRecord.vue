@@ -16,7 +16,6 @@ const props = defineProps<{
 
 
 onMounted(() => {
-    console.log(props.selectRecordItemItem)
     let data = {
         MId: props.selectRecordItemItem.mId,
         mrDateGroup: props.selectRecordItemItem.mrDateGroup,

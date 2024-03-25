@@ -19,7 +19,7 @@
       <div class="content-main">
         <el-table :data="filterOrderData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
           :header-cell-style="headerRowStyle">
-          <el-table-column prop="coNo" label="訂單" min-width="50%" :sort-by="['name']" sortable>
+          <el-table-column prop="coNo" label="訂單" min-width="30%" :sort-by="['name']" sortable>
             <template #default="scope">
               <div class="order-name">
                 <!-- <img class="customer-img" :src="icon_customer" /> -->
@@ -29,34 +29,37 @@
                 <div>
                   <span>{{ scope.row.coNo }}</span>
                   <div>
-                    <span>{{ scope.row.coCheckTime.split("T")[0] + " " }}</span>
-                    <span>{{ scope.row.coCheckTime.split("T")[1].split(":")[0] + ":" }}</span>
-                    <span>{{ scope.row.coCheckTime.split("T")[1].split(":")[1] }}</span>
+                    <span>{{ scope.row.dateCreate.split("T")[0] + " " }}</span>
+                    <span>{{ scope.row.dateCreate.split("T")[1].split(":")[0] + ":" }}</span>
+                    <span>{{ scope.row.dateCreate.split("T")[1].split(":")[1] }}</span>
                   </div>
 
                 </div>
               </div>
             </template>
           </el-table-column>
+          <el-table-column prop="productName" label="商品" min-width="20%" sortable />
           <el-table-column prop="memberInfo.name" label="顧客" min-width="30%" sortable />
-          <el-table-column prop="coAmount" label="狀態" min-width="10%" sortable>
+          <el-table-column prop="isPickUp" label="狀態" min-width="10%" sortable>
             <template #default="scope">
               <div class="handle-price">
-                <span>{{ scope.row.coAmount }}</span>
+                <span v-if="scope.row.isPickUp">已取貨</span>
+                <span v-else>未取貨</span>
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="coAmount" label="金額" min-width="10%" sortable>
+          <el-table-column prop="price" label="售價" min-width="10%" sortable>
             <template #default="scope">
               <div class="handle-price">
-                <span>{{ scope.row.coAmount }}</span>
+                <span>{{ scope.row.price }}</span>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="" min-width="10%">
             <template #default="scope">
               <div class="handle-drag" @click="selectDataFn(scope.row)">
-                <img class="edit_img" :src="icon_right_arrow" />
+                <!-- <img class="edit_img" :src="icon_right_arrow" /> -->
+                <button>通知</button>
               </div>
             </template>
           </el-table-column>
@@ -129,8 +132,9 @@ watchEffect(() => {
 
 
 function selectDataFn(params: any) {
-  selItem = params;
-  showOrderInfoFn(true);
+  console.log("通知會員");
+  // selItem = params;
+  // showOrderInfoFn(true);
 }
 let selItem: any = [];
 //刪除課程

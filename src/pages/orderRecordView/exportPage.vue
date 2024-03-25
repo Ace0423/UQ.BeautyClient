@@ -18,8 +18,8 @@
       </div>
       <div class="content-main">
         <el-table :data="filterOrderData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
-          :header-cell-style="headerRowStyle">
-          <el-table-column prop="coNo" label="訂單" min-width="50%" :sort-by="['name']" sortable>
+          :header-cell-style="headerRowStyle" >
+          <el-table-column prop="coNo" label="發票號碼" min-width="10%" :sort-by="['name']" >
             <template #default="scope">
               <div class="order-name">
                 <!-- <img class="customer-img" :src="icon_customer" /> -->
@@ -27,19 +27,27 @@
                   <CreditCard />
                 </el-icon>
                 <div>
-                  <span>{{ scope.row.coNo }}</span>
+                  <span>{{ scope.row.rNo }}</span>
                   <div>
-                    <span>{{ scope.row.coCheckTime.split("T")[0] + " " }}</span>
-                    <span>{{ scope.row.coCheckTime.split("T")[1].split(":")[0] + ":" }}</span>
-                    <span>{{ scope.row.coCheckTime.split("T")[1].split(":")[1] }}</span>
+                    <span>{{ scope.row.dateCreate.split("T")[0] + " " }}</span>
+                    <span>{{ scope.row.dateCreate.split("T")[1].split(":")[0] + ":" }}</span>
+                    <span>{{ scope.row.dateCreate.split("T")[1].split(":")[1] }}</span>
                   </div>
 
                 </div>
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="memberInfo.name" label="顧客" min-width="30%" sortable />
-          <el-table-column prop="coAmount" label="金額" min-width="10%" sortable>
+          <el-table-column prop="taxID" label="統一編號" min-width="10%"  />
+          <el-table-column prop="amount" label="總計" min-width="5%"  />
+          <el-table-column prop="salesPrice" label="銷售額" min-width="5%"  />
+          <el-table-column prop="businessTax" label="營業稅額" min-width="5%"  />
+          <el-table-column prop="taxType" label="課稅別" min-width="5%"  />
+          <el-table-column prop="rNo" label="訂單編號" min-width="10%"  />
+          <el-table-column prop="barcode" label="載具號碼" min-width="5%"  />
+          <!-- <el-table-column prop="memberInfo.name" label="狀態" min-width="5%"  /> -->
+          <!-- <el-table-column prop="memberInfo.name" label="免稅銷售額" min-width="5%"  /> -->
+          <!-- <el-table-column prop="coAmount" label="金額" min-width="10%" sortable>
             <template #default="scope">
               <div class="handle-price">
                 <span>{{ scope.row.coAmount }}</span>
@@ -52,7 +60,7 @@
                 <img class="edit_img" :src="icon_right_arrow" />
               </div>
             </template>
-          </el-table-column>
+          </el-table-column> -->
         </el-table>
       </div>
       <div>
@@ -199,7 +207,7 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
   return {
     height: "50px",
     backgroundColor: '#fff',
-    fontSize: "20px",
+    fontSize: "14px",
     borderBottom: "0px solid rgba(112, 112, 112, 0.5)"
   }
 }
@@ -394,14 +402,14 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
 
             >span {
               color: #000000;
-              font-size: 20px;
+              font-size: 16px;
             }
 
             >div {
               >span {
                 color: rgb(113, 113, 113);
 
-                font-size: 18px;
+                font-size: 12px;
               }
             }
           }

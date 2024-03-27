@@ -25,9 +25,9 @@ const messages = (type: any) => {
     }
     getMessages(data)
         .then((res) => {
-            if (res.state == 2) {
-                Alert.warning(showErrorMsg(res.msg), 2000);
-            }
+            // if (res.state == 2) {
+            //     Alert.warning(showErrorMsg(res.msg), 2000);
+            // }
         })
         .catch((e: any) => {
             console.log(e)

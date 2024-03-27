@@ -176,6 +176,8 @@ export const useCompanyStore = defineStore("company", () => {
             const res = await apiGetMessagesRequest(data);
             if (res.data.state == 1) {
                 messagesList.data = res.data.data.table;
+            }  else if (res.data.state == 2) {
+                messagesList.data = '';
             }
             return res.data;
         } catch (error) {
@@ -225,7 +227,6 @@ export const useCompanyStore = defineStore("company", () => {
         }
     };
     const getMessageRecords = async (data: any) => {
-
         try {
             const res = await apiGetMessageRecords(data);
             if (res.data.state == 1) {
@@ -238,7 +239,6 @@ export const useCompanyStore = defineStore("company", () => {
         }
     };
     const getInfoRecord = async (data: any) => {
-
         try {
             const res = await apiGetInfoRecord(data);
             // if (res.data.state == 1) {

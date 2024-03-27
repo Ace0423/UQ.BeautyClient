@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Icon from "@/assets/Icon zocial-guest.svg";
+import Icon_guest from "@/assets/Icon-guest.png";
 import { onMounted } from 'vue';
 import { storeToRefs } from "pinia";
 import { useManagerStore } from "@/stores/manager";
@@ -54,7 +54,7 @@ const filterRoleName = ((val: any) => {
   <div class="container">
     <el-table :data="filterManagerListData" style="width: 100%;" height="450" :header-cell-style="{ background: '#e6e2de' }">
       <el-table-column #default="props" width="50">
-        <img v-if="!props.row.photo" class="img-name" :src="Icon" />
+        <img v-if="!props.row.photo" class="img-name" :src="Icon_guest" />
         <img v-if="props.row.photo" class="img-name" :src="props.row.photo" />
       </el-table-column>
       <el-table-column #default="props" label="個人網站">

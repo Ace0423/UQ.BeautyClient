@@ -70,7 +70,6 @@ import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import Alert from "@/components/alertCmpt";
 import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
-import icon_customer from "@/assets/images/icon_customer.png";
 import {
   User, Edit, ShoppingBag, CreditCard
 } from '@element-plus/icons-vue';

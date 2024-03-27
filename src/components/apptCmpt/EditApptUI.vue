@@ -122,7 +122,7 @@
 
 <script setup lang="ts">
 import icon_closeX from "@/assets/images/icon_closeX.png";
-import icon_customer from "@/assets/images/icon_customer.png";
+import icon_customer from "@/assets/Icon-guest.png";
 import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
 import icon_cancleItem from "@/assets/images/icon_cancleItem.png";
 import { checkVerify_all, formatZeroDate } from "@/utils/utils";
@@ -664,8 +664,8 @@ let { ruleItem } = toRefs(ruleLists);
           }
 
           .customer-img {
-            width: 33px;
-            height: 39px;
+            width: 50px;
+            height: 50px;
           }
         }
 

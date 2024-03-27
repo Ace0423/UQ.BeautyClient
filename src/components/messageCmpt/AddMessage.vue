@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import icon_closeX from "@/assets/images/icon_closeX.png";
 import Icon from "@/assets/Icon zocial-guest.svg";
+import Icon_guest from "@/assets/Icon-guest.png";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";

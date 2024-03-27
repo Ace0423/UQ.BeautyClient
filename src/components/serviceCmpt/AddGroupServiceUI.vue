@@ -60,7 +60,6 @@
 </template>
 <script setup lang="ts">
 import closeIcon from "@/assets/Group32.svg";
-import Icon from "@/assets/Icon zocial-guest.svg";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import icon_cancleItem from "@/assets/images/icon_cancleItem.png";

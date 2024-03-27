@@ -1,6 +1,5 @@
 
 <script setup lang="ts">
-import Icon from "@/assets/Icon zocial-guest.svg";
 import InfoIcon from "@/assets/Icon ionic-ios-list-box.svg";
 import editIcon from "@/assets/Icon awesome-edit.svg";
 import { storeToRefs } from "pinia";

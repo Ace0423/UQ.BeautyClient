@@ -59,7 +59,7 @@
             <template #default="scope">
               <div class="handle-drag" @click="selectDataFn(scope.row)">
                 <!-- <img class="edit_img" :src="icon_right_arrow" /> -->
-                <button>通知</button>
+                <button @click="noticeFn(scope.row)">通知</button>
               </div>
             </template>
           </el-table-column>
@@ -79,8 +79,6 @@ import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import Alert from "@/components/alertCmpt";
-import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
-import icon_customer from "@/assets/images/icon_customer.png";
 import {
   User, Edit, ShoppingBag, CreditCard
 } from '@element-plus/icons-vue';
@@ -91,6 +89,7 @@ let { pickUpList } =
   storeToRefs(store);
 let {
   getPickUpListApi,
+  addPickUpNoticeApi,
 } = store;
 
 let showOrderInfoRef: any = ref(false);
@@ -135,6 +134,19 @@ function selectDataFn(params: any) {
   console.log("通知會員");
   // selItem = params;
   // showOrderInfoFn(true);
+}
+
+function noticeFn(item:any) {
+  console.log(item);
+  
+  let apiData = {
+    userId: 317,
+    noticeTime:new Date(),
+    productName:item.productName
+  };
+  addPickUpNoticeApi(apiData).then((res) => {
+    console.log(res);
+  })
 }
 let selItem: any = [];
 //刪除課程

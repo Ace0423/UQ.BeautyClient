@@ -14,7 +14,7 @@
             <span>{{ weekDayCpt }}</span>
             <h1>{{ dateCpt }}</h1>
             <div class="info-guest">
-              <img class="head-shot" :src="Icon" />
+              <img class="head-shot" :src="Icon_guest" />
               <div>
                 <span>{{ memberDataCpt.nameView }}</span>
                 <span>{{ memberDataCpt.phone }}</span>
@@ -97,7 +97,7 @@
 </template>
 <script setup lang="ts">
 import closeIcon from "@/assets/Group32.svg";
-import Icon from "@/assets/Icon zocial-guest.svg";
+import Icon_guest from "@/assets/Icon-guest.png";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import { useManagerStore } from "@/stores/manager";
@@ -335,16 +335,18 @@ function showOrderInfoFn(state: boolean) {
           .info-guest {
             display: flex;
             width: 90%;
+            height: 40%;
             margin-left: 5%;
             justify-content: center;
-            height: 40%;
+            align-items: center;
 
             // //margin: 5px 30px;
 
             .head-shot {
               //margin: 5px 30px;
               position: relative;
-              width: 15%;
+              width: 60px;
+              height: 60px;
             }
 
             >div {

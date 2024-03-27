@@ -1,7 +1,6 @@
 
 <script setup lang="ts">
-import Icon from "@/assets/Icon zocial-guest.svg";
-import editIcon from "@/assets/Icon awesome-edit.svg";
+import Icon_guest from "@/assets/Icon-guest.png";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
 import { showHttpsStatus, showErrorMsg } from "@/types/IMessage";
@@ -93,7 +92,7 @@ onMounted(() => {
       <tbody class="content-tab">
         <tr v-for="item in filterMemberListData" :key="item.userId">
           <td class="content-name">
-            <img v-if="!item.photo" class="img-name" :src="Icon" />
+            <img v-if="!item.photo" class="img-name" :src="Icon_guest" />
             <img v-if="item.photo" class="img-name" :src="item.photo" />
             <div>
               <p>{{ item.nameView }}</p>

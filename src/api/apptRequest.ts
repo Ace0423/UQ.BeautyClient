@@ -147,6 +147,9 @@ export const getPickUpListReq = (id: any, startDate: any, endDate: any, isList: 
 /**獲取匯出紀錄 */
 export const getExportListReq = (id: any, startDate: any, endDate: any, isList: any) =>
   getHttps(httpRequest, "/Order/ExportList?oid=" + id + "&startDate=" + startDate + "&endDate=" + endDate + "&isList=" + isList + "&pageIndex=" + 0 + "&count=" + 0);
+  /**獲取匯出紀錄 */
+  export const addPickUpNoticeReq = (data: any) =>
+  postHttps(httpRequest, "/Order/PickUpNotice", data);
 
 
 //-----------------------------------------排休

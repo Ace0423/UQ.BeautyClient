@@ -28,7 +28,7 @@
                     <div class="link-bottom"></div>
                     <div name="會員" class="info-user">
                         <div v-if="formInputRef.orderInfo.userInfo" class="info-guest">
-                            <img class="guest-img" :src="Icon" />
+                            <img class="guest-img" :src="Icon_guest" />
                             <div>
                                 <span>{{ formInputRef.orderInfo.userInfo.nameView }}</span>
                                 <span>{{ formInputRef.orderInfo.userInfo.phone }}</span>
@@ -168,6 +168,7 @@
 <script setup lang="ts">
 import closeIcon from "@/assets/Group32.svg";
 import Icon from "@/assets/Icon zocial-guest.svg";
+import Icon_guest from "@/assets/Icon-guest.png";
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
 import { useManagerStore } from "@/stores/manager";
@@ -248,7 +249,7 @@ function mathAllPercentFn(params: any) {
   
 <style scoped lang="scss">
 .popup-InfoOrderDetail {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     bottom: 0;

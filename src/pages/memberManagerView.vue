@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Icon_guest from "@/assets/Icon-guest.png";
 import Icon from "@/assets/Icon zocial-guest.svg";
 const props = defineProps<{
   memuState: any;

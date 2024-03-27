@@ -40,6 +40,7 @@ import {
   getNoticeCountReq,
   getExportListReq,
   getPickUpListReq,
+  addPickUpNoticeReq,
 } from "@/api/apptRequest";
 import {
   addGoodsBrandReq,
@@ -1026,6 +1027,20 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+
+  
+  /**新增通知 */
+  const addPickUpNoticeApi = async (data: any) => {
+    try {
+      let res = await addPickUpNoticeReq(data).then((res: any) => {
+        alertStateFn(res, "新增服務群組");
+        return res;
+      });
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //#endregion
 
   //#region 排休
@@ -1204,6 +1219,7 @@ export const useApptStore = defineStore("apptStore", () => {
     pickUpList,
     getExportListApi,
     exportList,
+    addPickUpNoticeApi,
     //-----------------休息日
     getDayOffApi,
     getRestApi,

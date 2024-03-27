@@ -35,11 +35,8 @@
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { useApptStore } from "@/stores/apptStore";
-import search_ico from "@/assets/images/icon_search.png";
-import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
 import icon_closeX from "@/assets/images/icon_closeX.png";
-import { RFC_2822 } from "moment";
-import icon_customer from "@/assets/images/icon_customer.png";
+import icon_customer from "@/assets/Icon-guest.png";
 
 let store = useApptStore();
 let { memberList } = storeToRefs(store);
@@ -302,8 +299,8 @@ function clickItem(item: any, id: number) {
                             align-items: center;
 
                             >img {
-                                width: 33px;
-                                height: 39px;
+                                width: 40px;
+                                height: 40px;
                             }
 
                             >div {

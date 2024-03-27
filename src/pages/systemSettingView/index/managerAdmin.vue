@@ -1,6 +1,6 @@
 
 <script setup lang="ts">
-import Icon from "@/assets/Icon zocial-guest.svg";
+import Icon_guest from "@/assets/Icon-guest.png";
 import editIcon from "@/assets/Icon awesome-edit.svg";
 import { storeToRefs } from "pinia";
 import Alert from "@/components/alertCmpt";
@@ -93,7 +93,7 @@ onMounted(() => {
                 <tbody class="content-tab">
                     <tr v-for="item in filterManagerListData" :key="item.managerId">
                         <td class="content-name">
-                            <img :src="Icon" />
+                            <img :src="Icon_guest" />
                             <p>{{ item.nameView }}</p>
                         </td>
                         <td>
@@ -248,6 +248,10 @@ onMounted(() => {
                         box-sizing: border-box;
                         display: flex;
                         padding-left: 5PX;
+                        >img{
+                            width: 40px;
+                            height: 40px;
+                        }
 
                         >P {
                             padding-left: 5PX;

@@ -101,6 +101,20 @@ const companyInfo = () => {
 onMounted(() => {
     companyInfo();
 })
+const openPage = (str: string) => {
+    switch (str) {
+        case 'teach':
+        window.open('https://pay.line.me/portal/tw/main')
+            break;
+        case 'manager':
+        window.open('https://pay.line.me/portal/tw/auth/login')
+            break;
+        default:
+            break;
+    }
+  
+
+}
 </script>
 <template>
     <div class="info-content">
@@ -116,16 +130,16 @@ onMounted(() => {
             <div class="teach-content">
                 <div>
                     <h3>LINE Pay 串接教學</h3>
-                    <p>你已有LINE Pay 並響啟用串接嗎?請前往教學範本了解如何設定。</p>
+                    <p>你已有LINE Pay 並想啟用串接嗎?請前往教學範本了解如何設定。</p>
                 </div>
-                <button>前往教學範本</button>
+                <button @click="openPage('teach')">前往教學範本</button>
             </div>
             <div class="back-content">
                 <div>
                     <h3>LINE Pay 後台</h3>
                     <p>請至 LINE Pay 後台登入您的「線下付款」帳號，並完成以下兩個步驟。</p>
                 </div>
-                <button>前往LINE Pay後台</button>
+                <button @click="openPage('manager')">前往LINE Pay後台</button>
             </div>
             <div class="hint-content">
                 <div class="i-icon">i</div>

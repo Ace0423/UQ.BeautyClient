@@ -163,6 +163,7 @@ let formInputRef: any = ref({
 onBefore();
 function onBefore() {
   formInputRef.value.selDate = getNowDay();
+  formInputRef.value.timeBooking = getNowTime();
 }
 onMounted(() => {
   // console.log('onMounted');
@@ -174,6 +175,13 @@ function getNowDay() {
   let month = formatZeroDate(datetime.getMonth() + 1);
   let date = formatZeroDate(datetime.getDate());
   return `${year}-${month}-${date}`;
+}
+function getNowTime() {
+  let datetime = new Date();
+  let hours = formatZeroDate(datetime.getHours());
+  let minutes = formatZeroDate(datetime.getMinutes() );
+  let seconds = formatZeroDate(datetime.getSeconds());
+  return `${hours}:${minutes}`;
 }
 
 function showMemberUIFn(state: boolean) {

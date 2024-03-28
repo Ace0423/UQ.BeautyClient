@@ -258,7 +258,8 @@ const verify_all = () => {
 
         .error-msg {
           display: grid;
-          .el-select{
+
+          .el-select {
             width: 181px;
           }
         }
@@ -495,6 +496,8 @@ const verify_all = () => {
         font-weight: bold;
         color: #717171;
         background-color: #fff;
+        border: solid 2px #717171;
+        box-sizing: border-box;
       }
     }
   }

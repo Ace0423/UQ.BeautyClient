@@ -489,7 +489,7 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 60px;
+            width: 70px;
             height: 35px;
             border: solid 1px #707070;
             border-radius: 6px;

@@ -220,7 +220,7 @@ function submitBtn() {
       // time: element.servicesTime,
       timer: element.subList.length > 0 ? element.subList[0].servicesTime : element.servicesTime,
       subId: element.subList.length > 0 ? element.subList[0].subId : 0,
-      customerCount:formInputRef.value.customerCount,
+      customerCount: formInputRef.value.customerCount,
     });
   }
 
@@ -691,6 +691,8 @@ let { ruleItem } = toRefs(ruleLists);
             font-weight: bold;
             color: #717171;
             background-color: #fff;
+            border: solid 2px #717171;
+            box-sizing: border-box;
           }
         }
       }

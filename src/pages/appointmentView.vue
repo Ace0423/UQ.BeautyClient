@@ -425,6 +425,8 @@ function setRestTimeFn(data: any) {
 /**取未讀訊息數量 */
 function updateNoticeCount() {
   getNoticeCountApi().then((res) => {
+    console.log(res.unReadCount);
+    
     if (res)
       newApptDataRef.value.noticeCount = res.unReadCount;
   });
@@ -496,7 +498,7 @@ const showApptInfoHdr = (state: boolean) => {
 };
 function showNoticeFn(state: boolean) {
   showNoticeRef.value = state;
-  if (!state) updateNoticeCount();
+  updateNoticeCount();
 }
 //改變預約狀態
 let changeStutusFn = (state: number, item: any) => {

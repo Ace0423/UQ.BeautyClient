@@ -14,6 +14,12 @@ export const showErrorMsg = (status: string): string => {
     case "DE04":
       message = "失敗的請求";
       break;
+    case "DE05":
+      message = "不可重複插入資料";
+      break;
+    case "DE06":
+      message = "查無會員資料";
+      break;
     case "UB01":
       message = "沖銷金額後，不可小於0";
       break;
@@ -61,6 +67,9 @@ export const showErrorMsg = (status: string): string => {
       break;
     case "LI01":
       message = "帳號密碼錯誤";
+      break;
+    case "OD01":
+      message = "此會員不是Line會員";
       break;
     default:
       message = status;

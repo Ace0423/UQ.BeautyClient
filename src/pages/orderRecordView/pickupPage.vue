@@ -147,8 +147,10 @@ function selectDataFn(params: any) {
 }
 
 function noticeFn(item: any) {
+  console.log(item);
+  
   let apiData = {
-    userId: 317,
+    userId: item.memberInfo.userId,
     noticeTime: new Date(),
     productName: item.productName
   };

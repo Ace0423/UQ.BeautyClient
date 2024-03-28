@@ -41,6 +41,7 @@ import {
   getExportListReq,
   getPickUpListReq,
   addPickUpNoticeReq,
+  updatePickUpStateReq,
 } from "@/api/apptRequest";
 import {
   addGoodsBrandReq,
@@ -1041,6 +1042,19 @@ export const useApptStore = defineStore("apptStore", () => {
       console.log(error);
     }
   };
+  
+  /**更新取貨狀態 */
+  const updatePickUpStateApi = async (data: any) => {
+    try {
+      let res = await updatePickUpStateReq(data).then((res: any) => {
+        alertStateFn(res, "更新通知讀取狀態");
+        return res;
+      });
+      // return res.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   //#endregion
 
   //#region 排休
@@ -1220,6 +1234,7 @@ export const useApptStore = defineStore("apptStore", () => {
     getExportListApi,
     exportList,
     addPickUpNoticeApi,
+    updatePickUpStateApi,
     //-----------------休息日
     getDayOffApi,
     getRestApi,

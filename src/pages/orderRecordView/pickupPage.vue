@@ -40,11 +40,12 @@
           </el-table-column>
           <el-table-column prop="productName" label="商品" min-width="20%" sortable />
           <el-table-column prop="memberInfo.name" label="顧客" min-width="30%" sortable />
-          <el-table-column prop="isPickUp" label="狀態" min-width="10%" sortable>
+          <el-table-column label="已取貨" min-width="10%">
             <template #default="scope">
-              <div class="handle-price">
-                <span v-if="scope.row.isPickUp">已取貨</span>
-                <span v-else>未取貨</span>
+              <div class="handle-state">
+                <div class="checkbox_state">
+                  <input type="checkbox" :checked="scope.row.isPickUp" @click="updatePickUpState(scope.row)" />
+                </div>
               </div>
             </template>
           </el-table-column>
@@ -57,7 +58,7 @@
           </el-table-column>
           <el-table-column label="" min-width="10%">
             <template #default="scope">
-              <div class="handle-drag" @click="selectDataFn(scope.row)">
+              <div class="handle-pickup" @click="selectDataFn(scope.row)">
                 <!-- <img class="edit_img" :src="icon_right_arrow" /> -->
                 <button @click="noticeFn(scope.row)">通知</button>
               </div>
@@ -90,6 +91,7 @@ let { pickUpList } =
 let {
   getPickUpListApi,
   addPickUpNoticeApi,
+  updatePickUpStateApi,
 } = store;
 
 let showOrderInfoRef: any = ref(false);
@@ -129,6 +131,14 @@ watchEffect(() => {
 
 });
 
+function getPickUpListFn(id: number = 0) {
+  let start: Date = formInputRef.value.datePicker[0]
+  let end: Date = formInputRef.value.datePicker[1]
+  let startDate: string = start.getFullYear() + "-" + (start.getMonth() + 1) + "-" + formatZeroDate(start.getDate());
+  let endDate: string = end.getFullYear() + "-" + (end.getMonth() + 1) + "-" + formatZeroDate(end.getDate());
+  getPickUpListApi(0, startDate, endDate);
+}
+
 
 function selectDataFn(params: any) {
   console.log("通知會員");
@@ -136,16 +146,23 @@ function selectDataFn(params: any) {
   // showOrderInfoFn(true);
 }
 
-function noticeFn(item:any) {
-  console.log(item);
-  
+function noticeFn(item: any) {
   let apiData = {
     userId: 317,
-    noticeTime:new Date(),
-    productName:item.productName
+    noticeTime: new Date(),
+    productName: item.productName
   };
   addPickUpNoticeApi(apiData).then((res) => {
-    console.log(res);
+    getPickUpListFn();
+  })
+}
+function updatePickUpState(item: any) {
+  let apiData = {
+    Id: item.id,
+    state: !item.isPickUp
+  };
+  updatePickUpStateApi(apiData).then((res) => {
+    getPickUpListFn();
   })
 }
 let selItem: any = [];
@@ -456,6 +473,96 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
           >span {
             width: 100%;
             margin-left: 2px;
+          }
+        }
+
+        .handle-pickup {
+          >button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 60px;
+            height: 35px;
+            border: solid 1px #707070;
+            border-radius: 6px;
+          }
+        }
+
+        .handle-state {
+          display: flex;
+          justify-content: center;
+
+          .checkbox_state {
+            [type="checkbox"] {
+              width: 2rem;
+              height: 2rem;
+              color: #84715c;
+              vertical-align: middle;
+              align-items: center;
+              -webkit-appearance: none;
+              background: none;
+              border: 0;
+              outline: 0;
+              flex-grow: 0;
+              border-radius: 50%;
+              background-color: #ffffff;
+              transition: background 300ms;
+              cursor: pointer;
+            }
+
+            /* Pseudo element for check styling */
+
+            [type="checkbox"]::before {
+              content: "";
+              color: transparent;
+              display: block;
+              width: inherit;
+              height: inherit;
+              border-radius: inherit;
+              border: 0;
+              background-color: transparent;
+              background-size: contain;
+              box-shadow: inset 0 0 0 1px #ccd3d8;
+            }
+
+            /* Checked */
+
+            [type="checkbox"]:checked {
+              background-color: currentcolor;
+            }
+
+            [type="checkbox"]:checked::before {
+              box-shadow: none;
+              background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+            }
+
+            /* Disabled */
+
+            [type="checkbox"]:disabled {
+              background-color: #ccd3d8;
+              opacity: 0.84;
+              cursor: not-allowed;
+            }
+
+            /* IE */
+
+            [type="checkbox"]::-ms-check {
+              content: "";
+              color: transparent;
+              display: block;
+              width: inherit;
+              height: inherit;
+              border-radius: inherit;
+              border: 0;
+              background-color: transparent;
+              background-size: contain;
+              box-shadow: inset 0 0 0 1px #ccd3d8;
+            }
+
+            [type="checkbox"]:checked::-ms-check {
+              box-shadow: none;
+              background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E %3Cpath d='M15.88 8.29L10 14.17l-1.88-1.88a.996.996 0 1 0-1.41 1.41l2.59 2.59c.39.39 1.02.39 1.41 0L17.3 9.7a.996.996 0 0 0 0-1.41c-.39-.39-1.03-.39-1.42 0z' fill='%23fff'/%3E %3C/svg%3E");
+            }
           }
         }
       }

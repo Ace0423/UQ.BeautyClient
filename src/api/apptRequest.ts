@@ -150,6 +150,9 @@ export const getExportListReq = (id: any, startDate: any, endDate: any, isList: 
   /**獲取匯出紀錄 */
   export const addPickUpNoticeReq = (data: any) =>
   postHttps(httpRequest, "/Order/PickUpNotice", data);
+  /**更新明細 */
+  export const updatePickUpStateReq = (data: any) =>
+  putHttps(httpRequest, "/Order/UpdatePickUpState?Id=" + data.Id, data);
 
 
 //-----------------------------------------排休

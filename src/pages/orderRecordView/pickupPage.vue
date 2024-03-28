@@ -134,7 +134,14 @@ watchEffect(() => {
 function getPickUpListFn(id: number = 0) {
   let start: Date = formInputRef.value.datePicker[0];
   let end: Date = formInputRef.value.datePicker[1];
+console.log();
+if(start.toString().indexOf("-")==-1){
+  let startDate: string = start.getFullYear() + "-" + (start.getMonth() + 1) + "-" + formatZeroDate(start.getDate());
+  let endDate: string = end.getFullYear() + "-" + (end.getMonth() + 1) + "-" + formatZeroDate(end.getDate());
+  getPickUpListApi(0, startDate, endDate);
+}else{
   getPickUpListApi(0, start, end);
+}
 }
 
 

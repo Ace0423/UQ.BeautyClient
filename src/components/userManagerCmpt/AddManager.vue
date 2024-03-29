@@ -224,9 +224,13 @@ const handSubmit = () => {
     newManager.email = state.form_items.email.value;
     newManager.phone = state.form_items.cellphone.value;
     newManager.roleList.push(roleActive.value);
+    if( newManager.roleList[0].length<1){
+        Alert.sussess('權限未選', 2000);
+        return
+    }
     if (props.selectManagerItem) {
         newManager.managerId = props.selectManagerItem.managerId;
-        newManager.password = "";
+        newManager.password = "";        
         editManagerData(newManager)
             .then((res) => {
                 if (res.state == 1) {

@@ -499,7 +499,7 @@ onMounted(() => {
                         <p>服務</p>
                     </div>
                     <div class="sale-info">
-                        <img style="background-color: #dadce0" />
+                        <img style="background-color: #d1687f" />
                         <p>商品</p>
                     </div>
                     <div>
@@ -518,11 +518,11 @@ onMounted(() => {
                         <p>男性{{ maleTotal }}({{ malePct }})</p>
                     </div>
                     <div class="sale-info">
-                        <img style="background-color: #dadce0" />
+                        <img style="background-color: #d1687f" />
                         <p>女性{{ femaleTotal }}({{ femalePct }})</p>
                     </div>
                     <div class="sale-info">
-                        <img style="background-color: #d1687f" />
+                        <img style="background-color: #dadce0" />
                         <p>不透漏{{ personalTotal }}({{ personalPct }})</p>
                     </div>
                     <div>

@@ -84,7 +84,7 @@ export const showHttpsStatus = (status: number | string): string => {
       message = "請求錯誤(400)";
       break;
     case 401:
-      message = "密鑰過期(401)，請重新登入";
+      message = "連線超時，請重新登入！";
       break;
     case 403:
       message = "未授權拒绝访问(403)";

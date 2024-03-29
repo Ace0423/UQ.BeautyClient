@@ -229,6 +229,7 @@ const emits = defineEmits<{
 }>();
 
 onMounted(() => {
+    console.log(props.mFilter);
     if (props.mFilter.msfId != 0 || props.mFilter.mId != 0) {
         selectItem.msfId = props.mFilter.msfId;
         selectItem.mId = props.mFilter.mId;

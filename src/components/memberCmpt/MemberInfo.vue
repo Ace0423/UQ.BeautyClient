@@ -82,7 +82,6 @@ const getmemberInfoApi = () => {
     count: 0
   };
   switch (currentIndex.value) {
-
     case 0:
       getExpenseInfo(data)
         .then((res: any) => {
@@ -90,7 +89,8 @@ const getmemberInfoApi = () => {
             memberExpenseInfo.averageAmount = res.data.data.table.averageAmount
             memberExpenseInfo.bookingAmount = res.data.data.table.bookingAmount
             memberExpenseInfo.bookingCount = res.data.data.table.bookingCount
-            memberExpenseInfo.lastBookingTime = new Date(res.data.data.table.lastBookingTime).toISOString().split('T')[0]
+            // memberExpenseInfo.lastBookingTime = new Date(res.data.data.table.lastBookingTime).toISOString().split('T')[0]
+            memberExpenseInfo.lastBookingTime = res.data.data.table.lastBookingTime
           } else if (res.data.state == 2) {
             // Alert.warning(showErrorMsg(res.data.msg), 2000);
           }
@@ -213,6 +213,7 @@ onMounted(() => {
               <h4>來源</h4>
               <p3 v-if="props.selectMemberItem.fromWhere == 0">現場</p3>
               <p3 v-if="props.selectMemberItem.fromWhere == 1">網路</p3>
+              <p3 v-if="props.selectMemberItem.fromWhere == 2">LINE</p3>
               <h4>加入時間</h4>
               <p3>{{ props.selectMemberItem.dateCreate }}</p3>
             </div>
@@ -226,10 +227,10 @@ onMounted(() => {
             <nobr>消費表現</nobr>
           </button>
           <button :class="currentIndex == 1 ? 'active' : ''" v-on:click="changeTab(1)">
-            <nobr>消費紀錄</nobr>
+            <nobr>預約記錄</nobr>
           </button>
           <button :class="currentIndex == 2 ? 'active' : ''" v-on:click="changeTab(2)">
-            <nobr>紀錄訂單</nobr>
+            <nobr>結帳記錄</nobr>
           </button>
           <button :class="currentIndex == 3 ? 'active' : ''" v-on:click="changeTab(3)">
             <nobr>儲值卡</nobr>

@@ -31,7 +31,7 @@ const messageData: any = reactive({
   mImage: "",
   mButtonText: "",
   mUrl: "",
-  mTarget: "",
+  mTarget: 0,
   mSendTimer: "",
   mSendTimeing: "",
   mSendDateD: "",
@@ -41,6 +41,25 @@ const messageData: any = reactive({
   mEnabled: true,
   mEnabledLine: false,
   mEnabledMessage: false,
+  mFilter: {
+    msfId: 0,
+    mId: 0,
+    msfSex: "",
+    msfRegister: "",
+    msfAvgPriceA: 0.0,
+    msfAvgPriceB: 0.0,
+    msfTolPriceA: 0.0,
+    msfTolPriceB: 0.0,
+    msfBirthday: "",
+    msfLabel: "",
+    msfConsumer: 0,
+    msfUnConsumer: 0,
+    msfConCycleA: 0,
+    msfConCycleB: 0,
+    msfStaff: "",
+    msfMember: "",
+    msfOther: ""
+  }
 });
 const mTarget: any = [
   {
@@ -561,6 +580,7 @@ onMounted(() => {
   }
   messageData.mAuto = props.selectMessageItem.auto;
   messageData.mType = props.selectMessageItem.type;
+  messageData.mTarget = props.selectMessageItem.auto == 1 ? 0 : 1;
 });
 const handSubmit = () => {
   switch (messageData.mSendTimer) {
@@ -652,7 +672,7 @@ const handCancelTicketBtn = () => {
               <p>關閉橫將不再自動執行訊息發送，可以隨時關閉或啟用</p>
             </div>
           </div>
-          <div class="coupon">
+          <!-- <div class="coupon">
             <div>
               <h3>附加優惠劵</h3>
               <p>你可以選擇附加優惠劵作為行銷用送給顧客</p>
@@ -664,7 +684,7 @@ const handCancelTicketBtn = () => {
               <p>{{ mMapCouponCards[0].ccTitle }}</p>
               <img :src="icon_closeX" v-on:click="handCancelTicketBtn()" />
             </div>
-          </div>
+          </div> -->
           <div class="auto">
             <h2 v-if="props.selectMessageItem.auto == 0">
               開始建立您的簡訊訊息
@@ -973,7 +993,7 @@ const handCancelTicketBtn = () => {
               <p>關閉橫將不再自動執行訊息發送，可以隨時關閉或啟用</p>
             </div>
           </div>
-          <div class="coupon">
+          <!-- <div class="coupon">
             <div>
               <h3>附加優惠劵</h3>
               <p>你可以選擇附加優惠劵作為行銷用送給顧客</p>
@@ -985,7 +1005,7 @@ const handCancelTicketBtn = () => {
               <p>{{ mMapCouponCards[0].ccTitle }}</p>
               <img :src="icon_closeX" v-on:click="handCancelTicketBtn()" />
             </div>
-          </div>
+          </div> -->
           <div class="auto">
             <h2 v-if="props.selectMessageItem.auto == 0">
               開始建立您的LINE訊息主題

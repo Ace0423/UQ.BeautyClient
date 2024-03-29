@@ -5,7 +5,6 @@ const aaa = ref();
 onMounted(() => {
 })
 const openPage = ()=>{
-    console.log(111)
     window.open('https://manager.line.biz/')
 }
 </script>

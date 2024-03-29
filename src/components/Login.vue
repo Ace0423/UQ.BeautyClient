@@ -36,9 +36,11 @@ const loginFn = () => {
 };
 const forgePasswordFn = () => {
   sendPasswordEmail(forgePassword_Email).then((res: any) => {
-    console.log(res)
     if (res.state == 1) {
       Alert.warning('已發送Email到信箱', 2000);
+      setTimeout(() => {
+        handForgePasswordBtn();
+            }, 2000);
     }
     if (res.state == 2) {
       Alert.warning(showErrorMsg(res.msg), 2000);

@@ -13,7 +13,7 @@
       <div class="content-topBar">
         <p>訂單(全部{{ filterOrderData.length }}個)</p>
         <div>
-          <input v-model="search" class="search-control" placeholder="搜尋編號、顧客" />
+          <input v-model="search" class="search-control" placeholder="搜尋編號、發票" />
         </div>
       </div>
       <div class="content-main">
@@ -105,7 +105,7 @@ function getOrderFn(data: any) {
   return (
     !search.value ||
     data.coNo.toLowerCase().includes(search.value.toLowerCase()) ||
-    data.memberInfo.name.toLowerCase().includes(search.value.toLowerCase())
+    data.rNo.toLowerCase().includes(search.value.toLowerCase())
   );
 }
 

@@ -11,13 +11,13 @@
     </div>
     <div class="content">
       <div class="content-topBar">
-        <p>訂單(全部{{ filterOrderData.length }}個)</p>
+        <p>訂單(全部{{ filterPickUpData.length }}個)</p>
         <div>
           <input v-model="search" class="search-control" placeholder="搜尋編號、顧客" />
         </div>
       </div>
       <div class="content-main">
-        <el-table :data="filterOrderData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
+        <el-table :data="filterPickUpData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
           :header-cell-style="headerRowStyle">
           <el-table-column prop="coNo" label="訂單" min-width="30%" :sort-by="['name']" sortable>
             <template #default="scope">
@@ -103,10 +103,10 @@ let formInputRef: any = ref({
 });
 
 let search = ref("");
-let filterOrderData: any = computed(() =>
-  pickUpList.value.filter(getOrderFn)
+let filterPickUpData: any = computed(() =>
+  pickUpList.value.filter(getPickUpFn)
 );
-function getOrderFn(data: any) {
+function getPickUpFn(data: any) {
   return (
     !search.value ||
     data.coNo.toLowerCase().includes(search.value.toLowerCase()) ||

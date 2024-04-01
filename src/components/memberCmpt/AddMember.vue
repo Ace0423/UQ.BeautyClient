@@ -14,7 +14,16 @@ const alertInformation = reactive({
   timerVal: 0, //時間計時器
 });
 const title = ref("新增會員");
-
+const memberState = ref([
+  {
+    value: 0,
+    label: '正常',
+  },
+  {
+    value: 1,
+    label: '黑名單',
+  }
+]);
 const newMember: any = reactive({
   userId: 0,
   email: "",
@@ -28,6 +37,7 @@ const newMember: any = reactive({
   memo: "",
   FromWhere: 0,
   groupList: [],
+  userLock: 0
 });
 
 const props = defineProps<{
@@ -210,6 +220,7 @@ const handSubmit = () => {
   newMember.phone = state.form_items.cellphone.value;
   newMember.birthday = newMember.birthday.split("T")[0];
   if (props.selectMemberItem) {
+    console.log(newMember);
     newMember.nameView = newMember.nameFirst;
     editMemberData(newMember)
       .then((res) => {
@@ -258,6 +269,7 @@ onMounted(() => {
     newMember.poto = props.selectMemberItem.poto;
     newMember.memo = props.selectMemberItem.memo;
     newMember.groupList = props.selectMemberItem.groupList;
+    newMember.userLock = props.selectMemberItem.userLock;
     title.value = "修改會員";
   }
 });
@@ -291,20 +303,6 @@ onMounted(() => {
             style="width: 100%" size="large">
             <el-option v-for="item in groupListData.data" :key="item.groupId" :label="item.label" :value="item" />
           </el-select>
-          <!-- <multiselect
-            v-model="newMember.groupList"
-            :options="groupListData.data"
-            :multiple="true"
-            :close-on-select="false"
-            :clear-on-select="false"
-            :preserve-search="true"
-            placeholder=""
-            label="label"
-            track-by="groupId"
-            :preselect-first="false"
-            :maxHeight="200"
-          >
-          </multiselect> -->
         </div>
       </div>
       <div>
@@ -325,6 +323,15 @@ onMounted(() => {
         <div>
           <input type="email" v-model="form_items.email.value" />
           <p v-if="form_items.email.is_error">{{ form_items.email.warn }}</p>
+        </div>
+      </div>
+      <div>
+        <span>狀態</span>
+        <div style="height: 30px;">
+          <select v-model="newMember.userLock">
+            <option disabled value="">請選擇</option>
+            <option v-for="item in memberState" :key="item.value" :value="item.value">{{ item.label }}</option>
+          </select>
         </div>
       </div>
       <div>
@@ -388,6 +395,14 @@ onMounted(() => {
         flex: 1;
 
         >input {
+          max-width: 200px;
+          height: 30px;
+          // text-align: center;
+          border-radius: 6px;
+          border: solid 1px #707070;
+        }
+
+        >select {
           max-width: 200px;
           height: 30px;
           // text-align: center;

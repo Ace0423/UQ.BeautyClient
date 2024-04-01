@@ -19,7 +19,7 @@ import { useMemberStore } from "@/stores/member";
 import { useBookingStore } from "@/stores/booking";
 import { useOrderStore } from "@/stores/order";
 const memberStore = useMemberStore();
-const { getExpenseInfo } = memberStore;
+const { getExpenseInfo, editMemberData } = memberStore;
 const bookingStore = useBookingStore();
 const { getBookingByUId } = bookingStore;
 const orderStore = useOrderStore();
@@ -165,7 +165,20 @@ const parseDate = ((time: any) => {
 onMounted(() => {
   getmemberInfoApi();
 });
-
+const handLockMember = (() => {
+  props.selectMemberItem.userLock = 1;
+  editMemberData(props.selectMemberItem)
+    .then((res) => {
+      if (res.state == 1) {
+        Alert.warning("修改成功", 1500);
+      } else {
+        Alert.warning(showErrorMsg(res.msg), 2000);
+      }
+    })
+    .catch((e: any) => {
+      Alert.warning(showErrorMsg(e.msg), 2000);
+    });
+})
 </script>
 
 <template>
@@ -180,7 +193,15 @@ onMounted(() => {
           <div class="info-simple">
             <img class="head-photo" v-if="!props.selectMemberItem.photo" :src="Icon" />
             <img class="head-photo" v-if="props.selectMemberItem.photo" :src="props.selectMemberItem.photo" />
-            <img class="edit-btn" :src="editIcon" v-on:click="handAddMemberView()" />
+            <el-dropdown class="edit-btn" trigger="click" placement="bottom-end">
+              <img :src="editIcon" />
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item v-on:click="handAddMemberView()">編輯顧客</el-dropdown-item>
+                  <el-dropdown-item v-on:click="handLockMember()">加入黑名單</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
             <h1>{{ props.selectMemberItem.nameView }}</h1>
             <p>{{ props.selectMemberItem.phone }}</p>
             <div class="group-lab">

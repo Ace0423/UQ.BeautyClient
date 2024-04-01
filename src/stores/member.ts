@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { apiGetMemberListRequest, apiPostMemberDataRequest, apiPostUpdateMemberDataRequest, apiGetGroupDataRequest, apiPostGroupDataRequest, apiPutGroupDataRequest, apiGetGroupInfoRequest, apiPostGroupInfoRequest, apiDeleteGroupInfoRequest, apiGetMemberExpenseInfoRequest,apiDeleteGroupDataRequest } from "@/api/index";
+import { apiGetMemberListRequest, apiPostMemberDataRequest, apiPostUpdateMemberDataRequest, apiGetGroupDataRequest, apiPostGroupDataRequest, apiPutGroupDataRequest, apiGetGroupInfoRequest, apiPostGroupInfoRequest, apiDeleteGroupInfoRequest, apiGetMemberExpenseInfoRequest, apiDeleteGroupDataRequest } from "@/api/index";
 export const useMemberStore = defineStore("member", () => {
     const memberList: any = reactive({ data: [] });
     const groupListData: any = reactive({ data: [] });
@@ -67,6 +67,7 @@ export const useMemberStore = defineStore("member", () => {
             sex: data.sex,
             poto: data.poto,
             memo: data.memo,
+            userLock: data.userLock,
             groupList: []
         }
 
@@ -104,6 +105,7 @@ export const useMemberStore = defineStore("member", () => {
                     item.poto = data.poto;
                     item.memo = data.memo;
                     item.groupList = data.groupList;
+                    item.userLock = data.userLock;
                 }
             })
         } else {

@@ -41,3 +41,8 @@ export const getMemberExpenseInfoRequest = (data: any) => {
   memberRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
   return memberRequest.get("/Member/ExpenseInfo", { params: data });
 }
+export const deleteGroupDataRequest = (data: any) => {
+  let token: any = getToken('token');
+  memberRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
+  return memberRequest.delete("/member/Group/" + data.groupId, data.groupId);
+}

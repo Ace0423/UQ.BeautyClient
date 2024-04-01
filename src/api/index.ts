@@ -1,5 +1,5 @@
 import { postLoginRequest, getUserNameRequest,postSendPasswordEmailRequest,postResetPasswordRequest } from "./authRequest";
-import { getMemberListRequest, postMemberDataRequest, postUpdateMemberDataRequest, getGroupDataRequest, putGroupDataRequest, postGroupDataRequest, getGroupInfoRequest, postGroupInfoRequest, deleteGroupInfoRequest, getMemberExpenseInfoRequest } from "./memberRequest";
+import { getMemberListRequest, postMemberDataRequest, postUpdateMemberDataRequest, getGroupDataRequest, putGroupDataRequest, postGroupDataRequest, getGroupInfoRequest, postGroupInfoRequest, deleteGroupInfoRequest, getMemberExpenseInfoRequest,deleteGroupDataRequest } from "./memberRequest";
 import { getMemberBankListRequest, postMemberBankRequest, getMemberBankInfoListRequest, getMemberBankDetailRequest, putMemberBankInfoRequest } from "./memberBankRequest";
 import { getAdminListRequest, postAdminDataRequest, putAdminDataRequest, getRoleListRequest, postRoleDataRequest, putRoleDataRequest, getRoleInfoRequest, postRoleManagerDataRequest, deleteRoleManagerRequest, getWorkingHoursRequest, postWorkingHoursRequest, getWorkingDefaultRequest, postWorkingDefaultRequest, putWorkingDefaultRequest } from "./managerRequest";
 import { getPermissionsListRequest, putOptionRoleRequest, getApiPermissionsListRequest, postApiPermissionsListRequest, updateApiPermissionsListRequest } from "./settingRequest";
@@ -9,12 +9,12 @@ import { getOnlineBusinessHours, postOnlineBusinessHours, getOnlinePayMeth, post
 import { getTotalSalesByTodayRequest, getTotalBookingByWeekRequest, getManagerSalesByTodayRequest, getVisitorCountByTodayRequest, getServiceProportionByTodayRequest, getProductProportionByTodayRequest, getTotalTopUpByTodayRequest, getTotalPayTypeByTodayRequest, getTotalSalesRequest, getManagerSalesRequest, getTotalBookingRequest, getAverageOrderRequest, getVisitorCountRequest, getVisitorHoursRequest, getServiceProportionRequest } from "./reportRequest";
 import { getBookingByUIdRequest } from "./bookingRequest";
 import { getOrderByUIdRequest } from "./orederRequest";
-
+//驗證
 export const apiPostLoginRequest = postLoginRequest;
 export const apiGetUserNameRequest = getUserNameRequest;
 export const apiPostSendPasswordEmailRequest = postSendPasswordEmailRequest;
 export const apiPostResetPasswordRequest = postResetPasswordRequest;
-
+//用戶
 export const apiGetMemberListRequest = getMemberListRequest;
 export const apiPostMemberDataRequest = postMemberDataRequest;
 export const apiPostUpdateMemberDataRequest = postUpdateMemberDataRequest;
@@ -25,7 +25,7 @@ export const apiGetGroupInfoRequest = getGroupInfoRequest;
 export const apiPostGroupInfoRequest = postGroupInfoRequest;
 export const apiDeleteGroupInfoRequest = deleteGroupInfoRequest;
 export const apiGetMemberExpenseInfoRequest = getMemberExpenseInfoRequest;
-
+export const apiDeleteGroupDataRequest = deleteGroupDataRequest;
 
 export const apiGetMemberBankListRequest = getMemberBankListRequest;
 export const apiPostMemberBankRequest = postMemberBankRequest;

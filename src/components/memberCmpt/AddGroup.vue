@@ -4,7 +4,7 @@ import { showErrorMsg, showHttpsStatus } from "@/types/IMessage";
 import { validateRequired } from "@/utils/utils";
 import { useForm, Form, Field, ErrorMessage, defineRule } from 'vee-validate';
 const memberStore = useMemberStore();
-const { createGroupData, editGroupData } = memberStore;
+const { createGroupData, editGroupData ,deleteGroupData} = memberStore;
 const alertState = ref(false);
 const subBut = ref(false)
 const alertInformation = reactive({
@@ -12,7 +12,8 @@ const alertInformation = reactive({
     buttonState: 0,  //按鈕顯示狀態 0:全部 1:只顯示確定按鈕 2:不顯示按鈕 
     timerVal: 0      //時間計時器
 })
-const title = ref('新增標籤');
+// const title = ref('新增標籤');
+const gType = ref('add');
 const newGroup = reactive({
     groupId: 0,
     label: '',
@@ -33,7 +34,7 @@ const handAlertView = (msg: string, btnState: number, timer: number) => {
 const handSubmit = () => {
     subBut.value = !subBut.value;
     if (props.selectGroupItem) {
-        editGroupData(newGroup).then((res) => {
+        editGroupData(newGroup).then((res:any) => {
             subBut.value = !subBut.value;
             if (res.state == 1) {
                 handAlertView("修改成功", 2, 1);
@@ -71,10 +72,26 @@ const handSubmit = () => {
             });
     }
 }
-
+const handDelete = () => {
+    deleteGroupData(newGroup).then((res:any) => {
+        subBut.value = !subBut.value;
+        if (res.state == 1) {
+            handAlertView("刪除成功", 2, 1);
+            setTimeout(() => {
+                props.handAddGroupView();
+            }, 1000)
+        } else {
+            handAlertView(showErrorMsg(res.msg), 2, 1);
+        }
+    })
+        .catch((e: any) => {
+            subBut.value = !subBut.value;
+            handAlertView(showHttpsStatus(e.response.status), 2, 1);
+        });
+}
 onMounted(() => {
     if (props.selectGroupItem) {
-        title.value = '修改標籤';
+        gType.value = 'edit';
         newGroup.groupId = props.selectGroupItem.groupId;
         newGroup.label = props.selectGroupItem.label;
         newGroup.memo = props.selectGroupItem.memo;
@@ -85,7 +102,8 @@ onMounted(() => {
 <template>
     <div class="popup-mask" v-on:click.self="handAddGroupView()">
         <div class="popup-content">
-            <h1>{{ title }}</h1>
+            <h1 v-if="gType == 'add'">新增標籤</h1>
+            <h1 v-if="gType == 'edit'">修改標籤</h1>
             <div class="group-inputbox">
                 <p>標籤</p>
                 <input v-model="newGroup.label" />
@@ -95,7 +113,8 @@ onMounted(() => {
                 <textarea v-model="newGroup.memo"></textarea>
             </div>
             <div class="submi-btn">
-                <button type="submit" v-on:click="handSubmit()" :disabled="subBut">確認</button>
+                <button v-if="gType == 'edit'" type="submit" v-on:click="handDelete()" :disabled="subBut">刪除標籤</button>
+                <button type="submit" v-on:click="handSubmit()" :disabled="subBut">儲存變更</button>
             </div>
         </div>
     </div>
@@ -196,6 +215,8 @@ onMounted(() => {
         }
 
         >.submi-btn {
+            display: flex;
+            justify-content: space-around;
             margin: 10px;
 
             >button {

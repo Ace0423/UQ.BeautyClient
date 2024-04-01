@@ -67,7 +67,7 @@ const alertSumitBtn = (val: IBackStatus) => {
   switch (alertInformation.selfType) {
     case "deleteMemberGroup":
       if (val.btnStatus) {
-        deleteGroupInfoData(alertInformation.selfData).then((res) => {
+        deleteGroupInfoData(alertInformation.selfData).then((res:any) => {
           if (res == 1) {
             handAlertView("刪除成功", 2, 1);
           } else {

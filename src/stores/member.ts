@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { apiGetMemberListRequest, apiPostMemberDataRequest, apiPostUpdateMemberDataRequest, apiGetGroupDataRequest, apiPostGroupDataRequest, apiPutGroupDataRequest, apiGetGroupInfoRequest, apiPostGroupInfoRequest, apiDeleteGroupInfoRequest, apiGetMemberExpenseInfoRequest } from "@/api/index";
+import { apiGetMemberListRequest, apiPostMemberDataRequest, apiPostUpdateMemberDataRequest, apiGetGroupDataRequest, apiPostGroupDataRequest, apiPutGroupDataRequest, apiGetGroupInfoRequest, apiPostGroupInfoRequest, apiDeleteGroupInfoRequest, apiGetMemberExpenseInfoRequest,apiDeleteGroupDataRequest } from "@/api/index";
 export const useMemberStore = defineStore("member", () => {
     const memberList: any = reactive({ data: [] });
     const groupListData: any = reactive({ data: [] });
@@ -230,6 +230,19 @@ export const useMemberStore = defineStore("member", () => {
             console.log(error);
         }
     };
+    const deleteGroupData = async (data: any) => {
+        try {
+            const res = await apiDeleteGroupDataRequest(data);
+            if (res.data.state == 1) {
+                groupListData.data = groupListData.data.filter((item: any) => {
+                    return item.groupId !== res.data.data;
+                })
+            }
+            return res.data
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return {
         memberList,
         getMemberList,
@@ -244,6 +257,7 @@ export const useMemberStore = defineStore("member", () => {
         addGroupInfoData,
         deleteGroupInfoData,
         groupInfoData,
-        getExpenseInfo
+        getExpenseInfo,
+        deleteGroupData
     }
 })

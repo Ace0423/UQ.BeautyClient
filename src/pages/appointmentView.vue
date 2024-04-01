@@ -54,61 +54,59 @@
                 :selectManager="selectManager" :changeDateTabsFn="changeDateTabsFn" :changeDateDayFn="changeDateDayFn" />
             </div>
           </div>
-
-          <div class="appt_list" name="預約列表" v-show="mainTabIndexRef == 1">
-            <div>
-              <table>
-                <thead align="left">
-                  <tr>
-                    <th v-for="item in aptTitle" :key="item">
-
-                      <p>{{ item }}</p>
-                    </th>
-                    <input v-model="searchList" class="search-control" placeholder="搜尋顧客" />
-                  </tr>
-                </thead>
-                <tbody id="content">
-                  <tr v-for="(item, index) in filterApptData" :v-if="item.state < 2" :key="item.id">
-                    <td class="td_time">
-                      <div class="dateBox">
-                        <div class="date-title">
-                          <span class="p_month">
-                            {{ item.dateBooking.split("-")[1] + "月" }}
-                          </span>
-                          <span class="p_date">{{
-                            item.dateBooking.split("-")[2].split("T")[0]
-                          }}</span>
-                          <span class="p_year">{{
-                            item.dateBooking.split("-")[0]
-                          }}</span>
+          <div class="apptList_list" name="預約列表" v-show="mainTabIndexRef == 1">
+            <div class="content-topBar">
+              <p>訂單(全部{{ filterApptData.length }}個)</p>
+              <div>
+                <input v-model="searchList" class="search-control" placeholder="搜尋編號、顧客" />
+              </div>
+            </div>
+            <div class="content-main">
+              <el-table :data="filterApptData" id="dragTable" style="width: 100%; height: 100%; " :cell-style="rowStyle"
+                :header-cell-style="headerRowStyle">
+                <el-table-column prop="dateBooking" label="預約時間" min-width="20%" :sort-by="['name']" align="center" sortable>
+                  <template #default="scope">
+                    <div class="order-name">
+                      <div class="td_time">
+                        <div class="dateBox">
+                          <div class="date-title">
+                            <span class="p_month">
+                              {{ scope.row.dateBooking.split("-")[1] + "月" }}
+                            </span>
+                            <span class="p_date">{{
+                              scope.row.dateBooking.split("-")[2].split("T")[0]
+                            }}</span>
+                            <span class="p_year">{{
+                              scope.row.dateBooking.split("-")[0]
+                            }}</span>
+                          </div>
+                          <span>{{ scope.row.dateBooking.split("-")[2].split("T")[1].substring(0, 5) }}</span>
                         </div>
-                        <span>{{ item.dateBooking.split("-")[2].split("T")[1].substring(0, 5) }}</span>
                       </div>
-                    </td>
-                    <td>
-                      <p v-if="item.serviceInfo">{{ item.serviceInfo.name }}</p>
-                    </td>
-                    <td>
-                      <p>{{ item.memberInfo.nameView }}</p>
-                    </td>
-                    <td>
-                      <p>{{ bookingState[item.state] }}</p>
-                    </td>
-                    <!-- <td>
-                      <div class="checked_state">
-                        <input type="checkbox" :id="item.bookingNo" :checked="item.state == 1"
-                          v-on:click="changeStutusFn(item.state == 1 ? 0 : 1, item)" />
-                        <label :for="item.bookingNo"></label>
-                      </div>
-                    </td> -->
-                    <td>
-                      <button v-show="item.state == 0" v-on:click="delApptListHdr(item)">
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="serviceInfo.name" label="預約項目" min-width="20%" />
+                <el-table-column prop="memberInfo.nameView" label="顧客" min-width="20%" />
+                <el-table-column prop="bookingState[item.state]" label="已完成" min-width="20%" >
+                  <template #default="scope">
+                    <div class="appt-bookingState">
+                      <span>
+                        {{ bookingState[scope.row.state] }}
+                      </span>
+                    </div>
+                  </template>
+                </el-table-column>
+                <el-table-column label="" min-width="20%">
+                  <template #default="scope">
+                    <div class="appt-operate">
+                      <button v-show="scope.row.state == 0" v-on:click="delApptListHdr(scope.row)">
                         <img :src="DeleteIcon" />
                       </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                    </div>
+                  </template>
+                </el-table-column>
+              </el-table>
             </div>
           </div>
         </div>
@@ -136,6 +134,7 @@ import { addZeroDateFn, bookingState, colorValues, countTimeUtil, formatDateTime
 import Alert from "@/components/alertCmpt";
 import { useManagerStore } from "@/stores/manager";
 import { useCounterStore } from "@/stores/counter";
+import icon_right_arrow from "@/assets/images/icon_right_arrow.png";
 
 const props = defineProps<{
   memuState: any;
@@ -216,7 +215,7 @@ let filterApptData: any = computed(() => {
     let element = tuiBookingListRef.value[i];
     if (
       !searchList.value ||
-      element.customer.toLowerCase().includes(searchList.value.toLowerCase())
+      element.memberInfo.nameView.toLowerCase().includes(searchList.value.toLowerCase())
     ) {
       curAptData.push(element);
     }
@@ -426,7 +425,7 @@ function setRestTimeFn(data: any) {
 function updateNoticeCount() {
   getNoticeCountApi().then((res) => {
     console.log(res.unReadCount);
-    
+
     if (res)
       newApptDataRef.value.noticeCount = res.unReadCount;
   });
@@ -570,6 +569,29 @@ watch(selectManager, (val) => {
     indeterminate.value = true
   }
 })
+
+//-------------------------------------------------------------------------表格css
+//內容css
+const rowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
+  return {
+    backgroundColor: '#fff',
+    color: '#717171',
+    fontSize: "16px",
+    fontWeight: "bold",
+    margin: "3px 5px",
+    fontFamily: " STXihei",
+    borderBottom: "2px solid rgba(112, 112, 112, 0.5)"
+  }
+}
+//標頭css
+const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
+  return {
+    height: "50px",
+    backgroundColor: '#fff',
+    fontSize: "20px",
+    borderBottom: "0px solid rgba(112, 112, 112, 0.5)"
+  }
+}
 //--------------------------------------------------full套件設置
 let xxx: any = ref([]);
 function clickBookInfoFn(data: any) {
@@ -750,7 +772,7 @@ $borderCoder: #eaedf2;
           }
         }
 
-        .appt_list {
+        .apptList_list {
           position: relative;
           top: 0px;
           left: 0px;
@@ -761,262 +783,136 @@ $borderCoder: #eaedf2;
           margin: 0 auto;
           border: 1px solid #ddd;
 
-          >div {
-            height: 100%;
-            width: 100%;
+          .content-topBar {
+            height: 50px;
+            width: calc(100%);
             font-weight: bold;
+            display: flex;
+            align-items: center;
             color: #717171;
+            border: solid 1px #707070;
+            box-sizing: border-box;
+            background-color: #e6e2de;
 
-            >table {
-              width: 100%;
-              font-weight: bold;
+            >div {
+              display: flex;
               height: 100%;
+              align-items: center;
+              justify-content: right;
+              width: 88%;
 
-              >thead {
-                width: 100%;
-                height: 47px;
-                align-items: center;
-                font-weight: bold;
-                color: #717171;
-                border-bottom: solid 1px #707070;
-                background-color: #e6e2de;
-                width: calc(100% - 1em);
+              .search-control {
+                width: 200px;
+                height: 60%;
+                border-radius: 6px;
+                border: solid 1px #707070;
+                box-sizing: border-box;
+                background-color: #fff;
+                margin-right: 10px;
 
-                >tr {
-                  // border: solid 1px #707070; //格線
-                  display: table;
-                  width: 100%;
-                  table-layout: fixed; //core code
-                  height: 10%;
-                  height: 100%;
-
-                  >th:nth-child(1) {
-                    width: 20%;
-
-                    >p {
-                      display: flex;
-                      justify-content: center;
-                    }
-                  }
-
-                  >th:nth-child(2) {
-                    width: 30%;
-                  }
-
-                  >th:nth-child(3) {
-                    width: 20%;
-                  }
-
-                  >th:nth-child(4) {
-                    width: 10%;
-                  }
-
-                  >th {
-                    // border: solid 1px #707070; //格線
-                    flex-wrap: nowrap;
-                    padding: 2px;
-                    // width: 100%;
-                    font-size: 18px;
-
-                    >img {
-                      width: 40px;
-                      height: 40px;
-                      border-radius: 45px;
-                    }
-
-                    >button {
-                      background-color: transparent;
-                      border: none;
-                    }
-                  }
-
-                  >input {
-                    display: flex;
-                    float: right;
-                    margin-top: 9px;
-                    width: 150px;
-                    height: 30px;
-                    border-radius: 6px;
-                    border: solid 1px #707070;
-                    background-color: #fff;
-                    margin-right: 10px;
-                    font-size: 18px;
-
-                    background: url("@/assets/images/icon_search.png") no-repeat;
-                    background-color: #fff;
-                    background-position: 97%;
-                    background-origin: content-box;
-                    text-indent: 5px;
-                  }
-                }
+                background: url("@/assets/images/icon_search.png") no-repeat;
+                background-color: #fff;
+                background-position: 99%;
+                background-origin: content-box;
+                text-indent: 5px;
               }
 
-              >tbody {
-                //滾動
-                display: block;
-                position: relative;
-                overflow-y: scroll;
-                height: 100%;
-
-                >tr {
-                  // border: solid 1px #707070; //格線
-                  border-bottom: 2px solid rgba(112, 112, 112, 0.5);
-                  display: table;
-                  width: 100%;
-                  table-layout: fixed;
-                  text-align: left; //If disabled, default align central
-                  // height: 10%;
-
-
-                  >td:nth-child(1) {
-                    width: 20%;
-                  }
-
-                  >td:nth-child(2) {
-                    width: 30%;
-                  }
-
-                  >td:nth-child(3) {
-                    width: 20%;
-                  }
-
-                  >td:nth-child(4) {
-                    width: 10%;
-                  }
-
-                  >td {
-                    // border: solid 1px #707070; //格線
-                    height: 47px;
-                    padding: 2px;
-                    position: relative;
-                    table-layout: fixed;
-                    font-size: 18px;
-
-                    >img {
-                      width: 20px;
-                      height: 40px;
-                      // padding: 0 20px;
-                      // border-radius: 45px;
-                    }
-
-                    // > p {
-                    //   margin: 3px 5px;
-                    // }
-
-                    >button {
-                      background-color: transparent;
-                      border: none;
-                      display: inline;
-                      float: right;
-                      margin-right: 15px;
-                    }
-
-                    .checked_state {
-                      display: flex;
-                      align-items: center;
-
-                      input {
-                        display: none;
-                      }
-
-                      label {
-                        display: inline-block;
-                        width: 20px;
-                        height: 20px;
-                        border-radius: 5px;
-                        border: 1px solid #8b6f6d;
-                        position: relative;
-                        cursor: pointer;
-                      }
-
-                      label::before {
-                        display: inline-block;
-                        content: " ";
-                        width: 12px;
-                        border: 2px solid #fff;
-                        height: 4px;
-                        border-top: none;
-                        border-right: none;
-                        transform: rotate(-45deg);
-                        top: 5px;
-                        left: 3px;
-                        position: absolute;
-                        opacity: 0;
-                      }
-
-                      input:checked+label {
-                        background: #8b6f6d;
-                      }
-
-                      input:checked+label::before {
-                        opacity: 1;
-                        transform: all 0.5s;
-                      }
-                    }
-                  }
-
-                  >th:nth-child(0) {
-                    width: 20%;
-
-                    >p {
-                      justify-content: center;
-                    }
-                  }
-
-                  .td_time {
-                    >div {
-                      justify-content: center;
-                      display: grid;
-                      width: 100%;
-                      height: 100%;
-
-                      .date-title {
-                        width: 63px;
-                        height: 63px;
-                        border: solid 1px #707070;
-                        box-sizing: border-box;
-                        border-radius: 10px;
-
-                        // display: inline-block;
-                        // position: relative;
-                        // text-align: center;
-                        // justify-content: center;
-
-                        .p_month {
-                          font-size: 10px;
-                          height: 20px;
-                          display: flex;
-                          justify-content: center;
-                          height: 30%;
-                        }
-
-                        .p_date {
-                          font-size: 20px;
-                          height: 20px;
-                          display: flex;
-                          justify-content: center;
-                          height: 40%;
-                        }
-
-                        .p_year {
-                          font-size: 10px;
-                          // line-height: 1px;
-                          height: 20px;
-                          display: flex;
-                          justify-content: center;
-                          height: 30%;
-                        }
-                      }
-
-                      >span {
-                        text-align: center;
-                      }
-                    }
-                  }
-                }
+              >.btn-open {
+                width: 90px;
+                height: 30px;
+                margin: 0;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                display: flex;
+                // padding: 7px 11px 6px;
+                border-radius: 6px;
+                border: solid 1px #707070;
+                box-sizing: border-box;
+                background-color: #84715c;
+                color: #ffffff;
               }
             }
           }
+
+          .content-main {
+            .el-table {
+              .td_time {
+                >div {
+                  justify-content: center;
+                  display: grid;
+                  width: 100%;
+                  height: 100%;
+
+                  .date-title {
+                    width: 63px;
+                    height: 63px;
+                    border: solid 1px #707070;
+                    box-sizing: border-box;
+                    border-radius: 10px;
+
+                    // display: inline-block;
+                    // position: relative;
+                    // text-align: center;
+                    // justify-content: center;
+
+                    .p_month {
+                      font-size: 10px;
+                      height: 20px;
+                      display: flex;
+                      justify-content: center;
+                      height: 30%;
+                    }
+
+                    .p_date {
+                      font-size: 20px;
+                      height: 20px;
+                      display: flex;
+                      justify-content: center;
+                      height: 40%;
+                    }
+
+                    .p_year {
+                      font-size: 10px;
+                      // line-height: 1px;
+                      height: 20px;
+                      display: flex;
+                      justify-content: center;
+                      height: 30%;
+                    }
+                  }
+
+                  >span {
+                    text-align: center;
+                  }
+                }
+              }
+
+              .appt-bookingState {}
+
+              .appt-operate {
+                background-color: #ff1100;
+
+                >button {
+                  background-color: transparent;
+                  border: none;
+                  display: inline;
+                  float: right;
+                  margin-right: 15px;
+                }
+              }
+
+              >th:nth-child(0) {
+                background-color: #ff1100;
+                min-width: 20%;
+                >span {
+                  justify-content: center;
+                }
+              }
+
+            }
+          }
+
         }
       }
     }

@@ -21,8 +21,7 @@
                         <input v-if="formInputRef.sglDiscountList.length == 0" placeholder="請選擇折扣" type="text"
                             @click="showRdSgDcFn(true)" readonly />
                         <div v-else @click="showRdSgDcFn(true)">
-                            <div class="sgdc-item" v-for="(sdItem, index) in formInputRef.sglDiscountList"
-                                :key="sdItem">
+                            <div class="sgdc-item" v-for="(sdItem, index) in formInputRef.sglDiscountList" :key="sdItem">
                                 <span>{{ sdItem.title }}</span>
                             </div>
                         </div>
@@ -99,7 +98,7 @@ function onBeforeFn() {
     formInputRef.value.sglDiscountList = props.selData.sglDiscountList ? props.selData.sglDiscountList : [];
     if (props.selData.managerInfo)
         formInputRef.value.managerInfo = props.selData.managerInfo;
-    if (props.selData.isPickUp)
+    if (props.selData.isPickUp == false)
         formInputRef.value.isPickUp = props.selData.isPickUp;
 
     // formInputRef.value.sglDiscountList = props.selData.curSgDiscountList;
@@ -142,6 +141,7 @@ function submitBtn() {
 
     if (formInputRef.value.managerInfo.nameView != "")
         props.selData.managerInfo = formInputRef.value.managerInfo;
+
     props.selData.sglDiscountList = formInputRef.value.sglDiscountList;
     props.selData.quantity = formInputRef.value.quantity;
     props.selData.isPickUp = formInputRef.value.isPickUp;

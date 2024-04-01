@@ -25,15 +25,15 @@
                           <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , " }}</span>
                           {{ bItem.timer + "分" }}
                           <span v-if="bItem.subInfo"> {{ " ," + bItem.subInfo.name
-                            }}</span>
+                          }}</span>
                         </span>
                         <span v-for="(sglItem, index) in bItem.sglDiscountList" :key="sglItem">
                           {{ sglItem.title }}
                         </span>
                       </div>
                       <div class="info-price"><span v-if="bItem.subInfo">{{ "$" +
-    bItem.salesPrice
-                          }}</span>
+                        bItem.salesPrice
+                      }}</span>
                         <span v-else>{{ "$" + bItem.salesPrice }}</span>
                       </div>
                     </div>
@@ -45,11 +45,11 @@
                         <span>
                           <span v-if="bItem.managerInfo"> {{ bItem.managerInfo.nameView + " , " }}</span>
                           {{
-    bItem.quantity +
-    "個" + "," +
-    bItem.nickName
+                            bItem.quantity +
+                            "個" + "," +
+                            bItem.nickName
 
-  }}
+                          }}
                         </span>
                         <span v-for="(sglItem, index) in bItem.sglDiscountList" :key="sglItem">
                           {{ sglItem.title }}
@@ -114,9 +114,9 @@
                 <div class="discount-link">
                   <span class="name-link">儲值卡</span>
                   <span :class="{
-    islink: formInputRef.memberInfo.userId != 0,
-    notlink: formInputRef.memberInfo.userId == 0
-  }" @click="showRdTopUpCardFn(true)">使用儲值卡</span>
+                    islink: formInputRef.memberInfo.userId != 0,
+                    notlink: formInputRef.memberInfo.userId == 0
+                  }" @click="showRdTopUpCardFn(true)">使用儲值卡</span>
                 </div>
               </div>
             </div>
@@ -129,8 +129,8 @@
               <div>
                 <span>{{ formInputRef.memberInfo.nameView }}</span>
                 <span class="customer-phone">{{
-    formInputRef.memberInfo.phone
-  }}</span>
+                  formInputRef.memberInfo.phone
+                }}</span>
               </div>
               <img :src="icon_right_arrow" />
             </div>
@@ -146,11 +146,11 @@
             <div class=" trade-record">
               <div>
                 <span class="customer-headcount">{{ formInputRef.bookingCount }}</span>
-                <span class="customer-headcount">{{ "總預約數" }}</span>
+                <span class="customer-headcount">{{ "完成預約數" }}</span>
               </div>
               <div>
                 <span class="customer-headcount">{{ formInputRef.bookingAmount }}</span>
-                <span class="customer-headcount">{{ "消費金額" }}</span>
+                <span class="customer-headcount">{{ "總消費金額" }}</span>
               </div>
 
             </div>
@@ -188,7 +188,7 @@
                   </el-option>
                 </el-select>
               </div>
-              <button class="cash-btn" @click="submitBtn()">確認</button>
+              <button id="submitBtn1" class="cash-btn" @click="submitBtn()">確認</button>
             </div>
           </div>
         </div>
@@ -235,6 +235,7 @@ let showEditItemTopUpUIRef = ref(false);
 let selctItemInfoRef = ref(null);
 let showRdTopUpCardUIRef = ref(false);
 let isFastCheckOut = ref(true);
+let submitBtnRef = ref(true);
 
 let store = useApptStore();
 let { payTypeListRef, expenseInfoRef } = storeToRefs(store);
@@ -701,6 +702,10 @@ function cancleGoodsFn(item: any, index: number) {
 }
 
 function submitBtn() {
+  var submitBtn1 = document.getElementById('submitBtn1') as HTMLInputElement
+  submitBtn1.disabled = true;
+  // submitBtnRef.value = false;
+
   ruleLists.ruleItem.name.value = formInputRef.value.memberInfo.userId;
   ruleLists.ruleItem.buyItem.value = formInputRef.value.buyItemsList.length;
 
@@ -712,7 +717,11 @@ function submitBtn() {
   }
   ruleLists.ruleItem.buyItemManager.value = checkManager;
 
-  if (!checkVerify_all(ruleLists)) return;
+  if (!checkVerify_all(ruleLists)) {
+    submitBtn1.disabled = false;
+    // submitBtnRef.value = true;
+    return;
+  }
 
   let curTopUpInfo = null;
   if (formInputRef.value.useTopUpCard)
@@ -741,6 +750,8 @@ function submitBtn() {
     if (res.state == 1) {
       setTimeout(() => {
         props.showUIFn(false);
+        // submitBtnRef.value = true;
+        submitBtn1.disabled = false;
       }, 1000);
     }
   });

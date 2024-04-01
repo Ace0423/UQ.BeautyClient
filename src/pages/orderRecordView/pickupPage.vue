@@ -39,7 +39,7 @@
             </template>
           </el-table-column>
           <el-table-column prop="productName" label="商品" min-width="20%" sortable />
-          <el-table-column prop="memberInfo.name" label="顧客" min-width="30%" sortable />
+          <el-table-column prop="memberInfo.name" label="顧客" min-width="20%" sortable />
           <el-table-column label="已取貨" min-width="10%">
             <template #default="scope">
               <div class="handle-state">
@@ -49,18 +49,22 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="price" label="售價" min-width="10%" sortable>
+          <el-table-column prop="price" label="售價" min-width="15%" sortable>
             <template #default="scope">
               <div class="handle-price">
                 <span>{{ scope.row.price }}</span>
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="" min-width="10%">
+          <el-table-column label="" min-width="15%">
             <template #default="scope">
               <div class="handle-pickup" @click="selectDataFn(scope.row)">
                 <!-- <img class="edit_img" :src="icon_right_arrow" /> -->
-                <button @click="noticeFn(scope.row)">通知</button>
+                <button v-if="!scope.row.isPickUp" @click="noticeFn(scope.row)">通知</button>
+                <div v-else class="dateUpdate-pickup">
+                  <span v-if="scope.row.dateUpdate">{{ scope.row.dateUpdate.split("T")[0] }}</span>
+                  <span v-if="scope.row.dateUpdate">{{ scope.row.dateUpdate.split("-")[2].split("T")[1].substring(0, 5) }}</span>
+                </div>
               </div>
             </template>
           </el-table-column>
@@ -134,14 +138,14 @@ watchEffect(() => {
 function getPickUpListFn(id: number = 0) {
   let start: Date = formInputRef.value.datePicker[0];
   let end: Date = formInputRef.value.datePicker[1];
-console.log();
-if(start.toString().indexOf("-")==-1){
-  let startDate: string = start.getFullYear() + "-" + (start.getMonth() + 1) + "-" + formatZeroDate(start.getDate());
-  let endDate: string = end.getFullYear() + "-" + (end.getMonth() + 1) + "-" + formatZeroDate(end.getDate());
-  getPickUpListApi(0, startDate, endDate);
-}else{
-  getPickUpListApi(0, start, end);
-}
+  console.log();
+  if (start.toString().indexOf("-") == -1) {
+    let startDate: string = start.getFullYear() + "-" + (start.getMonth() + 1) + "-" + formatZeroDate(start.getDate());
+    let endDate: string = end.getFullYear() + "-" + (end.getMonth() + 1) + "-" + formatZeroDate(end.getDate());
+    getPickUpListApi(0, startDate, endDate);
+  } else {
+    getPickUpListApi(0, start, end);
+  }
 }
 
 
@@ -153,7 +157,7 @@ function selectDataFn(params: any) {
 
 function noticeFn(item: any) {
   console.log(item);
-  
+
   let apiData = {
     userId: item.memberInfo.userId,
     noticeTime: new Date(),
@@ -164,6 +168,19 @@ function noticeFn(item: any) {
   })
 }
 function updatePickUpState(item: any) {
+  if (item.isPickUp) {
+    Alert.check("是否取消已取貨", 1000, (res: any) => {
+      if (res) {
+        updatePickUpStateFn(item)
+      } else {
+        getPickUpListFn();
+      }
+    });
+  } else {
+    updatePickUpStateFn(item);
+  }
+}
+function updatePickUpStateFn(item: any) {
   let apiData = {
     Id: item.id,
     state: !item.isPickUp
@@ -191,7 +208,7 @@ const onDeleteAlertBtn = (state: any, id: number) => {
 
 
 function dateChange() {
-  
+
   let start: Date = formInputRef.value.datePicker[0]
   let end: Date = formInputRef.value.datePicker[1]
   let startDate: string = start.getFullYear() + "-" + (start.getMonth() + 1) + "-" + formatZeroDate(start.getDate());
@@ -493,6 +510,15 @@ const headerRowStyle = ({ row, column, rowIndex, columnIndex }: any) => {
             height: 35px;
             border: solid 1px #707070;
             border-radius: 6px;
+          }
+
+          .dateUpdate-pickup {
+            width: 100%;
+
+            >span {
+              display: flex;
+              width: 100%;
+            }
           }
         }
 

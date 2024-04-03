@@ -8,13 +8,14 @@ const memberRequest = axios.create({
 export const getMemberListRequest = (data: any) => {
   let token: any = getToken('token');
   memberRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
-  return memberRequest.get("/member/user", { params: data });
+  // return memberRequest.get("/member/user", { params: data });
+  return memberRequest.post("/member/user", data);
 }
 
 export const postMemberDataRequest = (data: any) => {
   let token: any = getToken('token');
   memberRequest.defaults.headers.common["Authorization"] = 'bearer ' + JSON.parse(token).token;
-  return memberRequest.post("/member/user", data);
+  return memberRequest.post("/member/createUser", data);
 }
 export const postUpdateMemberDataRequest = (data: any) => {
   let token: any = getToken('token');

@@ -5,16 +5,20 @@ export const useMemberStore = defineStore("member", () => {
     const groupListData: any = reactive({ data: [] });
     const groupInfoData: any = reactive({ data: [] });
     const expenseInfoData: any = reactive({ data: [] });
-    const getMemberList = async () => {
+    const getMemberList = async (filter: any) => {
         try {
             const dataRequest = reactive({
-                id: 0,
+                UserId: 0,
                 pageindex: 0,
                 count: 0,
+                FilterData: filter
             });
             const res = await apiGetMemberListRequest(dataRequest);
-            if (res.data.data.table) {
+
+            if (res.data.state == 1 && res.data.data.table) {
                 memberList.data = res.data.data.table;
+            } else {
+                memberList.data = [];
             }
             return res.data;
         } catch (error) {

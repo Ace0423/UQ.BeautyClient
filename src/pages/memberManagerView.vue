@@ -66,7 +66,7 @@ onMounted(() => {
         }
 
         a:hover {
-          color: #717171;
+          color: #e6e2de;
         }
 
         >.router-link-exact-active {

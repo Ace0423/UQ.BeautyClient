@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import Icon_guest from "@/assets/Icon-guest.png";
 import { storeToRefs } from "pinia";
@@ -11,13 +10,40 @@ const { handLogOut } = counterStore;
 const memberStore = useMemberStore();
 const { memberList } = storeToRefs(memberStore);
 const { getMemberList } = memberStore;
-
+const filterView = ref(false);
 const addMemberView = ref(false);
 const memberInfoView = ref(false);
 const selectMemberItem = ref();
+const filterItem = ref({
+  sex: [],
+  register: [],
+  avgPriceA: 0,
+  avgPriceB: 0,
+  tolPriceA: 0,
+  tolPriceB: 0,
+  birthday: [],
+  label: [],
+  consumer: 0,
+  unConsumer: 0,
+  conCycleA: 0,
+  conCycleB: 0,
+  service: [],
+  staff: [],
+  other: []
+})
 const keyWord = ref("");
 const handAddMemberView = (item: any) => {
   addMemberView.value = !addMemberView.value;
+};
+const handFilterView = () => {
+  filterView.value = !filterView.value;
+  if(!filterView.value){
+    memberListData();
+  }
+};
+const handAddFilterSubmit = (filterData: any) => {
+  filterItem.value = filterData;
+  memberListData
 };
 const handMemberInfoView = (item: any) => {
   selectMemberItem.value = item;
@@ -43,9 +69,8 @@ const getMemberListFn = (data: any) => {
     );
   }
 };
-
-onMounted(() => {
-  getMemberList()
+const memberListData = (() => {
+  getMemberList(filterItem)
     .then((res) => {
       if (res.state == 2) {
         Alert.warning(showErrorMsg(res.msg), 2000);
@@ -59,12 +84,18 @@ onMounted(() => {
         }, 2000);
       }
     });
+})
+onMounted(() => {
+  memberListData();
 });
 </script>
 <template>
   <div class="content">
     <div class="function-area">
       <input placeholder="🔍搜尋名稱、暱稱或手機" v-model="keyWord" />
+      <button class="header-btn" @click="handFilterView()">
+        更多篩選條件
+      </button>
       <button class="header-btn" @click="handAddMemberView('')">
         新增會員
       </button>
@@ -121,6 +152,8 @@ onMounted(() => {
       </tbody>
     </table>
   </div>
+  <FilterView v-if="filterView" :hand-filter-view="handFilterView" :mFilter="filterItem"
+    @handSubmit="handAddFilterSubmit" />
   <AddMember v-if="addMemberView" :hand-add-member-view="handAddMemberView" :select-member-item="selectMemberItem" />
   <MemberInfo v-if="memberInfoView" :hand-member-info-view="handMemberInfoView" :select-member-item="selectMemberItem"
     :hand-add-member-view="handAddMemberView" />
@@ -157,18 +190,19 @@ onMounted(() => {
       border-radius: 6px;
       border: solid 1px #707070;
       background-color: #fff;
-      margin-right: 10px;
+      margin-right: 5px;
       text-align: center;
     }
 
     >button {
       border-radius: 6px;
-      min-width: 100px;
+      // min-width: 100px;
       height: 70%;
-      border: solid 1px #707070;
-      background-color: #84715c;
-      color: #fff;
-      margin: 0 20px;
+      font-weight: bold;
+      border: solid 1px #e6e2de;
+      background-color: #e6e2de;
+      color: #717171;
+      margin: 0 5px;
     }
   }
 

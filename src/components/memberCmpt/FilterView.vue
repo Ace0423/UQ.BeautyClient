@@ -20,23 +20,21 @@ const { managerList } = storeToRefs(managerstore);
 const { getManagerList } = managerstore;
 const title = ref("更多篩選條件");
 const selectItem: any = reactive({
-    msfId: 0,
-    mId: 0,
-    msfSex: [],
-    msfRegister: [],
-    msfAvgPriceA: 0,
-    msfAvgPriceB: 0,
-    msfTolPriceA: 0,
-    msfTolPriceB: 0,
-    msfBirthday: [],
-    msfLabel: [],
-    msfConsumer: 0,
-    msfUnConsumer: 0,
-    msfConCycleA: 0,
-    msfConCycleB: 0,
-    msfStaff: [],
-    msfMember: [],
-    msfOther: []
+    sex: [],
+    register: [],
+    avgPriceA: 0,
+    avgPriceB: 0,
+    tolPriceA: 0,
+    tolPriceB: 0,
+    birthday: [],
+    label: [],
+    consumer: 0,
+    unConsumer: 0,
+    conCycleA: 0,
+    conCycleB: 0,
+    staff: [],
+    service: [],
+    other: []
 }
 );
 const sexData: any = [
@@ -56,15 +54,15 @@ const sexData: any = [
 const registerData: any = [
     {
         value: 0,
-        label: '路過',
+        label: '路過客',
     },
     {
         value: 1,
-        label: '網路預約',
+        label: '來電客',
     },
     {
         value: 2,
-        label: '不透漏',
+        label: '網路預約',
     },
 ]
 const amountRange: any = [
@@ -212,94 +210,89 @@ const otherData: any = [
     },
     {
         value: 1,
-        label: ' 被封鎖客戶',
+        label: '被封鎖客戶',
     },
 ]
 const consumeCycleData: any = ref([0, 0]);
 const marks = reactive({
-    0: '1月',
-    11: '12月'
+    0: '1',
+    1: '2',
+    2: '3',
+    3: '4',
+    4: '5',
+    5: '6',
+    6: '7',
+    7: '8',
+    8: '9',
+    9: '10',
+    10: '11',
+    11: '12',
 })
 const props = defineProps<{
     mFilter: any,
-    handAddFilterView: Function
+    handFilterView: Function
 }>();
 const emits = defineEmits<{
     (e: "handSubmit", item: any): void;
 }>();
 
 onMounted(() => {
-    console.log(props.mFilter);
-    if (props.mFilter.msfId != 0 || props.mFilter.mId != 0) {
-        selectItem.msfId = props.mFilter.msfId;
-        selectItem.mId = props.mFilter.mId;
-        selectItem.msfSex = props.mFilter.msfSex.split(',');
-        selectItem.msfRegister = props.mFilter.msfRegister.split(',');
-        selectItem.msfAvgPriceA = props.mFilter.msfAvgPriceA;
-        selectItem.msfAvgPriceB = props.mFilter.msfAvgPriceB;
-        selectItem.msfTolPriceA = props.mFilter.msfTolPriceA;
-        selectItem.msfTolPriceB = props.mFilter.msfTolPriceB;
-        selectItem.msfBirthday = props.mFilter.msfBirthday.split(',');
-        selectItem.msfLabel = props.mFilter.msfLabel.split(',');
-        selectItem.msfConsumer = props.mFilter.msfConsumer;
-        selectItem.msfUnConsumer = props.mFilter.msfUnConsumer;
-        selectItem.msfConCycleA = props.mFilter.msfConCycleA;
-        selectItem.msfConCycleB = props.mFilter.msfConCycleB;
-        selectItem.msfStaff = props.mFilter.msfStaff.split(',');
-        selectItem.msfMember = props.mFilter.msfMember.split(',');
-        selectItem.msfOther = props.mFilter.msfOther.split(',');
-        consumeCycleData.value[0] = props.mFilter.msfConCycleA;
-        consumeCycleData.value[1] = props.mFilter.msfConCycleB;
-    }
+    selectItem.sex = props.mFilter.sex;
+    selectItem.register = props.mFilter.register;
+    selectItem.avgPriceA = props.mFilter.avgPriceA;
+    selectItem.avgPriceB = props.mFilter.avgPriceB;
+    selectItem.tolPriceA = props.mFilter.tolPriceA;
+    selectItem.tolPriceB = props.mFilter.tolPriceB;
+    selectItem.birthday = props.mFilter.birthday;
+    selectItem.label = props.mFilter.label;
+    selectItem.consumer = props.mFilter.consumer;
+    selectItem.unConsumer = props.mFilter.unConsumer;
+    selectItem.conCycleA = props.mFilter.conCycleA;
+    selectItem.conCycleB = props.mFilter.conCycleB;
+    selectItem.staff = props.mFilter.staff;
+    selectItem.service = props.mFilter.service;
+    selectItem.other = props.mFilter.other;
+    consumeCycleData.value[0] = props.mFilter.conCycleA;
+    consumeCycleData.value[1] = props.mFilter.conCycleB;
 });
 const changeEvent = (type: any, data: any) => {
     if (type == 3) {
-        selectItem.msfAvgPriceA = data.minAmount;
-        selectItem.msfAvgPriceB = data.maxAmount;
+        selectItem.avgPriceA = data.minAmount;
+        selectItem.avgPriceB = data.maxAmount;
     } else if (type == 4) {
-        selectItem.msfTolPriceA = data.minAmount;
-        selectItem.msfTolPriceB = data.maxAmount;
+        selectItem.tolPriceA = data.minAmount;
+        selectItem.tolPriceB = data.maxAmount;
     }
 };
 const handSubmit = () => {
-    selectItem.msfConCycleA = consumeCycleData.value[0] == consumeCycleData.value[1] ? 0 : consumeCycleData.value[0];
-    selectItem.msfConCycleB = consumeCycleData.value[1] == consumeCycleData.value[0] ? 0 : consumeCycleData.value[1];
-    selectItem.msfSex = selectItem.msfSex.toString();
-    selectItem.msfRegister = selectItem.msfRegister.toString();
-    selectItem.msfBirthday = selectItem.msfBirthday.toString();
-    selectItem.msfLabel = selectItem.msfLabel.toString();
-    selectItem.msfStaff = selectItem.msfStaff.toString();
-    selectItem.msfMember = selectItem.msfMember.toString();
-    selectItem.msfOther = selectItem.msfOther.toString();
+    selectItem.conCycleA = consumeCycleData.value[0] == consumeCycleData.value[1] ? 0 : consumeCycleData.value[0];
+    selectItem.conCycleB = consumeCycleData.value[1] == consumeCycleData.value[0] ? 0 : consumeCycleData.value[1];
     emits("handSubmit", selectItem);
-    props.handAddFilterView();
+    props.handFilterView();
 };
 const handCancel = () => {
-    selectItem.msfId = props.mFilter.msfId != 0 ? props.mFilter.msfId : 0;
-    selectItem.mId = props.mFilter.mId != 0 ? props.mFilter.mId : 0;
-    selectItem.msfSex = [];
-    selectItem.msfRegister = [];
-    selectItem.msfAvgPriceA = 0;
-    selectItem.msfAvgPriceB = 0;
-    selectItem.msfTolPriceA = 0;
-    selectItem.msfTolPriceB = 0;
-    selectItem.msfBirthday = [];
-    selectItem.msfLabel = [];
-    selectItem.msfConsumer = 0;
-    selectItem.msfUnConsumer = 0;
-    selectItem.msfConCycleA = 0;
-    selectItem.msfConCycleB = 0;
-    selectItem.msfStaff = [];
-    selectItem.msfMember = [];
-    selectItem.msfOther = [];
+    selectItem.sex = [];
+    selectItem.register = [];
+    selectItem.avgPriceA = 0;
+    selectItem.avgPriceB = 0;
+    selectItem.tolPriceA = 0;
+    selectItem.tolPriceB = 0;
+    selectItem.birthday = [];
+    selectItem.label = [];
+    selectItem.consumer = 0;
+    selectItem.unConsumer = 0;
+    selectItem.conCycleA = 0;
+    selectItem.conCycleB = 0;
+    selectItem.staff = [];
+    selectItem.service = [];
+    selectItem.other = [];
     consumeCycleData.value[0] = 0;
     consumeCycleData.value[1] = 0;
-
 }
 </script>
 
 <template>
-    <div class="popup-mask" v-on:click.self="handAddFilterView()">
+    <div class="popup-mask" v-on:click.self="handFilterView()">
         <!-- 提示弹窗 -->
         <div class="popup-content">
             <h1>{{ title }}</h1>
@@ -310,7 +303,7 @@ const handCancel = () => {
                         <el-collapse-item title="性別" name="1">
                             <div class="checkbox-block" v-for="item in sexData" :key="item.value">
                                 <input type="checkbox" :id="item.value" :value="item.value"
-                                    v-model="selectItem.msfSex" />
+                                    v-model="selectItem.sex" />
                                 <label>{{ item.label }}</label>
 
                             </div>
@@ -323,7 +316,7 @@ const handCancel = () => {
                         <el-collapse-item title="建立管道" name="2">
                             <div class="checkbox-block" v-for="item in registerData" :key="item.value">
                                 <input type="checkbox" :id="item.value" :value="item.value"
-                                    v-model="selectItem.msfRegister" />
+                                    v-model="selectItem.register" />
                                 <label>{{ item.label }}</label>
                             </div>
                         </el-collapse-item>
@@ -334,8 +327,8 @@ const handCancel = () => {
                     <el-collapse>
                         <el-collapse-item title="平均消費金額" name="3">
                             <div class="input-border">
-                                <input placeholder="最低" v-model="selectItem.msfAvgPriceA" />
-                                <input placeholder="最高" v-model="selectItem.msfAvgPriceB" />
+                                <input placeholder="最低" v-model="selectItem.avgPriceA" />
+                                <input placeholder="最高" v-model="selectItem.avgPriceB" />
                             </div>
                             <div class="radio-block" v-for="item in amountRange" :key="item.value">
                                 <input type="radio" name="amount" @change="changeEvent(3, item)" />
@@ -349,8 +342,8 @@ const handCancel = () => {
                     <el-collapse>
                         <el-collapse-item title="總消費金額" name="4">
                             <div class="input-border">
-                                <input placeholder="最低" v-model="selectItem.msfTolPriceA" />
-                                <input placeholder="最高" v-model="selectItem.msfTolPriceB" />
+                                <input placeholder="最低" v-model="selectItem.TolPriceA" />
+                                <input placeholder="最高" v-model="selectItem.TolPriceB" />
                             </div>
                             <div class="radio-block" v-for="item in amountRange" :key="item.value">
                                 <input type="radio" name="amount" @change="changeEvent(4, item)" />
@@ -365,7 +358,7 @@ const handCancel = () => {
                         <el-collapse-item title="生日月分" name="5">
                             <div class="checkbox-block" v-for="item in monthData" :key="item.value">
                                 <input type="checkbox" :id="item.value" :value="item.value"
-                                    v-model="selectItem.msfBirthday" />
+                                    v-model="selectItem.birthday" />
                                 <label>{{ item.label }}</label>
                             </div>
                         </el-collapse-item>
@@ -377,7 +370,7 @@ const handCancel = () => {
                         <el-collapse-item title="客戶標籤" name="6">
                             <div class="checkbox-block" v-for="item in groupListData.data" :key="item.groupId">
                                 <input type="checkbox" :id="item.groupId" :value="item.groupId"
-                                    v-model="selectItem.msfLabel" />
+                                    v-model="selectItem.label" />
                                 <label>{{ item.label }}</label>
                             </div>
                         </el-collapse-item>
@@ -389,7 +382,7 @@ const handCancel = () => {
                         <el-collapse-item title="近期有消費" name="7">
                             <div class="radio-block" v-for="item in consumerData" :key="item.value">
                                 <input type="radio" name="amount" :value="item.value"
-                                    v-model="selectItem.msfConsumer" />
+                                    v-model="selectItem.consumer" />
                                 <label>{{ item.label }}</label>
                             </div>
                         </el-collapse-item>
@@ -401,7 +394,7 @@ const handCancel = () => {
                         <el-collapse-item title="近期無消費" name="8">
                             <div class="radio-block" v-for="item in unConsumerData" :key="item.value">
                                 <input type="radio" name="unamount" :value="item.value"
-                                    v-model="selectItem.msfUnConsumer" />
+                                    v-model="selectItem.unConsumer" />
                                 <label>{{ item.label }}</label>
                             </div>
                         </el-collapse-item>
@@ -412,7 +405,7 @@ const handCancel = () => {
                     <el-collapse>
                         <el-collapse-item title="消費週期" name="9">
                             <div class="slider-demo-block">
-                                <el-slider v-model="consumeCycleData" range :marks="marks" show-stops :max="11" />
+                                <el-slider v-model="consumeCycleData" range :marks="marks" :max="11" />
                             </div>
                         </el-collapse-item>
                     </el-collapse>
@@ -423,7 +416,7 @@ const handCancel = () => {
                         <el-collapse-item title="服務人員" name="10">
                             <div class="checkbox-block" v-for="item in managerList.data" :key="item.managerId">
                                 <input type="checkbox" :id="item.managerId" :value="item.managerId"
-                                    v-model="selectItem.msfStaff" />
+                                    v-model="selectItem.staff" />
                                 <label>{{ item.nameView }}</label>
                             </div>
                         </el-collapse-item>
@@ -435,7 +428,7 @@ const handCancel = () => {
                         <el-collapse-item title="其他" name="11">
                             <div class="checkbox-block" v-for="item in otherData" :key="item.value">
                                 <input type="checkbox" :id="item.value" :value="item.value"
-                                    v-model="selectItem.msfOther" />
+                                    v-model="selectItem.other" />
                                 <label>{{ item.label }}</label>
                             </div>
                         </el-collapse-item>
